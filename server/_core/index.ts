@@ -7,6 +7,11 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { stripe, handleWebhookEvent } from "../stripe";
+import { ENV } from "./env";
+import multer from "multer";
+import { storagePut } from "../storage";
+import { nanoid } from "nanoid";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -30,11 +35,79 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  
+  // Stripe webhook route - MUST be before express.json() for signature verification
+  app.post(
+    "/api/stripe/webhook",
+    express.raw({ type: "application/json" }),
+    async (req, res) => {
+      const sig = req.headers["stripe-signature"];
+      
+      if (!sig) {
+        console.error("[Stripe Webhook] No signature header");
+        return res.status(400).send("No signature header");
+      }
+
+      try {
+        const event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          ENV.stripeWebhookSecret
+        );
+        
+        console.log(`[Stripe Webhook] Received event: ${event.type}`);
+        
+        const result = await handleWebhookEvent(event);
+        res.json(result);
+      } catch (err) {
+        console.error("[Stripe Webhook] Error:", err);
+        res.status(400).send(`Webhook Error: ${err instanceof Error ? err.message : "Unknown error"}`);
+      }
+    }
+  );
+
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+  // File upload endpoint
+  const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+    fileFilter: (req, file, cb) => {
+      if (file.mimetype.startsWith("image/")) {
+        cb(null, true);
+      } else {
+        cb(new Error("Only image files are allowed"));
+      }
+    },
+  });
+
+  app.post("/api/upload", upload.single("file"), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+
+      const ext = req.file.originalname.split(".").pop() || "jpg";
+      const fileKey = `products/${nanoid()}.${ext}`;
+      
+      const { url } = await storagePut(
+        fileKey,
+        req.file.buffer,
+        req.file.mimetype
+      );
+
+      res.json({ url, key: fileKey });
+    } catch (error) {
+      console.error("[Upload] Error:", error);
+      res.status(500).json({ error: "Failed to upload file" });
+    }
+  });
+  
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+  
   // tRPC API
   app.use(
     "/api/trpc",
@@ -43,6 +116,7 @@ async function startServer() {
       createContext,
     })
   );
+  
   // development mode uses Vite, production mode uses static files
   if (process.env.NODE_ENV === "development") {
     await setupVite(app, server);

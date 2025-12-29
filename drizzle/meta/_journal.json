@@ -1,5 +1,27 @@
 {
   "version": "7",
   "dialect": "mysql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1766880905104,
+      "tag": "0000_outgoing_sleepwalker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1766881042778,
+      "tag": "0001_sharp_thaddeus_ross",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1766881835628,
+      "tag": "0002_spotty_eddie_brock",
+      "breakpoints": true
+    }
+  ]
 }
