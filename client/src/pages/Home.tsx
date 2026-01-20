@@ -28,13 +28,21 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-secondary/50 via-background to-background">
-        <div className="container py-20 md:py-32">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-6xl font-serif font-semibold leading-tight mb-6">
+      <section className="relative overflow-hidden min-h-[600px] md:min-h-[700px]">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: 'url(/hero-background.jpg)' }}
+        />
+        {/* Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent" />
+        
+        <div className="container relative py-20 md:py-32">
+          <div className="max-w-xl">
+            <h1 className="text-4xl md:text-6xl font-serif font-semibold leading-tight mb-6 text-foreground">
               Curated Fashion,
               <br />
-              <span className="text-muted-foreground" style={{color: '#000000'}}>Second Chance</span>
+              <span className="text-foreground">Second Chance</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
               Personally curated secondhand fashion that gives back to the community – because great style shouldn't cost the earth.
@@ -46,13 +54,12 @@ export default function Home() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/shop/dresses">Browse Dresses</Link>
+              <Button asChild variant="outline" size="lg" className="bg-white/80 hover:bg-white">
+                <Link href="/shop">Browse All</Link>
               </Button>
             </div>
           </div>
         </div>
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 w-1/3 h-full bg-gradient-to-l from-accent/10 to-transparent pointer-events-none" />
       </section>
 
       {/* Value Props */}

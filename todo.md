@@ -84,3 +84,6 @@
 - [x] Rewards points tracking and redemption
 - [x] Spend limit management
 - [x] Order history with token earnings display
+
+## Visual Enhancements
+- [x] Generate custom hero image with men's clothing, baseball caps shelf, and shoes display
