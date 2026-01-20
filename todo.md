@@ -63,3 +63,9 @@
 - [x] Loading states and animations
 - [x] Error handling and user feedback
 
+
+## New Features to Add
+- [ ] About Us page with company story and mission
+- [ ] Our Partners page showcasing thrift store partnerships
+- [ ] Sustainability page highlighting environmental impact
+- [ ] Contact page with inquiry form

@@ -207,24 +207,24 @@ export default function Layout({ children }: LayoutProps) {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <span className="hover:text-primary transition-colors cursor-pointer">
+                  <Link href="/about" className="hover:text-primary transition-colors">
                     About Us
-                  </span>
+                  </Link>
                 </li>
                 <li>
-                  <span className="hover:text-primary transition-colors cursor-pointer">
+                  <Link href="/partners" className="hover:text-primary transition-colors">
                     Our Partners
-                  </span>
+                  </Link>
                 </li>
                 <li>
-                  <span className="hover:text-primary transition-colors cursor-pointer">
+                  <Link href="/sustainability" className="hover:text-primary transition-colors">
                     Sustainability
-                  </span>
+                  </Link>
                 </li>
                 <li>
-                  <span className="hover:text-primary transition-colors cursor-pointer">
+                  <Link href="/contact" className="hover:text-primary transition-colors">
                     Contact
-                  </span>
+                  </Link>
                 </li>
               </ul>
             </div>
