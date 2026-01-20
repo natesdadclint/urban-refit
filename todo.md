@@ -93,3 +93,5 @@
 - [x] Update navigation menu to men's categories (replace Dresses with Jackets/Accessories)
 - [x] Add sample thrift store partners for demo
 - [x] Add sample products with dual images for demo
+- [x] Remove hero headline text for cleaner design
+- [x] Fix Tommy Hilfiger product placeholder image

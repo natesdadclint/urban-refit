@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, name, image1Url, image2Url FROM products WHERE name LIKE '%Tommy%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, image1Url, image2Url FROM products WHERE name LIKE '%Tommy%';",
+  "rows": [
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "image1Url": "https://images.unsplash.com/photo-1625910513413-5fc45e2f6f0e?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage1Url\timage2Url\n6\tTommy Hilfiger Polo\thttps://images.unsplash.com/photo-1625910513413-5fc45e2f6f0e?w=800\thttps://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800\n",
+  "stderr": "",
+  "execution_time_ms": 1564
+}

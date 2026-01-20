@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE products SET image1Url = 'https://images.unsplash.com/photo-1625910513413-5fc45e2f6f0e?w=800', image2Url = 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800' WHERE name LIKE '%Tommy%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute UPDATE products SET image1Url = 'https://images.unsplash.com/photo-1625910513413-5fc45e2f6f0e?w=800', image2Url = 'https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800' WHERE name LIKE '%Tommy%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1548
+}

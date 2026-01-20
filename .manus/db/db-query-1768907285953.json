@@ -1,0 +1,58 @@
+{
+  "query": "SELECT id, name, image1Url, image2Url FROM products;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, image1Url, image2Url FROM products;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt",
+      "image1Url": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans",
+      "image1Url": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800"
+    },
+    {
+      "id": "3",
+      "name": "Carhartt Work Jacket",
+      "image1Url": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=800"
+    },
+    {
+      "id": "4",
+      "name": "Nike Air Force 1 Low",
+      "image1Url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=800"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap",
+      "image1Url": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1534215754734-18e55d13e346?w=800"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "image1Url": "https://images.unsplash.com/photo-1625910513413-5fc45e2f6f0e?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants",
+      "image1Url": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket",
+      "image1Url": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800",
+      "image2Url": "https://images.unsplash.com/photo-1578681994506-b8f463449011?w=800"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage1Url\timage2Url\n1\tRalph Lauren Oxford Shirt\thttps://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800\thttps://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=800\n2\tLevi's 501 Original Jeans\thttps://images.unsplash.com/photo-1542272604-787c3835535d?w=800\thttps://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=800\n3\tCarhartt Work Jacket\thttps://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800\thttps://images.unsplash.com/photo-1544022613-e87ca75a784a?w=800\n4\tNike Air Force 1 Low\thttps://images.unsplash.com/photo-1549298916-b41d501d3772?w=800\thttps://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=800\n5\tNew Era Yankees Cap\thttps://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800\thttps://images.unsplash.com/photo-1534215754734-18e55d13e346?w=800\n6\tTommy Hilfiger Polo\thttps://images.unsplash.com/photo-1625910513413-5fc45e2f6f0e?w=800\thttps://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?w=800\n7\tDickies 874 Work Pants\thttps://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800\thttps://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=800\n8\tPatagonia Fleece Jacket\thttps://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800\thttps://images.unsplash.com/photo-1578681994506-b8f463449011?w=800\n",
+  "stderr": "",
+  "execution_time_ms": 1559
+}

@@ -41,7 +41,7 @@ export default function Home() {
         <div className="container relative h-full min-h-[650px] md:min-h-[750px] flex flex-col justify-end pb-12 md:pb-16">
           <div className="max-w-2xl">
             <h1 className="text-3xl md:text-5xl font-serif font-semibold leading-tight mb-4 text-foreground">
-              Curated Fashion, Second Chance
+              
             </h1>
             <p className="text-base md:text-lg text-muted-foreground mb-6 max-w-lg">
               Personally curated secondhand fashion that gives back to the community – because great style shouldn't cost the earth.
