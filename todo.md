@@ -71,3 +71,16 @@
 - [x] Contact page with inquiry form
 - [x] Privacy Policy page
 - [x] Terms of Service page
+
+
+## Loyalty & Circular Economy Features
+- [x] Database schema for customer profiles, tokens, rewards, charities, and courier returns
+- [x] Signup page with marketing data collection
+- [x] Customer profile dashboard with personalized interface
+- [x] Courier return system for garment resale
+- [x] Token/rewards calculation system (25% of next purchase)
+- [x] Tiered discount system based on order quantity
+- [x] Charity integration and token donation feature
+- [x] Rewards points tracking and redemption
+- [x] Spend limit management
+- [x] Order history with token earnings display

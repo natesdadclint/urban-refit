@@ -8,7 +8,13 @@ import {
   orders, InsertOrder, Order,
   orderItems, InsertOrderItem,
   payouts, InsertPayout,
-  emailLogs, InsertEmailLog
+  emailLogs, InsertEmailLog,
+  customerProfiles, InsertCustomerProfile, CustomerProfile,
+  charities, InsertCharity, Charity,
+  courierReturns, InsertCourierReturn, CourierReturn,
+  tokenTransactions, InsertTokenTransaction, TokenTransaction,
+  charityDonations, InsertCharityDonation, CharityDonation,
+  discountTiers, InsertDiscountTier, DiscountTier
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -475,5 +481,289 @@ export async function getProductAnalytics() {
     topBrands: brandResult,
     avgMarkup: markupResult[0]?.avgMarkup ?? 0,
     avgProfit: markupResult[0]?.avgProfit ?? 0,
+  };
+}
+
+
+// ============ CUSTOMER PROFILE OPERATIONS ============
+export async function createCustomerProfile(profile: InsertCustomerProfile) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(customerProfiles).values(profile);
+  return result[0].insertId;
+}
+
+export async function updateCustomerProfile(userId: number, profile: Partial<InsertCustomerProfile>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(customerProfiles).set(profile).where(eq(customerProfiles.userId, userId));
+}
+
+export async function getCustomerProfileByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(customerProfiles).where(eq(customerProfiles.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getOrCreateCustomerProfile(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  let profile = await getCustomerProfileByUserId(userId);
+  if (!profile) {
+    await db.insert(customerProfiles).values({ userId });
+    profile = await getCustomerProfileByUserId(userId);
+  }
+  return profile;
+}
+
+export async function updateTokenBalance(userId: number, amount: string, operation: 'add' | 'subtract') {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (operation === 'add') {
+    await db.update(customerProfiles)
+      .set({ 
+        tokenBalance: sql`${customerProfiles.tokenBalance} + ${amount}`,
+        totalTokensEarned: sql`${customerProfiles.totalTokensEarned} + ${amount}`
+      })
+      .where(eq(customerProfiles.userId, userId));
+  } else {
+    await db.update(customerProfiles)
+      .set({ 
+        tokenBalance: sql`${customerProfiles.tokenBalance} - ${amount}`,
+        totalTokensSpent: sql`${customerProfiles.totalTokensSpent} + ${amount}`
+      })
+      .where(eq(customerProfiles.userId, userId));
+  }
+}
+
+export async function updateTokensDonated(userId: number, amount: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(customerProfiles)
+    .set({ 
+      tokenBalance: sql`${customerProfiles.tokenBalance} - ${amount}`,
+      totalTokensDonated: sql`${customerProfiles.totalTokensDonated} + ${amount}`
+    })
+    .where(eq(customerProfiles.userId, userId));
+}
+
+export async function updateSpendLimit(userId: number, amount: string, operation: 'add' | 'subtract') {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  if (operation === 'add') {
+    await db.update(customerProfiles)
+      .set({ spendLimit: sql`${customerProfiles.spendLimit} + ${amount}` })
+      .where(eq(customerProfiles.userId, userId));
+  } else {
+    await db.update(customerProfiles)
+      .set({ spendLimit: sql`${customerProfiles.spendLimit} - ${amount}` })
+      .where(eq(customerProfiles.userId, userId));
+  }
+}
+
+// ============ CHARITY OPERATIONS ============
+export async function createCharity(charity: InsertCharity) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(charities).values(charity);
+  return result[0].insertId;
+}
+
+export async function updateCharity(id: number, charity: Partial<InsertCharity>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(charities).set(charity).where(eq(charities.id, id));
+}
+
+export async function getCharityById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(charities).where(eq(charities.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllCharities(activeOnly = true) {
+  const db = await getDb();
+  if (!db) return [];
+  if (activeOnly) {
+    return db.select().from(charities).where(eq(charities.isActive, true)).orderBy(charities.name);
+  }
+  return db.select().from(charities).orderBy(charities.name);
+}
+
+export async function incrementCharityDonations(id: number, amount: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(charities)
+    .set({ totalDonationsReceived: sql`${charities.totalDonationsReceived} + ${amount}` })
+    .where(eq(charities.id, id));
+}
+
+// ============ COURIER RETURN OPERATIONS ============
+export async function createCourierReturn(courierReturn: InsertCourierReturn) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(courierReturns).values(courierReturn);
+  return result[0].insertId;
+}
+
+export async function updateCourierReturn(id: number, courierReturn: Partial<InsertCourierReturn>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(courierReturns).set(courierReturn).where(eq(courierReturns.id, id));
+}
+
+export async function getCourierReturnById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(courierReturns).where(eq(courierReturns.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserCourierReturns(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(courierReturns)
+    .where(eq(courierReturns.userId, userId))
+    .orderBy(desc(courierReturns.createdAt));
+}
+
+export async function getAllCourierReturns() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(courierReturns).orderBy(desc(courierReturns.createdAt));
+}
+
+export async function getCourierReturnsByStatus(status: string) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(courierReturns)
+    .where(eq(courierReturns.status, status as any))
+    .orderBy(desc(courierReturns.createdAt));
+}
+
+// ============ TOKEN TRANSACTION OPERATIONS ============
+export async function createTokenTransaction(transaction: InsertTokenTransaction) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(tokenTransactions).values(transaction);
+  return result[0].insertId;
+}
+
+export async function getUserTokenTransactions(userId: number, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(tokenTransactions)
+    .where(eq(tokenTransactions.userId, userId))
+    .orderBy(desc(tokenTransactions.createdAt))
+    .limit(limit);
+}
+
+// ============ CHARITY DONATION OPERATIONS ============
+export async function createCharityDonation(donation: InsertCharityDonation) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(charityDonations).values(donation);
+  return result[0].insertId;
+}
+
+export async function getUserCharityDonations(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select({
+    donation: charityDonations,
+    charity: charities
+  })
+  .from(charityDonations)
+  .innerJoin(charities, eq(charityDonations.charityId, charities.id))
+  .where(eq(charityDonations.userId, userId))
+  .orderBy(desc(charityDonations.createdAt));
+}
+
+// ============ DISCOUNT TIER OPERATIONS ============
+export async function createDiscountTier(tier: InsertDiscountTier) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(discountTiers).values(tier);
+  return result[0].insertId;
+}
+
+export async function updateDiscountTier(id: number, tier: Partial<InsertDiscountTier>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(discountTiers).set(tier).where(eq(discountTiers.id, id));
+}
+
+export async function getActiveDiscountTiers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(discountTiers)
+    .where(eq(discountTiers.isActive, true))
+    .orderBy(discountTiers.minItems);
+}
+
+export async function getDiscountTierForItemCount(itemCount: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(discountTiers)
+    .where(and(
+      eq(discountTiers.isActive, true),
+      lte(discountTiers.minItems, itemCount)
+    ))
+    .orderBy(desc(discountTiers.minItems))
+    .limit(1);
+  
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getAllDiscountTiers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(discountTiers).orderBy(discountTiers.minItems);
+}
+
+// ============ LOYALTY ANALYTICS ============
+export async function getLoyaltyAnalytics() {
+  const db = await getDb();
+  if (!db) return null;
+  
+  // Total tokens in circulation
+  const tokenStats = await db.select({
+    totalEarned: sql<number>`COALESCE(SUM(${customerProfiles.totalTokensEarned}), 0)`,
+    totalSpent: sql<number>`COALESCE(SUM(${customerProfiles.totalTokensSpent}), 0)`,
+    totalDonated: sql<number>`COALESCE(SUM(${customerProfiles.totalTokensDonated}), 0)`,
+    totalBalance: sql<number>`COALESCE(SUM(${customerProfiles.tokenBalance}), 0)`,
+    memberCount: sql<number>`COUNT(*)`,
+  })
+  .from(customerProfiles);
+  
+  // Courier returns stats
+  const returnStats = await db.select({
+    totalReturns: sql<number>`COUNT(*)`,
+    pendingReturns: sql<number>`SUM(CASE WHEN ${courierReturns.status} = 'pending_review' THEN 1 ELSE 0 END)`,
+    completedReturns: sql<number>`SUM(CASE WHEN ${courierReturns.status} = 'completed' THEN 1 ELSE 0 END)`,
+    tokensAwarded: sql<number>`COALESCE(SUM(${courierReturns.tokensAwarded}), 0)`,
+  })
+  .from(courierReturns);
+  
+  // Charity donation stats
+  const charityStats = await db.select({
+    totalDonations: sql<number>`COUNT(*)`,
+    totalTokensDonated: sql<number>`COALESCE(SUM(${charityDonations.tokenAmount}), 0)`,
+    totalDollarValue: sql<number>`COALESCE(SUM(${charityDonations.dollarValue}), 0)`,
+  })
+  .from(charityDonations);
+  
+  return {
+    tokens: tokenStats[0],
+    returns: returnStats[0],
+    charityDonations: charityStats[0],
   };
 }

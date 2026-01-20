@@ -18,12 +18,17 @@ import AdminThriftStores from "./pages/admin/ThriftStores";
 import AdminOrders from "./pages/admin/Orders";
 import AdminPayouts from "./pages/admin/Payouts";
 import AdminInsights from "./pages/admin/Insights";
+import AdminCourierReturns from "./pages/admin/CourierReturns";
+import AdminCharities from "./pages/admin/Charities";
 import About from "./pages/About";
 import Partners from "./pages/Partners";
 import Sustainability from "./pages/Sustainability";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import Profile from "./pages/Profile";
+import CourierReturn from "./pages/CourierReturn";
+import Charities from "./pages/Charities";
 
 function Router() {
   return (
@@ -43,6 +48,9 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
+      <Route path="/profile" component={Profile} />
+      <Route path="/courier-return" component={CourierReturn} />
+      <Route path="/charities" component={Charities} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />
@@ -53,6 +61,8 @@ function Router() {
       <Route path="/admin/orders" component={AdminOrders} />
       <Route path="/admin/payouts" component={AdminPayouts} />
       <Route path="/admin/insights" component={AdminInsights} />
+      <Route path="/admin/courier-returns" component={AdminCourierReturns} />
+      <Route path="/admin/charities" component={AdminCharities} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

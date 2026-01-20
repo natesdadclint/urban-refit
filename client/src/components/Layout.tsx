@@ -3,7 +3,7 @@ import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, User, Menu, X, LogOut, Settings } from "lucide-react";
+import { ShoppingBag, User, Menu, X, LogOut, Settings, Coins, Heart, RefreshCw } from "lucide-react";
 import { useState } from "react";
 import {
   DropdownMenu,
@@ -111,9 +111,27 @@ export default function Layout({ children }: LayoutProps) {
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
+                      <Link href="/profile" className="cursor-pointer">
+                        <User className="mr-2 h-4 w-4" />
+                        My Profile & Rewards
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link href="/orders" className="cursor-pointer">
                         <ShoppingBag className="mr-2 h-4 w-4" />
                         My Orders
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/courier-return" className="cursor-pointer">
+                        <RefreshCw className="mr-2 h-4 w-4" />
+                        Return Garments
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/charities" className="cursor-pointer">
+                        <Heart className="mr-2 h-4 w-4" />
+                        Donate Tokens
                       </Link>
                     </DropdownMenuItem>
                     {user?.role === "admin" && (
@@ -242,5 +260,4 @@ export default function Layout({ children }: LayoutProps) {
     </div>
   );
 }
-
 
