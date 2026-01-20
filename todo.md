@@ -88,3 +88,5 @@
 ## Visual Enhancements
 - [x] Generate custom hero image with men's clothing, baseball caps shelf, and shoes display
 - [x] Revise hero image: diverse men's clothing assortment, two stacks of jeans (5 high), shoes beside jeans
+- [x] Make Urban Refit logo larger and more prominent
+- [x] Redesign hero section layout for better readability and aesthetics

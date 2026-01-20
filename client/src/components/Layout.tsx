@@ -47,10 +47,10 @@ export default function Layout({ children }: LayoutProps) {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         <div className="container">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-serif font-semibold tracking-tight">
+              <span className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
                 Urban Refit
               </span>
             </Link>

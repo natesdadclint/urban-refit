@@ -28,33 +28,32 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-[600px] md:min-h-[700px]">
+      <section className="relative overflow-hidden min-h-[650px] md:min-h-[750px]">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url(/hero-background.jpg)' }}
         />
-        {/* Overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-transparent" />
+        {/* Subtle overlay at bottom for text readability */}
+        <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-white via-white/90 to-transparent" />
         
-        <div className="container relative py-20 md:py-32">
-          <div className="max-w-xl">
-            <h1 className="text-4xl md:text-6xl font-serif font-semibold leading-tight mb-6 text-foreground">
-              Curated Fashion,
-              <br />
-              <span className="text-foreground">Second Chance</span>
+        {/* Content positioned at bottom */}
+        <div className="container relative h-full min-h-[650px] md:min-h-[750px] flex flex-col justify-end pb-12 md:pb-16">
+          <div className="max-w-2xl">
+            <h1 className="text-3xl md:text-5xl font-serif font-semibold leading-tight mb-4 text-foreground">
+              Curated Fashion, Second Chance
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
+            <p className="text-base md:text-lg text-muted-foreground mb-6 max-w-lg">
               Personally curated secondhand fashion that gives back to the community – because great style shouldn't cost the earth.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="gap-2">
                 <Link href="/shop">
                   Shop Collection
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="bg-white/80 hover:bg-white">
+              <Button asChild variant="outline" size="lg" className="bg-white/90 hover:bg-white border-foreground/20">
                 <Link href="/shop">Browse All</Link>
               </Button>
             </div>
