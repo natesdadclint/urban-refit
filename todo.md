@@ -101,3 +101,9 @@
 - [x] Update Terms of Service with secondhand clothing expectations and policies
 - [x] Add condition disclaimer for pre-owned items
 - [x] Add return policy specific to secondhand clothing
+
+## Footer & Refund Policy
+- [x] Add Privacy Policy link to footer
+- [x] Add Terms of Service link to footer
+- [x] Create standalone Refund Policy page
+- [x] Add Refund Policy link to footer

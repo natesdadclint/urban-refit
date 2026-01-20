@@ -26,6 +26,7 @@ import Sustainability from "./pages/Sustainability";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import RefundPolicy from "./pages/RefundPolicy";
 import Profile from "./pages/Profile";
 import CourierReturn from "./pages/CourierReturn";
 import Charities from "./pages/Charities";
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/contact" component={Contact} />
       <Route path="/privacy" component={Privacy} />
       <Route path="/terms" component={Terms} />
+      <Route path="/refund-policy" component={RefundPolicy} />
       <Route path="/profile" component={Profile} />
       <Route path="/courier-return" component={CourierReturn} />
       <Route path="/charities" component={Charities} />
