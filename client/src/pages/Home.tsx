@@ -34,11 +34,10 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl font-serif font-semibold leading-tight mb-6">
               Curated Fashion,
               <br />
-              <span className="text-muted-foreground">Second Chance</span>
+              <span className="text-muted-foreground" style={{color: '#000000'}}>Second Chance</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-xl">
-              Discover premium pre-loved clothing handpicked from local thrift stores. 
-              Every purchase supports sustainable fashion and our community partners.
+              Personally curated secondhand fashion that gives back to the community – because great style shouldn't cost the earth.
             </p>
             <div className="flex flex-wrap gap-4">
               <Button asChild size="lg" className="gap-2">
