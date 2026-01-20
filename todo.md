@@ -95,3 +95,9 @@
 - [x] Add sample products with dual images for demo
 - [x] Remove hero headline text for cleaner design
 - [x] Fix Tommy Hilfiger product placeholder image
+
+## Legal Pages Update
+- [x] Update Privacy Policy with Urban Refit branding and help@urbanrefit.store email
+- [x] Update Terms of Service with secondhand clothing expectations and policies
+- [x] Add condition disclaimer for pre-owned items
+- [x] Add return policy specific to secondhand clothing
