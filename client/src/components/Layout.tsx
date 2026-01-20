@@ -19,13 +19,12 @@ interface LayoutProps {
 
 const categories = [
   { name: "All", href: "/shop" },
-  { name: "Tops", href: "/shop/tops" },
-  { name: "Bottoms", href: "/shop/bottoms" },
-  { name: "Dresses", href: "/shop/dresses" },
-  { name: "Outerwear", href: "/shop/outerwear" },
-  { name: "Accessories", href: "/shop/accessories" },
+  { name: "Shirts", href: "/shop/tops" },
+  { name: "Pants", href: "/shop/bottoms" },
+  { name: "Jackets", href: "/shop/outerwear" },
   { name: "Shoes", href: "/shop/shoes" },
-  { name: "Bags", href: "/shop/bags" },
+  { name: "Caps", href: "/shop/accessories" },
+  { name: "Jeans", href: "/shop/jeans" },
 ];
 
 export default function Layout({ children }: LayoutProps) {

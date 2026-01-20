@@ -90,3 +90,6 @@
 - [x] Revise hero image: diverse men's clothing assortment, two stacks of jeans (5 high), shoes beside jeans
 - [x] Make Urban Refit logo larger and more prominent
 - [x] Redesign hero section layout for better readability and aesthetics
+- [x] Update navigation menu to men's categories (replace Dresses with Jackets/Accessories)
+- [x] Add sample thrift store partners for demo
+- [x] Add sample products with dual images for demo
