@@ -111,3 +111,9 @@
 ## FAQ Section
 - [x] Create comprehensive FAQ page covering Urban Refit business model
 - [x] Add FAQ link to footer navigation
+
+## Signup/Join Page
+- [x] Create dedicated Join/Signup landing page with membership benefits
+- [x] Add marketing preferences collection
+- [x] Add signup link to navigation header
+- [x] Add signup link to footer

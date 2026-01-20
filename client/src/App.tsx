@@ -31,6 +31,7 @@ import Profile from "./pages/Profile";
 import CourierReturn from "./pages/CourierReturn";
 import Charities from "./pages/Charities";
 import FAQ from "./pages/FAQ";
+import Join from "./pages/Join";
 
 function Router() {
   return (
@@ -55,6 +56,7 @@ function Router() {
       <Route path="/courier-return" component={CourierReturn} />
       <Route path="/charities" component={Charities} />
       <Route path="/faq" component={FAQ} />
+      <Route path="/join" component={Join} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />

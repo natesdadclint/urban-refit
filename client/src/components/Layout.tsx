@@ -152,9 +152,14 @@ export default function Layout({ children }: LayoutProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button asChild variant="default" size="sm">
-                  <a href={getLoginUrl()}>Sign In</a>
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button asChild variant="outline" size="sm">
+                    <Link href="/join">Join</Link>
+                  </Button>
+                  <Button asChild variant="default" size="sm">
+                    <a href={getLoginUrl()}>Sign In</a>
+                  </Button>
+                </div>
               )}
 
               {/* Mobile menu button */}
@@ -266,6 +271,21 @@ export default function Layout({ children }: LayoutProps) {
                 <li>
                   <Link href="/faq" className="hover:text-primary transition-colors">
                     FAQ
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Join Us</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="/join" className="hover:text-primary transition-colors">
+                    Become a Member
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/charities" className="hover:text-primary transition-colors">
+                    Charity Partners
                   </Link>
                 </li>
               </ul>
