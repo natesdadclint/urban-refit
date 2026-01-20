@@ -30,6 +30,7 @@ import RefundPolicy from "./pages/RefundPolicy";
 import Profile from "./pages/Profile";
 import CourierReturn from "./pages/CourierReturn";
 import Charities from "./pages/Charities";
+import FAQ from "./pages/FAQ";
 
 function Router() {
   return (
@@ -53,6 +54,7 @@ function Router() {
       <Route path="/profile" component={Profile} />
       <Route path="/courier-return" component={CourierReturn} />
       <Route path="/charities" component={Charities} />
+      <Route path="/faq" component={FAQ} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />

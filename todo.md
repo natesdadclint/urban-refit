@@ -107,3 +107,7 @@
 - [x] Add Terms of Service link to footer
 - [x] Create standalone Refund Policy page
 - [x] Add Refund Policy link to footer
+
+## FAQ Section
+- [x] Create comprehensive FAQ page covering Urban Refit business model
+- [x] Add FAQ link to footer navigation

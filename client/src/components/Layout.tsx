@@ -263,6 +263,11 @@ export default function Layout({ children }: LayoutProps) {
                     Refund Policy
                   </Link>
                 </li>
+                <li>
+                  <Link href="/faq" className="hover:text-primary transition-colors">
+                    FAQ
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
