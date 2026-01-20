@@ -18,6 +18,12 @@ import AdminThriftStores from "./pages/admin/ThriftStores";
 import AdminOrders from "./pages/admin/Orders";
 import AdminPayouts from "./pages/admin/Payouts";
 import AdminInsights from "./pages/admin/Insights";
+import About from "./pages/About";
+import Partners from "./pages/Partners";
+import Sustainability from "./pages/Sustainability";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 function Router() {
   return (
@@ -31,6 +37,12 @@ function Router() {
       <Route path="/checkout" component={Checkout} />
       <Route path="/checkout/success" component={CheckoutSuccess} />
       <Route path="/orders" component={Orders} />
+      <Route path="/about" component={About} />
+      <Route path="/partners" component={Partners} />
+      <Route path="/sustainability" component={Sustainability} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/terms" component={Terms} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />

@@ -65,7 +65,9 @@
 
 
 ## New Features to Add
-- [ ] About Us page with company story and mission
-- [ ] Our Partners page showcasing thrift store partnerships
-- [ ] Sustainability page highlighting environmental impact
-- [ ] Contact page with inquiry form
+- [x] About Us page with company story and mission
+- [x] Our Partners page showcasing thrift store partnerships
+- [x] Sustainability page highlighting environmental impact
+- [x] Contact page with inquiry form
+- [x] Privacy Policy page
+- [x] Terms of Service page
