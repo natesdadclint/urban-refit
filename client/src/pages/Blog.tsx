@@ -4,11 +4,11 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, Clock, Eye, Heart, Sparkles, TrendingUp, Leaf, Users, Star, Zap } from "lucide-react";
+import { ArrowRight, Clock, Eye, Heart, TrendingUp, Leaf, Users, Star, Zap, Grid3X3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
-  { value: undefined, label: "All", icon: Sparkles },
+  { value: undefined, label: "All", icon: Grid3X3 },
   { value: "style_tips", label: "Style Tips", icon: Star },
   { value: "sustainability", label: "Sustainability", icon: Leaf },
   { value: "brand_spotlight", label: "Brand Spotlight", icon: Zap },
@@ -18,12 +18,12 @@ const CATEGORIES = [
 ] as const;
 
 const CATEGORY_COLORS: Record<string, string> = {
-  style_tips: "bg-pink-500/10 text-pink-500 border-pink-500/20",
-  sustainability: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-  brand_spotlight: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  behind_the_scenes: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-  community: "bg-rose-500/10 text-rose-500 border-rose-500/20",
-  trends: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  style_tips: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  sustainability: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  brand_spotlight: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  behind_the_scenes: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  community: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  trends: "bg-neutral-100 text-neutral-700 border-neutral-200",
 };
 
 function formatDate(date: Date | string | null) {
@@ -51,31 +51,26 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-lime-400/20 via-emerald-400/10 to-background py-16 md:py-24">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
-        <div className="container relative">
+      {/* Hero Section - Clean, minimal design matching Urban Refit */}
+      <section className="py-16 md:py-24 border-b border-border">
+        <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <Badge className="mb-4 bg-lime-400 text-black hover:bg-lime-500 border-0">
-              <Sparkles className="h-3 w-3 mr-1" />
+            <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
               The Refit Journal
-            </Badge>
-            <h1 className="text-4xl md:text-6xl font-serif font-bold mb-4 tracking-tight">
-              Stories that{" "}
-              <span className="bg-gradient-to-r from-lime-400 to-emerald-500 bg-clip-text text-transparent">
-                inspire
-              </span>
+            </p>
+            <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 tracking-tight">
+              Stories that inspire
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
               Discover sustainable fashion tips, brand stories, and community highlights. 
-              Your guide to looking good while doing good. ✨
+              Your guide to looking good while doing good.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Category Filter */}
-      <section className="sticky top-16 z-30 bg-background/80 backdrop-blur-lg border-b border-border">
+      {/* Category Filter - Neutral styling */}
+      <section className="sticky top-16 z-30 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="container py-4">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
             {CATEGORIES.map((cat) => {
@@ -89,7 +84,7 @@ export default function Blog() {
                   onClick={() => setSelectedCategory(cat.value)}
                   className={cn(
                     "rounded-full whitespace-nowrap transition-all",
-                    isActive && "bg-gradient-to-r from-lime-400 to-emerald-500 text-black border-0"
+                    isActive && "bg-black text-white hover:bg-black/90 border-0"
                   )}
                 >
                   <Icon className="h-4 w-4 mr-1.5" />
@@ -108,7 +103,7 @@ export default function Blog() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="space-y-4">
-                  <Skeleton className="aspect-[4/3] rounded-2xl" />
+                  <Skeleton className="aspect-[4/3] rounded-xl" />
                   <Skeleton className="h-4 w-20" />
                   <Skeleton className="h-6 w-full" />
                   <Skeleton className="h-4 w-3/4" />
@@ -116,7 +111,7 @@ export default function Blog() {
               ))}
             </div>
           ) : posts && posts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.map((post, index) => (
                 <Link key={post.id} href={`/blog/${post.slug}`}>
                   <article
@@ -127,7 +122,7 @@ export default function Blog() {
                   >
                     <div
                       className={cn(
-                        "relative overflow-hidden rounded-2xl bg-muted mb-4",
+                        "relative overflow-hidden rounded-xl bg-muted mb-4",
                         index === 0 ? "aspect-[16/9]" : "aspect-[4/3]"
                       )}
                     >
@@ -138,8 +133,8 @@ export default function Blog() {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-lime-400/30 to-emerald-500/30 flex items-center justify-center">
-                          <Sparkles className="h-12 w-12 text-lime-500/50" />
+                        <div className="w-full h-full bg-neutral-100 flex items-center justify-center">
+                          <Grid3X3 className="h-12 w-12 text-neutral-300" />
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -155,8 +150,8 @@ export default function Blog() {
                         <Badge
                           variant="outline"
                           className={cn(
-                            "text-xs",
-                            CATEGORY_COLORS[post.category] || "bg-muted"
+                            "text-xs font-normal",
+                            CATEGORY_COLORS[post.category] || "bg-neutral-100 text-neutral-700"
                           )}
                         >
                           {formatCategoryLabel(post.category)}
@@ -169,7 +164,7 @@ export default function Blog() {
                       
                       <h2
                         className={cn(
-                          "font-serif font-semibold group-hover:text-lime-500 transition-colors line-clamp-2",
+                          "font-serif font-semibold group-hover:text-neutral-600 transition-colors line-clamp-2",
                           index === 0 ? "text-2xl md:text-3xl" : "text-lg"
                         )}
                       >
@@ -200,14 +195,14 @@ export default function Blog() {
             </div>
           ) : (
             <div className="text-center py-16">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
-                <Sparkles className="h-10 w-10 text-muted-foreground" />
+              <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
+                <Grid3X3 className="h-10 w-10 text-neutral-400" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">No posts yet</h3>
+              <h3 className="text-xl font-serif font-semibold mb-2">No posts yet</h3>
               <p className="text-muted-foreground mb-6">
                 {selectedCategory
-                  ? "No posts in this category yet. Check back soon!"
-                  : "We're working on some amazing content. Stay tuned!"}
+                  ? "No posts in this category yet. Check back soon."
+                  : "We're working on some amazing content. Stay tuned."}
               </p>
               {selectedCategory && (
                 <Button
@@ -223,27 +218,26 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* Newsletter CTA */}
-      <section className="py-16 bg-gradient-to-r from-lime-400/10 to-emerald-500/10">
+      {/* Newsletter CTA - Neutral design */}
+      <section className="py-16 border-t border-border bg-neutral-50">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
-            <Badge className="mb-4 bg-black text-white hover:bg-black/90 border-0">
-              <Zap className="h-3 w-3 mr-1" />
+            <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
               Stay in the loop
-            </Badge>
+            </p>
             <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4">
               Get the freshest drops in your inbox
             </h2>
             <p className="text-muted-foreground mb-6">
-              Style tips, exclusive deals, and sustainability stories. No spam, just vibes. 💚
+              Style tips, exclusive deals, and sustainability stories. No spam, just quality content.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="your@email.com"
-                className="flex-1 px-4 py-3 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-lime-400"
+                className="flex-1 px-4 py-3 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-neutral-400"
               />
-              <Button className="rounded-full bg-gradient-to-r from-lime-400 to-emerald-500 text-black hover:opacity-90 px-6">
+              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-6">
                 Subscribe
               </Button>
             </div>

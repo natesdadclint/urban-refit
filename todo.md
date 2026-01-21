@@ -179,3 +179,8 @@
 - [x] Minimize chat button - make it subtle and less prominent
 - [x] Change chat button from green to gray gradient (gray to light gray)
 - [x] Add black dots on either side of Urban Refit logo
+
+## Blog Page Styling Update
+- [x] Update blog listing page to match Urban Refit design system
+- [x] Update blog post page to match Urban Refit design system
+- [x] Ensure consistent typography, spacing, and colors

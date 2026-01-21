@@ -3,18 +3,18 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Clock, Eye, Heart, Share2, Bookmark, Sparkles, Twitter, Facebook, Link2 } from "lucide-react";
+import { ArrowLeft, Clock, Eye, Heart, Share2, Twitter, Facebook, Link2, Grid3X3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  style_tips: "bg-pink-500/10 text-pink-500 border-pink-500/20",
-  sustainability: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-  brand_spotlight: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  behind_the_scenes: "bg-purple-500/10 text-purple-500 border-purple-500/20",
-  community: "bg-rose-500/10 text-rose-500 border-rose-500/20",
-  trends: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  style_tips: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  sustainability: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  brand_spotlight: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  behind_the_scenes: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  community: "bg-neutral-100 text-neutral-700 border-neutral-200",
+  trends: "bg-neutral-100 text-neutral-700 border-neutral-200",
 };
 
 function formatDate(date: Date | string | null) {
@@ -44,8 +44,8 @@ export default function BlogPost() {
 
   const likeMutation = trpc.blog.like.useMutation({
     onSuccess: () => {
-      toast.success("Thanks for the love! 💚", {
-        description: "Your support means everything to us.",
+      toast.success("Thanks for the support", {
+        description: "Your engagement means everything to us.",
       });
     },
   });
@@ -70,8 +70,8 @@ export default function BlogPost() {
       }
     } else {
       await navigator.clipboard.writeText(url);
-      toast.success("Link copied! 🔗", {
-        description: "Share it with your friends!",
+      toast.success("Link copied", {
+        description: "Share it with your friends.",
       });
     }
   };
@@ -81,7 +81,7 @@ export default function BlogPost() {
       <div className="min-h-screen bg-background">
         <div className="container py-8">
           <Skeleton className="h-8 w-32 mb-8" />
-          <Skeleton className="aspect-[21/9] rounded-2xl mb-8" />
+          <Skeleton className="aspect-[21/9] rounded-xl mb-8" />
           <div className="max-w-3xl mx-auto space-y-4">
             <Skeleton className="h-6 w-24" />
             <Skeleton className="h-12 w-full" />
@@ -101,15 +101,15 @@ export default function BlogPost() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-muted flex items-center justify-center">
-            <Sparkles className="h-10 w-10 text-muted-foreground" />
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
+            <Grid3X3 className="h-10 w-10 text-neutral-400" />
           </div>
-          <h1 className="text-2xl font-bold mb-2">Post not found</h1>
+          <h1 className="text-2xl font-serif font-bold mb-2">Post not found</h1>
           <p className="text-muted-foreground mb-6">
             This post might have been moved or deleted.
           </p>
           <Link href="/blog">
-            <Button className="rounded-full">
+            <Button className="rounded-full bg-black text-white hover:bg-black/90">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Blog
             </Button>
@@ -136,7 +136,7 @@ export default function BlogPost() {
       {/* Hero Image */}
       {post.featuredImageUrl && (
         <div className="container mb-8">
-          <div className="aspect-[21/9] rounded-2xl overflow-hidden">
+          <div className="aspect-[21/9] rounded-xl overflow-hidden">
             <img
               src={post.featuredImageUrl}
               alt={post.title}
@@ -154,8 +154,8 @@ export default function BlogPost() {
             <Badge
               variant="outline"
               className={cn(
-                "text-sm",
-                CATEGORY_COLORS[post.category] || "bg-muted"
+                "text-sm font-normal",
+                CATEGORY_COLORS[post.category] || "bg-neutral-100 text-neutral-700"
               )}
             >
               {formatCategoryLabel(post.category)}
@@ -174,7 +174,7 @@ export default function BlogPost() {
           {/* Author & Date */}
           <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-8 border-b border-border">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-lime-400 to-emerald-500 flex items-center justify-center text-black font-bold">
+              <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold">
                 {post.authorName?.charAt(0) || "U"}
               </div>
               <div>
@@ -202,7 +202,7 @@ export default function BlogPost() {
           )}
 
           {/* Content */}
-          <div className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-bold prose-a:text-lime-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-xl">
+          <div className="prose prose-lg max-w-none prose-headings:font-serif prose-headings:font-bold prose-a:text-neutral-700 prose-a:underline hover:prose-a:text-black prose-img:rounded-xl">
             <Streamdown>{post.content}</Streamdown>
           </div>
 
@@ -211,7 +211,7 @@ export default function BlogPost() {
             <div className="flex items-center gap-2 flex-wrap mt-8 pt-8 border-t border-border">
               <span className="text-sm text-muted-foreground">Tags:</span>
               {tags.map((tag: string) => (
-                <Badge key={tag} variant="secondary" className="rounded-full">
+                <Badge key={tag} variant="secondary" className="rounded-full bg-neutral-100 text-neutral-700">
                   #{tag}
                 </Badge>
               ))}
@@ -228,8 +228,8 @@ export default function BlogPost() {
                 onClick={handleLike}
                 disabled={likeMutation.isPending}
               >
-                <Heart className={cn("h-4 w-4 mr-1", likeMutation.isSuccess && "fill-current text-red-500")} />
-                {likeMutation.isSuccess ? "Liked!" : "Like"}
+                <Heart className={cn("h-4 w-4 mr-1", likeMutation.isSuccess && "fill-current text-neutral-700")} />
+                {likeMutation.isSuccess ? "Liked" : "Like"}
               </Button>
               <Button
                 variant="outline"
@@ -257,17 +257,17 @@ export default function BlogPost() {
       </article>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-lime-400/10 to-emerald-500/10">
+      <section className="py-16 border-t border-border bg-neutral-50">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4">
-              Ready to shop sustainably? 🌱
+              Ready to shop sustainably?
             </h2>
             <p className="text-muted-foreground mb-6">
               Discover unique pre-loved pieces that look good and do good.
             </p>
             <Link href="/shop">
-              <Button className="rounded-full bg-gradient-to-r from-lime-400 to-emerald-500 text-black hover:opacity-90 px-8">
+              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-8">
                 Shop Now
               </Button>
             </Link>
