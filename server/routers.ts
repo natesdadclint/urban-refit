@@ -1135,6 +1135,108 @@ Keep insights concise and actionable.`;
         return { success: true };
       }),
   }),
+
+  // ============ SELL TO US ROUTES ============
+  sell: router({
+    // Submit an item to sell
+    submit: publicProcedure
+      .input(z.object({
+        name: z.string().min(1).max(255),
+        email: z.string().email().max(320),
+        phone: z.string().max(20).optional(),
+        brand: z.string().min(1).max(255),
+        itemType: z.enum(["tops", "bottoms", "outerwear", "shoes", "accessories"]),
+        itemName: z.string().min(1).max(255),
+        size: z.string().min(1).max(50),
+        condition: z.enum(["like_new", "excellent", "good", "fair"]),
+        description: z.string().optional(),
+        originalPrice: z.string().optional(),
+        askingPrice: z.string().optional(),
+        image1Url: z.string().optional(),
+        image2Url: z.string().optional(),
+        image3Url: z.string().optional(),
+        image4Url: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const submission = await db.createSellSubmission({
+          ...input,
+          userId: ctx.user?.id || null,
+        });
+        
+        if (!submission) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create submission" });
+        }
+        
+        return { id: submission.id, status: submission.status };
+      }),
+    
+    // Get user's own submissions
+    mySubmissions: protectedProcedure.query(async ({ ctx }) => {
+      return db.getSellSubmissions({ userId: ctx.user.id });
+    }),
+    
+    // Get submission by ID (for user to check status)
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const submission = await db.getSellSubmissionById(input.id);
+        if (!submission) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
+        }
+        // Only allow viewing own submissions or admin
+        if (ctx.user?.role !== "admin" && submission.userId !== ctx.user?.id) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+        }
+        return submission;
+      }),
+    
+    // Upload image for submission
+    uploadImage: publicProcedure
+      .input(z.object({
+        base64: z.string(),
+        filename: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, "base64");
+        const key = `sell-submissions/${nanoid()}-${input.filename}`;
+        const { url } = await storagePut(key, buffer, input.mimeType);
+        return { url };
+      }),
+    
+    // Admin: Get all submissions
+    listAll: adminProcedure
+      .input(z.object({ status: z.string().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getSellSubmissions({ status: input?.status });
+      }),
+    
+    // Admin: Get submission stats
+    stats: adminProcedure.query(async () => {
+      return db.getSellSubmissionStats();
+    }),
+    
+    // Admin: Update submission status
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["pending", "reviewing", "accepted", "rejected", "completed"]),
+        adminNotes: z.string().optional(),
+        offerAmount: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const success = await db.updateSellSubmissionStatus(
+          input.id,
+          input.status,
+          input.adminNotes,
+          input.offerAmount
+        );
+        if (!success) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update status" });
+        }
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

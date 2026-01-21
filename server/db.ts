@@ -14,7 +14,8 @@ import {
   courierReturns, InsertCourierReturn, CourierReturn,
   tokenTransactions, InsertTokenTransaction, TokenTransaction,
   charityDonations, InsertCharityDonation, CharityDonation,
-  discountTiers, InsertDiscountTier, DiscountTier
+  discountTiers, InsertDiscountTier, DiscountTier,
+  sellSubmissions, InsertSellSubmission, SellSubmission
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1098,4 +1099,129 @@ export async function getPendingReviews() {
   .innerJoin(users, eq(productReviews.userId, users.id))
   .where(eq(productReviews.status, "pending"))
   .orderBy(desc(productReviews.createdAt));
+}
+
+
+// ============ SELL SUBMISSIONS OPERATIONS ============
+export async function createSellSubmission(submission: InsertSellSubmission): Promise<SellSubmission | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    await db.insert(sellSubmissions).values(submission);
+    const [created] = await db.select().from(sellSubmissions)
+      .where(eq(sellSubmissions.email, submission.email))
+      .orderBy(desc(sellSubmissions.createdAt))
+      .limit(1);
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create sell submission:", error);
+    return null;
+  }
+}
+
+export async function getSellSubmissions(options?: { 
+  status?: string; 
+  userId?: number;
+  limit?: number;
+}): Promise<SellSubmission[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    let query = db.select().from(sellSubmissions);
+    
+    const conditions = [];
+    if (options?.status) {
+      conditions.push(eq(sellSubmissions.status, options.status as any));
+    }
+    if (options?.userId) {
+      conditions.push(eq(sellSubmissions.userId, options.userId));
+    }
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions)) as any;
+    }
+    
+    return await query
+      .orderBy(desc(sellSubmissions.createdAt))
+      .limit(options?.limit || 50);
+  } catch (error) {
+    console.error("[Database] Failed to get sell submissions:", error);
+    return [];
+  }
+}
+
+export async function getSellSubmissionById(id: number): Promise<SellSubmission | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const [submission] = await db.select().from(sellSubmissions)
+      .where(eq(sellSubmissions.id, id))
+      .limit(1);
+    return submission || null;
+  } catch (error) {
+    console.error("[Database] Failed to get sell submission:", error);
+    return null;
+  }
+}
+
+export async function updateSellSubmissionStatus(
+  id: number, 
+  status: string, 
+  adminNotes?: string,
+  offerAmount?: string
+): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    const updateData: any = { status };
+    if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+    if (offerAmount !== undefined) updateData.offerAmount = offerAmount;
+    
+    await db.update(sellSubmissions)
+      .set(updateData)
+      .where(eq(sellSubmissions.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update sell submission status:", error);
+    return false;
+  }
+}
+
+export async function getSellSubmissionStats(): Promise<{
+  total: number;
+  pending: number;
+  reviewing: number;
+  accepted: number;
+  rejected: number;
+  completed: number;
+}> {
+  const db = await getDb();
+  if (!db) return { total: 0, pending: 0, reviewing: 0, accepted: 0, rejected: 0, completed: 0 };
+
+  try {
+    const [stats] = await db.select({
+      total: sql<number>`COUNT(*)`,
+      pending: sql<number>`SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END)`,
+      reviewing: sql<number>`SUM(CASE WHEN status = 'reviewing' THEN 1 ELSE 0 END)`,
+      accepted: sql<number>`SUM(CASE WHEN status = 'accepted' THEN 1 ELSE 0 END)`,
+      rejected: sql<number>`SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END)`,
+      completed: sql<number>`SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END)`,
+    }).from(sellSubmissions);
+    
+    return {
+      total: Number(stats.total) || 0,
+      pending: Number(stats.pending) || 0,
+      reviewing: Number(stats.reviewing) || 0,
+      accepted: Number(stats.accepted) || 0,
+      rejected: Number(stats.rejected) || 0,
+      completed: Number(stats.completed) || 0,
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get sell submission stats:", error);
+    return { total: 0, pending: 0, reviewing: 0, accepted: 0, rejected: 0, completed: 0 };
+  }
 }

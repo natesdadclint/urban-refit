@@ -474,3 +474,46 @@ export const productReviews = mysqlTable("product_reviews", {
 
 export type ProductReview = typeof productReviews.$inferSelect;
 export type InsertProductReview = typeof productReviews.$inferInsert;
+
+
+/**
+ * Sell submissions - customers submitting items to sell back to Urban Refit
+ */
+export const sellSubmissions = mysqlTable("sell_submissions", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId"), // null for guest submissions
+  
+  // Contact information
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  phone: varchar("phone", { length: 20 }),
+  
+  // Item details
+  brand: varchar("brand", { length: 255 }).notNull(),
+  itemType: mysqlEnum("itemType", ["tops", "bottoms", "outerwear", "shoes", "accessories"]).notNull(),
+  itemName: varchar("itemName", { length: 255 }).notNull(),
+  size: varchar("size", { length: 50 }).notNull(),
+  condition: mysqlEnum("condition", ["like_new", "excellent", "good", "fair"]).notNull(),
+  description: text("description"),
+  
+  // Pricing
+  originalPrice: decimal("originalPrice", { precision: 10, scale: 2 }),
+  askingPrice: decimal("askingPrice", { precision: 10, scale: 2 }),
+  
+  // Images (up to 4)
+  image1Url: text("image1Url"),
+  image2Url: text("image2Url"),
+  image3Url: text("image3Url"),
+  image4Url: text("image4Url"),
+  
+  // Submission status
+  status: mysqlEnum("status", ["pending", "reviewing", "accepted", "rejected", "completed"]).default("pending").notNull(),
+  adminNotes: text("adminNotes"),
+  offerAmount: decimal("offerAmount", { precision: 10, scale: 2 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SellSubmission = typeof sellSubmissions.$inferSelect;
+export type InsertSellSubmission = typeof sellSubmissions.$inferInsert;

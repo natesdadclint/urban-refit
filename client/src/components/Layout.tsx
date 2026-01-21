@@ -93,6 +93,14 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Reviews
               </Link>
+              <Link
+                href="/sell"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location === "/sell" ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                Sell
+              </Link>
             </nav>
 
             {/* Right side actions */}

@@ -199,3 +199,12 @@
 - [x] Position Urban Refit as alternative to in-store shopping with partners
 - [x] Generate new masculine blog images (5 AI-generated images)
 - [x] Update existing blog posts with men's fashion focus
+
+## Sell to Us Page
+- [x] Create sell_submissions database table (item details, photos, brand, condition, contact info)
+- [x] Implement backend routes for creating and managing sell submissions
+- [x] Build Sell to Us page UI with submission form
+- [x] Add image upload functionality for item photos (up to 4 photos)
+- [x] Add navigation link to Sell to Us page
+- [x] Add vitest tests for sell submissions
+- [ ] Create admin view for reviewing sell submissions
