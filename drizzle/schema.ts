@@ -438,3 +438,39 @@ export const chatMessages = mysqlTable("chat_messages", {
 
 export type ChatMessage = typeof chatMessages.$inferSelect;
 export type InsertChatMessage = typeof chatMessages.$inferInsert;
+
+
+/**
+ * Product reviews - customer reviews and ratings
+ */
+export const productReviews = mysqlTable("product_reviews", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull(),
+  userId: int("userId").notNull(),
+  
+  // Review content
+  rating: int("rating").notNull(), // 1-5 stars
+  title: varchar("title", { length: 255 }),
+  content: text("content"),
+  
+  // Fit feedback for clothing
+  fitFeedback: mysqlEnum("fitFeedback", ["runs_small", "true_to_size", "runs_large"]),
+  
+  // Verification
+  isVerifiedPurchase: boolean("isVerifiedPurchase").default(false).notNull(),
+  
+  // Moderation
+  status: mysqlEnum("status", ["pending", "approved", "rejected"]).default("pending").notNull(),
+  
+  // Helpful votes
+  helpfulCount: int("helpfulCount").default(0).notNull(),
+  
+  // Review images (optional)
+  imageUrl: text("imageUrl"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProductReview = typeof productReviews.$inferSelect;
+export type InsertProductReview = typeof productReviews.$inferInsert;

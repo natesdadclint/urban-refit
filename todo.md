@@ -184,3 +184,18 @@
 - [x] Update blog listing page to match Urban Refit design system
 - [x] Update blog post page to match Urban Refit design system
 - [x] Ensure consistent typography, spacing, and colors
+
+## Reviews Section
+- [x] Create reviews database schema (product reviews with ratings, fit feedback, verified purchase)
+- [x] Implement reviews backend routes (create, list, get by product, stats, mark helpful)
+- [x] Build Reviews page UI with men's fashion focus
+- [x] Add review submission form for authenticated users
+- [x] Display reviews with product info and user details
+- [x] Add review statistics with star rating breakdown
+
+## Men's Fashion Blog Update
+- [x] Update blog messaging to target men's fashion
+- [x] Add empowering copy about men taking control of their style
+- [x] Position Urban Refit as alternative to in-store shopping with partners
+- [x] Generate new masculine blog images (5 AI-generated images)
+- [x] Update existing blog posts with men's fashion focus

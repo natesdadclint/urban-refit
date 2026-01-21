@@ -1052,6 +1052,89 @@ Keep insights concise and actionable.`;
       }
     }),
   }),
+
+  // ============ REVIEW ROUTES ============
+  reviews: router({
+    // Get all approved reviews for display
+    list: publicProcedure
+      .input(z.object({ limit: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllApprovedReviews(input?.limit);
+      }),
+    
+    // Get reviews for a specific product
+    byProduct: publicProcedure
+      .input(z.object({ productId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getProductReviews(input.productId);
+      }),
+    
+    // Get overall review statistics
+    stats: publicProcedure.query(async () => {
+      return db.getOverallReviewStats();
+    }),
+    
+    // Get reviews by current user
+    myReviews: protectedProcedure.query(async ({ ctx }) => {
+      return db.getReviewsByUser(ctx.user.id);
+    }),
+    
+    // Submit a new review
+    create: protectedProcedure
+      .input(z.object({
+        productId: z.number(),
+        rating: z.number().min(1).max(5),
+        title: z.string().max(255).optional(),
+        content: z.string().optional(),
+        fitFeedback: z.enum(["runs_small", "true_to_size", "runs_large"]).optional(),
+        imageUrl: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Check if user has purchased this product (verified purchase)
+        const userOrders = await db.getUserOrders(ctx.user.id);
+        const purchasedProductIds = new Set<number>();
+        for (const order of userOrders) {
+          if (order.status === "delivered" || order.status === "shipped") {
+            const items = await db.getOrderItems(order.id);
+            items.forEach(item => purchasedProductIds.add(item.orderItem.productId));
+          }
+        }
+        const isVerifiedPurchase = purchasedProductIds.has(input.productId);
+        
+        const reviewId = await db.createProductReview({
+          ...input,
+          userId: ctx.user.id,
+          isVerifiedPurchase,
+          status: "approved", // Auto-approve for now, can add moderation later
+        });
+        
+        return { id: reviewId, isVerifiedPurchase };
+      }),
+    
+    // Mark a review as helpful
+    markHelpful: publicProcedure
+      .input(z.object({ reviewId: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.incrementReviewHelpful(input.reviewId);
+        return { success: true };
+      }),
+    
+    // Admin: Get pending reviews
+    pending: adminProcedure.query(async () => {
+      return db.getPendingReviews();
+    }),
+    
+    // Admin: Approve or reject a review
+    moderate: adminProcedure
+      .input(z.object({
+        reviewId: z.number(),
+        status: z.enum(["approved", "rejected"]),
+      }))
+      .mutation(async ({ input }) => {
+        await db.updateReviewStatus(input.reviewId, input.status);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

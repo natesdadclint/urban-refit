@@ -852,7 +852,7 @@ export async function getLoyaltyAnalytics() {
 
 
 // ============ BLOG POST OPERATIONS ============
-import { blogPosts, InsertBlogPost, BlogPost, chatMessages, InsertChatMessage, ChatMessage } from "../drizzle/schema";
+import { blogPosts, InsertBlogPost, BlogPost, chatMessages, InsertChatMessage, ChatMessage, productReviews, InsertProductReview, ProductReview } from "../drizzle/schema";
 
 export async function createBlogPost(post: InsertBlogPost) {
   const db = await getDb();
@@ -987,4 +987,115 @@ export async function getProductSummaryForChat() {
   }).from(products).where(eq(products.status, "available"));
   
   return availableProducts;
+}
+
+
+// ============ PRODUCT REVIEW OPERATIONS ============
+export async function createProductReview(review: InsertProductReview) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(productReviews).values(review);
+  return result[0].insertId;
+}
+
+export async function getProductReviews(productId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(productReviews)
+    .where(and(
+      eq(productReviews.productId, productId),
+      eq(productReviews.status, "approved")
+    ))
+    .orderBy(desc(productReviews.createdAt));
+}
+
+export async function getAllApprovedReviews(limit?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  const results = await db.select({
+    review: productReviews,
+    product: products,
+    user: users,
+  })
+  .from(productReviews)
+  .innerJoin(products, eq(productReviews.productId, products.id))
+  .innerJoin(users, eq(productReviews.userId, users.id))
+  .where(eq(productReviews.status, "approved"))
+  .orderBy(desc(productReviews.createdAt));
+  
+  return limit ? results.slice(0, limit) : results;
+}
+
+export async function getReviewsByUser(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    review: productReviews,
+    product: products,
+  })
+  .from(productReviews)
+  .innerJoin(products, eq(productReviews.productId, products.id))
+  .where(eq(productReviews.userId, userId))
+  .orderBy(desc(productReviews.createdAt));
+}
+
+export async function updateReviewStatus(id: number, status: "pending" | "approved" | "rejected") {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(productReviews).set({ status }).where(eq(productReviews.id, id));
+}
+
+export async function incrementReviewHelpful(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(productReviews)
+    .set({ helpfulCount: sql`${productReviews.helpfulCount} + 1` })
+    .where(eq(productReviews.id, id));
+}
+
+export async function getAverageRatingForProduct(productId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select({
+    avgRating: sql<number>`AVG(${productReviews.rating})`,
+    totalReviews: sql<number>`COUNT(*)`,
+  })
+  .from(productReviews)
+  .where(and(
+    eq(productReviews.productId, productId),
+    eq(productReviews.status, "approved")
+  ));
+  return result[0];
+}
+
+export async function getOverallReviewStats() {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db.select({
+    avgRating: sql<number>`AVG(${productReviews.rating})`,
+    totalReviews: sql<number>`COUNT(*)`,
+    fiveStarCount: sql<number>`SUM(CASE WHEN ${productReviews.rating} = 5 THEN 1 ELSE 0 END)`,
+    fourStarCount: sql<number>`SUM(CASE WHEN ${productReviews.rating} = 4 THEN 1 ELSE 0 END)`,
+    threeStarCount: sql<number>`SUM(CASE WHEN ${productReviews.rating} = 3 THEN 1 ELSE 0 END)`,
+    twoStarCount: sql<number>`SUM(CASE WHEN ${productReviews.rating} = 2 THEN 1 ELSE 0 END)`,
+    oneStarCount: sql<number>`SUM(CASE WHEN ${productReviews.rating} = 1 THEN 1 ELSE 0 END)`,
+  })
+  .from(productReviews)
+  .where(eq(productReviews.status, "approved"));
+  return result[0];
+}
+
+export async function getPendingReviews() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    review: productReviews,
+    product: products,
+    user: users,
+  })
+  .from(productReviews)
+  .innerJoin(products, eq(productReviews.productId, products.id))
+  .innerJoin(users, eq(productReviews.userId, users.id))
+  .where(eq(productReviews.status, "pending"))
+  .orderBy(desc(productReviews.createdAt));
 }
