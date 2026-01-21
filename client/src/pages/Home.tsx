@@ -191,11 +191,11 @@ export default function Home() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
               { name: "All", href: "/shop", image: "/category-all.png" },
-              { name: "Shirts", href: "/shop?category=shirts", image: "/category-shirts.png" },
-              { name: "Pants", href: "/shop?category=pants", image: "/category-pants.png" },
-              { name: "Jackets", href: "/shop?category=jackets", image: "/category-jackets.png" },
+              { name: "Tops", href: "/shop?category=tops", image: "/category-shirts.png" },
+              { name: "Bottoms", href: "/shop?category=bottoms", image: "/category-pants.png" },
+              { name: "Outerwear", href: "/shop?category=outerwear", image: "/category-jackets.png" },
               { name: "Shoes", href: "/shop?category=shoes", image: "/category-shoes.png" },
-              { name: "Caps", href: "/shop?category=caps", image: "/category-caps.png" },
+              { name: "Accessories", href: "/shop?category=accessories", image: "/category-caps.png" },
             ].map((category) => (
               <Link
                 key={category.href}

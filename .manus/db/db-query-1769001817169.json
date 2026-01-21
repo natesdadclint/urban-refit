@@ -1,0 +1,25 @@
+{
+  "query": "SELECT DISTINCT category FROM products;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT DISTINCT category FROM products;",
+  "rows": [
+    {
+      "category": "bottoms"
+    },
+    {
+      "category": "shoes"
+    },
+    {
+      "category": "accessories"
+    },
+    {
+      "category": "tops"
+    },
+    {
+      "category": "outerwear"
+    }
+  ],
+  "messages": [],
+  "stdout": "category\nbottoms\nshoes\naccessories\ntops\nouterwear\n",
+  "stderr": "",
+  "execution_time_ms": 1602
+}

@@ -26,18 +26,17 @@ import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 
+// Category values must match the database enum: tops, bottoms, dresses, outerwear, accessories, shoes, bags, other
 const categories = [
   { name: "All", value: "all" },
-  { name: "Shirts", value: "shirts" },
-  { name: "Pants", value: "pants" },
-  { name: "Jackets", value: "jackets" },
-  { name: "Shoes", value: "shoes" },
-  { name: "Caps", value: "caps" },
-  { name: "Jeans", value: "jeans" },
   { name: "Tops", value: "tops" },
   { name: "Bottoms", value: "bottoms" },
   { name: "Outerwear", value: "outerwear" },
+  { name: "Shoes", value: "shoes" },
   { name: "Accessories", value: "accessories" },
+  { name: "Bags", value: "bags" },
+  { name: "Dresses", value: "dresses" },
+  { name: "Other", value: "other" },
 ];
 
 const sortOptions = [

@@ -1,0 +1,30 @@
+{
+  "query": "SELECT category, COUNT(*) as count FROM products GROUP BY category;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT category, COUNT(*) as count FROM products GROUP BY category;",
+  "rows": [
+    {
+      "category": "tops",
+      "count": "2"
+    },
+    {
+      "category": "outerwear",
+      "count": "2"
+    },
+    {
+      "category": "accessories",
+      "count": "1"
+    },
+    {
+      "category": "shoes",
+      "count": "1"
+    },
+    {
+      "category": "bottoms",
+      "count": "2"
+    }
+  ],
+  "messages": [],
+  "stdout": "category\tcount\ntops\t2\nouterwear\t2\naccessories\t1\nshoes\t1\nbottoms\t2\n",
+  "stderr": "",
+  "execution_time_ms": 1516
+}

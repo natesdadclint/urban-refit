@@ -17,14 +17,14 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+// Category values must match the database enum: tops, bottoms, dresses, outerwear, accessories, shoes, bags, other
 const categories = [
   { name: "All", href: "/shop" },
-  { name: "Shirts", href: "/shop/tops" },
-  { name: "Pants", href: "/shop/bottoms" },
-  { name: "Jackets", href: "/shop/outerwear" },
-  { name: "Shoes", href: "/shop/shoes" },
-  { name: "Caps", href: "/shop/accessories" },
-  { name: "Jeans", href: "/shop/jeans" },
+  { name: "Tops", href: "/shop?category=tops" },
+  { name: "Bottoms", href: "/shop?category=bottoms" },
+  { name: "Outerwear", href: "/shop?category=outerwear" },
+  { name: "Shoes", href: "/shop?category=shoes" },
+  { name: "Accessories", href: "/shop?category=accessories" },
 ];
 
 export default function Layout({ children }: LayoutProps) {

@@ -84,7 +84,7 @@ export default function Partners() {
                 We're always looking for quality thrift stores that share our commitment to sustainability and community impact. Contact us to learn more about partnership opportunities.
               </p>
               <p className="text-muted-foreground">
-                Email: [contact email] | Phone: [contact phone]
+                Email: <a href="mailto:help@urbanrefit.store" className="text-primary hover:underline">help@urbanrefit.store</a>
               </p>
             </section>
           </div>

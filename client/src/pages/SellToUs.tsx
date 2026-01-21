@@ -426,6 +426,50 @@ export default function SellToUs() {
         </div>
       </section>
 
+      {/* Shipping & Packaging */}
+      <section className="py-16 bg-white border-t">
+        <div className="container">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl font-bold text-center mb-8">Shipping & Packaging</h2>
+            <div className="bg-neutral-50 rounded-lg p-8">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-semibold mb-2">Free Prepaid Shipping</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Once your item is accepted, we will send you a prepaid shipping label via email. 
+                    Simply pack your item and drop it off at any courier pickup point. 
+                    You pay nothing for shipping - we cover all postage costs.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Packaging Guidelines</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Please ensure your item is clean and folded neatly. Use a sturdy box or padded envelope 
+                    to protect the garment during transit. If you do not have suitable packaging, 
+                    we can arrange for a prepaid satchel to be sent to you.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Free Returns</h3>
+                  <p className="text-sm text-muted-foreground">
+                    If for any reason your item is not accepted after inspection, we will return it to you 
+                    free of charge. You will never be out of pocket for shipping costs.
+                  </p>
+                </div>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <h3 className="font-semibold text-amber-800 mb-2">Rural Delivery Notice</h3>
+                  <p className="text-sm text-amber-700">
+                    Please note: Rural delivery addresses may incur additional shipping time. 
+                    In some cases, rural delivery surcharges may apply. We will contact you 
+                    before processing if your address falls within a rural delivery zone.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* What We Accept */}
       <section className="py-16 bg-neutral-50">
         <div className="container">

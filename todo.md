@@ -208,3 +208,9 @@
 - [x] Add navigation link to Sell to Us page
 - [x] Add vitest tests for sell submissions
 - [ ] Create admin view for reviewing sell submissions
+
+## Bug Fixes & Enhancements
+- [x] Fix hero section navigation links to direct to correct category pages (updated to match database enum: tops, bottoms, outerwear, shoes, accessories)
+- [x] Fix email functionality for contact forms and notifications (added mailto links to help@urbanrefit.store)
+- [x] Add packaging/shipping details to Sell to Us page (free postage-paid returns)
+- [x] Add rural delivery exception notice for shipping
