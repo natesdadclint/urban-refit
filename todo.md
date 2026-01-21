@@ -166,3 +166,11 @@
 - [x] Add floating chat button to all pages
 - [x] Configure chatbot knowledge base for Urban Refit FAQs
 - [x] Style chatbot with modern, friendly UI (lime/emerald gradient)
+
+## Chatbot Enhancements
+- [x] Remove all emojis from chatbot responses
+- [x] Integrate chatbot with product database for real stock queries
+- [x] Add size filtering (S/M/L/XL and waist measurements)
+- [x] Suggest similar items when exact match not found
+- [x] Add disclaimer about handling multiple customers and urgency to purchase
+- [x] Professional tone without emojis

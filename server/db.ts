@@ -937,3 +937,54 @@ export async function getChatHistory(sessionId: string, limit: number = 20) {
     .orderBy(chatMessages.createdAt)
     .limit(limit);
 }
+
+
+// ============ CHATBOT PRODUCT SEARCH ============
+export async function searchProductsForChat(query: string, size?: string, category?: string) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const conditions: any[] = [eq(products.status, "available")];
+  
+  // Add size filter if provided
+  if (size) {
+    conditions.push(eq(products.size, size));
+  }
+  
+  // Add category filter if provided
+  if (category && category !== "all") {
+    conditions.push(eq(products.category, category as any));
+  }
+  
+  // Get all available products matching filters
+  const allProducts = await db.select().from(products)
+    .where(and(...conditions));
+  
+  // Filter by search query (name or brand)
+  const queryLower = query.toLowerCase();
+  const matchingProducts = allProducts.filter(p => 
+    p.name.toLowerCase().includes(queryLower) ||
+    (p.brand && p.brand.toLowerCase().includes(queryLower)) ||
+    (p.description && p.description.toLowerCase().includes(queryLower))
+  );
+  
+  return matchingProducts;
+}
+
+export async function getProductSummaryForChat() {
+  const db = await getDb();
+  if (!db) return null;
+  
+  // Get all available products with key info
+  const availableProducts = await db.select({
+    id: products.id,
+    name: products.name,
+    brand: products.brand,
+    size: products.size,
+    category: products.category,
+    salePrice: products.salePrice,
+    condition: products.condition,
+  }).from(products).where(eq(products.status, "available"));
+  
+  return availableProducts;
+}

@@ -69,7 +69,7 @@ export function HelpdeskChat() {
         {
           id: "welcome",
           role: "assistant",
-          content: "Hey there! 👋 I'm Refit, your personal style assistant. How can I help you today? Ask me about our products, shipping, returns, or anything else!",
+          content: "Hello, I am Refit, your personal style assistant at Urban Refit. How can I help you today? I can check our current stock, answer questions about shipping and returns, or help you find the perfect pre-loved piece. Please note that I assist multiple customers at once, so if you find something you like, I recommend purchasing it quickly as all items are one-of-a-kind.",
         },
       ]);
     }
@@ -87,7 +87,6 @@ export function HelpdeskChat() {
       >
         <MessageCircle className="h-5 w-5" />
         <span className="hidden sm:inline">Chat with Refit</span>
-        <Sparkles className="h-4 w-4" />
       </button>
 
       {/* Chat Window */}

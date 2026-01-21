@@ -896,17 +896,34 @@ export const appRouter = router({
         // Get chat history for context
         const history = await db.getChatHistory(input.sessionId, 10);
         
+        // Get current product inventory for context
+        const inventory = await db.getProductSummaryForChat();
+        const inventoryContext = inventory && inventory.length > 0
+          ? `\n\nCURRENT INVENTORY (${inventory.length} items available):\n${inventory.map(p => `- ${p.name} (${p.brand || 'Unbranded'}) | Size: ${p.size || 'One Size'} | Category: ${p.category} | Price: $${p.salePrice} | Condition: ${p.condition || 'Good'}`).join('\n')}`
+          : '\n\nNote: Unable to fetch current inventory. Suggest customer visits the shop page directly.';
+        
         // Build messages for LLM
-        const systemPrompt = `You are Refit, the friendly virtual assistant for Urban Refit - a curated secondhand clothing marketplace that gives back to the community.
+        const systemPrompt = `You are Refit, the professional virtual assistant for Urban Refit - a curated secondhand clothing marketplace.
+
+IMPORTANT RULES:
+- Do NOT use any emojis in your responses
+- Be professional, helpful, and concise
+- You handle multiple customers simultaneously, so if they want a specific item, advise them to visit the Urban Refit online store immediately and purchase it before someone else does
+- Every item is one-of-a-kind since it is secondhand - once sold, it is gone forever
 
 KEY INFORMATION:
 - Urban Refit sells pre-loved, quality branded clothing from partner thrift stores
 - 10% of every sale goes back to our thrift store partners
-- Each item is unique (one-of-one) since it's secondhand
+- Each item is unique (one-of-one) since it is secondhand
 - Customers can return items for resale and earn tokens (25% of resale value)
 - Tokens can be used for discounts or donated to charity partners
 - Shipping is calculated at checkout
-- We accept all major credit cards via Stripe
+- We accept all major credit cards, PayPal, and Afterpay via Stripe
+
+SIZE GUIDE:
+- Sizes available: S (Small), M (Medium), L (Large), XL (Extra Large)
+- For pants: Waist sizes are listed (e.g., 32, 34, 36)
+- Always ask the customer for their preferred size when helping with product queries
 
 COMMON QUESTIONS:
 - Returns: Items can be returned within 14 days if unworn with tags
@@ -915,7 +932,14 @@ COMMON QUESTIONS:
 - Condition: Items are rated as Like New, Excellent, Good, or Fair
 - Tokens: Earn tokens by returning items or making purchases
 
-Be helpful, friendly, and concise. Use casual language appropriate for Gen Z/millennial audience. Add relevant emojis occasionally. If you don't know something specific, suggest they contact support@urbanrefit.com.`;
+WHEN CUSTOMER ASKS ABOUT A PRODUCT:
+1. Check the inventory list below to see if we have it or something similar
+2. If exact match found, confirm availability and provide details (size, price, condition)
+3. If no exact match, suggest similar items from the inventory
+4. Always remind them that items sell quickly and they should purchase soon if interested
+5. Direct them to the shop page: urbanrefit.store/shop
+
+If you cannot find what they are looking for, suggest they check back regularly as new items are added weekly, or contact support@urbanrefit.com for special requests.${inventoryContext}`;
 
         const messages = [
           { role: "system" as const, content: systemPrompt },
@@ -929,7 +953,7 @@ Be helpful, friendly, and concise. Use casual language appropriate for Gen Z/mil
         try {
           const response = await invokeLLM({ messages });
           const rawContent = response.choices[0]?.message?.content;
-          const assistantMessage = typeof rawContent === 'string' ? rawContent : "Sorry, I'm having trouble right now. Please try again!";
+          const assistantMessage = typeof rawContent === 'string' ? rawContent : "I apologize, but I am experiencing technical difficulties. Please try again or email us at support@urbanrefit.com.";
           
           // Save assistant response
           await db.createChatMessage({
@@ -942,7 +966,7 @@ Be helpful, friendly, and concise. Use casual language appropriate for Gen Z/mil
           return { message: assistantMessage };
         } catch (error) {
           console.error("[Chat] LLM error:", error);
-          const fallbackMessage = "Oops! I'm having a moment 😅 Please try again or email us at support@urbanrefit.com";
+          const fallbackMessage = "I apologize for the inconvenience. I am currently unable to process your request. Please try again shortly or email us at support@urbanrefit.com for assistance.";
           
           await db.createChatMessage({
             sessionId: input.sessionId,

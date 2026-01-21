@@ -1,0 +1,82 @@
+{
+  "query": "SELECT id, name, brand, size, category, status, salePrice FROM products LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, brand, size, category, status, salePrice FROM products LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt",
+      "brand": "Ralph Lauren",
+      "size": "L",
+      "category": "tops",
+      "status": "available",
+      "salePrice": "37.50"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans",
+      "brand": "Levi's",
+      "size": "32x32",
+      "category": "bottoms",
+      "status": "available",
+      "salePrice": "33.00"
+    },
+    {
+      "id": "3",
+      "name": "Carhartt Work Jacket",
+      "brand": "Carhartt",
+      "size": "XL",
+      "category": "outerwear",
+      "status": "available",
+      "salePrice": "55.00"
+    },
+    {
+      "id": "4",
+      "name": "Nike Air Force 1 Low",
+      "brand": "Nike",
+      "size": "10.5",
+      "category": "shoes",
+      "status": "available",
+      "salePrice": "40.00"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap",
+      "brand": "New Era",
+      "size": "7 1/4",
+      "category": "accessories",
+      "status": "available",
+      "salePrice": "18.00"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "brand": "Tommy Hilfiger",
+      "size": "M",
+      "category": "tops",
+      "status": "available",
+      "salePrice": "25.00"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants",
+      "brand": "Dickies",
+      "size": "34x30",
+      "category": "bottoms",
+      "status": "available",
+      "salePrice": "23.85"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket",
+      "brand": "Patagonia",
+      "size": "L",
+      "category": "outerwear",
+      "status": "available",
+      "salePrice": "60.00"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tbrand\tsize\tcategory\tstatus\tsalePrice\n1\tRalph Lauren Oxford Shirt\tRalph Lauren\tL\ttops\tavailable\t37.50\n2\tLevi's 501 Original Jeans\tLevi's\t32x32\tbottoms\tavailable\t33.00\n3\tCarhartt Work Jacket\tCarhartt\tXL\touterwear\tavailable\t55.00\n4\tNike Air Force 1 Low\tNike\t10.5\tshoes\tavailable\t40.00\n5\tNew Era Yankees Cap\tNew Era\t7 1/4\taccessories\tavailable\t18.00\n6\tTommy Hilfiger Polo\tTommy Hilfiger\tM\ttops\tavailable\t25.00\n7\tDickies 874 Work Pants\tDickies\t34x30\tbottoms\tavailable\t23.85\n8\tPatagonia Fleece Jacket\tPatagonia\tL\touterwear\tavailable\t60.00\n",
+  "stderr": "",
+  "execution_time_ms": 1507
+}
