@@ -77,16 +77,16 @@ export function HelpdeskChat() {
 
   return (
     <>
-      {/* Floating Chat Button */}
+      {/* Floating Chat Button - Minimized subtle design */}
       <button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-gradient-to-r from-lime-400 to-emerald-500 px-5 py-3.5 text-black font-semibold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl",
+          "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-neutral-400 to-neutral-300 px-3 py-2 text-neutral-700 text-sm font-medium shadow-sm transition-all duration-300 hover:shadow-md hover:from-neutral-500 hover:to-neutral-400 hover:text-neutral-800 opacity-70 hover:opacity-100",
           isOpen && "hidden"
         )}
       >
-        <MessageCircle className="h-5 w-5" />
-        <span className="hidden sm:inline">Chat with Urban Refit</span>
+        <MessageCircle className="h-4 w-4" />
+        <span className="hidden sm:inline text-xs">Chat</span>
       </button>
 
       {/* Chat Window */}
@@ -97,21 +97,21 @@ export function HelpdeskChat() {
         )}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-lime-400 to-emerald-500 px-4 py-3 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-neutral-500 to-neutral-400 px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-black" />
+            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+              <MessageCircle className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-black">Refit</h3>
-              <p className="text-xs text-black/70">Your style assistant</p>
+              <h3 className="font-bold text-white">Urban Refit</h3>
+              <p className="text-xs text-white/70">Style assistant</p>
             </div>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsOpen(false)}
-            className="text-black hover:bg-black/10 rounded-full"
+            className="text-white hover:bg-white/10 rounded-full"
           >
             <X className="h-5 w-5" />
           </Button>
@@ -132,7 +132,7 @@ export function HelpdeskChat() {
                   className={cn(
                     "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm",
                     message.role === "user"
-                      ? "bg-gradient-to-r from-lime-400 to-emerald-500 text-black rounded-br-md"
+                      ? "bg-gradient-to-r from-neutral-500 to-neutral-400 text-white rounded-br-md"
                       : "bg-muted text-foreground rounded-bl-md"
                   )}
                 >
@@ -159,14 +159,14 @@ export function HelpdeskChat() {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask me anything..."
-              className="flex-1 rounded-full border-muted-foreground/20 focus-visible:ring-lime-400"
+              className="flex-1 rounded-full border-muted-foreground/20 focus-visible:ring-neutral-400"
               disabled={sendMessage.isPending}
             />
             <Button
               onClick={handleSend}
               disabled={!input.trim() || sendMessage.isPending}
               size="icon"
-              className="rounded-full bg-gradient-to-r from-lime-400 to-emerald-500 text-black hover:opacity-90"
+              className="rounded-full bg-gradient-to-r from-neutral-500 to-neutral-400 text-white hover:opacity-90"
             >
               <Send className="h-4 w-4" />
             </Button>

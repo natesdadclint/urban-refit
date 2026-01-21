@@ -174,3 +174,8 @@
 - [x] Suggest similar items when exact match not found
 - [x] Add disclaimer about handling multiple customers and urgency to purchase
 - [x] Professional tone without emojis
+
+## UI Styling Updates
+- [x] Minimize chat button - make it subtle and less prominent
+- [x] Change chat button from green to gray gradient (gray to light gray)
+- [x] Add black dots on either side of Urban Refit logo

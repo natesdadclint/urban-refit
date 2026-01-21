@@ -48,10 +48,12 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-3">
+              <span className="w-2.5 h-2.5 rounded-full bg-black"></span>
               <span className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
                 Urban Refit
               </span>
+              <span className="w-2.5 h-2.5 rounded-full bg-black"></span>
             </Link>
 
             {/* Desktop Navigation */}
