@@ -188,29 +188,30 @@ export default function Home() {
           <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-10 text-center">
             Shop by Category
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
-              { name: "Tops", href: "/shop/tops", image: "https://placehold.co/300x300/e7e5e4/78716c?text=Tops" },
-              { name: "Bottoms", href: "/shop/bottoms", image: "https://placehold.co/300x300/e7e5e4/78716c?text=Bottoms" },
-              { name: "Dresses", href: "/shop/dresses", image: "https://placehold.co/300x300/e7e5e4/78716c?text=Dresses" },
-              { name: "Outerwear", href: "/shop/outerwear", image: "https://placehold.co/300x300/e7e5e4/78716c?text=Outerwear" },
+              { name: "All", href: "/shop", image: "/category-all.jpg" },
+              { name: "Shirts", href: "/shop?category=shirts", image: "/category-shirts.jpg" },
+              { name: "Pants", href: "/shop?category=pants", image: "/category-pants.jpg" },
+              { name: "Jackets", href: "/shop?category=jackets", image: "/category-jackets.jpg" },
+              { name: "Shoes", href: "/shop?category=shoes", image: "/category-shoes.jpg" },
+              { name: "Caps", href: "/shop?category=caps", image: "/category-caps.jpg" },
             ].map((category) => (
               <Link
                 key={category.href}
                 href={category.href}
-                className="group relative aspect-square rounded-lg overflow-hidden bg-muted"
+                className="group flex flex-col"
               >
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 className="text-white font-serif text-xl font-semibold">
-                    {category.name}
-                  </h3>
+                <div className="aspect-square rounded-lg overflow-hidden bg-muted mb-3">
+                  <img
+                    src={category.image}
+                    alt={category.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
+                <p className="text-center font-medium text-sm text-foreground group-hover:text-primary transition-colors">
+                  {category.name}
+                </p>
               </Link>
             ))}
           </div>

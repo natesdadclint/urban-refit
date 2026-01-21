@@ -45,10 +45,7 @@ export default function ProductDetail() {
       <Layout>
         <div className="container py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="aspect-square skeleton rounded-lg" />
-              <div className="aspect-square skeleton rounded-lg" />
-            </div>
+            <div className="aspect-square skeleton rounded-lg" />
             <div className="space-y-4">
               <div className="h-6 skeleton rounded w-1/4" />
               <div className="h-10 skeleton rounded w-3/4" />
@@ -97,28 +94,13 @@ export default function ProductDetail() {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Images - Full body shot and stitching detail with zoom */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
-              <ImageZoom
-                src={product.image1Url || placeholderImage}
-                alt={`${product.name} - Full View`}
-                className="w-full h-full"
-              />
-              <span className="absolute bottom-3 left-3 text-xs uppercase tracking-wider bg-background/80 backdrop-blur-sm px-3 py-1 rounded text-muted-foreground font-medium">
-                Full View
-              </span>
-            </div>
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
-              <ImageZoom
-                src={product.image2Url || product.image1Url || placeholderImage}
-                alt={`${product.name} - Stitching Detail`}
-                className="w-full h-full"
-              />
-              <span className="absolute bottom-3 left-3 text-xs uppercase tracking-wider bg-background/80 backdrop-blur-sm px-3 py-1 rounded text-muted-foreground font-medium">
-                Detail
-              </span>
-            </div>
+          {/* Single Image with zoom */}
+          <div className="aspect-square rounded-lg overflow-hidden bg-muted">
+            <ImageZoom
+              src={product.image1Url || placeholderImage}
+              alt={product.name}
+              className="w-full h-full"
+            />
           </div>
 
           {/* Product Info */}

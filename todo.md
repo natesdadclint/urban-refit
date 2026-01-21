@@ -121,3 +121,10 @@
 ## Product Image Enhancement
 - [x] Update product images: Image 1 = full body shot, Image 2 = close-up stitching detail
 - [x] Update product card labels to indicate "Full View" and "Detail" views
+
+## Payment & UI Updates
+- [x] Add PayPal payment option to Stripe checkout
+- [x] Add Afterpay payment option to Stripe checkout
+- [x] Change product cards to single image display
+- [x] Redesign Shop by Category with simple images and names at bottom
+- [x] Add "All" category option

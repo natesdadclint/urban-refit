@@ -1,7 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
-import { useState } from "react";
 
 interface ProductCardProps {
   id: number;
@@ -9,7 +8,7 @@ interface ProductCardProps {
   brand: string | null;
   salePrice: string;
   image1Url: string | null;
-  image2Url: string | null;
+  image2Url?: string | null;
   condition: string;
   size: string | null;
   onAddToCart?: () => void;
@@ -29,45 +28,23 @@ export default function ProductCard({
   brand,
   salePrice,
   image1Url,
-  image2Url,
   condition,
   size,
   onAddToCart,
   isAddingToCart,
 }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  
   const placeholderImage = "https://placehold.co/400x400/f5f5f4/a8a29e?text=No+Image";
 
   return (
-    <div
-      className="product-card group bg-card rounded-lg overflow-hidden border border-border"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="product-card group bg-card rounded-lg overflow-hidden border border-border">
       <Link href={`/product/${id}`}>
-        {/* Dual Image Display - Full body shot and stitching detail */}
-        <div className="grid grid-cols-2 gap-0.5 bg-muted">
-          <div className="aspect-square overflow-hidden relative">
-            <img
-              src={image1Url || placeholderImage}
-              alt={`${name} - Full View`}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <span className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider bg-background/80 backdrop-blur-sm px-2 py-0.5 rounded text-muted-foreground font-medium">
-              Full View
-            </span>
-          </div>
-          <div className="aspect-square overflow-hidden relative">
-            <img
-              src={image2Url || image1Url || placeholderImage}
-              alt={`${name} - Stitching Detail`}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <span className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider bg-background/80 backdrop-blur-sm px-2 py-0.5 rounded text-muted-foreground font-medium">
-              Detail
-            </span>
-          </div>
+        {/* Single Image Display */}
+        <div className="aspect-square overflow-hidden bg-muted">
+          <img
+            src={image1Url || placeholderImage}
+            alt={name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
         </div>
       </Link>
 
