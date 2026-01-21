@@ -128,3 +128,12 @@
 - [x] Change product cards to single image display
 - [x] Redesign Shop by Category with simple images and names at bottom
 - [x] Add "All" category option
+
+## Product Filtering System
+- [x] Update backend API to support filtering by size, brand, and price range
+- [x] Create filter UI components (dropdowns, sliders, checkboxes)
+- [x] Add size filter with common men's sizes
+- [x] Add brand filter with available brands from products
+- [x] Add price range filter with min/max slider
+- [x] Integrate filters with URL parameters for shareable links
+- [x] Add clear filters functionality

@@ -1,4 +1,4 @@
-import { eq, and, desc, sql, inArray, gte, lte } from "drizzle-orm";
+import { eq, and, desc, asc, sql, inArray, gte, lte, isNotNull } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
   InsertUser, users, 
@@ -181,18 +181,100 @@ export async function getProductsByIds(ids: number[]) {
   return db.select().from(products).where(inArray(products.id, ids));
 }
 
-export async function getAvailableProducts(category?: string) {
+export interface ProductFilters {
+  category?: string;
+  size?: string;
+  brand?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy?: 'price_asc' | 'price_desc' | 'newest' | 'name';
+}
+
+export async function getAvailableProducts(filters?: ProductFilters) {
   const db = await getDb();
   if (!db) return [];
   
-  if (category && category !== "all") {
-    return db.select().from(products)
-      .where(and(eq(products.status, "available"), eq(products.category, category as any)))
-      .orderBy(desc(products.createdAt));
+  const conditions: any[] = [eq(products.status, "available")];
+  
+  if (filters?.category && filters.category !== "all") {
+    conditions.push(eq(products.category, filters.category as any));
   }
+  
+  if (filters?.size) {
+    conditions.push(eq(products.size, filters.size));
+  }
+  
+  if (filters?.brand) {
+    conditions.push(eq(products.brand, filters.brand));
+  }
+  
+  if (filters?.minPrice !== undefined) {
+    conditions.push(gte(products.salePrice, filters.minPrice.toString()));
+  }
+  
+  if (filters?.maxPrice !== undefined) {
+    conditions.push(lte(products.salePrice, filters.maxPrice.toString()));
+  }
+  
+  // Determine sort order
+  let orderByClause;
+  switch (filters?.sortBy) {
+    case 'price_asc':
+      orderByClause = asc(products.salePrice);
+      break;
+    case 'price_desc':
+      orderByClause = desc(products.salePrice);
+      break;
+    case 'name':
+      orderByClause = asc(products.name);
+      break;
+    case 'newest':
+    default:
+      orderByClause = desc(products.createdAt);
+  }
+  
   return db.select().from(products)
-    .where(eq(products.status, "available"))
-    .orderBy(desc(products.createdAt));
+    .where(and(...conditions))
+    .orderBy(orderByClause);
+}
+
+export async function getDistinctBrands() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.selectDistinct({ brand: products.brand })
+    .from(products)
+    .where(and(eq(products.status, "available"), isNotNull(products.brand)));
+  
+  return result.map(r => r.brand).filter(Boolean) as string[];
+}
+
+export async function getDistinctSizes() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.selectDistinct({ size: products.size })
+    .from(products)
+    .where(and(eq(products.status, "available"), isNotNull(products.size)));
+  
+  return result.map(r => r.size).filter(Boolean) as string[];
+}
+
+export async function getPriceRange() {
+  const db = await getDb();
+  if (!db) return { min: 0, max: 1000 };
+  
+  const result = await db.select({
+    minPrice: sql<string>`MIN(CAST(${products.salePrice} AS DECIMAL(10,2)))`,
+    maxPrice: sql<string>`MAX(CAST(${products.salePrice} AS DECIMAL(10,2)))`
+  })
+    .from(products)
+    .where(eq(products.status, "available"));
+  
+  return {
+    min: parseFloat(result[0]?.minPrice || '0'),
+    max: parseFloat(result[0]?.maxPrice || '1000')
+  };
 }
 
 export async function getAllProducts() {

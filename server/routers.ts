@@ -99,10 +99,27 @@ export const appRouter = router({
   // ============ PRODUCT ROUTES ============
   product: router({
     list: publicProcedure
-      .input(z.object({ category: z.string().optional() }).optional())
+      .input(z.object({ 
+        category: z.string().optional(),
+        size: z.string().optional(),
+        brand: z.string().optional(),
+        minPrice: z.number().optional(),
+        maxPrice: z.number().optional(),
+        sortBy: z.enum(['price_asc', 'price_desc', 'newest', 'name']).optional(),
+      }).optional())
       .query(async ({ input }) => {
-        return db.getAvailableProducts(input?.category);
+        return db.getAvailableProducts(input);
       }),
+    
+    // Get available filter options
+    filterOptions: publicProcedure.query(async () => {
+      const [brands, sizes, priceRange] = await Promise.all([
+        db.getDistinctBrands(),
+        db.getDistinctSizes(),
+        db.getPriceRange(),
+      ]);
+      return { brands, sizes, priceRange };
+    }),
     
     listAll: adminProcedure.query(async () => {
       return db.getAllProducts();

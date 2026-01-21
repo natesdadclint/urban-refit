@@ -2,33 +2,94 @@ import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
-import { useParams, Link } from "wouter";
-import { Search, SlidersHorizontal } from "lucide-react";
-import { useState, useMemo } from "react";
+import { useLocation, useSearch } from "wouter";
+import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 
 const categories = [
   { name: "All", value: "all" },
+  { name: "Shirts", value: "shirts" },
+  { name: "Pants", value: "pants" },
+  { name: "Jackets", value: "jackets" },
+  { name: "Shoes", value: "shoes" },
+  { name: "Caps", value: "caps" },
+  { name: "Jeans", value: "jeans" },
   { name: "Tops", value: "tops" },
   { name: "Bottoms", value: "bottoms" },
-  { name: "Dresses", value: "dresses" },
   { name: "Outerwear", value: "outerwear" },
   { name: "Accessories", value: "accessories" },
-  { name: "Shoes", value: "shoes" },
-  { name: "Bags", value: "bags" },
+];
+
+const sortOptions = [
+  { name: "Newest", value: "newest" },
+  { name: "Price: Low to High", value: "price_asc" },
+  { name: "Price: High to Low", value: "price_desc" },
+  { name: "Name A-Z", value: "name" },
 ];
 
 export default function Shop() {
-  const params = useParams<{ category?: string }>();
-  const category = params.category || "all";
+  const [, setLocation] = useLocation();
+  const searchString = useSearch();
+  const searchParams = new URLSearchParams(searchString);
+  
   const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   
-  const { data: products, isLoading } = trpc.product.list.useQuery({
+  // Get filter values from URL params
+  const category = searchParams.get("category") || "all";
+  const size = searchParams.get("size") || "";
+  const brand = searchParams.get("brand") || "";
+  const sortBy = (searchParams.get("sort") as any) || "newest";
+  const minPriceParam = searchParams.get("minPrice");
+  const maxPriceParam = searchParams.get("maxPrice");
+  
+  // Fetch filter options
+  const { data: filterOptions } = trpc.product.filterOptions.useQuery();
+  
+  // Local state for price slider
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 500]);
+  
+  // Update price range when filter options load
+  useEffect(() => {
+    if (filterOptions?.priceRange) {
+      const min = minPriceParam ? parseFloat(minPriceParam) : filterOptions.priceRange.min;
+      const max = maxPriceParam ? parseFloat(maxPriceParam) : filterOptions.priceRange.max;
+      setPriceRange([min, max]);
+    }
+  }, [filterOptions?.priceRange, minPriceParam, maxPriceParam]);
+  
+  // Build query params for API
+  const queryParams = useMemo(() => ({
     category: category === "all" ? undefined : category,
-  });
+    size: size || undefined,
+    brand: brand || undefined,
+    minPrice: minPriceParam ? parseFloat(minPriceParam) : undefined,
+    maxPrice: maxPriceParam ? parseFloat(maxPriceParam) : undefined,
+    sortBy: sortBy as any,
+  }), [category, size, brand, minPriceParam, maxPriceParam, sortBy]);
+  
+  const { data: products, isLoading } = trpc.product.list.useQuery(queryParams);
   
   const utils = trpc.useUtils();
   
@@ -43,6 +104,7 @@ export default function Shop() {
     },
   });
 
+  // Filter products by search query (client-side)
   const filteredProducts = useMemo(() => {
     if (!products) return [];
     if (!searchQuery.trim()) return products;
@@ -56,27 +118,213 @@ export default function Shop() {
     );
   }, [products, searchQuery]);
 
+  // Update URL with filters
+  const updateFilters = (updates: Record<string, string | undefined>) => {
+    const params = new URLSearchParams(searchString);
+    
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value && value !== "all" && value !== "") {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+    
+    const newSearch = params.toString();
+    setLocation(newSearch ? `/shop?${newSearch}` : "/shop");
+  };
+  
+  // Apply price range filter
+  const applyPriceFilter = () => {
+    updateFilters({
+      minPrice: priceRange[0].toString(),
+      maxPrice: priceRange[1].toString(),
+    });
+  };
+  
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    setPriceRange([filterOptions?.priceRange.min || 0, filterOptions?.priceRange.max || 500]);
+    setLocation("/shop");
+  };
+  
+  // Check if any filters are active
+  const hasActiveFilters = category !== "all" || size || brand || minPriceParam || maxPriceParam || sortBy !== "newest";
+
   const categoryTitle = category === "all" 
     ? "All Products" 
     : categories.find(c => c.value === category)?.name || "Products";
+
+  // Filter sidebar content (shared between desktop and mobile)
+  const FilterContent = () => (
+    <div className="space-y-6">
+      {/* Category Filter */}
+      <div>
+        <Label className="text-sm font-semibold mb-3 block">Category</Label>
+        <Select value={category} onValueChange={(value) => updateFilters({ category: value })}>
+          <SelectTrigger>
+            <SelectValue placeholder="All Categories" />
+          </SelectTrigger>
+          <SelectContent>
+            {categories.map((cat) => (
+              <SelectItem key={cat.value} value={cat.value}>
+                {cat.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <Separator />
+      
+      {/* Size Filter */}
+      <div>
+        <Label className="text-sm font-semibold mb-3 block">Size</Label>
+        <Select value={size} onValueChange={(value) => updateFilters({ size: value === "all" ? undefined : value })}>
+          <SelectTrigger>
+            <SelectValue placeholder="All Sizes" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sizes</SelectItem>
+            {filterOptions?.sizes.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <Separator />
+      
+      {/* Brand Filter */}
+      <div>
+        <Label className="text-sm font-semibold mb-3 block">Brand</Label>
+        <Select value={brand} onValueChange={(value) => updateFilters({ brand: value === "all" ? undefined : value })}>
+          <SelectTrigger>
+            <SelectValue placeholder="All Brands" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Brands</SelectItem>
+            {filterOptions?.brands.map((b) => (
+              <SelectItem key={b} value={b}>
+                {b}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      <Separator />
+      
+      {/* Price Range Filter */}
+      <div>
+        <Label className="text-sm font-semibold mb-3 block">Price Range</Label>
+        <div className="px-2">
+          <Slider
+            value={priceRange}
+            onValueChange={(value) => setPriceRange(value as [number, number])}
+            min={filterOptions?.priceRange.min || 0}
+            max={filterOptions?.priceRange.max || 500}
+            step={5}
+            className="mb-4"
+          />
+          <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
+            <span>${priceRange[0].toFixed(0)}</span>
+            <span>${priceRange[1].toFixed(0)}</span>
+          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full"
+            onClick={applyPriceFilter}
+          >
+            Apply Price Filter
+          </Button>
+        </div>
+      </div>
+      
+      <Separator />
+      
+      {/* Sort By */}
+      <div>
+        <Label className="text-sm font-semibold mb-3 block">Sort By</Label>
+        <Select value={sortBy} onValueChange={(value) => updateFilters({ sort: value })}>
+          <SelectTrigger>
+            <SelectValue placeholder="Sort by..." />
+          </SelectTrigger>
+          <SelectContent>
+            {sortOptions.map((opt) => (
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      {/* Clear Filters */}
+      {hasActiveFilters && (
+        <>
+          <Separator />
+          <Button 
+            variant="ghost" 
+            className="w-full text-destructive hover:text-destructive"
+            onClick={clearAllFilters}
+          >
+            <X className="h-4 w-4 mr-2" />
+            Clear All Filters
+          </Button>
+        </>
+      )}
+    </div>
+  );
 
   return (
     <Layout>
       <div className="container py-8 md:py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-2">
-            {categoryTitle}
-          </h1>
-          <p className="text-muted-foreground">
-            {filteredProducts.length} {filteredProducts.length === 1 ? "item" : "items"} available
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-1">
+              {categoryTitle}
+            </h1>
+            <p className="text-muted-foreground">
+              {filteredProducts.length} {filteredProducts.length === 1 ? "item" : "items"} available
+            </p>
+          </div>
+          
+          {/* Mobile Filter Button */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="gap-2">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filters
+                  {hasActiveFilters && (
+                    <span className="bg-primary text-primary-foreground rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                      !
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-80">
+                <SheetHeader>
+                  <SheetTitle>Filters</SheetTitle>
+                </SheetHeader>
+                <div className="mt-6">
+                  <FilterContent />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar - Categories */}
-          <aside className="lg:w-64 shrink-0">
-            <div className="sticky top-24">
+          {/* Desktop Sidebar */}
+          <aside className="hidden lg:block lg:w-64 shrink-0">
+            <div className="sticky top-24 bg-card rounded-lg border border-border p-5">
               {/* Search */}
               <div className="relative mb-6">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -87,41 +335,90 @@ export default function Shop() {
                   className="pl-9"
                 />
               </div>
-
-              {/* Category filters */}
-              <div className="space-y-1">
-                <h3 className="font-semibold mb-3 flex items-center gap-2">
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Categories
-                </h3>
-                {categories.map((cat) => (
-                  <Link
-                    key={cat.value}
-                    href={cat.value === "all" ? "/shop" : `/shop/${cat.value}`}
-                  >
-                    <Button
-                      variant={category === cat.value ? "secondary" : "ghost"}
-                      className="w-full justify-start"
-                      size="sm"
-                    >
-                      {cat.name}
-                    </Button>
-                  </Link>
-                ))}
-              </div>
+              
+              <FilterContent />
             </div>
           </aside>
 
           {/* Product Grid */}
           <div className="flex-1">
+            {/* Mobile Search */}
+            <div className="relative mb-6 lg:hidden">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            
+            {/* Active Filters Pills */}
+            {hasActiveFilters && (
+              <div className="flex flex-wrap gap-2 mb-6">
+                {category !== "all" && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-1 h-7"
+                    onClick={() => updateFilters({ category: "all" })}
+                  >
+                    {categories.find(c => c.value === category)?.name}
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+                {size && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-1 h-7"
+                    onClick={() => updateFilters({ size: undefined })}
+                  >
+                    Size: {size}
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+                {brand && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-1 h-7"
+                    onClick={() => updateFilters({ brand: undefined })}
+                  >
+                    {brand}
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+                {(minPriceParam || maxPriceParam) && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-1 h-7"
+                    onClick={() => updateFilters({ minPrice: undefined, maxPrice: undefined })}
+                  >
+                    ${minPriceParam || '0'} - ${maxPriceParam || '∞'}
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+                {sortBy !== "newest" && (
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-1 h-7"
+                    onClick={() => updateFilters({ sort: "newest" })}
+                  >
+                    {sortOptions.find(s => s.value === sortBy)?.name}
+                    <X className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            )}
+            
             {isLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="bg-card rounded-lg overflow-hidden border border-border">
-                    <div className="grid grid-cols-2 gap-0.5 bg-muted">
-                      <div className="aspect-square skeleton" />
-                      <div className="aspect-square skeleton" />
-                    </div>
+                    <div className="aspect-square skeleton" />
                     <div className="p-4 space-y-3">
                       <div className="h-4 skeleton rounded w-1/3" />
                       <div className="h-5 skeleton rounded w-2/3" />
@@ -154,16 +451,16 @@ export default function Shop() {
               </div>
             ) : (
               <div className="text-center py-16 bg-secondary/30 rounded-lg">
+                <SlidersHorizontal className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <p className="text-lg font-medium mb-2">No products found</p>
                 <p className="text-muted-foreground mb-4">
                   {searchQuery
                     ? "No products match your search."
-                    : "No products available in this category yet."}
+                    : "Try adjusting your filters to find what you're looking for."}
                 </p>
-                {searchQuery && (
-                  <Button variant="outline" onClick={() => setSearchQuery("")}>
-                    Clear Search
-                  </Button>
-                )}
+                <Button variant="outline" onClick={clearAllFilters}>
+                  Clear All Filters
+                </Button>
               </div>
             )}
           </div>
