@@ -1,0 +1,74 @@
+{
+  "query": "SELECT id, name, brand, category, size, image1Url FROM products ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, brand, category, size, image1Url FROM products ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt",
+      "brand": "Ralph Lauren",
+      "category": "tops",
+      "size": "L",
+      "image1Url": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans",
+      "brand": "Levi's",
+      "category": "bottoms",
+      "size": "32x32",
+      "image1Url": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800"
+    },
+    {
+      "id": "3",
+      "name": "Carhartt Work Jacket",
+      "brand": "Carhartt",
+      "category": "outerwear",
+      "size": "XL",
+      "image1Url": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800"
+    },
+    {
+      "id": "4",
+      "name": "Nike Air Force 1 Low",
+      "brand": "Nike",
+      "category": "shoes",
+      "size": "10.5",
+      "image1Url": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap",
+      "brand": "New Era",
+      "category": "accessories",
+      "size": "7 1/4",
+      "image1Url": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "brand": "Tommy Hilfiger",
+      "category": "tops",
+      "size": "M",
+      "image1Url": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants",
+      "brand": "Dickies",
+      "category": "bottoms",
+      "size": "34x30",
+      "image1Url": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket",
+      "brand": "Patagonia",
+      "category": "outerwear",
+      "size": "L",
+      "image1Url": "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tbrand\tcategory\tsize\timage1Url\n1\tRalph Lauren Oxford Shirt\tRalph Lauren\ttops\tL\thttps://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800\n2\tLevi's 501 Original Jeans\tLevi's\tbottoms\t32x32\thttps://images.unsplash.com/photo-1542272604-787c3835535d?w=800\n3\tCarhartt Work Jacket\tCarhartt\touterwear\tXL\thttps://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=800\n4\tNike Air Force 1 Low\tNike\tshoes\t10.5\thttps://images.unsplash.com/photo-1549298916-b41d501d3772?w=800\n5\tNew Era Yankees Cap\tNew Era\taccessories\t7 1/4\thttps://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800\n6\tTommy Hilfiger Polo\tTommy Hilfiger\ttops\tM\thttps://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800\n7\tDickies 874 Work Pants\tDickies\tbottoms\t34x30\thttps://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=800\n8\tPatagonia Fleece Jacket\tPatagonia\touterwear\tL\thttps://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800\n",
+  "stderr": "",
+  "execution_time_ms": 1547
+}

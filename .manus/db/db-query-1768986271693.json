@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, name, image1Url FROM products ORDER BY id;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, image1Url FROM products ORDER BY id;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt",
+      "image1Url": "/products/oxford-shirt-white.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans",
+      "image1Url": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=800"
+    },
+    {
+      "id": "3",
+      "name": "Carhartt Work Jacket",
+      "image1Url": "/products/bomber-jacket-navy.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Nike Air Force 1 Low",
+      "image1Url": "/products/sneakers-white.jpg"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap",
+      "image1Url": "/products/baseball-cap-beige.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "image1Url": "/products/polo-navy.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants",
+      "image1Url": "/products/work-pants-khaki.jpg"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket",
+      "image1Url": "/products/fleece-jacket-gray.jpg"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage1Url\n1\tRalph Lauren Oxford Shirt\t/products/oxford-shirt-white.jpg\n2\tLevi's 501 Original Jeans\thttps://images.unsplash.com/photo-1542272604-787c3835535d?w=800\n3\tCarhartt Work Jacket\t/products/bomber-jacket-navy.jpg\n4\tNike Air Force 1 Low\t/products/sneakers-white.jpg\n5\tNew Era Yankees Cap\t/products/baseball-cap-beige.jpg\n6\tTommy Hilfiger Polo\t/products/polo-navy.jpg\n7\tDickies 874 Work Pants\t/products/work-pants-khaki.jpg\n8\tPatagonia Fleece Jacket\t/products/fleece-jacket-gray.jpg\n",
+  "stderr": "",
+  "execution_time_ms": 1538
+}

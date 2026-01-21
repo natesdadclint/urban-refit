@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE products SET image1Url = '/products/tommy-hilfiger-polo.png' WHERE name LIKE '%Tommy Hilfiger%';\nUPDATE products SET image1Url = '/products/dickies-work-pants.png' WHERE name LIKE '%Dickies%';\nUPDATE products SET image1Url = '/products/patagonia-fleece.png' WHERE name LIKE '%Patagonia%';\nUPDATE products SET image1Url = '/products/ralph-lauren-oxford.png' WHERE name LIKE '%Ralph Lauren%';\nUPDATE products SET image1Url = '/products/levis-501-jeans.png' WHERE name LIKE '%Levi%';\nUPDATE products SET image1Url = '/products/carhartt-work-jacket.png' WHERE name LIKE '%Carhartt%';\nUPDATE products SET image1Url = '/products/nike-air-force-1.png' WHERE name LIKE '%Nike%';\nUPDATE products SET image1Url = '/products/new-era-cap.png' WHERE name LIKE '%New Era%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute UPDATE products SET image1Url = '/products/tommy-hilfiger-polo.png' WHERE name LIKE '%Tommy Hilfiger%';\nUPDATE products SET image1Url = '/products/dickies-work-pants.png' WHERE name LIKE '%Dickies%';\nUPDATE products SET image1Url = '/products/patagonia-fleece.png' WHERE name LIKE '%Patagonia%';\nUPDATE products SET image1Url = '/products/ralph-lauren-oxford.png' WHERE name LIKE '%Ralph Lauren%';\nUPDATE products SET image1Url = '/products/levis-501-jeans.png' WHERE name LIKE '%Levi%';\nUPDATE products SET image1Url = '/products/carhartt-work-jacket.png' WHERE name LIKE '%Carhartt%';\nUPDATE products SET image1Url = '/products/nike-air-force-1.png' WHERE name LIKE '%Nike%';\nUPDATE products SET image1Url = '/products/new-era-cap.png' WHERE name LIKE '%New Era%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3099
+}
