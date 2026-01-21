@@ -141,3 +141,12 @@
 ## Product Image Consistency
 - [x] Update all product images to match pants image style (clean, minimalist, neutral background)
 - [x] Generate custom AI product images for all 8 products (watermark-free, consistent style)
+
+## Category Images
+- [x] Generate custom AI category images for All
+- [x] Generate custom AI category images for Shirts
+- [x] Generate custom AI category images for Pants
+- [x] Generate custom AI category images for Jackets
+- [x] Generate custom AI category images for Shoes
+- [x] Generate custom AI category images for Caps
+- [x] Update category images in the codebase
