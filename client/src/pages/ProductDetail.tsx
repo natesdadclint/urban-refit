@@ -97,21 +97,27 @@ export default function ProductDetail() {
         </Button>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* Images - Dual square boxes with zoom */}
+          {/* Images - Full body shot and stitching detail with zoom */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted">
+            <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
               <ImageZoom
                 src={product.image1Url || placeholderImage}
-                alt={`${product.name} - View 1`}
+                alt={`${product.name} - Full View`}
                 className="w-full h-full"
               />
+              <span className="absolute bottom-3 left-3 text-xs uppercase tracking-wider bg-background/80 backdrop-blur-sm px-3 py-1 rounded text-muted-foreground font-medium">
+                Full View
+              </span>
             </div>
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted">
+            <div className="aspect-square rounded-lg overflow-hidden bg-muted relative">
               <ImageZoom
                 src={product.image2Url || product.image1Url || placeholderImage}
-                alt={`${product.name} - View 2`}
+                alt={`${product.name} - Stitching Detail`}
                 className="w-full h-full"
               />
+              <span className="absolute bottom-3 left-3 text-xs uppercase tracking-wider bg-background/80 backdrop-blur-sm px-3 py-1 rounded text-muted-foreground font-medium">
+                Detail
+              </span>
             </div>
           </div>
 

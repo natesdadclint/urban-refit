@@ -117,3 +117,7 @@
 - [x] Add marketing preferences collection
 - [x] Add signup link to navigation header
 - [x] Add signup link to footer
+
+## Product Image Enhancement
+- [x] Update product images: Image 1 = full body shot, Image 2 = close-up stitching detail
+- [x] Update product card labels to indicate "Full View" and "Detail" views

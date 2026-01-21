@@ -46,21 +46,27 @@ export default function ProductCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link href={`/product/${id}`}>
-        {/* Dual Image Display - Two square boxes side by side */}
+        {/* Dual Image Display - Full body shot and stitching detail */}
         <div className="grid grid-cols-2 gap-0.5 bg-muted">
-          <div className="aspect-square overflow-hidden">
+          <div className="aspect-square overflow-hidden relative">
             <img
               src={image1Url || placeholderImage}
-              alt={`${name} - View 1`}
+              alt={`${name} - Full View`}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
+            <span className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider bg-background/80 backdrop-blur-sm px-2 py-0.5 rounded text-muted-foreground font-medium">
+              Full View
+            </span>
           </div>
-          <div className="aspect-square overflow-hidden">
+          <div className="aspect-square overflow-hidden relative">
             <img
               src={image2Url || image1Url || placeholderImage}
-              alt={`${name} - View 2`}
+              alt={`${name} - Stitching Detail`}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
+            <span className="absolute bottom-2 left-2 text-[10px] uppercase tracking-wider bg-background/80 backdrop-blur-sm px-2 py-0.5 rounded text-muted-foreground font-medium">
+              Detail
+            </span>
           </div>
         </div>
       </Link>

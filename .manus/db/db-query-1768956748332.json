@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE products SET \n  image2Url = '/stitching-detail-1.jpg'\nWHERE id = 1;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-2.jpg'\nWHERE id = 2;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-3.jpg'\nWHERE id = 3;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-4.jpg'\nWHERE id = 4;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-1.jpg'\nWHERE id = 5;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-2.jpg'\nWHERE id = 6;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-3.jpg'\nWHERE id = 7;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-4.jpg'\nWHERE id = 8;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute UPDATE products SET \n  image2Url = '/stitching-detail-1.jpg'\nWHERE id = 1;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-2.jpg'\nWHERE id = 2;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-3.jpg'\nWHERE id = 3;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-4.jpg'\nWHERE id = 4;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-1.jpg'\nWHERE id = 5;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-2.jpg'\nWHERE id = 6;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-3.jpg'\nWHERE id = 7;\n\nUPDATE products SET \n  image2Url = '/stitching-detail-4.jpg'\nWHERE id = 8;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 3587
+}
