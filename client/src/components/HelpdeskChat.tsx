@@ -86,7 +86,7 @@ export function HelpdeskChat() {
         )}
       >
         <MessageCircle className="h-5 w-5" />
-        <span className="hidden sm:inline">Chat with Refit</span>
+        <span className="hidden sm:inline">Chat with Urban Refit</span>
       </button>
 
       {/* Chat Window */}
