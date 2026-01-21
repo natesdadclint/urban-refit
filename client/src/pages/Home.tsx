@@ -44,7 +44,7 @@ export default function Home() {
               
             </h1>
             <p className="text-base md:text-lg text-muted-foreground mb-6 max-w-lg">
-              Personally curated secondhand fashion that gives back to the community – because great style shouldn't cost the earth.
+              Personally curated pre-loved fashion that gives back to the community – because great style shouldn't cost the earth.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="gap-2">
