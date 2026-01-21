@@ -795,6 +795,173 @@ export const appRouter = router({
     }),
   }),
 
+  // ============ BLOG ROUTES ============
+  blog: router({
+    list: publicProcedure
+      .input(z.object({
+        category: z.enum(["style_tips", "sustainability", "brand_spotlight", "behind_the_scenes", "community", "trends"]).optional(),
+        limit: z.number().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        return db.getPublishedBlogPosts(input?.category, input?.limit);
+      }),
+    
+    listAll: adminProcedure.query(async () => {
+      return db.getAllBlogPosts();
+    }),
+    
+    getBySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        const post = await db.getBlogPostBySlug(input.slug);
+        if (post) {
+          await db.incrementBlogViewCount(post.id);
+        }
+        return post;
+      }),
+    
+    create: adminProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        slug: z.string().min(1),
+        excerpt: z.string().optional(),
+        content: z.string().min(1),
+        featuredImageUrl: z.string().optional(),
+        category: z.enum(["style_tips", "sustainability", "brand_spotlight", "behind_the_scenes", "community", "trends"]),
+        tags: z.string().optional(),
+        authorName: z.string().optional(),
+        readingTime: z.number().optional(),
+        status: z.enum(["draft", "published", "archived"]).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const id = await db.createBlogPost({
+          ...input,
+          authorId: ctx.user.id,
+          authorName: input.authorName || ctx.user.name || "Urban Refit Team",
+          publishedAt: input.status === "published" ? new Date() : undefined,
+        });
+        return { id, success: true };
+      }),
+    
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().min(1).optional(),
+        slug: z.string().min(1).optional(),
+        excerpt: z.string().optional(),
+        content: z.string().min(1).optional(),
+        featuredImageUrl: z.string().optional(),
+        category: z.enum(["style_tips", "sustainability", "brand_spotlight", "behind_the_scenes", "community", "trends"]).optional(),
+        tags: z.string().optional(),
+        readingTime: z.number().optional(),
+        status: z.enum(["draft", "published", "archived"]).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        const updateData: any = { ...data };
+        if (data.status === "published") {
+          const existing = await db.getBlogPostById(id);
+          if (existing && !existing.publishedAt) {
+            updateData.publishedAt = new Date();
+          }
+        }
+        await db.updateBlogPost(id, updateData);
+        return { success: true };
+      }),
+    
+    like: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.incrementBlogLikeCount(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // ============ CHAT/HELPDESK ROUTES ============
+  chat: router({
+    send: publicProcedure
+      .input(z.object({
+        sessionId: z.string(),
+        message: z.string().min(1),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Save user message
+        await db.createChatMessage({
+          sessionId: input.sessionId,
+          userId: ctx.user?.id,
+          role: "user",
+          content: input.message,
+        });
+        
+        // Get chat history for context
+        const history = await db.getChatHistory(input.sessionId, 10);
+        
+        // Build messages for LLM
+        const systemPrompt = `You are Refit, the friendly virtual assistant for Urban Refit - a curated secondhand clothing marketplace that gives back to the community.
+
+KEY INFORMATION:
+- Urban Refit sells pre-loved, quality branded clothing from partner thrift stores
+- 10% of every sale goes back to our thrift store partners
+- Each item is unique (one-of-one) since it's secondhand
+- Customers can return items for resale and earn tokens (25% of resale value)
+- Tokens can be used for discounts or donated to charity partners
+- Shipping is calculated at checkout
+- We accept all major credit cards via Stripe
+
+COMMON QUESTIONS:
+- Returns: Items can be returned within 14 days if unworn with tags
+- Shipping: Standard shipping 5-7 business days, express 2-3 days
+- Sizing: Check product descriptions for measurements
+- Condition: Items are rated as Like New, Excellent, Good, or Fair
+- Tokens: Earn tokens by returning items or making purchases
+
+Be helpful, friendly, and concise. Use casual language appropriate for Gen Z/millennial audience. Add relevant emojis occasionally. If you don't know something specific, suggest they contact support@urbanrefit.com.`;
+
+        const messages = [
+          { role: "system" as const, content: systemPrompt },
+          ...history.map(m => ({
+            role: m.role as "user" | "assistant",
+            content: m.content,
+          })),
+          { role: "user" as const, content: input.message },
+        ];
+        
+        try {
+          const response = await invokeLLM({ messages });
+          const rawContent = response.choices[0]?.message?.content;
+          const assistantMessage = typeof rawContent === 'string' ? rawContent : "Sorry, I'm having trouble right now. Please try again!";
+          
+          // Save assistant response
+          await db.createChatMessage({
+            sessionId: input.sessionId,
+            userId: ctx.user?.id,
+            role: "assistant",
+            content: assistantMessage,
+          });
+          
+          return { message: assistantMessage };
+        } catch (error) {
+          console.error("[Chat] LLM error:", error);
+          const fallbackMessage = "Oops! I'm having a moment 😅 Please try again or email us at support@urbanrefit.com";
+          
+          await db.createChatMessage({
+            sessionId: input.sessionId,
+            userId: ctx.user?.id,
+            role: "assistant",
+            content: fallbackMessage,
+          });
+          
+          return { message: fallbackMessage };
+        }
+      }),
+    
+    history: publicProcedure
+      .input(z.object({ sessionId: z.string() }))
+      .query(async ({ input }) => {
+        return db.getChatHistory(input.sessionId);
+      }),
+  }),
+
   // ============ ANALYTICS ROUTES ============
   analytics: router({
     sales: adminProcedure.query(async () => {

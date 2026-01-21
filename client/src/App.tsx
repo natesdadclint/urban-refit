@@ -32,6 +32,9 @@ import CourierReturn from "./pages/CourierReturn";
 import Charities from "./pages/Charities";
 import FAQ from "./pages/FAQ";
 import Join from "./pages/Join";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import { HelpdeskChat } from "./components/HelpdeskChat";
 
 function Router() {
   return (
@@ -57,6 +60,8 @@ function Router() {
       <Route path="/charities" component={Charities} />
       <Route path="/faq" component={FAQ} />
       <Route path="/join" component={Join} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />
@@ -88,6 +93,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <Router />
+          <HelpdeskChat />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

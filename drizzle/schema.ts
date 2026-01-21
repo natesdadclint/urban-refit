@@ -377,3 +377,64 @@ export const discountTiers = mysqlTable("discount_tiers", {
 
 export type DiscountTier = typeof discountTiers.$inferSelect;
 export type InsertDiscountTier = typeof discountTiers.$inferInsert;
+
+
+/**
+ * Blog posts - content for the blog section
+ */
+export const blogPosts = mysqlTable("blog_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  title: varchar("title", { length: 500 }).notNull(),
+  excerpt: text("excerpt"),
+  content: text("content").notNull(),
+  
+  // Featured image
+  featuredImageUrl: text("featuredImageUrl"),
+  
+  // Categorization
+  category: mysqlEnum("category", ["style_tips", "sustainability", "brand_spotlight", "behind_the_scenes", "community", "trends"]).default("style_tips").notNull(),
+  tags: text("tags"), // JSON array of tags
+  
+  // Author info
+  authorId: int("authorId"),
+  authorName: varchar("authorName", { length: 255 }),
+  
+  // Engagement metrics
+  viewCount: int("viewCount").default(0).notNull(),
+  likeCount: int("likeCount").default(0).notNull(),
+  
+  // Publishing
+  status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft").notNull(),
+  publishedAt: timestamp("publishedAt"),
+  
+  // Reading time estimate (in minutes)
+  readingTime: int("readingTime").default(5).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
+/**
+ * Chat messages - conversation history for helpdesk bot
+ */
+export const chatMessages = mysqlTable("chat_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("sessionId", { length: 100 }).notNull(),
+  userId: int("userId"), // null for anonymous users
+  
+  // Message content
+  role: mysqlEnum("role", ["user", "assistant"]).notNull(),
+  content: text("content").notNull(),
+  
+  // Metadata
+  metadata: text("metadata"), // JSON for any additional data
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ChatMessage = typeof chatMessages.$inferSelect;
+export type InsertChatMessage = typeof chatMessages.$inferInsert;

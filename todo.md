@@ -150,3 +150,19 @@
 - [x] Generate custom AI category images for Shoes
 - [x] Generate custom AI category images for Caps
 - [x] Update category images in the codebase
+
+## Blog Page (Gen Y/Z/Alpha Style)
+- [x] Create blog database schema (posts, categories, tags)
+- [x] Implement blog backend routes (list, get by slug, categories, like)
+- [x] Design blog listing page with modern Gen Z aesthetics
+- [x] Design individual blog post page with engaging layout
+- [x] Add blog navigation link to header
+- [x] Generate AI blog post images (5 unique images)
+- [x] Seed initial blog posts about sustainable fashion (5 posts)
+
+## Virtual Assistant Helpdesk Bot
+- [x] Create AI-powered chatbot component (Refit assistant)
+- [x] Implement chat backend with LLM integration
+- [x] Add floating chat button to all pages
+- [x] Configure chatbot knowledge base for Urban Refit FAQs
+- [x] Style chatbot with modern, friendly UI (lime/emerald gradient)

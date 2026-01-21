@@ -75,6 +75,14 @@ export default function Layout({ children }: LayoutProps) {
                   {cat.name}
                 </Link>
               ))}
+              <Link
+                href="/blog"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location.startsWith("/blog") ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                Blog
+              </Link>
             </nav>
 
             {/* Right side actions */}

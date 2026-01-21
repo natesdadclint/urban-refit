@@ -849,3 +849,91 @@ export async function getLoyaltyAnalytics() {
     charityDonations: charityStats[0],
   };
 }
+
+
+// ============ BLOG POST OPERATIONS ============
+import { blogPosts, InsertBlogPost, BlogPost, chatMessages, InsertChatMessage, ChatMessage } from "../drizzle/schema";
+
+export async function createBlogPost(post: InsertBlogPost) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(blogPosts).values(post);
+  return result[0].insertId;
+}
+
+export async function updateBlogPost(id: number, post: Partial<InsertBlogPost>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(blogPosts).set(post).where(eq(blogPosts.id, id));
+}
+
+export async function getBlogPostBySlug(slug: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const results = await db.select().from(blogPosts).where(eq(blogPosts.slug, slug));
+  return results[0] || null;
+}
+
+export async function getBlogPostById(id: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const results = await db.select().from(blogPosts).where(eq(blogPosts.id, id));
+  return results[0] || null;
+}
+
+export async function getPublishedBlogPosts(category?: string, limit?: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  let query = db.select().from(blogPosts)
+    .where(eq(blogPosts.status, "published"))
+    .orderBy(desc(blogPosts.publishedAt));
+  
+  if (category) {
+    query = db.select().from(blogPosts)
+      .where(and(eq(blogPosts.status, "published"), eq(blogPosts.category, category as any)))
+      .orderBy(desc(blogPosts.publishedAt));
+  }
+  
+  const results = await query;
+  return limit ? results.slice(0, limit) : results;
+}
+
+export async function getAllBlogPosts() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt));
+}
+
+export async function incrementBlogViewCount(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(blogPosts)
+    .set({ viewCount: sql`${blogPosts.viewCount} + 1` })
+    .where(eq(blogPosts.id, id));
+}
+
+export async function incrementBlogLikeCount(id: number) {
+  const db = await getDb();
+  if (!db) return;
+  await db.update(blogPosts)
+    .set({ likeCount: sql`${blogPosts.likeCount} + 1` })
+    .where(eq(blogPosts.id, id));
+}
+
+// ============ CHAT MESSAGE OPERATIONS ============
+export async function createChatMessage(message: InsertChatMessage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(chatMessages).values(message);
+  return result[0].insertId;
+}
+
+export async function getChatHistory(sessionId: string, limit: number = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(chatMessages)
+    .where(eq(chatMessages.sessionId, sessionId))
+    .orderBy(chatMessages.createdAt)
+    .limit(limit);
+}
