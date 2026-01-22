@@ -214,3 +214,9 @@
 - [x] Fix email functionality for contact forms and notifications (added mailto links to help@urbanrefit.store)
 - [x] Add packaging/shipping details to Sell to Us page (free postage-paid returns)
 - [x] Add rural delivery exception notice for shipping
+
+## Sample Product Reviews
+- [x] Seed database with 8-10 sample product reviews (10 reviews added)
+- [x] Include realistic customer names, ratings, and feedback
+- [x] Add fit information (true to size, runs small/large)
+- [x] Verify reviews display correctly on Reviews page (4.6 star average, 6 five-star and 4 four-star reviews)

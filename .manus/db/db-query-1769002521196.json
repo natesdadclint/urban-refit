@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, name, brand FROM products WHERE status = 'available' LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, brand FROM products WHERE status = 'available' LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt",
+      "brand": "Ralph Lauren"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans",
+      "brand": "Levi's"
+    },
+    {
+      "id": "3",
+      "name": "Carhartt Work Jacket",
+      "brand": "Carhartt"
+    },
+    {
+      "id": "4",
+      "name": "Nike Air Force 1 Low",
+      "brand": "Nike"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap",
+      "brand": "New Era"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "brand": "Tommy Hilfiger"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants",
+      "brand": "Dickies"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket",
+      "brand": "Patagonia"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tbrand\n1\tRalph Lauren Oxford Shirt\tRalph Lauren\n2\tLevi's 501 Original Jeans\tLevi's\n3\tCarhartt Work Jacket\tCarhartt\n4\tNike Air Force 1 Low\tNike\n5\tNew Era Yankees Cap\tNew Era\n6\tTommy Hilfiger Polo\tTommy Hilfiger\n7\tDickies 874 Work Pants\tDickies\n8\tPatagonia Fleece Jacket\tPatagonia\n",
+  "stderr": "",
+  "execution_time_ms": 1560
+}
