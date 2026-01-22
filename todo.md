@@ -220,3 +220,13 @@
 - [x] Include realistic customer names, ratings, and feedback
 - [x] Add fit information (true to size, runs small/large)
 - [x] Verify reviews display correctly on Reviews page (4.6 star average, 6 five-star and 4 four-star reviews)
+
+## Admin Dashboard for Sell Submissions
+- [x] Add admin-only routes for sell submissions management (listAll, stats, updateStatus)
+- [x] Create admin dashboard page to view all submissions (/admin/sell-submissions)
+- [x] Add ability to review submission details and photos (modal dialog with image gallery)
+- [x] Implement offer management (make offer, set price with offerAmount field)
+- [x] Add status update functionality (pending, reviewing, accepted, rejected, completed)
+- [x] Display submission statistics and metrics (total, pending, reviewing, accepted, rejected)
+- [x] Add filtering and sorting by status and brand search
+- [x] Write vitest tests for admin sell submissions routes (7 tests passing)

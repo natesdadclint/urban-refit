@@ -36,6 +36,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Reviews from "./pages/Reviews";
 import SellToUs from "./pages/SellToUs";
+import AdminSellSubmissions from "./pages/AdminSellSubmissions";
 import { HelpdeskChat } from "./components/HelpdeskChat";
 
 function Router() {
@@ -78,6 +79,7 @@ function Router() {
       <Route path="/admin/insights" component={AdminInsights} />
       <Route path="/admin/courier-returns" component={AdminCourierReturns} />
       <Route path="/admin/charities" component={AdminCharities} />
+      <Route path="/admin/sell-submissions" component={AdminSellSubmissions} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
