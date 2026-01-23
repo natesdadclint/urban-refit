@@ -233,3 +233,11 @@
 
 ## Review Verification Fixes
 - [x] Verify Verified Purchase badge only appears on reviews from actual customers with purchases (5 verified, 5 unverified sample reviews)
+
+## Bulk Image Upload Feature
+- [x] Create admin bulk image upload page (/admin/bulk-upload)
+- [x] Implement backend routes for bulk image upload (admin.bulkUploadImages)
+- [x] Add image processing and S3 storage integration
+- [x] Support CSV metadata mapping for image association
+- [x] Create separate product_metadata table for detailed product information
+- [x] Add route to App.tsx for bulk upload page

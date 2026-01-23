@@ -15,7 +15,8 @@ import {
   tokenTransactions, InsertTokenTransaction, TokenTransaction,
   charityDonations, InsertCharityDonation, CharityDonation,
   discountTiers, InsertDiscountTier, DiscountTier,
-  sellSubmissions, InsertSellSubmission, SellSubmission
+  sellSubmissions, InsertSellSubmission,
+  productMetadata, InsertProductMetadata, ProductMetadata
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1224,4 +1225,36 @@ export async function getSellSubmissionStats(): Promise<{
     console.error("[Database] Failed to get sell submission stats:", error);
     return { total: 0, pending: 0, reviewing: 0, accepted: 0, rejected: 0, completed: 0 };
   }
+}
+
+
+// ============ PRODUCT METADATA OPERATIONS ============
+
+export async function createProductMetadata(data: InsertProductMetadata) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(productMetadata).values(data);
+  return result[0].insertId;
+}
+
+export async function getProductMetadata(productId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  return await db.query.productMetadata.findFirst({
+    where: (meta) => eq(meta.productId, productId),
+  });
+}
+
+export async function updateProductMetadata(productId: number, data: Partial<InsertProductMetadata>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(productMetadata).set(data).where(eq(productMetadata.productId, productId));
+}
+
+export async function bulkCreateProductMetadata(items: InsertProductMetadata[]) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  if (items.length === 0) return [];
+  const result = await db.insert(productMetadata).values(items);
+  return result;
 }

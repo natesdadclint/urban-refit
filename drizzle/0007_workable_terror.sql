@@ -1,0 +1,22 @@
+CREATE TABLE `product_metadata` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`productId` int NOT NULL,
+	`invoiceNumber` varchar(100),
+	`thriftStoreName` varchar(255),
+	`styleDescription` text,
+	`materialDescription` text,
+	`customInformation` text,
+	`image1Alt` varchar(255),
+	`image2Alt` varchar(255),
+	`image3Url` text,
+	`image3Alt` varchar(255),
+	`image4Url` text,
+	`image4Alt` varchar(255),
+	`careInstructions` text,
+	`sizeGuide` text,
+	`productHighlights` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `product_metadata_id` PRIMARY KEY(`id`),
+	CONSTRAINT `product_metadata_productId_unique` UNIQUE(`productId`)
+);

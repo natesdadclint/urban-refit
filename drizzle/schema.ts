@@ -517,3 +517,40 @@ export const sellSubmissions = mysqlTable("sell_submissions", {
 
 export type SellSubmission = typeof sellSubmissions.$inferSelect;
 export type InsertSellSubmission = typeof sellSubmissions.$inferInsert;
+
+/**
+ * Product Metadata - Detailed product information for customers
+ * Stored separately from core product data to keep metadata organized
+ */
+export const productMetadata = mysqlTable("product_metadata", {
+  id: int("id").autoincrement().primaryKey(),
+  productId: int("productId").notNull().unique(),
+  
+  // Invoice and sourcing information
+  invoiceNumber: varchar("invoiceNumber", { length: 100 }),
+  thriftStoreName: varchar("thriftStoreName", { length: 255 }),
+  
+  // Detailed product information
+  styleDescription: text("styleDescription"), // Detailed style description
+  materialDescription: text("materialDescription"), // Material composition and care
+  customInformation: text("customInformation"), // Custom fields/notes
+  
+  // Image metadata
+  image1Alt: varchar("image1Alt", { length: 255 }), // Alt text for image 1
+  image2Alt: varchar("image2Alt", { length: 255 }), // Alt text for image 2
+  image3Url: text("image3Url"), // Additional image
+  image3Alt: varchar("image3Alt", { length: 255 }),
+  image4Url: text("image4Url"), // Additional image
+  image4Alt: varchar("image4Alt", { length: 255 }),
+  
+  // Customer-facing details
+  careInstructions: text("careInstructions"), // How to care for the item
+  sizeGuide: text("sizeGuide"), // Size fitting details
+  productHighlights: text("productHighlights"), // Key selling points (JSON array)
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProductMetadata = typeof productMetadata.$inferSelect;
+export type InsertProductMetadata = typeof productMetadata.$inferInsert;
