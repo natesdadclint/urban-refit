@@ -38,6 +38,7 @@ import Reviews from "./pages/Reviews";
 import SellToUs from "./pages/SellToUs";
 import AdminSellSubmissions from "./pages/AdminSellSubmissions";
 import AdminBulkUpload from "./pages/AdminBulkUpload";
+import AdminPartnerProfitability from "./pages/AdminPartnerProfitability";
 import { HelpdeskChat } from "./components/HelpdeskChat";
 
 function Router() {
@@ -82,6 +83,7 @@ function Router() {
       <Route path="/admin/charities" component={AdminCharities} />
       <Route path="/admin/sell-submissions" component={AdminSellSubmissions} />
       <Route path="/admin/bulk-upload" component={AdminBulkUpload} />
+      <Route path="/admin/partner-profitability" component={AdminPartnerProfitability} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

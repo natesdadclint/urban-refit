@@ -15,6 +15,7 @@ import {
   X,
   RefreshCw,
   Heart,
+  TrendingUp,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -29,6 +30,7 @@ const navItems = [
   { href: "/admin/thrift-stores", icon: Store, label: "Thrift Stores" },
   { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
   { href: "/admin/payouts", icon: DollarSign, label: "Payouts" },
+  { href: "/admin/partner-profitability", icon: TrendingUp, label: "Partner Profitability" },
   { href: "/admin/courier-returns", icon: RefreshCw, label: "Courier Returns" },
   { href: "/admin/charities", icon: Heart, label: "Charities" },
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },

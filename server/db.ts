@@ -1343,3 +1343,358 @@ export async function getSubscriberStats(): Promise<{
   
   return stats;
 }
+
+
+// ============ SALES ATTRIBUTION & PARTNER PROFITABILITY ============
+
+export interface PartnerProfitabilityData {
+  thriftStoreId: number;
+  storeName: string;
+  city: string | null;
+  // Inventory metrics
+  totalProductsSourced: number;
+  productsSold: number;
+  productsAvailable: number;
+  sellThroughRate: number; // percentage
+  // Financial metrics
+  totalRevenue: number;
+  totalCost: number;
+  grossProfit: number;
+  profitMargin: number; // percentage
+  avgMarkup: number;
+  // Payout metrics
+  totalPayouts: number;
+  pendingPayouts: number;
+  // Performance metrics
+  avgDaysToSell: number | null;
+  topCategory: string | null;
+  topBrand: string | null;
+}
+
+export async function getPartnerProfitability(): Promise<PartnerProfitabilityData[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get all thrift stores with their product and sales data
+  const storeData = await db.select({
+    thriftStoreId: thriftStores.id,
+    storeName: thriftStores.name,
+    city: thriftStores.city,
+    totalPayout: thriftStores.totalPayout,
+  })
+  .from(thriftStores)
+  .where(eq(thriftStores.isActive, true));
+
+  const results: PartnerProfitabilityData[] = [];
+
+  for (const store of storeData) {
+    // Get product metrics for this store
+    const productMetrics = await db.select({
+      totalProducts: sql<number>`COUNT(*)`,
+      soldProducts: sql<number>`SUM(CASE WHEN ${products.status} = 'sold' THEN 1 ELSE 0 END)`,
+      availableProducts: sql<number>`SUM(CASE WHEN ${products.status} = 'available' THEN 1 ELSE 0 END)`,
+      totalRevenue: sql<number>`COALESCE(SUM(CASE WHEN ${products.status} = 'sold' THEN ${products.salePrice} ELSE 0 END), 0)`,
+      totalCost: sql<number>`COALESCE(SUM(CASE WHEN ${products.status} = 'sold' THEN ${products.originalCost} ELSE 0 END), 0)`,
+      avgMarkup: sql<number>`AVG(${products.markupPercentage})`,
+    })
+    .from(products)
+    .where(eq(products.thriftStoreId, store.thriftStoreId));
+
+    // Get top category for this store (sold items only)
+    const topCategoryResult = await db.select({
+      category: products.category,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(products)
+    .where(and(
+      eq(products.thriftStoreId, store.thriftStoreId),
+      eq(products.status, "sold")
+    ))
+    .groupBy(products.category)
+    .orderBy(desc(sql`COUNT(*)`))
+    .limit(1);
+
+    // Get top brand for this store (sold items only)
+    const topBrandResult = await db.select({
+      brand: products.brand,
+      count: sql<number>`COUNT(*)`,
+    })
+    .from(products)
+    .where(and(
+      eq(products.thriftStoreId, store.thriftStoreId),
+      eq(products.status, "sold")
+    ))
+    .groupBy(products.brand)
+    .orderBy(desc(sql`COUNT(*)`))
+    .limit(1);
+
+    // Get pending payouts for this store
+    const pendingPayoutsResult = await db.select({
+      pendingAmount: sql<number>`COALESCE(SUM(${payouts.amount}), 0)`,
+    })
+    .from(payouts)
+    .where(and(
+      eq(payouts.thriftStoreId, store.thriftStoreId),
+      eq(payouts.status, "pending")
+    ));
+
+    // Calculate average days to sell
+    const avgDaysResult = await db.select({
+      avgDays: sql<number>`AVG(DATEDIFF(${products.soldAt}, ${products.createdAt}))`,
+    })
+    .from(products)
+    .where(and(
+      eq(products.thriftStoreId, store.thriftStoreId),
+      eq(products.status, "sold"),
+      sql`${products.soldAt} IS NOT NULL`
+    ));
+
+    const metrics = productMetrics[0];
+    const totalProducts = Number(metrics?.totalProducts) || 0;
+    const soldProducts = Number(metrics?.soldProducts) || 0;
+    const availableProducts = Number(metrics?.availableProducts) || 0;
+    const totalRevenue = Number(metrics?.totalRevenue) || 0;
+    const totalCost = Number(metrics?.totalCost) || 0;
+    const grossProfit = totalRevenue - totalCost;
+
+    results.push({
+      thriftStoreId: store.thriftStoreId,
+      storeName: store.storeName,
+      city: store.city,
+      totalProductsSourced: totalProducts,
+      productsSold: soldProducts,
+      productsAvailable: availableProducts,
+      sellThroughRate: totalProducts > 0 ? (soldProducts / totalProducts) * 100 : 0,
+      totalRevenue,
+      totalCost,
+      grossProfit,
+      profitMargin: totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0,
+      avgMarkup: Number(metrics?.avgMarkup) || 0,
+      totalPayouts: Number(store.totalPayout) || 0,
+      pendingPayouts: Number(pendingPayoutsResult[0]?.pendingAmount) || 0,
+      avgDaysToSell: avgDaysResult[0]?.avgDays ? Number(avgDaysResult[0].avgDays) : null,
+      topCategory: topCategoryResult[0]?.category || null,
+      topBrand: topBrandResult[0]?.brand || null,
+    });
+  }
+
+  // Sort by gross profit descending
+  return results.sort((a, b) => b.grossProfit - a.grossProfit);
+}
+
+export interface SalesAttributionSummary {
+  totalRevenue: number;
+  totalCost: number;
+  totalGrossProfit: number;
+  overallProfitMargin: number;
+  totalItemsSold: number;
+  avgRevenuePerItem: number;
+  avgProfitPerItem: number;
+  topPerformingStores: Array<{
+    storeId: number;
+    storeName: string;
+    grossProfit: number;
+    itemsSold: number;
+  }>;
+  bottomPerformingStores: Array<{
+    storeId: number;
+    storeName: string;
+    grossProfit: number;
+    itemsSold: number;
+  }>;
+  profitByCategory: Array<{
+    category: string;
+    revenue: number;
+    cost: number;
+    profit: number;
+    itemsSold: number;
+  }>;
+}
+
+export async function getSalesAttributionSummary(): Promise<SalesAttributionSummary | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  // Overall metrics from sold products
+  const overallMetrics = await db.select({
+    totalRevenue: sql<number>`COALESCE(SUM(${products.salePrice}), 0)`,
+    totalCost: sql<number>`COALESCE(SUM(${products.originalCost}), 0)`,
+    totalItemsSold: sql<number>`COUNT(*)`,
+  })
+  .from(products)
+  .where(eq(products.status, "sold"));
+
+  const totalRevenue = Number(overallMetrics[0]?.totalRevenue) || 0;
+  const totalCost = Number(overallMetrics[0]?.totalCost) || 0;
+  const totalItemsSold = Number(overallMetrics[0]?.totalItemsSold) || 0;
+  const totalGrossProfit = totalRevenue - totalCost;
+
+  // Profit by category
+  const categoryMetrics = await db.select({
+    category: products.category,
+    revenue: sql<number>`COALESCE(SUM(${products.salePrice}), 0)`,
+    cost: sql<number>`COALESCE(SUM(${products.originalCost}), 0)`,
+    itemsSold: sql<number>`COUNT(*)`,
+  })
+  .from(products)
+  .where(eq(products.status, "sold"))
+  .groupBy(products.category)
+  .orderBy(desc(sql`SUM(${products.salePrice}) - SUM(${products.originalCost})`));
+
+  // Top and bottom performing stores
+  const storePerformance = await db.select({
+    storeId: thriftStores.id,
+    storeName: thriftStores.name,
+    grossProfit: sql<number>`COALESCE(SUM(${products.salePrice} - ${products.originalCost}), 0)`,
+    itemsSold: sql<number>`COUNT(*)`,
+  })
+  .from(products)
+  .innerJoin(thriftStores, eq(products.thriftStoreId, thriftStores.id))
+  .where(eq(products.status, "sold"))
+  .groupBy(thriftStores.id, thriftStores.name)
+  .orderBy(desc(sql`SUM(${products.salePrice} - ${products.originalCost})`));
+
+  const topPerformingStores = storePerformance.slice(0, 5).map(s => ({
+    storeId: s.storeId,
+    storeName: s.storeName,
+    grossProfit: Number(s.grossProfit),
+    itemsSold: Number(s.itemsSold),
+  }));
+
+  const bottomPerformingStores = storePerformance.slice(-5).reverse().map(s => ({
+    storeId: s.storeId,
+    storeName: s.storeName,
+    grossProfit: Number(s.grossProfit),
+    itemsSold: Number(s.itemsSold),
+  }));
+
+  return {
+    totalRevenue,
+    totalCost,
+    totalGrossProfit,
+    overallProfitMargin: totalRevenue > 0 ? (totalGrossProfit / totalRevenue) * 100 : 0,
+    totalItemsSold,
+    avgRevenuePerItem: totalItemsSold > 0 ? totalRevenue / totalItemsSold : 0,
+    avgProfitPerItem: totalItemsSold > 0 ? totalGrossProfit / totalItemsSold : 0,
+    topPerformingStores,
+    bottomPerformingStores,
+    profitByCategory: categoryMetrics.map(c => ({
+      category: c.category,
+      revenue: Number(c.revenue),
+      cost: Number(c.cost),
+      profit: Number(c.revenue) - Number(c.cost),
+      itemsSold: Number(c.itemsSold),
+    })),
+  };
+}
+
+export interface StoreDetailedAnalytics {
+  store: ThriftStore;
+  monthlyPerformance: Array<{
+    month: string;
+    revenue: number;
+    cost: number;
+    profit: number;
+    itemsSold: number;
+  }>;
+  topSellingProducts: Array<{
+    productId: number;
+    name: string;
+    brand: string | null;
+    salePrice: number;
+    profit: number;
+    soldAt: Date | null;
+  }>;
+  categoryBreakdown: Array<{
+    category: string;
+    count: number;
+    revenue: number;
+    profit: number;
+  }>;
+}
+
+export async function getStoreDetailedAnalytics(thriftStoreId: number): Promise<StoreDetailedAnalytics | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  // Get store details
+  const storeResult = await db.select().from(thriftStores).where(eq(thriftStores.id, thriftStoreId)).limit(1);
+  if (storeResult.length === 0) return null;
+
+  const store = storeResult[0];
+
+  // Monthly performance (last 12 months)
+  // Use raw SQL to avoid GROUP BY issues with MySQL's only_full_group_by mode
+  const monthlyPerformanceRaw = await db.execute(sql`
+    SELECT 
+      DATE_FORMAT(soldAt, '%Y-%m') as month,
+      COALESCE(SUM(salePrice), 0) as revenue,
+      COALESCE(SUM(originalCost), 0) as cost,
+      COUNT(*) as itemsSold
+    FROM products
+    WHERE thriftStoreId = ${thriftStoreId}
+      AND status = 'sold'
+      AND soldAt IS NOT NULL
+      AND soldAt >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+    GROUP BY DATE_FORMAT(soldAt, '%Y-%m')
+    ORDER BY month
+  `);
+  const monthlyPerformance = ((monthlyPerformanceRaw as unknown as any[][])[0] || []) as any[];
+
+  // Top selling products
+  const topProducts = await db.select({
+    productId: products.id,
+    name: products.name,
+    brand: products.brand,
+    salePrice: products.salePrice,
+    originalCost: products.originalCost,
+    soldAt: products.soldAt,
+  })
+  .from(products)
+  .where(and(
+    eq(products.thriftStoreId, thriftStoreId),
+    eq(products.status, "sold")
+  ))
+  .orderBy(desc(sql`${products.salePrice} - ${products.originalCost}`))
+  .limit(10);
+
+  // Category breakdown
+  const categoryBreakdown = await db.select({
+    category: products.category,
+    count: sql<number>`COUNT(*)`,
+    revenue: sql<number>`COALESCE(SUM(${products.salePrice}), 0)`,
+    cost: sql<number>`COALESCE(SUM(${products.originalCost}), 0)`,
+  })
+  .from(products)
+  .where(and(
+    eq(products.thriftStoreId, thriftStoreId),
+    eq(products.status, "sold")
+  ))
+  .groupBy(products.category)
+  .orderBy(desc(sql`SUM(${products.salePrice})`));
+
+  return {
+    store,
+    monthlyPerformance: monthlyPerformance.map(m => ({
+      month: m.month,
+      revenue: Number(m.revenue),
+      cost: Number(m.cost),
+      profit: Number(m.revenue) - Number(m.cost),
+      itemsSold: Number(m.itemsSold),
+    })),
+    topSellingProducts: topProducts.map(p => ({
+      productId: p.productId,
+      name: p.name,
+      brand: p.brand,
+      salePrice: Number(p.salePrice),
+      profit: Number(p.salePrice) - Number(p.originalCost),
+      soldAt: p.soldAt,
+    })),
+    categoryBreakdown: categoryBreakdown.map(c => ({
+      category: c.category,
+      count: Number(c.count),
+      revenue: Number(c.revenue),
+      profit: Number(c.revenue) - Number(c.cost),
+    })),
+  };
+}

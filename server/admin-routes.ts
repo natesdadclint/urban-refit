@@ -76,4 +76,34 @@ export const adminRouter = router({
         });
       }
     }),
+
+  // ============ SALES ATTRIBUTION & PARTNER PROFITABILITY ============
+  
+  // Get partner profitability data for all thrift stores
+  getPartnerProfitability: adminProcedure
+    .query(async () => {
+      const data = await db.getPartnerProfitability();
+      return data;
+    }),
+
+  // Get overall sales attribution summary
+  getSalesAttributionSummary: adminProcedure
+    .query(async () => {
+      const summary = await db.getSalesAttributionSummary();
+      if (!summary) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Failed to fetch sales attribution summary' });
+      }
+      return summary;
+    }),
+
+  // Get detailed analytics for a specific thrift store
+  getStoreDetailedAnalytics: adminProcedure
+    .input(z.object({ thriftStoreId: z.number() }))
+    .query(async ({ input }) => {
+      const analytics = await db.getStoreDetailedAnalytics(input.thriftStoreId);
+      if (!analytics) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Store not found' });
+      }
+      return analytics;
+    }),
 });

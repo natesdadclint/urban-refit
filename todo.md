@@ -278,3 +278,10 @@
 - [x] Create Mailchimp helper for adding subscribers to audience
 - [x] Update newsletter subscription routes to sync with Mailchimp
 - [x] Write vitest test for Mailchimp integration
+
+## Sales Attribution & Partner Profitability
+- [x] Review database schema for products, orders, and thrift stores relationships
+- [x] Create sales attribution queries linking orders to thrift store sources
+- [x] Add analytics endpoints for partner profitability metrics
+- [x] Build admin dashboard section for partner profitability analytics
+- [x] Display metrics: total sales, profit margins, best-selling items per partner
