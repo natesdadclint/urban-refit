@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ImageZoom from "@/components/ImageZoom";
+import SocialShare from "@/components/SocialShare";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -209,6 +210,16 @@ export default function ProductDetail() {
                 </p>
               </div>
             )}
+
+            <Separator className="my-6" />
+
+            {/* Social Share */}
+            <SocialShare
+              url={typeof window !== "undefined" ? window.location.href : ""}
+              title={`${product.name} - Urban Refit`}
+              description={product.description || `Check out this ${product.brand || ""} ${product.name} on Urban Refit`}
+              image={product.image1Url || undefined}
+            />
 
             <Separator className="my-6" />
 
