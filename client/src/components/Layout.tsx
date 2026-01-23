@@ -3,8 +3,10 @@ import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, User, Menu, X, LogOut, Settings, Coins, Heart, RefreshCw } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ShoppingBag, User, Menu, X, LogOut, Settings, Coins, Heart, RefreshCw, Mail, Loader2, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,14 +33,41 @@ export default function Layout({ children }: LayoutProps) {
   const { user, isAuthenticated, logout, loading } = useAuth();
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
   
   const { data: cartCount } = trpc.cart.count.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.alreadySubscribed ? "Already Subscribed" : "Subscribed!", {
+        description: data.message,
+      });
+      setNewsletterEmail("");
+    },
+    onError: (error) => {
+      toast.error("Error", {
+        description: error.message || "Failed to subscribe. Please try again.",
+      });
+    },
+  });
+
   const handleLogout = async () => {
     await logout();
     window.location.href = "/";
+  };
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+    
+    subscribeMutation.mutate({
+      email: newsletterEmail,
+      source: "footer",
+      newArrivals: true,
+      exclusiveOffers: true,
+    });
   };
 
   return (
@@ -231,14 +260,44 @@ export default function Layout({ children }: LayoutProps) {
       <footer className="border-t border-border bg-secondary/30">
         <div className="container py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Brand and Newsletter */}
             <div className="md:col-span-2">
               <h3 className="text-xl font-serif font-semibold mb-4">Urban Refit</h3>
-              <p className="text-muted-foreground text-sm max-w-md">
+              <p className="text-muted-foreground text-sm max-w-md mb-6">
                 Curated Premium brands. We source the finest pre-loved fashion
                 from local thrift stores, giving garments a second life while supporting
                 our community partners.
               </p>
+              
+              {/* Newsletter Signup */}
+              <div className="max-w-sm">
+                <h4 className="font-semibold mb-3 text-sm">Stay Updated</h4>
+                <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      className="pl-10 bg-background"
+                      required
+                    />
+                  </div>
+                  <Button type="submit" size="icon" disabled={subscribeMutation.isPending}>
+                    {subscribeMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <ArrowRight className="w-4 h-4" />
+                    )}
+                  </Button>
+                </form>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Get notified about new arrivals and exclusive offers.
+                </p>
+              </div>
             </div>
+            
             <div>
               <h4 className="font-semibold mb-4">Shop</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
@@ -330,4 +389,3 @@ export default function Layout({ children }: LayoutProps) {
     </div>
   );
 }
-

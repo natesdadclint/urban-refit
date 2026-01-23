@@ -16,7 +16,8 @@ import {
   charityDonations, InsertCharityDonation, CharityDonation,
   discountTiers, InsertDiscountTier, DiscountTier,
   sellSubmissions, InsertSellSubmission, SellSubmission,
-  productMetadata, InsertProductMetadata, ProductMetadata
+  productMetadata, InsertProductMetadata, ProductMetadata,
+  emailSubscribers, InsertEmailSubscriber, EmailSubscriber
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1256,4 +1257,89 @@ export async function bulkCreateProductMetadata(items: InsertProductMetadata[]) 
   if (items.length === 0) return [];
   const result = await db.insert(productMetadata).values(items);
   return result;
+}
+
+
+// ============ EMAIL SUBSCRIBER OPERATIONS ============
+
+export async function createEmailSubscriber(subscriber: InsertEmailSubscriber): Promise<EmailSubscriber | null> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  try {
+    await db.insert(emailSubscribers).values(subscriber);
+    const [created] = await db.select().from(emailSubscribers).where(eq(emailSubscribers.email, subscriber.email));
+    return created || null;
+  } catch (error: any) {
+    // Handle duplicate email
+    if (error.code === 'ER_DUP_ENTRY') {
+      return null;
+    }
+    throw error;
+  }
+}
+
+export async function getEmailSubscriberByEmail(email: string): Promise<EmailSubscriber | null> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const [subscriber] = await db.select().from(emailSubscribers).where(eq(emailSubscribers.email, email));
+  return subscriber || null;
+}
+
+export async function updateEmailSubscriber(email: string, data: Partial<InsertEmailSubscriber>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.update(emailSubscribers).set(data).where(eq(emailSubscribers.email, email));
+}
+
+export async function unsubscribeEmail(email: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.update(emailSubscribers)
+    .set({ isActive: false, unsubscribedAt: new Date() })
+    .where(eq(emailSubscribers.email, email));
+  
+  return true;
+}
+
+export async function getAllActiveSubscribers(): Promise<EmailSubscriber[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db.select().from(emailSubscribers).where(eq(emailSubscribers.isActive, true)).orderBy(desc(emailSubscribers.createdAt));
+}
+
+export async function getSubscribersBySource(source: string): Promise<EmailSubscriber[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db.select().from(emailSubscribers)
+    .where(and(eq(emailSubscribers.source, source as any), eq(emailSubscribers.isActive, true)))
+    .orderBy(desc(emailSubscribers.createdAt));
+}
+
+export async function getSubscriberStats(): Promise<{
+  total: number;
+  active: number;
+  bySource: Record<string, number>;
+}> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const all = await db.select().from(emailSubscribers);
+  
+  const stats = {
+    total: all.length,
+    active: all.filter(s => s.isActive).length,
+    bySource: {} as Record<string, number>
+  };
+  
+  for (const sub of all) {
+    stats.bySource[sub.source] = (stats.bySource[sub.source] || 0) + 1;
+  }
+  
+  return stats;
 }

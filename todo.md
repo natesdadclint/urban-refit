@@ -252,3 +252,12 @@
 ## Font Size Bug Fix
 - [x] Investigate font size increasing when navigating between pages
 - [x] Ensure consistent font size throughout the site (standardized to text-base/16px)
+
+## Email Collection & Newsletter System
+- [x] Create email_subscribers database table (email, source, preferences, subscribed_at)
+- [x] Create backend routes for email subscription (subscribe, unsubscribe, list)
+- [x] Update Join/Become a Member page with email input field for non-logged-in users
+- [x] Update FAQ "Still have questions" section with email collection form
+- [x] Add newsletter signup component to footer
+- [x] Add email validation and duplicate checking
+- [x] Write vitest tests for email subscription routes

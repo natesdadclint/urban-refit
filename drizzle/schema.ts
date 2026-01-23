@@ -554,3 +554,33 @@ export const productMetadata = mysqlTable("product_metadata", {
 
 export type ProductMetadata = typeof productMetadata.$inferSelect;
 export type InsertProductMetadata = typeof productMetadata.$inferInsert;
+
+
+/**
+ * Email subscribers - newsletter and marketing email collection
+ */
+export const emailSubscribers = mysqlTable("email_subscribers", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  name: varchar("name", { length: 255 }),
+  
+  // Source of subscription
+  source: mysqlEnum("source", ["newsletter", "join_page", "contact", "checkout", "footer"]).default("newsletter").notNull(),
+  
+  // Subscription preferences
+  newArrivals: boolean("newArrivals").default(true).notNull(),
+  exclusiveOffers: boolean("exclusiveOffers").default(true).notNull(),
+  sustainabilityNews: boolean("sustainabilityNews").default(false).notNull(),
+  partnerUpdates: boolean("partnerUpdates").default(false).notNull(),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  unsubscribedAt: timestamp("unsubscribedAt"),
+  
+  // Tracking
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailSubscriber = typeof emailSubscribers.$inferSelect;
+export type InsertEmailSubscriber = typeof emailSubscribers.$inferInsert;

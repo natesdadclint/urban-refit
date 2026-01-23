@@ -2,9 +2,12 @@ import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { 
   Gift, 
   Percent, 
@@ -15,17 +18,37 @@ import {
   Star,
   Sparkles,
   ArrowRight,
-  Check
+  Check,
+  Mail,
+  Loader2
 } from "lucide-react";
 import { useState } from "react";
 
 export default function Join() {
   const { isAuthenticated, user } = useAuth();
+
   const [preferences, setPreferences] = useState({
     newArrivals: true,
     exclusiveOffers: true,
     sustainabilityNews: false,
     partnerUpdates: false,
+  });
+  const [email, setEmail] = useState("");
+  const [showEmailForm, setShowEmailForm] = useState(false);
+
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: (data) => {
+      toast.success(data.alreadySubscribed ? "Already Subscribed" : "Subscribed!", {
+        description: data.message,
+      });
+      setEmail("");
+      setShowEmailForm(false);
+    },
+    onError: (error) => {
+      toast.error("Error", {
+        description: error.message || "Failed to subscribe. Please try again.",
+      });
+    },
   });
 
   const benefits = [
@@ -76,6 +99,17 @@ export default function Join() {
     // Store preferences in localStorage before redirecting
     localStorage.setItem('urbanrefit_marketing_preferences', JSON.stringify(preferences));
     window.location.href = getLoginUrl();
+  };
+
+  const handleEmailSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+    
+    subscribeMutation.mutate({
+      email,
+      source: "join_page",
+      ...preferences,
+    });
   };
 
   if (isAuthenticated) {
@@ -264,6 +298,53 @@ export default function Join() {
                     {" "}and{" "}
                     <a href="/privacy" className="underline hover:text-primary">Privacy Policy</a>.
                   </p>
+                </div>
+
+                {/* Email-only subscription option */}
+                <div className="pt-4 border-t">
+                  {!showEmailForm ? (
+                    <button
+                      onClick={() => setShowEmailForm(true)}
+                      className="w-full text-center text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Not ready to join? <span className="underline">Subscribe to our newsletter instead</span>
+                    </button>
+                  ) : (
+                    <form onSubmit={handleEmailSubscribe} className="space-y-4">
+                      <div className="text-center mb-4">
+                        <p className="text-sm text-muted-foreground">
+                          Stay updated without creating an account
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <div className="relative flex-1">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            type="email"
+                            placeholder="Enter your email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="pl-10"
+                            required
+                          />
+                        </div>
+                        <Button type="submit" disabled={subscribeMutation.isPending}>
+                          {subscribeMutation.isPending ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "Subscribe"
+                          )}
+                        </Button>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowEmailForm(false)}
+                        className="w-full text-center text-xs text-muted-foreground hover:text-primary"
+                      >
+                        Cancel
+                      </button>
+                    </form>
+                  )}
                 </div>
               </CardContent>
             </Card>

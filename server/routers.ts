@@ -1239,6 +1239,100 @@ Keep insights concise and actionable.`;
         return { success: true };
       }),
   }),
+
+  // ============ EMAIL SUBSCRIPTION ROUTES ============
+  newsletter: router({
+    // Subscribe to newsletter
+    subscribe: publicProcedure
+      .input(z.object({
+        email: z.string().email().max(320),
+        name: z.string().max(255).optional(),
+        source: z.enum(["newsletter", "join_page", "contact", "checkout", "footer"]).default("newsletter"),
+        newArrivals: z.boolean().default(true),
+        exclusiveOffers: z.boolean().default(true),
+        sustainabilityNews: z.boolean().default(false),
+        partnerUpdates: z.boolean().default(false),
+      }))
+      .mutation(async ({ input }) => {
+        // Check if already subscribed
+        const existing = await db.getEmailSubscriberByEmail(input.email);
+        
+        if (existing) {
+          if (existing.isActive) {
+            // Already subscribed and active
+            return { success: true, message: "You're already subscribed!", alreadySubscribed: true };
+          } else {
+            // Reactivate subscription
+            await db.updateEmailSubscriber(input.email, {
+              isActive: true,
+              unsubscribedAt: null,
+              newArrivals: input.newArrivals,
+              exclusiveOffers: input.exclusiveOffers,
+              sustainabilityNews: input.sustainabilityNews,
+              partnerUpdates: input.partnerUpdates,
+            });
+            return { success: true, message: "Welcome back! Your subscription has been reactivated.", reactivated: true };
+          }
+        }
+        
+        // Create new subscription
+        const subscriber = await db.createEmailSubscriber(input);
+        if (!subscriber) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to subscribe" });
+        }
+        
+        return { success: true, message: "Thanks for subscribing!", id: subscriber.id };
+      }),
+    
+    // Unsubscribe from newsletter
+    unsubscribe: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ input }) => {
+        await db.unsubscribeEmail(input.email);
+        return { success: true, message: "You have been unsubscribed." };
+      }),
+    
+    // Check subscription status
+    status: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .query(async ({ input }) => {
+        const subscriber = await db.getEmailSubscriberByEmail(input.email);
+        return {
+          isSubscribed: subscriber?.isActive ?? false,
+          preferences: subscriber ? {
+            newArrivals: subscriber.newArrivals,
+            exclusiveOffers: subscriber.exclusiveOffers,
+            sustainabilityNews: subscriber.sustainabilityNews,
+            partnerUpdates: subscriber.partnerUpdates,
+          } : null,
+        };
+      }),
+    
+    // Update preferences
+    updatePreferences: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        newArrivals: z.boolean().optional(),
+        exclusiveOffers: z.boolean().optional(),
+        sustainabilityNews: z.boolean().optional(),
+        partnerUpdates: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { email, ...preferences } = input;
+        await db.updateEmailSubscriber(email, preferences);
+        return { success: true };
+      }),
+    
+    // Admin: Get all subscribers
+    list: adminProcedure.query(async () => {
+      return db.getAllActiveSubscribers();
+    }),
+    
+    // Admin: Get subscriber stats
+    stats: adminProcedure.query(async () => {
+      return db.getSubscriberStats();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

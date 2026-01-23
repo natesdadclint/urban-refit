@@ -5,8 +5,57 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
+import { Mail, Send, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 export default function FAQ() {
+  const [contactForm, setContactForm] = useState({
+    email: "",
+    message: "",
+  });
+  const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(true);
+
+  const subscribeMutation = trpc.newsletter.subscribe.useMutation();
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!contactForm.email || !contactForm.message) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    // Subscribe to newsletter if opted in
+    if (subscribeToNewsletter) {
+      try {
+        await subscribeMutation.mutateAsync({
+          email: contactForm.email,
+          source: "contact",
+          newArrivals: true,
+          exclusiveOffers: true,
+        });
+      } catch (error) {
+        // Silently continue - subscription is optional
+      }
+    }
+
+    // Open email client with pre-filled message
+    const subject = encodeURIComponent("FAQ Question from Website");
+    const body = encodeURIComponent(`From: ${contactForm.email}\n\n${contactForm.message}`);
+    window.location.href = `mailto:help@urbanrefit.store?subject=${subject}&body=${body}`;
+    
+    toast.success("Opening your email client...", {
+      description: "Your message will be sent via email.",
+    });
+    
+    setContactForm({ email: "", message: "" });
+  };
+
   const faqCategories = [
     {
       title: "About Urban Refit",
@@ -206,7 +255,7 @@ export default function FAQ() {
       questions: [
         {
           q: "Do I need an account to shop?",
-          a: "While you can browse our catalog without an account, you'll need to create one to make purchases, earn loyalty tokens, and access member benefits like tiered discounts and the courier return system."
+          a: "You can browse our catalog without an account, but you'll need to create one to make purchases, track orders, and participate in our loyalty program. Account creation is free and takes just a moment."
         },
         {
           q: "How is my personal information protected?",
@@ -264,20 +313,69 @@ export default function FAQ() {
             ))}
           </div>
 
-          {/* Contact CTA */}
-          <div className="mt-16 p-8 bg-muted/50 rounded-lg text-center">
-            <h3 className="text-xl font-serif font-bold text-foreground mb-3">
-              Still have questions?
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              We're here to help. Reach out to our customer service team.
-            </p>
-            <a 
-              href="mailto:help@urbanrefit.store" 
-              className="inline-flex items-center justify-center px-6 py-3 bg-foreground text-background rounded-md font-medium hover:bg-foreground/90 transition-colors"
-            >
-              Contact Us
-            </a>
+          {/* Contact CTA with Email Collection */}
+          <div className="mt-16 p-8 bg-muted/50 rounded-lg">
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-serif font-bold text-foreground mb-3">
+                Still have questions?
+              </h3>
+              <p className="text-muted-foreground">
+                We're here to help. Send us a message and we'll get back to you.
+              </p>
+            </div>
+            
+            <form onSubmit={handleContactSubmit} className="max-w-md mx-auto space-y-4">
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="email"
+                  placeholder="Your email address"
+                  value={contactForm.email}
+                  onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                  className="pl-10"
+                  required
+                />
+              </div>
+              
+              <Textarea
+                placeholder="How can we help you?"
+                value={contactForm.message}
+                onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
+                rows={4}
+                required
+              />
+              
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="subscribeNewsletter"
+                  checked={subscribeToNewsletter}
+                  onChange={(e) => setSubscribeToNewsletter(e.target.checked)}
+                  className="rounded border-border"
+                />
+                <label htmlFor="subscribeNewsletter" className="text-sm text-muted-foreground cursor-pointer">
+                  Keep me updated with news and offers
+                </label>
+              </div>
+              
+              <Button type="submit" className="w-full gap-2" disabled={subscribeMutation.isPending}>
+                {subscribeMutation.isPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    Send Message
+                  </>
+                )}
+              </Button>
+              
+              <p className="text-xs text-muted-foreground text-center">
+                Or email us directly at{" "}
+                <a href="mailto:help@urbanrefit.store" className="underline hover:text-primary">
+                  help@urbanrefit.store
+                </a>
+              </p>
+            </form>
           </div>
         </div>
       </div>
