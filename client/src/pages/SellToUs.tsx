@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Upload, X, CheckCircle, DollarSign, Recycle, Clock, ArrowRight } from "lucide-react";
+import { Upload, X, CheckCircle, DollarSign, Recycle, Clock, ArrowRight, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
 
 export default function SellToUs() {
   const { user } = useAuth();
@@ -157,6 +158,10 @@ export default function SellToUs() {
       {/* Hero Section */}
       <section className="bg-black text-white py-16">
         <div className="container">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-6">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
           <div className="max-w-3xl">
             <p className="text-sm uppercase tracking-wider text-neutral-400 mb-4">Circular Fashion</p>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">

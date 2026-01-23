@@ -22,7 +22,8 @@ import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation, useSearch } from "wouter";
-import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
 import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -283,6 +284,10 @@ export default function Shop() {
   return (
     <Layout>
       <div className="container py-8 md:py-12">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </Link>
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>

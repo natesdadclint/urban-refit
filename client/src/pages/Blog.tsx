@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, Clock, Eye, Heart, TrendingUp, Leaf, Users, Star, Zap, Grid3X3 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Clock, Eye, Heart, TrendingUp, Leaf, Users, Star, Zap, Grid3X3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
@@ -54,6 +54,10 @@ export default function Blog() {
       {/* Hero Section - Clean, minimal design matching Urban Refit */}
       <section className="py-16 md:py-24 border-b border-border">
         <div className="container">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
               The Refit Journal

@@ -1,0 +1,24 @@
+{
+  "query": "SELECT * FROM email_subscribers;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT * FROM email_subscribers;",
+  "rows": [
+    {
+      "id": "1",
+      "email": "natesdadclint@gmail.com",
+      "name": "NULL",
+      "source": "footer",
+      "newArrivals": "1",
+      "exclusiveOffers": "1",
+      "sustainabilityNews": "0",
+      "partnerUpdates": "0",
+      "isActive": "1",
+      "unsubscribedAt": "NULL",
+      "createdAt": "2026-01-23 03:46:57",
+      "updatedAt": "2026-01-23 03:46:57"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\tsource\tnewArrivals\texclusiveOffers\tsustainabilityNews\tpartnerUpdates\tisActive\tunsubscribedAt\tcreatedAt\tupdatedAt\n1\tnatesdadclint@gmail.com\tNULL\tfooter\t1\t1\t0\t0\t1\tNULL\t2026-01-23 03:46:57\t2026-01-23 03:46:57\n",
+  "stderr": "",
+  "execution_time_ms": 1508
+}

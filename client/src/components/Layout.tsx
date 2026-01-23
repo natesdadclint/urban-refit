@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingBag, User, Menu, X, LogOut, Settings, Coins, Heart, RefreshCw, Mail, Loader2, ArrowRight } from "lucide-react";
+import { ShoppingBag, User, Menu, X, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -34,6 +34,7 @@ export default function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   
   const { data: cartCount } = trpc.cart.count.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -45,6 +46,9 @@ export default function Layout({ children }: LayoutProps) {
         description: data.message,
       });
       setNewsletterEmail("");
+      setSubscriptionSuccess(true);
+      // Reset success state after 5 seconds
+      setTimeout(() => setSubscriptionSuccess(false), 5000);
     },
     onError: (error) => {
       toast.error("Error", {
@@ -272,29 +276,44 @@ export default function Layout({ children }: LayoutProps) {
               {/* Newsletter Signup */}
               <div className="max-w-sm">
                 <h4 className="font-semibold mb-3 text-sm">Stay Updated</h4>
-                <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      type="email"
-                      placeholder="Enter your email"
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="pl-10 bg-background"
-                      required
-                    />
+                
+                {subscriptionSuccess ? (
+                  <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-md">
+                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-green-800 dark:text-green-200">Successfully subscribed!</p>
+                      <p className="text-xs text-green-600 dark:text-green-400">You'll receive updates about new arrivals and offers.</p>
+                    </div>
                   </div>
-                  <Button type="submit" size="icon" disabled={subscribeMutation.isPending}>
-                    {subscribeMutation.isPending ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <ArrowRight className="w-4 h-4" />
-                    )}
-                  </Button>
-                </form>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Get notified about new arrivals and exclusive offers.
-                </p>
+                ) : (
+                  <>
+                    <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+                      <div className="relative flex-1">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          value={newsletterEmail}
+                          onChange={(e) => setNewsletterEmail(e.target.value)}
+                          className="pl-10 bg-background"
+                          required
+                        />
+                      </div>
+                      <Button type="submit" size="icon" disabled={subscribeMutation.isPending}>
+                        {subscribeMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <ArrowRight className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </form>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Get notified about new arrivals and exclusive offers.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
             

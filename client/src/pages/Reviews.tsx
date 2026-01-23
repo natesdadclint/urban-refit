@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star, ThumbsUp, CheckCircle, User, ShieldCheck } from "lucide-react";
+import { Star, ThumbsUp, CheckCircle, User, ShieldCheck, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 
@@ -64,6 +64,10 @@ export default function Reviews() {
       {/* Hero Section - Men's Fashion Focus */}
       <section className="py-16 md:py-24 border-b border-border">
         <div className="container">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>

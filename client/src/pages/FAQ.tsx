@@ -10,8 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Mail, Send, Loader2 } from "lucide-react";
+import { Mail, Send, Loader2, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { Link } from "wouter";
 
 export default function FAQ() {
   const [contactForm, setContactForm] = useState({
@@ -275,6 +276,10 @@ export default function FAQ() {
         {/* Hero Section */}
         <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
           <div className="container max-w-4xl">
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Link>
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
               Frequently Asked Questions
             </h1>

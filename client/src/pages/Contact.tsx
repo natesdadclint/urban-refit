@@ -5,7 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -53,6 +54,10 @@ export default function Contact() {
         {/* Hero Section */}
         <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
           <div className="container max-w-4xl">
+            <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Link>
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
               Get in Touch
             </h1>

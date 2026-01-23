@@ -18,11 +18,13 @@ import {
   Star,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   Check,
   Mail,
   Loader2
 } from "lucide-react";
 import { useState } from "react";
+import { Link } from "wouter";
 
 export default function Join() {
   const { isAuthenticated, user } = useAuth();
@@ -145,6 +147,10 @@ export default function Join() {
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-primary/5 via-background to-primary/10 py-16 md:py-24">
         <div className="container">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />

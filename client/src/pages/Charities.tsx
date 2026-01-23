@@ -10,8 +10,9 @@ import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useState } from "react";
 import { 
-  Heart, Coins, Loader2, ExternalLink, Globe
+  Heart, Coins, Loader2, ExternalLink, Globe, ArrowLeft
 } from "lucide-react";
+import { Link } from "wouter";
 
 export default function Charities() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
@@ -78,6 +79,10 @@ export default function Charities() {
   return (
     <Layout>
       <div className="container py-8 md:py-12">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6">
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </Link>
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">

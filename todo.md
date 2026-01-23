@@ -261,3 +261,7 @@
 - [x] Add newsletter signup component to footer
 - [x] Add email validation and duplicate checking
 - [x] Write vitest tests for email subscription routes
+
+## UX Improvements
+- [x] Make newsletter subscription feedback more visible (show confirmation in footer area)
+- [x] Add back button navigation to subpages to return to home/hero page
