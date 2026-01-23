@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, email, source FROM email_subscribers;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, email, source FROM email_subscribers;",
+  "rows": [
+    {
+      "id": "1",
+      "email": "natesdadclint@gmail.com",
+      "source": "footer"
+    },
+    {
+      "id": "2",
+      "email": "test@example.com",
+      "source": "footer"
+    },
+    {
+      "id": "30001",
+      "email": "info@urbanrefit.store",
+      "source": "footer"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tsource\n1\tnatesdadclint@gmail.com\tfooter\n2\ttest@example.com\tfooter\n30001\tinfo@urbanrefit.store\tfooter\n",
+  "stderr": "",
+  "execution_time_ms": 1550
+}

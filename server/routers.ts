@@ -10,6 +10,7 @@ import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe";
 import { invokeLLM } from "./_core/llm";
+import { addSubscriberToMailchimp, removeSubscriberFromMailchimp } from "./mailchimp";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -1271,6 +1272,15 @@ Keep insights concise and actionable.`;
               sustainabilityNews: input.sustainabilityNews,
               partnerUpdates: input.partnerUpdates,
             });
+            
+            // Re-add to Mailchimp
+            const nameParts = input.name?.split(" ") || [];
+            await addSubscriberToMailchimp(input.email, {
+              firstName: nameParts[0],
+              lastName: nameParts.slice(1).join(" ") || undefined,
+              tags: [input.source],
+            });
+            
             return { success: true, message: "Welcome back! Your subscription has been reactivated.", reactivated: true };
           }
         }
@@ -1281,6 +1291,19 @@ Keep insights concise and actionable.`;
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to subscribe" });
         }
         
+        // Sync to Mailchimp
+        const nameParts = input.name?.split(" ") || [];
+        const mailchimpResult = await addSubscriberToMailchimp(input.email, {
+          firstName: nameParts[0],
+          lastName: nameParts.slice(1).join(" ") || undefined,
+          tags: [input.source],
+        });
+        
+        if (!mailchimpResult.success) {
+          console.warn("[Newsletter] Mailchimp sync failed:", mailchimpResult.error);
+          // Don't fail the subscription if Mailchimp fails - we still have the local record
+        }
+        
         return { success: true, message: "Thanks for subscribing!", id: subscriber.id };
       }),
     
@@ -1289,6 +1312,13 @@ Keep insights concise and actionable.`;
       .input(z.object({ email: z.string().email() }))
       .mutation(async ({ input }) => {
         await db.unsubscribeEmail(input.email);
+        
+        // Remove from Mailchimp
+        const mailchimpResult = await removeSubscriberFromMailchimp(input.email);
+        if (!mailchimpResult.success) {
+          console.warn("[Newsletter] Mailchimp unsubscribe failed:", mailchimpResult.error);
+        }
+        
         return { success: true, message: "You have been unsubscribed." };
       }),
     

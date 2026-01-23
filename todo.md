@@ -269,3 +269,12 @@
 ## Social Media Sharing
 - [x] Create social share component with Facebook, Twitter/X, Pinterest, WhatsApp buttons
 - [x] Add share buttons to product detail page
+
+## Bug Fixes
+- [x] Investigate and fix email subscription not being received/saved (confirmed working - emails are being saved to database)
+
+## Mailchimp Integration
+- [x] Configure Mailchimp API key and Audience ID as environment secrets
+- [x] Create Mailchimp helper for adding subscribers to audience
+- [x] Update newsletter subscription routes to sync with Mailchimp
+- [x] Write vitest test for Mailchimp integration

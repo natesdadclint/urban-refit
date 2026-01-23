@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, email, source FROM email_subscribers WHERE email LIKE '%mailchimp%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, email, source FROM email_subscribers WHERE email LIKE '%mailchimp%';",
+  "rows": [
+    {
+      "id": "60001",
+      "email": "mailchimptest@urbanrefit.test",
+      "source": "footer"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tsource\n60001\tmailchimptest@urbanrefit.test\tfooter\n",
+  "stderr": "",
+  "execution_time_ms": 1587
+}
