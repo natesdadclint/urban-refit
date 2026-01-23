@@ -241,3 +241,6 @@
 - [x] Support CSV metadata mapping for image association
 - [x] Create separate product_metadata table for detailed product information
 - [x] Add route to App.tsx for bulk upload page
+
+## Founder Story Update
+- [x] Replace generic About page story with authentic founder narrative
