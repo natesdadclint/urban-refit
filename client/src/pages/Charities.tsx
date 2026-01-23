@@ -83,7 +83,7 @@ export default function Charities() {
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
             Donate Your Tokens
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
             Make a difference by donating your earned tokens to charitable organizations. 
             Every token counts towards creating positive change.
           </p>

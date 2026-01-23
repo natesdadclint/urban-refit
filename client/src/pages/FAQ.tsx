@@ -229,7 +229,7 @@ export default function FAQ() {
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
               Frequently Asked Questions
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-base text-muted-foreground max-w-2xl">
               Everything you need to know about Urban Refit, our secondhand fashion marketplace, 
               and how we're making sustainable style accessible.
             </p>

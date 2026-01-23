@@ -56,7 +56,7 @@ export default function Contact() {
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
               Get in Touch
             </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <p className="text-base text-muted-foreground leading-relaxed">
               Have questions about our products, orders, or the circular fashion movement? We are here to help.
             </p>
           </div>

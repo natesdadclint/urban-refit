@@ -73,7 +73,7 @@ export default function Reviews() {
                 <h1 className="text-4xl md:text-5xl font-serif font-bold mb-6 tracking-tight">
                   Real Men. Real Style. Real Reviews.
                 </h1>
-                <p className="text-lg text-muted-foreground mb-6">
+                <p className="text-base text-muted-foreground mb-6">
                   No more waiting in fitting rooms. No more asking "does this look okay?" 
                   Our customers know what they want and they get it delivered to their door.
                 </p>

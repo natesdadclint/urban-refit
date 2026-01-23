@@ -43,7 +43,7 @@ export default function Home() {
             <h1 className="text-3xl md:text-5xl font-serif font-semibold leading-tight mb-4 text-foreground">
               
             </h1>
-            <p className="text-base md:text-lg text-muted-foreground mb-6 max-w-lg">
+            <p className="text-base text-muted-foreground mb-6 max-w-lg">
               Personally curated pre-loved fashion that gives back to the community – because great style shouldn't cost the earth.
             </p>
             <div className="flex flex-wrap gap-3">

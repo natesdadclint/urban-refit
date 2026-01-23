@@ -248,3 +248,7 @@
 ## Font Styling Update
 - [x] Find and integrate monospace font (Space Mono from Google Fonts - similar technical aesthetic)
 - [x] Ensure consistent body font height and width throughout site
+
+## Font Size Bug Fix
+- [x] Investigate font size increasing when navigating between pages
+- [x] Ensure consistent font size throughout the site (standardized to text-base/16px)

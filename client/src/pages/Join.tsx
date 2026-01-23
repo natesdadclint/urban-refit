@@ -119,7 +119,7 @@ export default function Join() {
             <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-6">
               Become an Urban Refit Member
             </h1>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-base text-muted-foreground mb-8 max-w-2xl mx-auto">
               Unlock exclusive discounts, earn rewards on every purchase, and be part of a community 
               that's redefining sustainable men's fashion. Membership is free – forever.
             </p>

@@ -162,7 +162,7 @@ export default function SellToUs() {
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Sell Your Clothes.<br />Get Paid. Do Good.
             </h1>
-            <p className="text-lg text-neutral-300 mb-8">
+            <p className="text-base text-neutral-300 mb-8">
               Turn your unwanted quality menswear into cash. We buy premium brands in good condition 
               and give them a second life. No hassle, no fees, just fair prices.
             </p>

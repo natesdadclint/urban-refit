@@ -196,7 +196,7 @@ export default function BlogPost() {
 
           {/* Excerpt */}
           {post.excerpt && (
-            <p className="text-xl text-muted-foreground mb-8 font-serif italic">
+            <p className="text-base text-muted-foreground mb-8 font-serif italic">
               {post.excerpt}
             </p>
           )}
