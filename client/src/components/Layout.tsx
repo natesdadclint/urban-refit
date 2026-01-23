@@ -234,7 +234,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="md:col-span-2">
               <h3 className="text-xl font-serif font-semibold mb-4">Urban Refit</h3>
               <p className="text-muted-foreground text-sm max-w-md">
-                Curated secondhand upmarket clothing. We source the finest pre-loved fashion
+                Curated Premium brands. We source the finest pre-loved fashion
                 from local thrift stores, giving garments a second life while supporting
                 our community partners.
               </p>
