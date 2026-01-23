@@ -15,7 +15,7 @@ import {
   tokenTransactions, InsertTokenTransaction, TokenTransaction,
   charityDonations, InsertCharityDonation, CharityDonation,
   discountTiers, InsertDiscountTier, DiscountTier,
-  sellSubmissions, InsertSellSubmission,
+  sellSubmissions, InsertSellSubmission, SellSubmission,
   productMetadata, InsertProductMetadata, ProductMetadata
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -1237,12 +1237,11 @@ export async function createProductMetadata(data: InsertProductMetadata) {
   return result[0].insertId;
 }
 
-export async function getProductMetadata(productId: number) {
+export async function getProductMetadata(productId: number): Promise<ProductMetadata | undefined> {
   const db = await getDb();
   if (!db) return undefined;
-  return await db.query.productMetadata.findFirst({
-    where: (meta) => eq(meta.productId, productId),
-  });
+  const results = await db.select().from(productMetadata).where(eq(productMetadata.productId, productId)).limit(1);
+  return results[0];
 }
 
 export async function updateProductMetadata(productId: number, data: Partial<InsertProductMetadata>) {

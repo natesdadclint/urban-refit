@@ -244,3 +244,7 @@
 
 ## Founder Story Update
 - [x] Replace generic About page story with authentic founder narrative
+
+## Font Styling Update
+- [x] Find and integrate monospace font (Space Mono from Google Fonts - similar technical aesthetic)
+- [x] Ensure consistent body font height and width throughout site
