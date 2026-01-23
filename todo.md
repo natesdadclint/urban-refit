@@ -285,3 +285,6 @@
 - [x] Add analytics endpoints for partner profitability metrics
 - [x] Build admin dashboard section for partner profitability analytics
 - [x] Display metrics: total sales, profit margins, best-selling items per partner
+
+## Navigation Updates
+- [x] Swap Reviews and About Us positions in header navigation (About Us now in main nav, Reviews in footer)

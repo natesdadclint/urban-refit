@@ -119,12 +119,12 @@ export default function Layout({ children }: LayoutProps) {
                 Blog
               </Link>
               <Link
-                href="/reviews"
+                href="/about"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  location === "/reviews" ? "text-primary" : "text-muted-foreground"
+                  location === "/about" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
-                Reviews
+                About Us
               </Link>
               <Link
                 href="/sell"
@@ -333,8 +333,8 @@ export default function Layout({ children }: LayoutProps) {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="/about" className="hover:text-primary transition-colors">
-                    About Us
+                  <Link href="/reviews" className="hover:text-primary transition-colors">
+                    Reviews
                   </Link>
                 </li>
                 <li>
