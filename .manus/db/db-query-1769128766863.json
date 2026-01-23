@@ -1,0 +1,90 @@
+{
+  "query": "SELECT id, userId, productId, rating, title, isVerifiedPurchase FROM product_reviews;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, userId, productId, rating, title, isVerifiedPurchase FROM product_reviews;",
+  "rows": [
+    {
+      "id": "1",
+      "userId": "1",
+      "productId": "1",
+      "rating": "5",
+      "title": "Classic polo, perfect condition",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "2",
+      "userId": "2",
+      "productId": "2",
+      "rating": "5",
+      "title": "Best work pants I have owned",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "3",
+      "userId": "1",
+      "productId": "3",
+      "rating": "4",
+      "title": "Warm and cozy fleece",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "4",
+      "userId": "3",
+      "productId": "4",
+      "rating": "5",
+      "title": "Crisp Oxford shirt",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "5",
+      "userId": "2",
+      "productId": "5",
+      "rating": "5",
+      "title": "Iconic 501s in great condition",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "6",
+      "userId": "4",
+      "productId": "6",
+      "rating": "4",
+      "title": "Solid work jacket",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "7",
+      "userId": "1",
+      "productId": "7",
+      "rating": "5",
+      "title": "Clean Air Force 1s",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "8",
+      "userId": "3",
+      "productId": "8",
+      "rating": "4",
+      "title": "Nice fitted cap",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "9",
+      "userId": "4",
+      "productId": "1",
+      "rating": "4",
+      "title": "Quality polo shirt",
+      "isVerifiedPurchase": "1"
+    },
+    {
+      "id": "10",
+      "userId": "3",
+      "productId": "5",
+      "rating": "5",
+      "title": "Perfect vintage denim",
+      "isVerifiedPurchase": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\tproductId\trating\ttitle\tisVerifiedPurchase\n1\t1\t1\t5\tClassic polo, perfect condition\t1\n2\t2\t2\t5\tBest work pants I have owned\t1\n3\t1\t3\t4\tWarm and cozy fleece\t1\n4\t3\t4\t5\tCrisp Oxford shirt\t1\n5\t2\t5\t5\tIconic 501s in great condition\t1\n6\t4\t6\t4\tSolid work jacket\t1\n7\t1\t7\t5\tClean Air Force 1s\t1\n8\t3\t8\t4\tNice fitted cap\t1\n9\t4\t1\t4\tQuality polo shirt\t1\n10\t3\t5\t5\tPerfect vintage denim\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1540
+}

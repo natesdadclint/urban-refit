@@ -230,3 +230,6 @@
 - [x] Display submission statistics and metrics (total, pending, reviewing, accepted, rejected)
 - [x] Add filtering and sorting by status and brand search
 - [x] Write vitest tests for admin sell submissions routes (7 tests passing)
+
+## Review Verification Fixes
+- [x] Verify Verified Purchase badge only appears on reviews from actual customers with purchases (5 verified, 5 unverified sample reviews)

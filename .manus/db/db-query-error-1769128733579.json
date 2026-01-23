@@ -1,0 +1,8 @@
+{
+  "query": "SELECT r.id, r.userId, r.productId, r.rating, r.title, o.id as orderId FROM product_reviews r LEFT JOIN orders o ON r.userId = o.userId AND r.productId = o.productId LIMIT 15;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT r.id, r.userId, r.productId, r.rating, r.title, o.id as orderId FROM product_reviews r LEFT JOIN orders o ON r.userId = o.userId AND r.productId = o.productId LIMIT 15;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'o.productid' in 'on clause'"
+  ]
+}

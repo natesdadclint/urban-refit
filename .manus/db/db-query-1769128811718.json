@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE product_reviews SET isVerifiedPurchase = 0 WHERE id IN (4, 5, 6, 8, 10);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute UPDATE product_reviews SET isVerifiedPurchase = 0 WHERE id IN (4, 5, 6, 8, 10);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1503
+}
