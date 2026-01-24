@@ -1,0 +1,31 @@
+{
+  "query": "SELECT id, userId, tokenBalance, totalTokensEarned, lastWeeklyReward FROM customer_profiles;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, userId, tokenBalance, totalTokensEarned, lastWeeklyReward FROM customer_profiles;",
+  "rows": [
+    {
+      "id": "1",
+      "userId": "1",
+      "tokenBalance": "5.00",
+      "totalTokensEarned": "42.50",
+      "lastWeeklyReward": "2026-01-24 08:42:00"
+    },
+    {
+      "id": "30001",
+      "userId": "240001",
+      "tokenBalance": "0.00",
+      "totalTokensEarned": "5.00",
+      "lastWeeklyReward": "2026-01-24 08:43:35"
+    },
+    {
+      "id": "30002",
+      "userId": "300029",
+      "tokenBalance": "0.00",
+      "totalTokensEarned": "0.00",
+      "lastWeeklyReward": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tuserId\ttokenBalance\ttotalTokensEarned\tlastWeeklyReward\n1\t1\t5.00\t42.50\t2026-01-24 08:42:00\n30001\t240001\t0.00\t5.00\t2026-01-24 08:43:35\n30002\t300029\t0.00\t0.00\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1495
+}

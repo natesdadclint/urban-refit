@@ -1,0 +1,73 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "blog_posts"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "cart_items"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "charities"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "charity_donations"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "chat_messages"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "courier_returns"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "customer_profiles"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "discount_tiers"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "email_logs"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "email_subscribers"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "order_items"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "orders"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "payouts"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "product_metadata"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "product_reviews"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "products"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "sell_submissions"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "thrift_stores"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "token_transactions"
+    },
+    {
+      "Tables_in_E6pe8Nu22gDSQMdPz9Svd5": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_E6pe8Nu22gDSQMdPz9Svd5\n__drizzle_migrations\nblog_posts\ncart_items\ncharities\ncharity_donations\nchat_messages\ncourier_returns\ncustomer_profiles\ndiscount_tiers\nemail_logs\nemail_subscribers\norder_items\norders\npayouts\nproduct_metadata\nproduct_reviews\nproducts\nsell_submissions\nthrift_stores\ntoken_transactions\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 1530
+}

@@ -311,3 +311,10 @@
 - [x] Add UI to display token balance in header/profile (WeeklyRewardBanner component)
 - [x] Show reward notification when tokens are awarded
 - [x] Write vitest tests for token reward logic
+
+## Bug Fix: Donate Tokens Page
+- [x] Investigate why weekly login reward tokens don't show on donate tokens page
+- [ ] Fix: Weekly reward tokens not being added to user's token balance (showing 0 instead of 5)
+
+## Weekly Reward Donate Link
+- [x] Add clickable option to donate tokens from the weekly reward banner after claiming
