@@ -295,3 +295,12 @@
 
 ## New Arrivals Badge
 - [x] Add "New Arrivals" badge to ProductCard for recently added products (within 7 days)
+
+## Mailchimp Issue Investigation
+- [x] Check Mailchimp API connection and server logs
+- [x] Test email subscription and diagnose issue
+- [x] Verified: Mailchimp integration is working correctly
+
+## Mobile Back Button Bug
+- [x] Investigate back-to-home button not working on mobile
+- [x] Fix the mobile back button issue (increased visibility with larger text, better contrast, larger touch target)

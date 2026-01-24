@@ -158,7 +158,7 @@ export default function SellToUs() {
       {/* Hero Section */}
       <section className="bg-black text-white py-16">
         <div className="container">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors mb-6">
+          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-white hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-white/10">
             <ArrowLeft className="w-4 h-4" />
             Back to Home
           </Link>
