@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Sparkles } from "lucide-react";
 
 interface ProductCardProps {
   id: number;
@@ -11,6 +11,7 @@ interface ProductCardProps {
   image2Url?: string | null;
   condition: string;
   size: string | null;
+  createdAt?: Date | string;
   onAddToCart?: () => void;
   isAddingToCart?: boolean;
 }
@@ -22,6 +23,15 @@ const conditionLabels: Record<string, string> = {
   fair: "Fair",
 };
 
+// Check if product was added within the last 7 days
+function isNewArrival(createdAt?: Date | string): boolean {
+  if (!createdAt) return false;
+  const created = new Date(createdAt);
+  const now = new Date();
+  const diffInDays = (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24);
+  return diffInDays <= 7;
+}
+
 export default function ProductCard({
   id,
   name,
@@ -30,21 +40,30 @@ export default function ProductCard({
   image1Url,
   condition,
   size,
+  createdAt,
   onAddToCart,
   isAddingToCart,
 }: ProductCardProps) {
   const placeholderImage = "https://placehold.co/400x400/f5f5f4/a8a29e?text=No+Image";
+  const isNew = isNewArrival(createdAt);
 
   return (
     <div className="product-card group bg-card rounded-lg overflow-hidden border border-border">
       <Link href={`/product/${id}`}>
         {/* Single Image Display */}
-        <div className="aspect-square overflow-hidden bg-muted">
+        <div className="aspect-square overflow-hidden bg-muted relative">
           <img
             src={image1Url || placeholderImage}
             alt={name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+          {/* New Arrivals Badge */}
+          {isNew && (
+            <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 shadow-sm">
+              <Sparkles className="h-3 w-3" />
+              New
+            </div>
+          )}
         </div>
       </Link>
 

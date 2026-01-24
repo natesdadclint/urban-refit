@@ -292,3 +292,6 @@
 ## Testimonials Carousel
 - [x] Create testimonials carousel component with auto-scroll
 - [x] Add carousel to home page featuring top 5 reviews
+
+## New Arrivals Badge
+- [x] Add "New Arrivals" badge to ProductCard for recently added products (within 7 days)

@@ -152,6 +152,7 @@ export default function Home() {
                   image2Url={product.image2Url}
                   condition={product.condition}
                   size={product.size}
+                  createdAt={product.createdAt}
                   onAddToCart={
                     isAuthenticated
                       ? () => addToCart.mutate({ productId: product.id })
