@@ -304,3 +304,10 @@
 ## Mobile Back Button Bug
 - [x] Investigate back-to-home button not working on mobile
 - [x] Fix the mobile back button issue (increased visibility with larger text, better contrast, larger touch target)
+
+## Weekly Login Reward System
+- [x] Add tokens field to user table and create token_transactions table (already existed, added lastWeeklyReward field)
+- [x] Create backend logic to detect weekly logins and award 5 tokens
+- [x] Add UI to display token balance in header/profile (WeeklyRewardBanner component)
+- [x] Show reward notification when tokens are awarded
+- [x] Write vitest tests for token reward logic

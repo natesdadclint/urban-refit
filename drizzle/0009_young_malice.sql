@@ -1,0 +1,2 @@
+ALTER TABLE `token_transactions` MODIFY COLUMN `type` enum('earned_return','earned_purchase','earned_weekly_login','spent_discount','spent_spend_limit','donated_charity') NOT NULL;--> statement-breakpoint
+ALTER TABLE `customer_profiles` ADD `lastWeeklyReward` timestamp;

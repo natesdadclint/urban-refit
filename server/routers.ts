@@ -467,6 +467,17 @@ export const appRouter = router({
         
         return { success: true, newBalance: newBalance.toFixed(2) };
       }),
+    
+    // Weekly login reward endpoints
+    claimWeeklyReward: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        return db.checkAndAwardWeeklyLoginReward(ctx.user.id);
+      }),
+    
+    getWeeklyRewardStatus: protectedProcedure
+      .query(async ({ ctx }) => {
+        return db.getWeeklyRewardStatus(ctx.user.id);
+      }),
   }),
 
   // ============ CHARITY ROUTES ============

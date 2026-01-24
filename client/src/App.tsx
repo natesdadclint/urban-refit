@@ -40,6 +40,8 @@ import AdminSellSubmissions from "./pages/AdminSellSubmissions";
 import AdminBulkUpload from "./pages/AdminBulkUpload";
 import AdminPartnerProfitability from "./pages/AdminPartnerProfitability";
 import { HelpdeskChat } from "./components/HelpdeskChat";
+import { WeeklyRewardBanner } from "./components/WeeklyRewardBanner";
+import { useAuth } from "./hooks/useAuth";
 
 function Router() {
   return (
@@ -96,14 +98,25 @@ function Router() {
 //   to keep consistent foreground/background color across components
 // - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
 
+function AppContent() {
+  const { user } = useAuth();
+  
+  return (
+    <>
+      <Toaster />
+      <Router />
+      <HelpdeskChat />
+      {user && <WeeklyRewardBanner />}
+    </>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
-          <Toaster />
-          <Router />
-          <HelpdeskChat />
+          <AppContent />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

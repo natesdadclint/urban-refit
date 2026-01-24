@@ -234,6 +234,9 @@ export const customerProfiles = mysqlTable("customer_profiles", {
   // Membership tier based on activity
   membershipTier: mysqlEnum("membershipTier", ["bronze", "silver", "gold", "platinum"]).default("bronze").notNull(),
   
+  // Weekly login reward tracking
+  lastWeeklyReward: timestamp("lastWeeklyReward"),
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -318,7 +321,7 @@ export const tokenTransactions = mysqlTable("token_transactions", {
   userId: int("userId").notNull(),
   
   // Transaction type
-  type: mysqlEnum("type", ["earned_return", "earned_purchase", "spent_discount", "spent_spend_limit", "donated_charity"]).notNull(),
+  type: mysqlEnum("type", ["earned_return", "earned_purchase", "earned_weekly_login", "spent_discount", "spent_spend_limit", "donated_charity"]).notNull(),
   
   // Amount (positive for earned, negative for spent/donated)
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),

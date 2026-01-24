@@ -1698,3 +1698,112 @@ export async function getStoreDetailedAnalytics(thriftStoreId: number): Promise<
     })),
   };
 }
+
+
+// ============ WEEKLY LOGIN REWARD OPERATIONS ============
+
+const WEEKLY_REWARD_TOKENS = 5;
+const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+export interface WeeklyRewardResult {
+  awarded: boolean;
+  tokensAwarded: number;
+  newBalance: string;
+  message: string;
+  nextEligibleDate?: Date;
+}
+
+export async function checkAndAwardWeeklyLoginReward(userId: number): Promise<WeeklyRewardResult> {
+  const db = await getDb();
+  if (!db) {
+    return { awarded: false, tokensAwarded: 0, newBalance: "0", message: "Database not available" };
+  }
+
+  try {
+    // Get or create customer profile
+    let profile = await getOrCreateCustomerProfile(userId);
+    if (!profile) {
+      return { awarded: false, tokensAwarded: 0, newBalance: "0", message: "Could not create profile" };
+    }
+
+    const now = new Date();
+    const lastReward = profile.lastWeeklyReward;
+    
+    // Check if a week has passed since last reward
+    if (lastReward) {
+      const timeSinceLastReward = now.getTime() - new Date(lastReward).getTime();
+      if (timeSinceLastReward < ONE_WEEK_MS) {
+        const nextEligible = new Date(new Date(lastReward).getTime() + ONE_WEEK_MS);
+        return {
+          awarded: false,
+          tokensAwarded: 0,
+          newBalance: profile.tokenBalance,
+          message: "Already received weekly reward",
+          nextEligibleDate: nextEligible
+        };
+      }
+    }
+
+    // Award tokens
+    const newBalance = (parseFloat(profile.tokenBalance) + WEEKLY_REWARD_TOKENS).toFixed(2);
+    const newTotalEarned = (parseFloat(profile.totalTokensEarned) + WEEKLY_REWARD_TOKENS).toFixed(2);
+
+    // Update profile with new balance and last reward date
+    await db.update(customerProfiles)
+      .set({
+        tokenBalance: newBalance,
+        totalTokensEarned: newTotalEarned,
+        lastWeeklyReward: now
+      })
+      .where(eq(customerProfiles.userId, userId));
+
+    // Create token transaction record
+    await createTokenTransaction({
+      userId,
+      type: "earned_weekly_login",
+      amount: WEEKLY_REWARD_TOKENS.toFixed(2),
+      balanceAfter: newBalance,
+      description: "Weekly login reward - Thank you for being an active member!"
+    });
+
+    return {
+      awarded: true,
+      tokensAwarded: WEEKLY_REWARD_TOKENS,
+      newBalance,
+      message: `Congratulations! You earned ${WEEKLY_REWARD_TOKENS} tokens for your weekly login!`
+    };
+  } catch (error) {
+    console.error("[Database] Failed to award weekly login reward:", error);
+    return { awarded: false, tokensAwarded: 0, newBalance: "0", message: "Error processing reward" };
+  }
+}
+
+export async function getWeeklyRewardStatus(userId: number): Promise<{
+  eligible: boolean;
+  lastRewardDate: Date | null;
+  nextEligibleDate: Date | null;
+  daysUntilEligible: number;
+}> {
+  const db = await getDb();
+  if (!db) {
+    return { eligible: false, lastRewardDate: null, nextEligibleDate: null, daysUntilEligible: 0 };
+  }
+
+  const profile = await getCustomerProfileByUserId(userId);
+  if (!profile || !profile.lastWeeklyReward) {
+    return { eligible: true, lastRewardDate: null, nextEligibleDate: null, daysUntilEligible: 0 };
+  }
+
+  const now = new Date();
+  const lastReward = new Date(profile.lastWeeklyReward);
+  const nextEligible = new Date(lastReward.getTime() + ONE_WEEK_MS);
+  const timeDiff = nextEligible.getTime() - now.getTime();
+  const daysUntilEligible = Math.max(0, Math.ceil(timeDiff / (24 * 60 * 60 * 1000)));
+
+  return {
+    eligible: timeDiff <= 0,
+    lastRewardDate: lastReward,
+    nextEligibleDate: nextEligible,
+    daysUntilEligible
+  };
+}
