@@ -288,3 +288,7 @@
 
 ## Navigation Updates
 - [x] Swap Reviews and About Us positions in header navigation (About Us now in main nav, Reviews in footer)
+
+## Testimonials Carousel
+- [x] Create testimonials carousel component with auto-scroll
+- [x] Add carousel to home page featuring top 5 reviews

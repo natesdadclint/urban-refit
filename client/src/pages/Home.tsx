@@ -1,5 +1,6 @@
 import Layout from "@/components/Layout";
 import ProductCard from "@/components/ProductCard";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -217,6 +218,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Testimonials Carousel */}
+      <TestimonialsCarousel />
 
       {/* CTA Section */}
       <section className="py-20 md:py-28">
