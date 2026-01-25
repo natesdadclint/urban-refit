@@ -1,0 +1,24 @@
+{
+  "query": "SELECT * FROM payouts;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT * FROM payouts;",
+  "rows": [
+    {
+      "id": "1",
+      "thriftStoreId": "3",
+      "amount": "18.77",
+      "status": "paid",
+      "paymentMethod": "Transfer",
+      "paymentReference": "1234567890",
+      "periodStart": "NULL",
+      "periodEnd": "NULL",
+      "notes": "...",
+      "paidAt": "2026-01-25 12:48:33",
+      "createdAt": "2026-01-25 12:47:50",
+      "updatedAt": "2026-01-25 12:48:33"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tthriftStoreId\tamount\tstatus\tpaymentMethod\tpaymentReference\tperiodStart\tperiodEnd\tnotes\tpaidAt\tcreatedAt\tupdatedAt\n1\t3\t18.77\tpaid\tTransfer\t1234567890\tNULL\tNULL\t...\t2026-01-25 12:48:33\t2026-01-25 12:47:50\t2026-01-25 12:48:33\n",
+  "stderr": "",
+  "execution_time_ms": 1493
+}

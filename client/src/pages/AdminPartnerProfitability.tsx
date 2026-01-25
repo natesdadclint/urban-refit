@@ -30,7 +30,10 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Clock,
-  Tag
+  Tag,
+  CreditCard,
+  CheckCircle2,
+  AlertCircle
 } from "lucide-react";
 
 export default function AdminPartnerProfitability() {
@@ -264,6 +267,8 @@ export default function AdminPartnerProfitability() {
                   <TableHead className="text-right">Margin</TableHead>
                   <TableHead className="text-right">Avg Days to Sell</TableHead>
                   <TableHead>Top Category</TableHead>
+                  <TableHead className="text-right">Paid Payouts</TableHead>
+                  <TableHead>Latest Payout</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -306,6 +311,45 @@ export default function AdminPartnerProfitability() {
                           <Tag className="h-3 w-3 mr-1" />
                           {partner.topCategory}
                         </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <span className="text-green-600 font-medium">
+                        {formatCurrency(partner.paidPayouts || 0)}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {partner.latestPayoutStatus ? (
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-1">
+                            {partner.latestPayoutStatus === 'paid' ? (
+                              <CheckCircle2 className="h-3 w-3 text-green-600" />
+                            ) : partner.latestPayoutStatus === 'pending' ? (
+                              <Clock className="h-3 w-3 text-yellow-600" />
+                            ) : (
+                              <AlertCircle className="h-3 w-3 text-red-600" />
+                            )}
+                            <Badge 
+                              variant={partner.latestPayoutStatus === 'paid' ? 'default' : 'secondary'}
+                              className="capitalize text-xs"
+                            >
+                              {partner.latestPayoutStatus}
+                            </Badge>
+                          </div>
+                          {partner.latestPayoutMethod && (
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <CreditCard className="h-3 w-3" />
+                              {partner.latestPayoutMethod}
+                            </div>
+                          )}
+                          {partner.latestPayoutAmount && (
+                            <span className="text-xs font-medium">
+                              {formatCurrency(partner.latestPayoutAmount)}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-muted-foreground text-xs">No payouts</span>
                       )}
                     </TableCell>
                     <TableCell>

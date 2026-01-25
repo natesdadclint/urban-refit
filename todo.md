@@ -347,3 +347,6 @@
 - [x] Add 'incl. GST' text to ProductDetail page prices
 - [x] Add 'incl. GST' text to Cart page prices
 - [x] Change phone number placeholder to NZ format (+64 21 123 4567)
+- [x] Fix Partner Profitability page - payment method and paid status now showing
+  - Added Paid Payouts column showing total paid amount
+  - Added Latest Payout column showing status, payment method, and amount

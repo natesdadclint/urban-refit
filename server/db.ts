@@ -1365,6 +1365,12 @@ export interface PartnerProfitabilityData {
   // Payout metrics
   totalPayouts: number;
   pendingPayouts: number;
+  paidPayouts: number;
+  // Latest payout details
+  latestPayoutStatus: string | null;
+  latestPayoutMethod: string | null;
+  latestPayoutAmount: number | null;
+  latestPayoutDate: Date | null;
   // Performance metrics
   avgDaysToSell: number | null;
   topCategory: string | null;
@@ -1438,6 +1444,29 @@ export async function getPartnerProfitability(): Promise<PartnerProfitabilityDat
       eq(payouts.status, "pending")
     ));
 
+    // Get paid payouts for this store
+    const paidPayoutsResult = await db.select({
+      paidAmount: sql<number>`COALESCE(SUM(${payouts.amount}), 0)`,
+    })
+    .from(payouts)
+    .where(and(
+      eq(payouts.thriftStoreId, store.thriftStoreId),
+      eq(payouts.status, "paid")
+    ));
+
+    // Get latest payout details for this store
+    const latestPayoutResult = await db.select({
+      status: payouts.status,
+      paymentMethod: payouts.paymentMethod,
+      amount: payouts.amount,
+      paidAt: payouts.paidAt,
+      createdAt: payouts.createdAt,
+    })
+    .from(payouts)
+    .where(eq(payouts.thriftStoreId, store.thriftStoreId))
+    .orderBy(desc(payouts.createdAt))
+    .limit(1);
+
     // Calculate average days to sell
     const avgDaysResult = await db.select({
       avgDays: sql<number>`AVG(DATEDIFF(${products.soldAt}, ${products.createdAt}))`,
@@ -1472,6 +1501,11 @@ export async function getPartnerProfitability(): Promise<PartnerProfitabilityDat
       avgMarkup: Number(metrics?.avgMarkup) || 0,
       totalPayouts: Number(store.totalPayout) || 0,
       pendingPayouts: Number(pendingPayoutsResult[0]?.pendingAmount) || 0,
+      paidPayouts: Number(paidPayoutsResult[0]?.paidAmount) || 0,
+      latestPayoutStatus: latestPayoutResult[0]?.status || null,
+      latestPayoutMethod: latestPayoutResult[0]?.paymentMethod || null,
+      latestPayoutAmount: latestPayoutResult[0]?.amount ? Number(latestPayoutResult[0].amount) : null,
+      latestPayoutDate: latestPayoutResult[0]?.paidAt || latestPayoutResult[0]?.createdAt || null,
       avgDaysToSell: avgDaysResult[0]?.avgDays ? Number(avgDaysResult[0].avgDays) : null,
       topCategory: topCategoryResult[0]?.category || null,
       topBrand: topBrandResult[0]?.brand || null,

@@ -1,0 +1,27 @@
+Partner Profitability Page Test Results
+========================================
+
+The Partner Profitability page now displays the following columns:
+- Store
+- Products
+- Sold
+- Sell-Through
+- Revenue
+- Profit
+- Margin
+- Avg Days to Sell
+- Top Category
+- Paid Payouts (NEW)
+- Latest Payout (NEW)
+
+Test Data Observed:
+-------------------
+1. Vintage Vault: $0.00 paid payouts, "No payouts" status
+2. Second Time Around: $0.00 paid payouts, "No payouts" status
+3. The Thrift Collective: $18.77 paid payouts, Status: "paid", Method: "Transfer", Amount: $18.77
+
+The fix is working correctly - The Thrift Collective now shows:
+- Paid Payouts: $18.77 (green text)
+- Latest Payout Status: "paid" (with green checkmark icon)
+- Payment Method: "Transfer" (with credit card icon)
+- Amount: $18.77
