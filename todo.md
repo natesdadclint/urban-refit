@@ -338,3 +338,6 @@
 - [x] Update admin Orders page to show GST amounts
 - [x] Update order confirmation emails with GST breakdown
 - [x] Update payout notification emails with NZD currency
+
+## Checkout Form Updates
+- [x] Set New Zealand as default country in shipping address form

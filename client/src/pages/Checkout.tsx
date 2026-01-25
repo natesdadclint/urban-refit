@@ -42,7 +42,7 @@ export default function Checkout() {
     shippingCity: "",
     shippingState: "",
     shippingZip: "",
-    shippingCountry: "United States",
+    shippingCountry: "New Zealand",
     shippingPhone: "",
   });
 
@@ -290,7 +290,7 @@ export default function Checkout() {
                           name="shippingCountry"
                           value={formData.shippingCountry}
                           onChange={handleInputChange}
-                          placeholder="United States"
+                          placeholder="New Zealand"
                           required
                         />
                       </div>
