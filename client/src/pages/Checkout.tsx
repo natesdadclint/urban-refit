@@ -304,7 +304,7 @@ export default function Checkout() {
                         type="tel"
                         value={formData.shippingPhone}
                         onChange={handleInputChange}
-                        placeholder="+1 (555) 123-4567"
+                        placeholder="+64 21 123 4567"
                         required
                       />
                     </div>

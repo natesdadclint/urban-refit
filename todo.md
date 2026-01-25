@@ -346,3 +346,4 @@
 - [x] Add 'incl. GST' text to ProductCard component prices
 - [x] Add 'incl. GST' text to ProductDetail page prices
 - [x] Add 'incl. GST' text to Cart page prices
+- [x] Change phone number placeholder to NZ format (+64 21 123 4567)
