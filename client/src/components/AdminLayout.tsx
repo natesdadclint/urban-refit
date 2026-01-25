@@ -2,6 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { trpc } from "@/lib/trpc";
 import {
   LayoutDashboard,
   Package,
@@ -35,13 +36,19 @@ const navItems = [
   { href: "/admin/courier-returns", icon: RefreshCw, label: "Courier Returns" },
   { href: "/admin/charities", icon: Heart, label: "Charities" },
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
-  { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages" },
+  { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages", showBadge: true },
 ];
 
 export default function AdminLayout({ children, title }: AdminLayoutProps) {
   const { user, isAuthenticated, loading, logout } = useAuth();
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Fetch unread message count for badge
+  const { data: unreadMessages } = trpc.contact.unread.useQuery(undefined, {
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
+  const unreadCount = unreadMessages?.length || 0;
 
   const handleLogout = async () => {
     await logout();
@@ -125,15 +132,21 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
               {navItems.map((item) => {
                 const isActive = location === item.href || 
                   (item.href !== "/admin" && location.startsWith(item.href));
+                const showBadge = item.showBadge && unreadCount > 0;
                 return (
                   <Link key={item.href} href={item.href}>
                     <Button
                       variant={isActive ? "secondary" : "ghost"}
-                      className="w-full justify-start gap-3"
+                      className="w-full justify-start gap-3 relative"
                       onClick={() => setSidebarOpen(false)}
                     >
                       <item.icon className="h-4 w-4" />
                       {item.label}
+                      {showBadge && (
+                        <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-red-500 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1.5">
+                          {unreadCount > 99 ? "99+" : unreadCount}
+                        </span>
+                      )}
                     </Button>
                   </Link>
                 );

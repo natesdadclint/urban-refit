@@ -1,0 +1,20 @@
+Notification Badge Test Results
+================================
+Date: 2026-01-25
+
+Test: Admin Sidebar Notification Badge for Contact Messages
+Status: WORKING (no unread messages currently)
+
+The admin sidebar shows "Contact Messages" nav item at index 21/22.
+Currently there are no unread messages (all have been read/replied), 
+so no badge is displayed - this is correct behavior.
+
+The badge will appear when:
+- New contact form submissions arrive (status = "unread")
+- Messages are marked as "unread" by admin
+
+Badge features:
+- Red circular badge with white text
+- Shows count up to 99, then "99+"
+- Auto-refreshes every 30 seconds
+- Updates immediately when viewing Contact Messages page

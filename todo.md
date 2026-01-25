@@ -381,3 +381,8 @@
 - [x] Add reply form/dialog to contact messages page
 - [x] Store reply history in database
 - [x] Auto-mark message as "replied" after sending
+
+## Admin Sidebar Notification Badge
+- [x] Create backend procedure to get unread message count (already exists)
+- [x] Update AdminLayout sidebar to show badge on Contact Messages
+- [x] Auto-refresh badge count every 30 seconds
