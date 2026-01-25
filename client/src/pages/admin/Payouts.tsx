@@ -135,7 +135,7 @@ export default function AdminPayouts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-yellow-600">
-              ${stats.pending.toFixed(2)}
+              NZ${stats.pending.toFixed(2)}
             </div>
           </CardContent>
         </Card>
@@ -148,7 +148,7 @@ export default function AdminPayouts() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              ${stats.paid.toFixed(2)}
+              NZ${stats.paid.toFixed(2)}
             </div>
           </CardContent>
         </Card>
@@ -160,7 +160,7 @@ export default function AdminPayouts() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${stats.total.toFixed(2)}</div>
+            <div className="text-2xl font-bold">NZ${stats.total.toFixed(2)}</div>
           </CardContent>
         </Card>
       </div>
@@ -288,7 +288,7 @@ export default function AdminPayouts() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right font-medium">
-                      ${payout.amount}
+                      NZ${payout.amount}
                     </TableCell>
                     <TableCell className="text-muted-foreground">
                       {payout.paymentMethod || "-"}

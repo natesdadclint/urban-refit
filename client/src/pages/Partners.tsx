@@ -78,7 +78,7 @@ export default function Partners() {
                   <h3 className="text-base font-semibold text-foreground">Partner Name</h3>
                   <p className="text-base text-muted-foreground">City, State</p>
                   <p className="text-sm text-muted-foreground">Items sourced: 0</p>
-                  <p className="text-sm text-muted-foreground">Total payouts: $0.00</p>
+                  <p className="text-sm text-muted-foreground">Total payouts: NZ$0.00</p>
                 </div>
               </div>
             </section>

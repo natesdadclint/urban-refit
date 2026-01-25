@@ -350,7 +350,7 @@ export default function AdminThriftStores() {
       {stores && stores.length > 0 && (
         <div className="mt-4 text-sm text-muted-foreground">
           {stores.length} partner {stores.length === 1 ? "store" : "stores"} • 
-          Total payouts: ${stores.reduce((sum, s) => sum + parseFloat(s.totalPayout), 0).toFixed(2)}
+          Total payouts: NZ${stores.reduce((sum, s) => sum + parseFloat(s.totalPayout), 0).toFixed(2)}
         </div>
       )}
     </AdminLayout>

@@ -187,7 +187,7 @@ export default function AdminCourierReturns() {
               {returnItem.estimatedResaleValue && (
                 <div>
                   <span className="text-muted-foreground">Est. Value:</span>{" "}
-                  ${parseFloat(returnItem.estimatedResaleValue).toFixed(2)}
+                  NZ${parseFloat(returnItem.estimatedResaleValue).toFixed(2)}
                 </div>
               )}
               {returnItem.tokensAwarded && (

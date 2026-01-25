@@ -321,3 +321,11 @@
 
 ## Bug Fix: Donate Button Not Appearing
 - [x] Fix donate button not appearing/clickable after claiming weekly reward tokens
+
+## Currency Change: USD to NZD
+- [x] Update all currency symbols and references from USD ($) to NZD (NZ$)
+- [x] Update Stripe configuration for NZD currency
+- [x] Update frontend product cards, cart, checkout pages
+- [x] Update admin dashboard, orders, payouts, products pages
+- [x] Update Terms of Service with NZD references
+- [x] Update token value displays (1 token = NZ$1)

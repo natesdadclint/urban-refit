@@ -367,7 +367,7 @@ export default function Join() {
               <p className="text-primary-foreground/80">Happy Members</p>
             </div>
             <div>
-              <p className="text-4xl font-bold mb-2">$50,000+</p>
+              <p className="text-4xl font-bold mb-2">NZ$50,000+</p>
               <p className="text-primary-foreground/80">Donated to Thrift Partners</p>
             </div>
             <div>

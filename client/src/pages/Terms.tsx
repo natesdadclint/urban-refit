@@ -65,7 +65,7 @@ export default function Terms() {
             <section>
               <h2 className="text-2xl font-serif font-bold text-foreground mb-4">4. Pricing and Payment</h2>
               <p className="mb-4">
-                All prices are listed in USD and include the following components:
+                All prices are listed in NZD (New Zealand Dollars) and include the following components:
               </p>
               <ul className="list-disc list-inside space-y-2">
                 <li>Original acquisition cost from our thrift store partners</li>
@@ -114,7 +114,7 @@ export default function Terms() {
               <ul className="list-disc list-inside space-y-2">
                 <li>Tokens are earned when you return garments through our courier return program</li>
                 <li>Token value is approximately 25% of the item's resale value</li>
-                <li>Tokens can be converted to spend limit (1 token = $1 USD) for orders of 3+ items</li>
+                <li>Tokens can be converted to spend limit (1 token = $1 NZD) for orders of 3+ items</li>
                 <li>Alternatively, tokens can be donated to our charity partners</li>
                 <li>Tokens have no cash value and cannot be exchanged for cash</li>
                 <li>Urban Refit reserves the right to modify or discontinue the loyalty program at any time</li>

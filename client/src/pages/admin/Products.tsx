@@ -157,13 +157,13 @@ export default function AdminProducts() {
                           {conditionLabels[product.condition] || product.condition}
                         </span>
                       </TableCell>
-                      <TableCell className="text-right">${cost.toFixed(2)}</TableCell>
-                      <TableCell className="text-right font-medium">${sale.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">NZ${cost.toFixed(2)}</TableCell>
+                      <TableCell className="text-right font-medium">NZ${sale.toFixed(2)}</TableCell>
                       <TableCell className="text-right">
                         <div>
-                          <p className="font-medium text-green-600">${netProfit.toFixed(2)}</p>
+                          <p className="font-medium text-green-600">NZ${netProfit.toFixed(2)}</p>
                           <p className="text-xs text-muted-foreground">
-                            -{thriftPayout.toFixed(2)} payout
+                            -NZ{thriftPayout.toFixed(2)} payout
                           </p>
                         </div>
                       </TableCell>

@@ -189,7 +189,7 @@ export default function Checkout() {
                     {discountPercentage}% Bulk Discount Applied!
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    You're saving ${discountAmount.toFixed(2)} with {itemCount} items + earning {bonusTokens} bonus tokens
+                    You're saving NZ${discountAmount.toFixed(2)} with {itemCount} items + earning {bonusTokens} bonus tokens
                   </p>
                 </div>
               </div>
@@ -315,7 +315,7 @@ export default function Checkout() {
                         <div>
                           <p className="font-medium">Use Spend Limit</p>
                           <p className="text-sm text-muted-foreground">
-                            Available: ${availableSpendLimit.toFixed(2)}
+                            Available: NZ${availableSpendLimit.toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -347,7 +347,7 @@ export default function Checkout() {
                               onClick={() => setSpendLimitAmount(Math.min(amount, availableSpendLimit).toString())}
                               disabled={availableSpendLimit < amount}
                             >
-                              ${amount}
+                              NZ${amount}
                             </Button>
                           ))}
                           <Button
@@ -368,7 +368,7 @@ export default function Checkout() {
                   <div className="p-4 bg-muted rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
                       <Coins className="h-5 w-5 text-muted-foreground" />
-                      <p className="font-medium">Spend Limit Available: ${availableSpendLimit.toFixed(2)}</p>
+                      <p className="font-medium">Spend Limit Available: NZ${availableSpendLimit.toFixed(2)}</p>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Add {3 - itemCount} more item{3 - itemCount > 1 ? 's' : ''} to use your spend limit!
@@ -399,7 +399,7 @@ export default function Checkout() {
                             {product.brand} {product.size && `• Size ${product.size}`}
                           </p>
                           <p className="text-sm font-medium mt-1">
-                            ${parseFloat(product.salePrice).toFixed(2)}
+                            NZ${parseFloat(product.salePrice).toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -411,25 +411,25 @@ export default function Checkout() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal ({itemCount} items)</span>
-                      <span>${subtotal.toFixed(2)}</span>
+                      <span>NZ${subtotal.toFixed(2)}</span>
                     </div>
                     
                     {discountAmount > 0 && (
                       <div className="flex justify-between text-green-600">
                         <span>Bulk Discount ({discountPercentage}%)</span>
-                        <span>-${discountAmount.toFixed(2)}</span>
+                        <span>-NZ${discountAmount.toFixed(2)}</span>
                       </div>
                     )}
                     
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
-                      <span>${shipping.toFixed(2)}</span>
+                      <span>NZ${shipping.toFixed(2)}</span>
                     </div>
                     
                     {spendLimitToUse > 0 && (
                       <div className="flex justify-between text-primary">
                         <span>Spend Limit Applied</span>
-                        <span>-${spendLimitToUse.toFixed(2)}</span>
+                        <span>-NZ${spendLimitToUse.toFixed(2)}</span>
                       </div>
                     )}
                   </div>
@@ -438,7 +438,7 @@ export default function Checkout() {
 
                   <div className="flex justify-between font-semibold text-lg mb-2">
                     <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>NZ${total.toFixed(2)}</span>
                   </div>
                   
                   {bonusTokens > 0 && (
@@ -455,7 +455,7 @@ export default function Checkout() {
                     disabled={createCheckoutSession.isPending}
                   >
                     <CreditCard className="h-4 w-4" />
-                    {createCheckoutSession.isPending ? "Processing..." : `Pay $${total.toFixed(2)} with Stripe`}
+                    {createCheckoutSession.isPending ? "Processing..." : `Pay NZ${total.toFixed(2)} with Stripe`}
                   </Button>
 
                   <div className="flex items-center justify-center gap-2 mt-4 text-xs text-muted-foreground">

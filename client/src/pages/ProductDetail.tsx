@@ -121,7 +121,7 @@ export default function ProductDetail() {
             {/* Price */}
             <div className="flex items-baseline gap-3 mb-6">
               <span className="text-3xl font-serif font-semibold">
-                ${parseFloat(product.salePrice).toFixed(2)}
+                NZ${parseFloat(product.salePrice).toFixed(2)}
               </span>
               {product.status !== "available" && (
                 <Badge variant="secondary">Sold</Badge>
@@ -227,7 +227,7 @@ export default function ProductDetail() {
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col items-center gap-2">
                 <Truck className="h-5 w-5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Free shipping over $50</span>
+                <span className="text-xs text-muted-foreground">Free shipping over NZ$50</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <Shield className="h-5 w-5 text-muted-foreground" />

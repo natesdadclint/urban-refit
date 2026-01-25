@@ -529,15 +529,15 @@ export default function AdminProductForm() {
                   <div className="pt-4 border-t border-border space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Sale Price</span>
-                      <span className="font-semibold">${salePrice.toFixed(2)}</span>
+                      <span className="font-semibold">NZ${salePrice.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Thrift Store (10%)</span>
-                      <span className="text-orange-600">-${thriftStorePayout.toFixed(2)}</span>
+                      <span className="text-orange-600">-NZ${thriftStorePayout.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm pt-2 border-t border-border">
                       <span className="font-medium">Your Profit</span>
-                      <span className="font-semibold text-green-600">${profit.toFixed(2)}</span>
+                      <span className="font-semibold text-green-600">NZ${profit.toFixed(2)}</span>
                     </div>
                   </div>
                 )}

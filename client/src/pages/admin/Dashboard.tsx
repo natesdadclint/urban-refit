@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const stats = [
     {
       title: "Total Revenue",
-      value: salesData ? `$${Number(salesData.totalSales).toFixed(2)}` : "$0.00",
+      value: salesData ? `NZ${Number(salesData.totalSales).toFixed(2)}` : "NZ$0.00",
       icon: DollarSign,
       description: `${salesData?.orderCount || 0} orders`,
     },
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${order.total}</p>
+                      <p className="font-medium">NZ${order.total}</p>
                       <p className="text-xs text-muted-foreground capitalize">{order.status}</p>
                     </div>
                   </div>
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
                       <p className="text-sm text-muted-foreground">{store.city || "No location"}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium">${store.totalPayout}</p>
+                      <p className="font-medium">NZ${store.totalPayout}</p>
                       <p className="text-xs text-muted-foreground">Total payouts</p>
                     </div>
                   </div>
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
               <div>
                 <p className="text-sm text-muted-foreground">Avg Profit/Item</p>
                 <p className="text-xl font-semibold">
-                  ${Number(productData.avgProfit).toFixed(2)}
+                  NZ${Number(productData.avgProfit).toFixed(2)}
                 </p>
               </div>
               <div>

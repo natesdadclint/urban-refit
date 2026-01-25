@@ -328,7 +328,7 @@ export default function Profile() {
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    1 token = $1 spend limit. Spend limit can be used on orders of 3+ items.
+                    1 token = NZ$1 spend limit. Spend limit can be used on orders of 3+ items.
                   </p>
                 </CardContent>
               </Card>

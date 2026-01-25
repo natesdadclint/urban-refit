@@ -82,7 +82,7 @@ export async function createCheckoutSession(
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = cartItems.map(
     (item) => ({
       price_data: {
-        currency: "usd",
+        currency: "nzd",
         product_data: {
           name: item.product.name,
           images: item.product.image1Url ? [item.product.image1Url] : [],
@@ -96,7 +96,7 @@ export async function createCheckoutSession(
   // Add shipping as a line item
   lineItems.push({
     price_data: {
-      currency: "usd",
+      currency: "nzd",
       product_data: {
         name: "Shipping",
       },

@@ -189,7 +189,7 @@ export default function CourierReturn() {
                 </div>
                 <div className="mt-6 p-4 bg-muted rounded-lg">
                   <p className="text-sm">
-                    <strong>Token Value:</strong> Tokens can be converted to spend limit (1 token = $1) 
+                    <strong>Token Value:</strong> Tokens can be converted to spend limit (1 token = NZ$1) 
                     or donated to charity. Spend limit applies to orders of 3+ items.
                   </p>
                 </div>

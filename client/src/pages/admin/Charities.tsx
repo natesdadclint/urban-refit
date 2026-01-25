@@ -233,7 +233,7 @@ export default function AdminCharities() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Total Donated</p>
-                  <p className="text-2xl font-bold">${totalDonations.toFixed(2)}</p>
+                  <p className="text-2xl font-bold">NZ${totalDonations.toFixed(2)}</p>
                 </div>
               </div>
             </CardContent>
@@ -293,7 +293,7 @@ export default function AdminCharities() {
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm text-muted-foreground">Total received:</span>
                     <span className="font-medium">
-                      ${parseFloat(charity.totalDonationsReceived || "0").toFixed(2)}
+                      NZ${parseFloat(charity.totalDonationsReceived || "0").toFixed(2)}
                     </span>
                   </div>
                   <div className="flex gap-2">

@@ -63,7 +63,7 @@ export default function AdminInsights() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${salesData ? Number(salesData.totalSales).toFixed(2) : "0.00"}
+              NZ${salesData ? Number(salesData.totalSales).toFixed(2) : "0.00"}
             </div>
             <p className="text-xs text-muted-foreground">
               {salesData?.orderCount || 0} orders
@@ -80,7 +80,7 @@ export default function AdminInsights() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              ${salesData && salesData.orderCount > 0 ? (Number(salesData.totalSales) / salesData.orderCount).toFixed(2) : "0.00"}
+              NZ${salesData && salesData.orderCount > 0 ? (Number(salesData.totalSales) / salesData.orderCount).toFixed(2) : "0.00"}
             </div>
           </CardContent>
         </Card>
@@ -175,7 +175,7 @@ export default function AdminInsights() {
                     <span className="font-medium">{store.storeName || 'Unknown Store'}</span>
                     <div className="text-right">
                       <span className="text-muted-foreground">{store.itemsSold} items</span>
-                      <span className="text-orange-600 ml-2">${Number(store.revenue).toFixed(2)}</span>
+                      <span className="text-orange-600 ml-2">NZ${Number(store.revenue).toFixed(2)}</span>
                     </div>
                   </div>
                 ))}
@@ -199,7 +199,7 @@ export default function AdminInsights() {
                 {salesData.salesByCategory.map((item: any, index: number) => (
                   <div key={index} className="flex items-center justify-between">
                     <span className="font-medium capitalize">{item.category}</span>
-                    <span className="text-muted-foreground">${Number(item.total).toFixed(2)}</span>
+                    <span className="text-muted-foreground">NZ${Number(item.total).toFixed(2)}</span>
                   </div>
                 ))}
               </div>

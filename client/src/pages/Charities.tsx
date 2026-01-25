@@ -108,7 +108,7 @@ export default function Charities() {
                     <p className="text-2xl font-bold">{tokenBalance.toFixed(2)} tokens</p>
                   </div>
                 </div>
-                <Badge variant="secondary">1 token = $1</Badge>
+                <Badge variant="secondary">1 token = NZ$1</Badge>
               </div>
             </CardContent>
           </Card>
@@ -160,7 +160,7 @@ export default function Charities() {
                     <div className="text-sm">
                       <span className="text-muted-foreground">Total received: </span>
                       <span className="font-medium">
-                        ${parseFloat(charity.totalDonationsReceived || "0").toFixed(2)}
+                        NZ${parseFloat(charity.totalDonationsReceived || "0").toFixed(2)}
                       </span>
                     </div>
                     {isAuthenticated ? (
@@ -179,7 +179,7 @@ export default function Charities() {
                             <DialogTitle>Donate to {charity.name}</DialogTitle>
                             <DialogDescription>
                               Enter the number of tokens you'd like to donate. 
-                              Each token equals $1 in donation value.
+                              Each token equals NZ$1 in donation value.
                             </DialogDescription>
                           </DialogHeader>
                           <div className="space-y-4 pt-4">

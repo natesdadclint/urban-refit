@@ -144,7 +144,7 @@ export default function Cart() {
                         </span>
                       </div>
                       <p className="font-semibold mt-2">
-                        ${parseFloat(product.salePrice).toFixed(2)}
+                        NZ${parseFloat(product.salePrice).toFixed(2)}
                       </p>
                     </div>
 
@@ -172,11 +172,11 @@ export default function Cart() {
                       <span className="text-muted-foreground">
                         Subtotal ({cart.count} {cart.count === 1 ? "item" : "items"})
                       </span>
-                      <span>${cart.total}</span>
+                      <span>NZ${cart.total}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
-                      <span>$9.99</span>
+                      <span>NZ$9.99</span>
                     </div>
                   </div>
 
@@ -184,7 +184,7 @@ export default function Cart() {
 
                   <div className="flex justify-between font-semibold text-lg mb-6">
                     <span>Total</span>
-                    <span>${(parseFloat(cart.total) + 9.99).toFixed(2)}</span>
+                    <span>NZ${(parseFloat(cart.total) + 9.99).toFixed(2)}</span>
                   </div>
 
                   <Button asChild className="w-full gap-2">

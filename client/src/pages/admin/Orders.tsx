@@ -178,10 +178,10 @@ export default function AdminOrders() {
                       </Select>
                     </TableCell>
                     <TableCell className="text-right font-medium">
-                      ${order.total}
+                      NZ${order.total}
                     </TableCell>
                     <TableCell className="text-right text-orange-600">
-                      ${(parseFloat(order.subtotal) * 0.1).toFixed(2)}
+                      NZ${(parseFloat(order.subtotal) * 0.1).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <Button
@@ -206,11 +206,11 @@ export default function AdminOrders() {
           <span>{filteredOrders.length} orders</span>
           <span>•</span>
           <span>
-            Total: ${filteredOrders.reduce((sum, o) => sum + parseFloat(o.total), 0).toFixed(2)}
+            Total: NZ${filteredOrders.reduce((sum, o) => sum + parseFloat(o.total), 0).toFixed(2)}
           </span>
           <span>•</span>
           <span>
-            Thrift payouts: ${filteredOrders.reduce((sum, o) => sum + parseFloat(o.subtotal) * 0.1, 0).toFixed(2)}
+            Thrift payouts: NZ${filteredOrders.reduce((sum, o) => sum + parseFloat(o.subtotal) * 0.1, 0).toFixed(2)}
           </span>
         </div>
       )}
@@ -256,15 +256,15 @@ export default function AdminOrders() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>${selectedOrder.subtotal}</span>
+                    <span>NZ${selectedOrder.subtotal}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
-                    <span>${selectedOrder.shippingCost}</span>
+                    <span>NZ${selectedOrder.shippingCost}</span>
                   </div>
                   <div className="flex justify-between font-medium pt-2 border-t">
                     <span>Total</span>
-                    <span>${selectedOrder.total}</span>
+                    <span>NZ${selectedOrder.total}</span>
                   </div>
                 </div>
               </div>
@@ -274,7 +274,7 @@ export default function AdminOrders() {
                 <div className="text-sm">
                   <div className="flex justify-between text-orange-600">
                     <span>Total Payout Due</span>
-                    <span>${(parseFloat(selectedOrder.subtotal) * 0.1).toFixed(2)}</span>
+                    <span>NZ${(parseFloat(selectedOrder.subtotal) * 0.1).toFixed(2)}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
                     10% of subtotal goes to partner thrift stores
