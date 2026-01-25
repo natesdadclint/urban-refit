@@ -20,8 +20,22 @@ export default function FAQ() {
     message: "",
   });
   const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(true);
+  const [messageSent, setMessageSent] = useState(false);
 
-  const subscribeMutation = trpc.newsletter.subscribe.useMutation();
+  const contactMutation = trpc.contact.submit.useMutation({
+    onSuccess: (data) => {
+      toast.success("Message Sent!", {
+        description: data.message,
+      });
+      setContactForm({ email: "", message: "" });
+      setMessageSent(true);
+    },
+    onError: (error) => {
+      toast.error("Error", {
+        description: error.message || "Failed to send message. Please try again.",
+      });
+    },
+  });
 
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,30 +45,11 @@ export default function FAQ() {
       return;
     }
 
-    // Subscribe to newsletter if opted in
-    if (subscribeToNewsletter) {
-      try {
-        await subscribeMutation.mutateAsync({
-          email: contactForm.email,
-          source: "contact",
-          newArrivals: true,
-          exclusiveOffers: true,
-        });
-      } catch (error) {
-        // Silently continue - subscription is optional
-      }
-    }
-
-    // Open email client with pre-filled message
-    const subject = encodeURIComponent("FAQ Question from Website");
-    const body = encodeURIComponent(`From: ${contactForm.email}\n\n${contactForm.message}`);
-    window.location.href = `mailto:help@urbanrefit.store?subject=${subject}&body=${body}`;
-    
-    toast.success("Opening your email client...", {
-      description: "Your message will be sent via email.",
+    contactMutation.mutate({
+      email: contactForm.email,
+      message: contactForm.message,
+      subscribeToNewsletter,
     });
-    
-    setContactForm({ email: "", message: "" });
   };
 
   const faqCategories = [
@@ -329,6 +324,24 @@ export default function FAQ() {
               </p>
             </div>
             
+            {messageSent ? (
+              <div className="max-w-md mx-auto text-center space-y-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                  <Send className="w-8 h-8 text-green-600 dark:text-green-400" />
+                </div>
+                <h4 className="text-lg font-semibold text-foreground">Message Sent!</h4>
+                <p className="text-muted-foreground">
+                  Thank you for reaching out. We'll get back to you as soon as possible.
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setMessageSent(false)}
+                  className="mt-4"
+                >
+                  Send Another Message
+                </Button>
+              </div>
+            ) : (
             <form onSubmit={handleContactSubmit} className="max-w-md mx-auto space-y-4">
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -363,8 +376,8 @@ export default function FAQ() {
                 </label>
               </div>
               
-              <Button type="submit" className="w-full gap-2" disabled={subscribeMutation.isPending}>
-                {subscribeMutation.isPending ? (
+              <Button type="submit" className="w-full gap-2" disabled={contactMutation.isPending}>
+                {contactMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <>
@@ -381,6 +394,7 @@ export default function FAQ() {
                 </a>
               </p>
             </form>
+            )}
           </div>
         </div>
       </div>

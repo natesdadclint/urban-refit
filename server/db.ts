@@ -17,7 +17,8 @@ import {
   discountTiers, InsertDiscountTier, DiscountTier,
   sellSubmissions, InsertSellSubmission, SellSubmission,
   productMetadata, InsertProductMetadata, ProductMetadata,
-  emailSubscribers, InsertEmailSubscriber, EmailSubscriber
+  emailSubscribers, InsertEmailSubscriber, EmailSubscriber,
+  contactMessages, InsertContactMessage, ContactMessage
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1840,4 +1841,90 @@ export async function getWeeklyRewardStatus(userId: number): Promise<{
     nextEligibleDate: nextEligible,
     daysUntilEligible
   };
+}
+
+
+// ============ CONTACT MESSAGE OPERATIONS ============
+
+export async function createContactMessage(message: InsertContactMessage): Promise<ContactMessage | null> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  try {
+    const result = await db.insert(contactMessages).values(message);
+    const [created] = await db.select().from(contactMessages).where(eq(contactMessages.id, result[0].insertId));
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create contact message:", error);
+    throw error;
+  }
+}
+
+export async function getAllContactMessages(): Promise<ContactMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
+}
+
+export async function getUnreadContactMessages(): Promise<ContactMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(contactMessages)
+    .where(eq(contactMessages.status, "unread"))
+    .orderBy(desc(contactMessages.createdAt));
+}
+
+export async function updateContactMessageStatus(
+  id: number, 
+  status: "unread" | "read" | "replied" | "archived",
+  adminNotes?: string
+): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  try {
+    const updateData: any = { status };
+    if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+    if (status === "replied") updateData.repliedAt = new Date();
+    
+    await db.update(contactMessages)
+      .set(updateData)
+      .where(eq(contactMessages.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update contact message status:", error);
+    return false;
+  }
+}
+
+export async function getContactMessageStats(): Promise<{
+  total: number;
+  unread: number;
+  read: number;
+  replied: number;
+  archived: number;
+}> {
+  const db = await getDb();
+  if (!db) return { total: 0, unread: 0, read: 0, replied: 0, archived: 0 };
+  
+  try {
+    const [stats] = await db.select({
+      total: sql<number>`COUNT(*)`,
+      unread: sql<number>`SUM(CASE WHEN status = 'unread' THEN 1 ELSE 0 END)`,
+      read: sql<number>`SUM(CASE WHEN status = 'read' THEN 1 ELSE 0 END)`,
+      replied: sql<number>`SUM(CASE WHEN status = 'replied' THEN 1 ELSE 0 END)`,
+      archived: sql<number>`SUM(CASE WHEN status = 'archived' THEN 1 ELSE 0 END)`,
+    }).from(contactMessages);
+    
+    return {
+      total: Number(stats.total) || 0,
+      unread: Number(stats.unread) || 0,
+      read: Number(stats.read) || 0,
+      replied: Number(stats.replied) || 0,
+      archived: Number(stats.archived) || 0,
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get contact message stats:", error);
+    return { total: 0, unread: 0, read: 0, replied: 0, archived: 0 };
+  }
 }

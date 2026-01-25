@@ -354,3 +354,14 @@
 ## NZ Checkout Form Improvements
 - [x] Add NZ postcode validation (4 digits only)
 - [x] Replace State field with NZ regions dropdown
+
+## Bug Fixes - Subscribe/Mailchimp
+- [x] Investigate Subscribe link not working - footer form works correctly
+- [x] Check Mailchimp API integration - verified working with 6 members
+
+## Bug Fixes - FAQ Contact Form
+- [x] Create contact_messages table in database schema
+- [x] Create backend procedure to save contact messages
+- [x] Send notification to owner when message received
+- [x] Update FAQ page to use new backend procedure
+- [x] Show success message after submission

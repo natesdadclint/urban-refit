@@ -588,3 +588,34 @@ export const emailSubscribers = mysqlTable("email_subscribers", {
 
 export type EmailSubscriber = typeof emailSubscribers.$inferSelect;
 export type InsertEmailSubscriber = typeof emailSubscribers.$inferInsert;
+
+
+/**
+ * Contact messages - messages from the FAQ contact form
+ */
+export const contactMessages = mysqlTable("contact_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Sender information
+  email: varchar("email", { length: 320 }).notNull(),
+  userId: int("userId"), // null for anonymous users
+  
+  // Message content
+  message: text("message").notNull(),
+  
+  // Newsletter opt-in
+  subscribedToNewsletter: boolean("subscribedToNewsletter").default(false).notNull(),
+  
+  // Status tracking
+  status: mysqlEnum("status", ["unread", "read", "replied", "archived"]).default("unread").notNull(),
+  
+  // Admin notes
+  adminNotes: text("adminNotes"),
+  repliedAt: timestamp("repliedAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ContactMessage = typeof contactMessages.$inferSelect;
+export type InsertContactMessage = typeof contactMessages.$inferInsert;

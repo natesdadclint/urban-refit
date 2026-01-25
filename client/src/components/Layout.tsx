@@ -301,7 +301,12 @@ export default function Layout({ children }: LayoutProps) {
                           required
                         />
                       </div>
-                      <Button type="submit" size="icon" disabled={subscribeMutation.isPending}>
+                      <Button 
+                        type="submit" 
+                        size="icon" 
+                        disabled={subscribeMutation.isPending}
+                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                      >
                         {subscribeMutation.isPending ? (
                           <Loader2 className="w-4 h-4 animate-spin" />
                         ) : (

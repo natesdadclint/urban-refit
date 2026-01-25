@@ -1374,6 +1374,74 @@ Keep insights concise and actionable.`;
       return db.getSubscriberStats();
     }),
   }),
+
+  // ============ CONTACT MESSAGE ROUTES ============
+  contact: router({
+    // Submit a contact message from FAQ page
+    submit: publicProcedure
+      .input(z.object({
+        email: z.string().email().max(320),
+        message: z.string().min(1).max(5000),
+        subscribeToNewsletter: z.boolean().default(false),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Import notification helper
+        const { notifyOwner } = await import("./_core/notification");
+        
+        // Create the contact message
+        const contactMessage = await db.createContactMessage({
+          email: input.email,
+          message: input.message,
+          userId: ctx.user?.id || null,
+          subscribedToNewsletter: input.subscribeToNewsletter,
+        });
+        
+        if (!contactMessage) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to save message" });
+        }
+        
+        // Notify owner about new contact message
+        await notifyOwner({
+          title: "New Contact Message from Urban Refit",
+          content: `New message from ${input.email}:\n\n${input.message}\n\n---\nNewsletter opt-in: ${input.subscribeToNewsletter ? "Yes" : "No"}`,
+        });
+        
+        return { 
+          success: true, 
+          message: "Your message has been sent! We'll get back to you soon." 
+        };
+      }),
+    
+    // Admin: Get all contact messages
+    list: adminProcedure.query(async () => {
+      return db.getAllContactMessages();
+    }),
+    
+    // Admin: Get unread messages
+    unread: adminProcedure.query(async () => {
+      return db.getUnreadContactMessages();
+    }),
+    
+    // Admin: Update message status
+    updateStatus: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        status: z.enum(["unread", "read", "replied", "archived"]),
+        adminNotes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const success = await db.updateContactMessageStatus(input.id, input.status, input.adminNotes);
+        if (!success) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update message" });
+        }
+        return { success: true };
+      }),
+    
+    // Admin: Get message stats
+    stats: adminProcedure.query(async () => {
+      return db.getContactMessageStats();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
