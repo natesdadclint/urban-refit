@@ -16,6 +16,7 @@ import {
   RefreshCw,
   Heart,
   TrendingUp,
+  Mail,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -34,6 +35,7 @@ const navItems = [
   { href: "/admin/courier-returns", icon: RefreshCw, label: "Courier Returns" },
   { href: "/admin/charities", icon: Heart, label: "Charities" },
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
+  { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages" },
 ];
 
 export default function AdminLayout({ children, title }: AdminLayoutProps) {

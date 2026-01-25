@@ -368,3 +368,9 @@
 
 ## Bug Fixes - Newsletter Subscription
 - [x] Fix "Get the freshest drops in your inbox" newsletter section on Blog page
+
+## Admin Contact Messages Page
+- [x] Create backend procedures for listing and managing contact messages (already exists)
+- [x] Create admin contact messages page UI with status tracking
+- [x] Add navigation link to admin sidebar
+- [x] Add ability to mark messages as read/replied

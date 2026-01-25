@@ -20,6 +20,7 @@ import AdminPayouts from "./pages/admin/Payouts";
 import AdminInsights from "./pages/admin/Insights";
 import AdminCourierReturns from "./pages/admin/CourierReturns";
 import AdminCharities from "./pages/admin/Charities";
+import AdminContactMessages from "./pages/admin/ContactMessages";
 import About from "./pages/About";
 import Partners from "./pages/Partners";
 import Sustainability from "./pages/Sustainability";
@@ -86,6 +87,7 @@ function Router() {
       <Route path="/admin/sell-submissions" component={AdminSellSubmissions} />
       <Route path="/admin/bulk-upload" component={AdminBulkUpload} />
       <Route path="/admin/partner-profitability" component={AdminPartnerProfitability} />
+      <Route path="/admin/contact-messages" component={AdminContactMessages} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
