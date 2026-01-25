@@ -318,3 +318,6 @@
 
 ## Weekly Reward Donate Link
 - [x] Add clickable option to donate tokens from the weekly reward banner after claiming
+
+## Bug Fix: Donate Button Not Appearing
+- [x] Fix donate button not appearing/clickable after claiming weekly reward tokens
