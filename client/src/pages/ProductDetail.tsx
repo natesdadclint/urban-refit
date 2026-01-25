@@ -123,6 +123,7 @@ export default function ProductDetail() {
               <span className="text-3xl font-serif font-semibold">
                 NZ${parseFloat(product.salePrice).toFixed(2)}
               </span>
+              <span className="text-sm text-muted-foreground">incl. GST</span>
               {product.status !== "available" && (
                 <Badge variant="secondary">Sold</Badge>
               )}

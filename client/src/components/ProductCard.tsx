@@ -93,9 +93,12 @@ export default function ProductCard({
 
         {/* Price and Buy Now */}
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
-          <span className="text-lg font-serif font-semibold">
-            NZ${parseFloat(salePrice).toFixed(2)}
-          </span>
+          <div>
+            <span className="text-lg font-serif font-semibold">
+              NZ${parseFloat(salePrice).toFixed(2)}
+            </span>
+            <span className="text-xs text-muted-foreground ml-1">incl. GST</span>
+          </div>
           
           {onAddToCart && (
             <Button

@@ -341,3 +341,8 @@
 
 ## Checkout Form Updates
 - [x] Set New Zealand as default country in shipping address form
+
+## Bug Fixes
+- [x] Add 'incl. GST' text to ProductCard component prices
+- [x] Add 'incl. GST' text to ProductDetail page prices
+- [x] Add 'incl. GST' text to Cart page prices

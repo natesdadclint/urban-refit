@@ -145,6 +145,7 @@ export default function Cart() {
                       </div>
                       <p className="font-semibold mt-2">
                         NZ${parseFloat(product.salePrice).toFixed(2)}
+                        <span className="text-xs font-normal text-muted-foreground ml-1">incl. GST</span>
                       </p>
                     </div>
 
@@ -173,6 +174,9 @@ export default function Cart() {
                         Subtotal ({cart.count} {cart.count === 1 ? "item" : "items"})
                       </span>
                       <span>NZ${cart.total}</span>
+                    </div>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>(Includes GST of NZ${(parseFloat(cart.total) * (15 / 115)).toFixed(2)})</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
