@@ -365,3 +365,6 @@
 - [x] Send notification to owner when message received
 - [x] Update FAQ page to use new backend procedure
 - [x] Show success message after submission
+
+## Bug Fixes - Newsletter Subscription
+- [x] Fix "Get the freshest drops in your inbox" newsletter section on Blog page

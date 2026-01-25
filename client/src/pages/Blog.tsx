@@ -4,8 +4,9 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowRight, ArrowLeft, Clock, Eye, Heart, TrendingUp, Leaf, Users, Star, Zap, Grid3X3 } from "lucide-react";
+import { ArrowRight, ArrowLeft, Clock, Eye, Heart, TrendingUp, Leaf, Users, Star, Zap, Grid3X3, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const CATEGORIES = [
   { value: undefined, label: "All", icon: Grid3X3 },
@@ -44,10 +45,39 @@ function formatCategoryLabel(category: string) {
 
 export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
   
   const { data: posts, isLoading } = trpc.blog.list.useQuery(
     selectedCategory ? { category: selectedCategory as any } : undefined
   );
+
+  const newsletterMutation = trpc.newsletter.subscribe.useMutation({
+    onSuccess: (data) => {
+      toast.success("Subscribed!", {
+        description: data.message || "Thanks for subscribing to our newsletter!",
+      });
+      setNewsletterEmail("");
+    },
+    onError: (error) => {
+      toast.error("Error", {
+        description: error.message || "Failed to subscribe. Please try again.",
+      });
+    },
+  });
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) {
+      toast.error("Please enter your email address");
+      return;
+    }
+    newsletterMutation.mutate({
+      email: newsletterEmail,
+      source: "newsletter",
+      newArrivals: true,
+      exclusiveOffers: true,
+    });
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -235,16 +265,27 @@ export default function Blog() {
             <p className="text-muted-foreground mb-6">
               Style tips, exclusive deals, and sustainability stories. No spam, just quality content.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="your@email.com"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
                 className="flex-1 px-4 py-3 rounded-full border border-border bg-background focus:outline-none focus:ring-2 focus:ring-neutral-400"
+                disabled={newsletterMutation.isPending}
               />
-              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-6">
-                Subscribe
+              <Button 
+                type="submit"
+                className="rounded-full bg-black text-white hover:bg-black/90 px-6"
+                disabled={newsletterMutation.isPending}
+              >
+                {newsletterMutation.isPending ? (
+                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Subscribing...</>
+                ) : (
+                  "Subscribe"
+                )}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
       </section>
