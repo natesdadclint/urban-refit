@@ -350,3 +350,7 @@
 - [x] Fix Partner Profitability page - payment method and paid status now showing
   - Added Paid Payouts column showing total paid amount
   - Added Latest Payout column showing status, payment method, and amount
+
+## NZ Checkout Form Improvements
+- [x] Add NZ postcode validation (4 digits only)
+- [x] Replace State field with NZ regions dropdown

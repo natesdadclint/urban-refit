@@ -5,7 +5,34 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
+
+// New Zealand regions for shipping
+const NZ_REGIONS = [
+  "Northland",
+  "Auckland",
+  "Waikato",
+  "Bay of Plenty",
+  "Gisborne",
+  "Hawke's Bay",
+  "Taranaki",
+  "Manawatū-Whanganui",
+  "Wellington",
+  "Tasman",
+  "Nelson",
+  "Marlborough",
+  "West Coast",
+  "Canterbury",
+  "Otago",
+  "Southland",
+] as const;
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Link, useLocation } from "wouter";
 import { ArrowLeft, CreditCard, Lock, Coins, Gift, Sparkles } from "lucide-react";
@@ -72,6 +99,13 @@ export default function Checkout() {
     
     if (missing.length > 0) {
       toast.error("Please fill in all required fields");
+      return;
+    }
+
+    // Validate NZ postcode (4 digits)
+    const postcodeRegex = /^\d{4}$/;
+    if (!postcodeRegex.test(formData.shippingZip)) {
+      toast.error("Please enter a valid 4-digit NZ postcode");
       return;
     }
 
@@ -254,32 +288,41 @@ export default function Checkout() {
                           name="shippingCity"
                           value={formData.shippingCity}
                           onChange={handleInputChange}
-                          placeholder="New York"
+                          placeholder="Auckland"
                           required
                         />
                       </div>
                       <div>
-                        <Label htmlFor="shippingState">State *</Label>
-                        <Input
-                          id="shippingState"
-                          name="shippingState"
+                        <Label htmlFor="shippingState">Region *</Label>
+                        <Select
                           value={formData.shippingState}
-                          onChange={handleInputChange}
-                          placeholder="NY"
-                          required
-                        />
+                          onValueChange={(value) => setFormData((prev) => ({ ...prev, shippingState: value }))}
+                        >
+                          <SelectTrigger id="shippingState">
+                            <SelectValue placeholder="Select region" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {NZ_REGIONS.map((region) => (
+                              <SelectItem key={region} value={region}>
+                                {region}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="shippingZip">ZIP Code *</Label>
+                        <Label htmlFor="shippingZip">Postcode *</Label>
                         <Input
                           id="shippingZip"
                           name="shippingZip"
                           value={formData.shippingZip}
                           onChange={handleInputChange}
-                          placeholder="10001"
+                          placeholder="1010"
+                          maxLength={4}
+                          pattern="\d{4}"
                           required
                         />
                       </div>
