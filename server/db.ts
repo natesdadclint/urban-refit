@@ -18,7 +18,8 @@ import {
   sellSubmissions, InsertSellSubmission, SellSubmission,
   productMetadata, InsertProductMetadata, ProductMetadata,
   emailSubscribers, InsertEmailSubscriber, EmailSubscriber,
-  contactMessages, InsertContactMessage, ContactMessage
+  contactMessages, InsertContactMessage, ContactMessage,
+  contactReplies, InsertContactReply, ContactReply
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1927,4 +1928,36 @@ export async function getContactMessageStats(): Promise<{
     console.error("[Database] Failed to get contact message stats:", error);
     return { total: 0, unread: 0, read: 0, replied: 0, archived: 0 };
   }
+}
+
+
+// ============ CONTACT REPLY OPERATIONS ============
+
+export async function createContactReply(reply: InsertContactReply): Promise<ContactReply | null> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  try {
+    const result = await db.insert(contactReplies).values(reply);
+    const [created] = await db.select().from(contactReplies).where(eq(contactReplies.id, result[0].insertId));
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create contact reply:", error);
+    throw error;
+  }
+}
+
+export async function getContactRepliesByMessageId(messageId: number): Promise<ContactReply[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(contactReplies)
+    .where(eq(contactReplies.contactMessageId, messageId))
+    .orderBy(desc(contactReplies.createdAt));
+}
+
+export async function getContactMessageById(id: number): Promise<ContactMessage | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [message] = await db.select().from(contactMessages).where(eq(contactMessages.id, id));
+  return message || null;
 }

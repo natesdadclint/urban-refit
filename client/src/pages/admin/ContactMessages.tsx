@@ -31,7 +31,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { trpc } from "@/lib/trpc";
-import { Search, Mail, MailOpen, MessageSquareReply, Archive, Clock, CheckCircle2, Eye } from "lucide-react";
+import { Search, Mail, MailOpen, MessageSquareReply, Archive, Clock, CheckCircle2, Eye, Send, History } from "lucide-react";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 
@@ -62,9 +62,19 @@ export default function AdminContactMessages() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [adminNotes, setAdminNotes] = useState("");
+  
+  // Reply dialog state
+  const [showReplyDialog, setShowReplyDialog] = useState(false);
+  const [replySubject, setReplySubject] = useState("Re: Your inquiry to Urban Refit");
+  const [replyContent, setReplyContent] = useState("");
+  const [showRepliesDialog, setShowRepliesDialog] = useState(false);
 
   const { data: messages, isLoading } = trpc.contact.list.useQuery();
   const { data: stats } = trpc.contact.stats.useQuery();
+  const { data: replies, isLoading: repliesLoading } = trpc.contact.getReplies.useQuery(
+    { messageId: selectedMessage?.id || 0 },
+    { enabled: !!selectedMessage && showRepliesDialog }
+  );
   const utils = trpc.useUtils();
 
   const updateStatus = trpc.contact.updateStatus.useMutation({
@@ -75,6 +85,27 @@ export default function AdminContactMessages() {
     },
     onError: (error) => {
       toast.error(error.message || "Failed to update status");
+    },
+  });
+
+  const sendReply = trpc.contact.sendReply.useMutation({
+    onSuccess: (data) => {
+      utils.contact.list.invalidate();
+      utils.contact.stats.invalidate();
+      utils.contact.getReplies.invalidate({ messageId: selectedMessage?.id });
+      
+      if (data.emailSent) {
+        toast.success("Reply sent successfully!");
+      } else {
+        toast.warning(`Reply saved but email failed: ${data.error || "Unknown error"}. Please check your Resend API key.`);
+      }
+      
+      setShowReplyDialog(false);
+      setReplyContent("");
+      setSelectedMessage(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to send reply");
     },
   });
 
@@ -111,6 +142,25 @@ export default function AdminContactMessages() {
       adminNotes: adminNotes || undefined,
     });
     setSelectedMessage(null);
+  };
+
+  const handleOpenReplyDialog = () => {
+    setReplySubject("Re: Your inquiry to Urban Refit");
+    setReplyContent("");
+    setShowReplyDialog(true);
+  };
+
+  const handleSendReply = () => {
+    if (!selectedMessage || !replyContent.trim()) {
+      toast.error("Please enter a reply message");
+      return;
+    }
+    
+    sendReply.mutate({
+      messageId: selectedMessage.id,
+      subject: replySubject,
+      content: replyContent,
+    });
   };
 
   const formatDate = (date: Date | string) => {
@@ -277,7 +327,7 @@ export default function AdminContactMessages() {
       </div>
 
       {/* Message Detail Dialog */}
-      <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
+      <Dialog open={!!selectedMessage && !showReplyDialog && !showRepliesDialog} onOpenChange={() => setSelectedMessage(null)}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -323,7 +373,7 @@ export default function AdminContactMessages() {
           )}
           
           <DialogFooter className="flex-col sm:flex-row gap-2">
-            <div className="flex gap-2 flex-1">
+            <div className="flex gap-2 flex-1 flex-wrap">
               <Button
                 variant="outline"
                 size="sm"
@@ -336,30 +386,165 @@ export default function AdminContactMessages() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => handleUpdateStatus("replied")}
-                disabled={selectedMessage?.status === "replied"}
-              >
-                <MessageSquareReply className="h-4 w-4 mr-1" />
-                Mark Replied
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
                 onClick={() => handleUpdateStatus("archived")}
                 disabled={selectedMessage?.status === "archived"}
               >
                 <Archive className="h-4 w-4 mr-1" />
                 Archive
               </Button>
+              {selectedMessage?.status === "replied" && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowRepliesDialog(true)}
+                >
+                  <History className="h-4 w-4 mr-1" />
+                  View Replies
+                </Button>
+              )}
             </div>
             <Button
               variant="default"
-              onClick={() => {
-                window.location.href = `mailto:${selectedMessage?.email}?subject=Re: Your inquiry to Urban Refit`;
-              }}
+              onClick={handleOpenReplyDialog}
             >
-              <Mail className="h-4 w-4 mr-1" />
-              Reply via Email
+              <Send className="h-4 w-4 mr-1" />
+              Send Reply
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reply Dialog */}
+      <Dialog open={showReplyDialog} onOpenChange={setShowReplyDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Send className="h-5 w-5" />
+              Reply to {selectedMessage?.email}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="bg-stone-50 p-3 rounded-lg">
+              <p className="text-sm text-muted-foreground mb-1">Original message:</p>
+              <p className="text-sm whitespace-pre-wrap line-clamp-3">{selectedMessage?.message}</p>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Subject</label>
+              <Input
+                value={replySubject}
+                onChange={(e) => setReplySubject(e.target.value)}
+                placeholder="Email subject"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Your Reply</label>
+              <Textarea
+                placeholder="Type your reply here..."
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                rows={8}
+                className="resize-none"
+              />
+              <p className="text-xs text-muted-foreground">
+                This reply will be sent directly to the customer's email address.
+              </p>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowReplyDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSendReply}
+              disabled={sendReply.isPending || !replyContent.trim()}
+            >
+              {sendReply.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-1" />
+                  Send Reply
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reply History Dialog */}
+      <Dialog open={showRepliesDialog} onOpenChange={setShowRepliesDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <History className="h-5 w-5" />
+              Reply History for {selectedMessage?.email}
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+            {repliesLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-stone-900"></div>
+              </div>
+            ) : replies && replies.length > 0 ? (
+              replies.map((reply: any) => (
+                <div key={reply.id} className="border rounded-lg p-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium">{reply.subject}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDate(reply.createdAt)}
+                    </span>
+                  </div>
+                  <p className="text-sm whitespace-pre-wrap">{reply.content}</p>
+                  <div className="flex items-center gap-2 text-xs">
+                    {reply.emailSent ? (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                        Email sent
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                        Email failed
+                      </Badge>
+                    )}
+                    {reply.sentByName && (
+                      <span className="text-muted-foreground">
+                        by {reply.sentByName}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-center text-muted-foreground py-8">
+                No replies sent yet
+              </p>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowRepliesDialog(false)}
+            >
+              Close
+            </Button>
+            <Button onClick={() => {
+              setShowRepliesDialog(false);
+              handleOpenReplyDialog();
+            }}>
+              <Send className="h-4 w-4 mr-1" />
+              Send Another Reply
             </Button>
           </DialogFooter>
         </DialogContent>

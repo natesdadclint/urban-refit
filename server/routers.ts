@@ -1441,6 +1441,66 @@ Keep insights concise and actionable.`;
     stats: adminProcedure.query(async () => {
       return db.getContactMessageStats();
     }),
+    
+    // Admin: Send reply to a contact message
+    sendReply: adminProcedure
+      .input(z.object({
+        messageId: z.number(),
+        subject: z.string().min(1).max(500),
+        content: z.string().min(1).max(10000),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Get the original message
+        const originalMessage = await db.getContactMessageById(input.messageId);
+        if (!originalMessage) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Message not found" });
+        }
+        
+        // Send email via Resend
+        const { sendContactReply } = await import("./resend");
+        const emailResult = await sendContactReply(
+          originalMessage.email,
+          null, // We don't have customer name stored
+          originalMessage.message,
+          input.content
+        );
+        
+        // Create reply record
+        const reply = await db.createContactReply({
+          contactMessageId: input.messageId,
+          subject: input.subject,
+          content: input.content,
+          sentByUserId: ctx.user?.id || null,
+          sentByName: ctx.user?.name || null,
+          emailSent: emailResult.success,
+          emailMessageId: emailResult.messageId || null,
+          emailError: emailResult.error || null,
+        });
+        
+        // Update message status to replied
+        await db.updateContactMessageStatus(input.messageId, "replied");
+        
+        return { 
+          success: true, 
+          emailSent: emailResult.success,
+          error: emailResult.error,
+          replyId: reply?.id 
+        };
+      }),
+    
+    // Admin: Get replies for a message
+    getReplies: adminProcedure
+      .input(z.object({ messageId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getContactRepliesByMessageId(input.messageId);
+      }),
+    
+    // Admin: Get single message by ID
+    getById: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return db.getContactMessageById(input.id);
+      }),
   }),
 });
 

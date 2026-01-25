@@ -374,3 +374,10 @@
 - [x] Create admin contact messages page UI with status tracking
 - [x] Add navigation link to admin sidebar
 - [x] Add ability to mark messages as read/replied
+
+## Admin Email Reply Feature
+- [x] Set up Resend transactional email service integration
+- [x] Create backend procedure to send email replies
+- [x] Add reply form/dialog to contact messages page
+- [x] Store reply history in database
+- [x] Auto-mark message as "replied" after sending

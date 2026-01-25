@@ -619,3 +619,31 @@ export const contactMessages = mysqlTable("contact_messages", {
 
 export type ContactMessage = typeof contactMessages.$inferSelect;
 export type InsertContactMessage = typeof contactMessages.$inferInsert;
+
+/**
+ * Contact replies - replies sent to contact form messages
+ */
+export const contactReplies = mysqlTable("contact_replies", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Reference to original message
+  contactMessageId: int("contactMessageId").notNull(),
+  
+  // Reply content
+  subject: varchar("subject", { length: 500 }).notNull(),
+  content: text("content").notNull(),
+  
+  // Sender info (admin who sent)
+  sentByUserId: int("sentByUserId"),
+  sentByName: varchar("sentByName", { length: 255 }),
+  
+  // Email delivery status
+  emailSent: boolean("emailSent").default(false).notNull(),
+  emailMessageId: varchar("emailMessageId", { length: 255 }),
+  emailError: text("emailError"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ContactReply = typeof contactReplies.$inferSelect;
+export type InsertContactReply = typeof contactReplies.$inferInsert;
