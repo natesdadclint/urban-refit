@@ -536,22 +536,43 @@ export default function Profile() {
               <CardContent>
                 {orders && orders.length > 0 ? (
                   <div className="space-y-4">
-                    {orders.map((order: any) => (
-                      <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <p className="font-medium">Order #{order.id}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {new Date(order.createdAt).toLocaleDateString()}
-                          </p>
+                    {orders.map((order: any) => {
+                      const total = parseFloat(order.total);
+                      const gstAmount = order.gstAmount ? parseFloat(order.gstAmount) : (parseFloat(order.subtotal) * (15 / 115));
+                      return (
+                        <div key={order.id} className="p-4 border rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <div>
+                              <p className="font-medium">Order #{order.id}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {new Date(order.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <Badge variant="outline" className="capitalize">
+                              {order.status}
+                            </Badge>
+                          </div>
+                          <div className="text-sm text-muted-foreground space-y-1">
+                            <div className="flex justify-between">
+                              <span>Subtotal:</span>
+                              <span>NZ${parseFloat(order.subtotal).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between text-xs">
+                              <span>(Includes GST:</span>
+                              <span>NZ${gstAmount.toFixed(2)})</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span>Shipping:</span>
+                              <span>NZ${parseFloat(order.shippingCost).toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between font-bold text-foreground pt-1 border-t">
+                              <span>Total:</span>
+                              <span>NZ${total.toFixed(2)}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <p className="font-bold">${parseFloat(order.total).toFixed(2)}</p>
-                          <Badge variant="outline" className="capitalize">
-                            {order.status}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-12">

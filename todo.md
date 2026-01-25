@@ -329,3 +329,12 @@
 - [x] Update admin dashboard, orders, payouts, products pages
 - [x] Update Terms of Service with NZD references
 - [x] Update token value displays (1 token = NZ$1)
+
+## GST (Goods and Services Tax) Implementation
+- [x] Add GST amount field to orders table in database schema
+- [x] Update checkout page to display GST breakdown (15% of subtotal)
+- [x] Update order summary to show subtotal, GST, shipping, and total
+- [x] Update Profile/Order History to display GST on past orders
+- [x] Update admin Orders page to show GST amounts
+- [x] Update order confirmation emails with GST breakdown
+- [x] Update payout notification emails with NZD currency

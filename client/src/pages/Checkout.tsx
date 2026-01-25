@@ -142,6 +142,11 @@ export default function Checkout() {
   const subtotal = parseFloat(cart.total);
   const shipping = 9.99;
   
+  // Calculate GST (15% included in prices - NZ standard)
+  // GST = Price × (15/115) for GST-inclusive pricing
+  const gstAmount = subtotal * (15 / 115);
+  const subtotalExGst = subtotal - gstAmount;
+  
   // Calculate tiered discount
   const { percentage: discountPercentage, bonusTokens } = getTieredDiscount(itemCount);
   const discountAmount = (subtotal * discountPercentage) / 100;
@@ -412,6 +417,10 @@ export default function Checkout() {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal ({itemCount} items)</span>
                       <span>NZ${subtotal.toFixed(2)}</span>
+                    </div>
+                    
+                    <div className="flex justify-between text-muted-foreground text-xs">
+                      <span>(Includes GST of NZ${gstAmount.toFixed(2)})</span>
                     </div>
                     
                     {discountAmount > 0 && (

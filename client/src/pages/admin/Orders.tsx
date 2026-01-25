@@ -258,6 +258,10 @@ export default function AdminOrders() {
                     <span className="text-muted-foreground">Subtotal</span>
                     <span>NZ${selectedOrder.subtotal}</span>
                   </div>
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>(Includes GST)</span>
+                    <span>NZ${selectedOrder.gstAmount || (parseFloat(selectedOrder.subtotal) * (15 / 115)).toFixed(2)}</span>
+                  </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Shipping</span>
                     <span>NZ${selectedOrder.shippingCost}</span>

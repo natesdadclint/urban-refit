@@ -31,10 +31,13 @@ export async function sendOrderConfirmationEmail(
     const itemsList = items
       .map(
         (item) =>
-          `- ${item.product.name} (${item.product.brand || "No brand"}, Size: ${item.product.size || "N/A"}) - $${item.orderItem.price}`
+          `- ${item.product.name} (${item.product.brand || "No brand"}, Size: ${item.product.size || "N/A"}) - NZ$${item.orderItem.price}`
       )
       .join("\n");
 
+    // Calculate GST (15% included in prices)
+    const gstAmount = order.gstAmount || (parseFloat(order.subtotal) * (15 / 115)).toFixed(2);
+    
     const content = `
 🎉 New Order Received!
 
@@ -45,9 +48,10 @@ Email: ${order.customerEmail}
 Items:
 ${itemsList}
 
-Subtotal: $${order.subtotal}
-Shipping: $${order.shippingCost}
-Total: $${order.total}
+Subtotal: NZ$${order.subtotal}
+(Includes GST: NZ$${gstAmount})
+Shipping: NZ$${order.shippingCost}
+Total: NZ$${order.total}
 
 Shipping Address:
 ${order.shippingName}
@@ -70,7 +74,7 @@ Payment Status: Paid ✓
 
     // Notify owner about new order
     await notifyOwner({
-      title: `New Order #${order.id} - $${order.total}`,
+      title: `New Order #${order.id} - NZ$${order.total}`,
       content,
     });
 
@@ -104,12 +108,12 @@ export async function sendPayoutNotificationEmail(
 A sale has been completed and you're entitled to a payout!
 
 Order #${orderId}
-Payout Amount: $${amount.toFixed(2)}
+Payout Amount: NZ$${amount.toFixed(2)}
 (10% of sale price as per our partnership agreement)
 
 This payout will be processed according to our standard payment schedule.
 
-Total Lifetime Payouts: $${thriftStore.totalPayout}
+Total Lifetime Payouts: NZ$${thriftStore.totalPayout}
 
 Thank you for being a valued partner of Urban Refit!
     `.trim();
@@ -118,14 +122,14 @@ Thank you for being a valued partner of Urban Refit!
     await db.createEmailLog({
       type: "payout_notification",
       recipientEmail: thriftStore.email || "",
-      subject: `Payout Notification - $${amount.toFixed(2)}`,
+      subject: `Payout Notification - NZ$${amount.toFixed(2)}`,
       status: "sent",
       relatedOrderId: orderId,
     });
 
     // Notify owner about payout
     await notifyOwner({
-      title: `Payout Due: ${thriftStore.name} - $${amount.toFixed(2)}`,
+      title: `Payout Due: ${thriftStore.name} - NZ$${amount.toFixed(2)}`,
       content,
     });
 
@@ -137,7 +141,7 @@ Thank you for being a valued partner of Urban Refit!
     await db.createEmailLog({
       type: "payout_notification",
       recipientEmail: thriftStore.email || "",
-      subject: `Payout Notification - $${amount.toFixed(2)}`,
+      subject: `Payout Notification - NZ$${amount.toFixed(2)}`,
       status: "failed",
       relatedOrderId: orderId,
       errorMessage: error instanceof Error ? error.message : "Unknown error",

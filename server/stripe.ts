@@ -47,6 +47,9 @@ export async function createCheckoutSession(
     (sum, item) => sum + parseFloat(item.product.salePrice),
     0
   );
+  // GST is included in prices (NZ standard) - calculate GST component (15%)
+  // GST = Price × (15/115) for GST-inclusive pricing
+  const gstAmount = subtotal * (15 / 115);
   const shippingCost = 9.99; // Flat rate shipping
   const total = subtotal + shippingCost;
 
@@ -55,6 +58,7 @@ export async function createCheckoutSession(
     userId,
     status: "pending",
     subtotal: subtotal.toFixed(2),
+    gstAmount: gstAmount.toFixed(2),
     shippingCost: shippingCost.toFixed(2),
     total: total.toFixed(2),
     shippingName: shippingInfo.name,

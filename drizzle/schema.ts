@@ -106,6 +106,7 @@ export const orders = mysqlTable("orders", {
   
   // Totals
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
+  gstAmount: decimal("gstAmount", { precision: 10, scale: 2 }).default("0.00").notNull(), // 15% GST
   shippingCost: decimal("shippingCost", { precision: 10, scale: 2 }).default("0.00").notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
   
