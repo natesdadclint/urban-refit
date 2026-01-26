@@ -1175,7 +1175,7 @@ export async function updateSellSubmissionStatus(
   id: number, 
   status: string, 
   adminNotes?: string,
-  offerAmount?: string
+  tokenOffer?: number
 ): Promise<boolean> {
   const db = await getDb();
   if (!db) return false;
@@ -1183,8 +1183,8 @@ export async function updateSellSubmissionStatus(
   try {
     const updateData: any = { status };
     if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
-    if (offerAmount !== undefined) {
-      updateData.offerAmount = offerAmount;
+    if (tokenOffer !== undefined) {
+      updateData.tokenOffer = tokenOffer;
       updateData.offerSentAt = new Date();
       updateData.customerResponse = 'pending';
     }
@@ -1203,7 +1203,7 @@ export async function updateSellSubmissionStatus(
 export async function respondToSellOffer(
   id: number,
   response: 'accepted' | 'rejected' | 'counter',
-  counterOfferAmount?: string,
+  counterTokenOffer?: number,
   customerNotes?: string
 ): Promise<boolean> {
   const db = await getDb();
@@ -1217,19 +1217,19 @@ export async function respondToSellOffer(
     
     if (response === 'accepted') {
       updateData.status = 'offer_accepted';
-      // Get the offer amount to set as final amount
-      const [submission] = await db.select({ offerAmount: sellSubmissions.offerAmount })
+      // Get the token offer to set as final tokens
+      const [submission] = await db.select({ tokenOffer: sellSubmissions.tokenOffer })
         .from(sellSubmissions)
         .where(eq(sellSubmissions.id, id))
         .limit(1);
-      if (submission?.offerAmount) {
-        updateData.finalAmount = submission.offerAmount;
+      if (submission?.tokenOffer) {
+        updateData.finalTokens = submission.tokenOffer;
       }
     } else if (response === 'rejected') {
       updateData.status = 'offer_rejected';
     } else if (response === 'counter') {
       updateData.status = 'counter_offered';
-      if (counterOfferAmount) updateData.counterOfferAmount = counterOfferAmount;
+      if (counterTokenOffer) updateData.counterTokenOffer = counterTokenOffer;
     }
     
     if (customerNotes) updateData.customerNotes = customerNotes;
@@ -1253,15 +1253,15 @@ export async function acceptCounterOffer(
   if (!db) return false;
 
   try {
-    // Get the counter offer amount
-    const [submission] = await db.select({ counterOfferAmount: sellSubmissions.counterOfferAmount })
+    // Get the counter token offer
+    const [submission] = await db.select({ counterTokenOffer: sellSubmissions.counterTokenOffer })
       .from(sellSubmissions)
       .where(eq(sellSubmissions.id, id))
       .limit(1);
     
     const updateData: any = {
       status: 'accepted',
-      finalAmount: submission?.counterOfferAmount,
+      finalTokens: submission?.counterTokenOffer,
     };
     if (adminNotes) updateData.adminNotes = adminNotes;
     

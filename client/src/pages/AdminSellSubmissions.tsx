@@ -5,16 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Eye, Check, X, DollarSign, Mail, MessageSquare } from "lucide-react";
+import { Loader2, Eye, Check, X, Coins, Mail, MessageSquare } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 
 export default function AdminSellSubmissions() {
   const { user } = useAuth();
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [searchBrand, setSearchBrand] = useState("");
-  const [offerAmount, setOfferAmount] = useState("");
+  const [tokenOffer, setTokenOffer] = useState("");
   const [adminNotes, setAdminNotes] = useState("");
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -47,7 +47,7 @@ export default function AdminSellSubmissions() {
   const handleStatusUpdate = async (
     submissionId: number,
     newStatus: string,
-    amount?: string,
+    tokens?: string,
     notes?: string,
     sendEmail: boolean = true
   ) => {
@@ -56,20 +56,20 @@ export default function AdminSellSubmissions() {
       await updateStatusMutation.mutateAsync({
         id: submissionId,
         status: newStatus as any,
-        offerAmount: amount,
+        tokenOffer: tokens ? parseInt(tokens) : undefined,
         adminNotes: notes,
         sendEmail,
       });
       
       if (newStatus === 'offer_made' && sendEmail) {
-        toast.success("Offer sent! Customer will receive an email notification.");
+        toast.success("Token offer sent! Customer will receive an email notification.");
       } else {
         toast.success("Submission updated successfully");
       }
       
       refetch();
       setDialogOpen(false);
-      setOfferAmount("");
+      setTokenOffer("");
       setAdminNotes("");
     } catch (error) {
       toast.error("Failed to update submission");
@@ -85,7 +85,7 @@ export default function AdminSellSubmissions() {
         id: submissionId,
         adminNotes: adminNotes || undefined,
       });
-      toast.success("Counter offer accepted! Customer will receive an email notification.");
+      toast.success("Counter offer accepted! Customer will receive tokens after shipping.");
       refetch();
       setDialogOpen(false);
       setAdminNotes("");
@@ -115,7 +115,7 @@ export default function AdminSellSubmissions() {
       case "rejected":
         return "bg-red-100 text-red-800";
       case "completed":
-        return "bg-gray-100 text-gray-800";
+        return "bg-amber-100 text-amber-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -124,13 +124,15 @@ export default function AdminSellSubmissions() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "offer_made":
-        return "Offer Sent";
+        return "Token Offer Sent";
       case "offer_accepted":
         return "Offer Accepted";
       case "offer_rejected":
         return "Offer Rejected";
       case "counter_offered":
         return "Counter Offer";
+      case "completed":
+        return "Tokens Awarded";
       default:
         return status.charAt(0).toUpperCase() + status.slice(1);
     }
@@ -140,7 +142,20 @@ export default function AdminSellSubmissions() {
     <AdminLayout title="Sell Submissions">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Sell Submissions</h1>
-        <p className="text-muted-foreground">Review customer submissions and make offers</p>
+        <p className="text-muted-foreground">Review customer submissions and offer tokens (not cash)</p>
+      </div>
+
+      {/* Token Info Banner */}
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-4 mb-6">
+        <div className="flex items-center gap-3">
+          <Coins className="w-6 h-6 text-amber-600" />
+          <div>
+            <p className="font-medium text-amber-900">Circular Economy Model</p>
+            <p className="text-sm text-amber-700">
+              Customers earn tokens (1 token = $1 NZD) to shop or donate. No cash payouts.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Stats */}
@@ -168,7 +183,7 @@ export default function AdminSellSubmissions() {
           </Card>
           <Card className="p-4">
             <p className="text-sm text-muted-foreground">Completed</p>
-            <p className="text-2xl font-bold text-gray-600">{stats.completed}</p>
+            <p className="text-2xl font-bold text-amber-600">{stats.completed}</p>
           </Card>
         </div>
       )}
@@ -183,13 +198,13 @@ export default function AdminSellSubmissions() {
             <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="pending">Pending</SelectItem>
             <SelectItem value="reviewing">Reviewing</SelectItem>
-            <SelectItem value="offer_made">Offer Sent</SelectItem>
+            <SelectItem value="offer_made">Token Offer Sent</SelectItem>
             <SelectItem value="offer_accepted">Offer Accepted</SelectItem>
             <SelectItem value="offer_rejected">Offer Rejected</SelectItem>
             <SelectItem value="counter_offered">Counter Offer</SelectItem>
             <SelectItem value="accepted">Accepted</SelectItem>
             <SelectItem value="rejected">Rejected</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
+            <SelectItem value="completed">Tokens Awarded</SelectItem>
           </SelectContent>
         </Select>
 
@@ -238,8 +253,14 @@ export default function AdminSellSubmissions() {
                       <p className="capitalize">{submission.condition.replace(/_/g, " ")}</p>
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Asking Price</p>
-                      <p>{submission.askingPrice ? `$${submission.askingPrice}` : "Not set"}</p>
+                      <p className="font-medium text-foreground">Requested Tokens</p>
+                      <p className="flex items-center gap-1">
+                        {submission.requestedTokens ? (
+                          <><Coins className="w-3.5 h-3.5 text-amber-500" /> {submission.requestedTokens}</>
+                        ) : (
+                          "Not set"
+                        )}
+                      </p>
                     </div>
                     <div>
                       <p className="font-medium text-foreground">Submitted</p>
@@ -247,24 +268,24 @@ export default function AdminSellSubmissions() {
                     </div>
                   </div>
                   
-                  {/* Offer/Counter info */}
+                  {/* Token Offer/Counter info */}
                   <div className="flex flex-wrap gap-4 text-sm">
-                    {submission.offerAmount && (
+                    {submission.tokenOffer && (
                       <div className="flex items-center gap-2 bg-purple-50 px-3 py-1 rounded">
-                        <DollarSign className="h-4 w-4 text-purple-600" />
-                        <span className="text-purple-700">Our Offer: ${submission.offerAmount}</span>
+                        <Coins className="h-4 w-4 text-amber-500" />
+                        <span className="text-purple-700">Our Offer: {submission.tokenOffer} tokens</span>
                       </div>
                     )}
-                    {submission.counterOfferAmount && (
+                    {submission.counterTokenOffer && (
                       <div className="flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded">
                         <MessageSquare className="h-4 w-4 text-indigo-600" />
-                        <span className="text-indigo-700">Counter: ${submission.counterOfferAmount}</span>
+                        <span className="text-indigo-700">Counter: {submission.counterTokenOffer} tokens</span>
                       </div>
                     )}
-                    {submission.finalAmount && (
-                      <div className="flex items-center gap-2 bg-green-50 px-3 py-1 rounded">
-                        <Check className="h-4 w-4 text-green-600" />
-                        <span className="text-green-700">Final: ${submission.finalAmount}</span>
+                    {submission.finalTokens && (
+                      <div className="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded">
+                        <Check className="h-4 w-4 text-amber-600" />
+                        <span className="text-amber-700">Final: {submission.finalTokens} tokens</span>
                       </div>
                     )}
                   </div>
@@ -276,7 +297,7 @@ export default function AdminSellSubmissions() {
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        setOfferAmount(submission.offerAmount || "");
+                        setTokenOffer(submission.tokenOffer?.toString() || "");
                         setAdminNotes(submission.adminNotes || "");
                         setDialogOpen(true);
                       }}
@@ -330,8 +351,14 @@ export default function AdminSellSubmissions() {
                           <p>{submission.originalPrice ? `$${submission.originalPrice}` : "Not provided"}</p>
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">Asking Price</p>
-                          <p className="font-semibold text-primary">{submission.askingPrice ? `$${submission.askingPrice}` : "Not provided"}</p>
+                          <p className="font-medium text-foreground">Requested Tokens</p>
+                          <p className="font-semibold text-amber-600 flex items-center gap-1">
+                            {submission.requestedTokens ? (
+                              <><Coins className="w-4 h-4" /> {submission.requestedTokens}</>
+                            ) : (
+                              "Not provided"
+                            )}
+                          </p>
                         </div>
                       </div>
 
@@ -381,9 +408,10 @@ export default function AdminSellSubmissions() {
                                 </span>
                               )}
                             </div>
-                            {submission.counterOfferAmount && (
-                              <p className="text-lg font-semibold text-indigo-700 mb-2">
-                                Counter Offer: ${submission.counterOfferAmount}
+                            {submission.counterTokenOffer && (
+                              <p className="text-lg font-semibold text-indigo-700 mb-2 flex items-center gap-2">
+                                <Coins className="w-5 h-5 text-amber-500" />
+                                Counter Offer: {submission.counterTokenOffer} tokens
                               </p>
                             )}
                             {submission.customerNotes && (
@@ -398,14 +426,16 @@ export default function AdminSellSubmissions() {
                         <p className="font-medium text-foreground">Admin Actions</p>
 
                         <div>
-                          <label className="text-sm font-medium">Offer Amount (NZD)</label>
+                          <label className="text-sm font-medium flex items-center gap-2">
+                            <Coins className="w-4 h-4 text-amber-500" />
+                            Token Offer (1 token = $1 NZD)
+                          </label>
                           <Input
                             type="number"
-                            placeholder="Enter offer amount"
-                            value={offerAmount}
-                            onChange={(e) => setOfferAmount(e.target.value)}
-                            step="0.01"
-                            min="0"
+                            placeholder="Enter token amount"
+                            value={tokenOffer}
+                            onChange={(e) => setTokenOffer(e.target.value)}
+                            min="1"
                           />
                         </div>
 
@@ -437,15 +467,15 @@ export default function AdminSellSubmissions() {
                               <Button
                                 className="bg-purple-600 hover:bg-purple-700"
                                 size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "offer_made", offerAmount, adminNotes, true)}
-                                disabled={updatingId === submission.id || !offerAmount}
+                                onClick={() => handleStatusUpdate(submission.id, "offer_made", tokenOffer, adminNotes, true)}
+                                disabled={updatingId === submission.id || !tokenOffer}
                               >
                                 {updatingId === submission.id ? (
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                 ) : (
                                   <Mail className="h-4 w-4 mr-2" />
                                 )}
-                                Send Offer
+                                Send Token Offer
                               </Button>
 
                               <Button
@@ -481,14 +511,14 @@ export default function AdminSellSubmissions() {
                                 ) : (
                                   <Check className="h-4 w-4 mr-2" />
                                 )}
-                                Accept Counter (${submission.counterOfferAmount})
+                                Accept Counter ({submission.counterTokenOffer} tokens)
                               </Button>
 
                               <Button
                                 className="bg-purple-600 hover:bg-purple-700"
                                 size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "offer_made", offerAmount, adminNotes, true)}
-                                disabled={updatingId === submission.id || !offerAmount}
+                                onClick={() => handleStatusUpdate(submission.id, "offer_made", tokenOffer, adminNotes, true)}
+                                disabled={updatingId === submission.id || !tokenOffer}
                               >
                                 {updatingId === submission.id ? (
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -513,7 +543,7 @@ export default function AdminSellSubmissions() {
                           {(submission.status === 'offer_accepted' || submission.status === 'accepted') && (
                             <>
                               <Button
-                                className="bg-green-600 hover:bg-green-700"
+                                className="bg-amber-600 hover:bg-amber-700"
                                 size="sm"
                                 onClick={() => handleStatusUpdate(submission.id, "completed", undefined, adminNotes, false)}
                                 disabled={updatingId === submission.id}
@@ -521,34 +551,23 @@ export default function AdminSellSubmissions() {
                                 {updatingId === submission.id ? (
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                 ) : (
-                                  <Check className="h-4 w-4 mr-2" />
+                                  <Coins className="h-4 w-4 mr-2" />
                                 )}
-                                Mark Completed
+                                Award Tokens & Complete
                               </Button>
+                              <p className="text-sm text-muted-foreground w-full">
+                                Click to award {submission.finalTokens || submission.tokenOffer || 0} tokens to customer's account.
+                              </p>
                             </>
                           )}
 
-                          {submission.status === 'offer_rejected' && (
-                            <>
-                              <Button
-                                className="bg-purple-600 hover:bg-purple-700"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "offer_made", offerAmount, adminNotes, true)}
-                                disabled={updatingId === submission.id || !offerAmount}
-                              >
-                                <Mail className="h-4 w-4 mr-2" />
-                                Send New Offer
-                              </Button>
-
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "rejected", undefined, adminNotes, false)}
-                                disabled={updatingId === submission.id}
-                              >
-                                Close Submission
-                              </Button>
-                            </>
+                          {submission.status === 'completed' && (
+                            <div className="flex items-center gap-2 text-amber-700 bg-amber-50 px-4 py-2 rounded-lg">
+                              <Coins className="h-5 w-5" />
+                              <span className="font-medium">
+                                {submission.finalTokens || submission.tokenOffer || 0} tokens awarded to customer
+                              </span>
+                            </div>
                           )}
                         </div>
                       </div>

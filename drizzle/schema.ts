@@ -500,9 +500,9 @@ export const sellSubmissions = mysqlTable("sell_submissions", {
   condition: mysqlEnum("condition", ["like_new", "excellent", "good", "fair"]).notNull(),
   description: text("description"),
   
-  // Pricing
-  originalPrice: decimal("originalPrice", { precision: 10, scale: 2 }),
-  askingPrice: decimal("askingPrice", { precision: 10, scale: 2 }),
+  // Token Request (customers request tokens, not cash)
+  originalPrice: decimal("originalPrice", { precision: 10, scale: 2 }), // Original retail price for reference
+  requestedTokens: int("requestedTokens"), // Number of tokens customer is requesting
   
   // Images (up to 4)
   image1Url: text("image1Url"),
@@ -513,17 +513,17 @@ export const sellSubmissions = mysqlTable("sell_submissions", {
   // Submission status
   status: mysqlEnum("status", ["pending", "reviewing", "offer_made", "offer_accepted", "offer_rejected", "counter_offered", "accepted", "rejected", "completed"]).default("pending").notNull(),
   adminNotes: text("adminNotes"),
-  offerAmount: decimal("offerAmount", { precision: 10, scale: 2 }),
+  tokenOffer: int("tokenOffer"), // Admin's token offer to customer
   
   // Customer response to offer
   customerResponse: mysqlEnum("customerResponse", ["pending", "accepted", "rejected", "counter"]),
-  counterOfferAmount: decimal("counterOfferAmount", { precision: 10, scale: 2 }),
+  counterTokenOffer: int("counterTokenOffer"), // Customer's counter offer in tokens
   customerNotes: text("customerNotes"),
   offerSentAt: timestamp("offerSentAt"),
   customerRespondedAt: timestamp("customerRespondedAt"),
   
-  // Final agreed amount
-  finalAmount: decimal("finalAmount", { precision: 10, scale: 2 }),
+  // Final agreed tokens
+  finalTokens: int("finalTokens"), // Final agreed token amount
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

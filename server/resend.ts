@@ -513,17 +513,17 @@ Personally curated pre-loved fashion that gives back to the community.
 
 
 /**
- * Send sell offer email to customer when admin makes an offer
+ * Send sell offer email to customer when admin makes a token offer
  */
 export async function sendSellOfferEmail(options: {
   to: string;
   customerName: string;
   itemName: string;
   brand: string;
-  offerAmount: string;
+  tokenOffer: number;
   submissionId: number;
 }): Promise<SendEmailResult> {
-  const { to, customerName, itemName, brand, offerAmount, submissionId } = options;
+  const { to, customerName, itemName, brand, tokenOffer, submissionId } = options;
   const firstName = customerName.split(" ")[0];
   const baseUrl = process.env.VITE_APP_URL || "https://urbanrefit.store";
   const responseUrl = `${baseUrl}/my-submissions/${submissionId}`;
@@ -564,15 +564,22 @@ export async function sendSellOfferEmail(options: {
             <p style="color: #78716c; font-size: 14px; margin: 0;">Submission #${submissionId}</p>
           </div>
           
-          <!-- Offer Amount -->
-          <div style="background-color: #dcfce7; border: 2px solid #22c55e; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
-            <p style="color: #166534; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Our Offer</p>
-            <p style="color: #166534; font-size: 36px; font-weight: 700; margin: 0;">NZ$${parseFloat(offerAmount).toFixed(2)}</p>
+          <!-- Token Offer -->
+          <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
+            <p style="color: #92400e; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Our Token Offer</p>
+            <p style="color: #92400e; font-size: 36px; font-weight: 700; margin: 0;">🪙 ${tokenOffer} Tokens</p>
+            <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $1 NZD value)</p>
           </div>
           
-          <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+          <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
             You can accept this offer, reject it, or make a counter-offer. Simply click the button below to respond.
           </p>
+          
+          <div style="background-color: #f0fdf4; border-radius: 8px; padding: 16px; margin: 0 0 24px 0;">
+            <p style="color: #166534; font-size: 14px; margin: 0; line-height: 1.6;">
+              <strong>💡 How tokens work:</strong> Use your tokens to shop for more pre-loved fashion on Urban Refit, or donate them directly to our partner charities. It's our circular economy in action!
+            </p>
+          </div>
           
           <!-- CTA Button -->
           <div style="text-align: center; margin: 32px 0;">
@@ -609,7 +616,10 @@ YOUR ITEM
 ${brand} - ${itemName}
 Submission #${submissionId}
 
-OUR OFFER: NZ$${parseFloat(offerAmount).toFixed(2)}
+OUR TOKEN OFFER: ${tokenOffer} Tokens (1 token = $1 NZD value)
+
+HOW TOKENS WORK:
+Use your tokens to shop for more pre-loved fashion on Urban Refit, or donate them directly to our partner charities. It's our circular economy in action!
 
 You can accept this offer, reject it, or make a counter-offer. Visit the link below to respond:
 ${responseUrl}
@@ -623,7 +633,7 @@ Personally curated pre-loved fashion that gives back to the community.
 
   return sendEmail({
     to,
-    subject: `We've made you an offer for your ${brand} ${itemName}!`,
+    subject: `🪙 Token offer for your ${brand} ${itemName}!`,
     html: htmlContent,
     text: textContent,
     replyTo: "help@urbanrefit.store",
@@ -638,10 +648,10 @@ export async function sendSellOfferAcceptedEmail(options: {
   customerName: string;
   itemName: string;
   brand: string;
-  finalAmount: string;
+  finalTokens: number;
   submissionId: number;
 }): Promise<SendEmailResult> {
-  const { to, customerName, itemName, brand, finalAmount, submissionId } = options;
+  const { to, customerName, itemName, brand, finalTokens, submissionId } = options;
   const firstName = customerName.split(" ")[0];
   const baseUrl = process.env.VITE_APP_URL || "https://urbanrefit.store";
   const submissionUrl = `${baseUrl}/my-submissions/${submissionId}`;
@@ -682,10 +692,11 @@ export async function sendSellOfferAcceptedEmail(options: {
             <p style="color: #78716c; font-size: 14px; margin: 0;">Submission #${submissionId}</p>
           </div>
           
-          <!-- Final Amount -->
-          <div style="background-color: #dcfce7; border: 2px solid #22c55e; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
-            <p style="color: #166534; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Agreed Amount</p>
-            <p style="color: #166534; font-size: 36px; font-weight: 700; margin: 0;">NZ$${parseFloat(finalAmount).toFixed(2)}</p>
+          <!-- Final Tokens -->
+          <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
+            <p style="color: #92400e; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Agreed Token Amount</p>
+            <p style="color: #92400e; font-size: 36px; font-weight: 700; margin: 0;">🪙 ${finalTokens} Tokens</p>
+            <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $1 NZD value)</p>
           </div>
           
           <h2 style="color: #1c1917; font-size: 18px; margin: 24px 0 16px 0;">What Happens Next?</h2>
@@ -693,8 +704,14 @@ export async function sendSellOfferAcceptedEmail(options: {
           <ol style="color: #1c1917; font-size: 14px; line-height: 1.8; padding-left: 20px; margin: 0 0 24px 0;">
             <li style="margin-bottom: 8px;">We'll send you a prepaid shipping label via email within 24 hours.</li>
             <li style="margin-bottom: 8px;">Pack your item securely and drop it off at your nearest courier location.</li>
-            <li style="margin-bottom: 8px;">Once we receive and verify the item, we'll process your payment within 48 hours.</li>
+            <li style="margin-bottom: 8px;">Once we receive and verify the item, your tokens will be added to your account within 48 hours.</li>
           </ol>
+          
+          <div style="background-color: #f0fdf4; border-radius: 8px; padding: 16px; margin: 0 0 24px 0;">
+            <p style="color: #166534; font-size: 14px; margin: 0; line-height: 1.6;">
+              <strong>💡 Use your tokens:</strong> Shop for more pre-loved fashion or donate to our partner charities. Keep the circular economy spinning!
+            </p>
+          </div>
           
           <!-- CTA Button -->
           <div style="text-align: center; margin: 32px 0;">
@@ -731,12 +748,15 @@ YOUR ITEM
 ${brand} - ${itemName}
 Submission #${submissionId}
 
-AGREED AMOUNT: NZ$${parseFloat(finalAmount).toFixed(2)}
+AGREED TOKEN AMOUNT: ${finalTokens} Tokens (1 token = $1 NZD value)
 
 WHAT HAPPENS NEXT?
 1. We'll send you a prepaid shipping label via email within 24 hours.
 2. Pack your item securely and drop it off at your nearest courier location.
-3. Once we receive and verify the item, we'll process your payment within 48 hours.
+3. Once we receive and verify the item, your tokens will be added to your account within 48 hours.
+
+USE YOUR TOKENS:
+Shop for more pre-loved fashion or donate to our partner charities. Keep the circular economy spinning!
 
 View your submission details: ${submissionUrl}
 
@@ -749,7 +769,7 @@ Personally curated pre-loved fashion that gives back to the community.
 
   return sendEmail({
     to,
-    subject: `Offer accepted! Your ${brand} ${itemName} - Next steps`,
+    subject: `🪙 Tokens confirmed! Your ${brand} ${itemName} - Next steps`,
     html: htmlContent,
     text: textContent,
     replyTo: "help@urbanrefit.store",

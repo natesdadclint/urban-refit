@@ -5,16 +5,16 @@ import { getLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Package, Clock, Check, X, DollarSign, ArrowRight, MessageSquare } from "lucide-react";
+import { Loader2, Package, Clock, Check, X, Coins, ArrowRight, MessageSquare, ShoppingBag, Heart } from "lucide-react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
 
 export default function MySubmissions() {
   const { user, isAuthenticated, loading } = useAuth();
   const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
-  const [counterAmount, setCounterAmount] = useState("");
+  const [counterTokens, setCounterTokens] = useState("");
   const [customerNotes, setCustomerNotes] = useState("");
   const [respondingId, setRespondingId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -42,7 +42,7 @@ export default function MySubmissions() {
           <Package className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
           <h1 className="text-3xl font-bold mb-4">My Submissions</h1>
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Sign in to view your sell submissions and respond to offers from Urban Refit.
+            Sign in to view your submissions and respond to token offers from Urban Refit.
           </p>
           <Button asChild size="lg">
             <a href={getLoginUrl()}>Sign In</a>
@@ -58,12 +58,12 @@ export default function MySubmissions() {
       await respondMutation.mutateAsync({
         id: submissionId,
         response,
-        counterOfferAmount: response === 'counter' ? counterAmount : undefined,
+        counterTokenOffer: response === 'counter' ? parseInt(counterTokens) : undefined,
         customerNotes: customerNotes || undefined,
       });
       
       if (response === 'accepted') {
-        toast.success("Offer accepted! We'll be in touch with next steps.");
+        toast.success("Token offer accepted! We'll be in touch with shipping details.");
       } else if (response === 'rejected') {
         toast.success("Offer declined. Thank you for considering Urban Refit.");
       } else {
@@ -72,7 +72,7 @@ export default function MySubmissions() {
       
       refetch();
       setDialogOpen(false);
-      setCounterAmount("");
+      setCounterTokens("");
       setCustomerNotes("");
     } catch (error: any) {
       toast.error(error.message || "Failed to respond to offer");
@@ -88,7 +88,7 @@ export default function MySubmissions() {
       case "reviewing":
         return { label: "Under Review", color: "bg-blue-100 text-blue-800", icon: Package };
       case "offer_made":
-        return { label: "Offer Received", color: "bg-purple-100 text-purple-800", icon: DollarSign };
+        return { label: "Token Offer Received", color: "bg-purple-100 text-purple-800", icon: Coins };
       case "offer_accepted":
         return { label: "Offer Accepted", color: "bg-emerald-100 text-emerald-800", icon: Check };
       case "offer_rejected":
@@ -100,7 +100,7 @@ export default function MySubmissions() {
       case "rejected":
         return { label: "Not Accepted", color: "bg-red-100 text-red-800", icon: X };
       case "completed":
-        return { label: "Completed", color: "bg-gray-100 text-gray-800", icon: Check };
+        return { label: "Tokens Awarded", color: "bg-amber-100 text-amber-800", icon: Coins };
       default:
         return { label: status, color: "bg-gray-100 text-gray-800", icon: Package };
     }
@@ -113,8 +113,32 @@ export default function MySubmissions() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">My Submissions</h1>
             <p className="text-muted-foreground">
-              Track your sell submissions and respond to offers from Urban Refit.
+              Track your submissions and respond to token offers from Urban Refit.
             </p>
+          </div>
+
+          {/* Token Info Banner */}
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6 mb-8">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <Coins className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Earn Tokens, Not Cash</h3>
+                <p className="text-sm text-muted-foreground mb-3">
+                  Urban Refit operates on a circular economy. When we accept your items, you earn tokens (1 token = $1 NZD) 
+                  that you can use to shop our collection or donate to our partner charities.
+                </p>
+                <div className="flex gap-4 text-sm">
+                  <span className="flex items-center gap-1.5 text-amber-700">
+                    <ShoppingBag className="w-4 h-4" /> Shop with tokens
+                  </span>
+                  <span className="flex items-center gap-1.5 text-amber-700">
+                    <Heart className="w-4 h-4" /> Donate to charity
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {isLoading ? (
@@ -126,11 +150,11 @@ export default function MySubmissions() {
               <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
               <h2 className="text-xl font-semibold mb-2">No Submissions Yet</h2>
               <p className="text-muted-foreground mb-6">
-                Have quality pre-loved items to sell? Submit them to Urban Refit and earn cash.
+                Have quality pre-loved items? Submit them to Urban Refit and earn tokens for your next wardrobe refresh.
               </p>
               <Button asChild>
                 <Link href="/sell-to-us">
-                  Sell Your Items
+                  Trade Your Items for Tokens
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Link>
               </Button>
@@ -186,20 +210,28 @@ export default function MySubmissions() {
                             <p className="capitalize">{submission.condition.replace(/_/g, " ")}</p>
                           </div>
                           <div>
-                            <p className="text-muted-foreground">Your Asking Price</p>
-                            <p className="font-medium">{submission.askingPrice ? `$${submission.askingPrice}` : "Not set"}</p>
+                            <p className="text-muted-foreground">Requested Tokens</p>
+                            <p className="font-medium flex items-center gap-1">
+                              {submission.requestedTokens ? (
+                                <><Coins className="w-3.5 h-3.5 text-amber-500" /> {submission.requestedTokens}</>
+                              ) : (
+                                "Not set"
+                              )}
+                            </p>
                           </div>
                         </div>
 
-                        {/* Offer Section */}
-                        {submission.status === 'offer_made' && submission.offerAmount && (
+                        {/* Token Offer Section */}
+                        {submission.status === 'offer_made' && submission.tokenOffer && (
                           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
                             <div className="flex items-center justify-between mb-3">
                               <div>
-                                <p className="text-sm text-purple-700 font-medium">Our Offer</p>
-                                <p className="text-2xl font-bold text-purple-900">
-                                  NZ${parseFloat(submission.offerAmount).toFixed(2)}
+                                <p className="text-sm text-purple-700 font-medium">Our Token Offer</p>
+                                <p className="text-2xl font-bold text-purple-900 flex items-center gap-2">
+                                  <Coins className="w-6 h-6 text-amber-500" />
+                                  {submission.tokenOffer} tokens
                                 </p>
+                                <p className="text-xs text-purple-600">= ${submission.tokenOffer} NZD store credit</p>
                               </div>
                               <Dialog open={dialogOpen && selectedSubmission?.id === submission.id} onOpenChange={(open) => {
                                 setDialogOpen(open);
@@ -212,13 +244,17 @@ export default function MySubmissions() {
                                 </DialogTrigger>
                                 <DialogContent>
                                   <DialogHeader>
-                                    <DialogTitle>Respond to Offer</DialogTitle>
+                                    <DialogTitle>Respond to Token Offer</DialogTitle>
                                   </DialogHeader>
                                   
                                   <div className="space-y-4 py-4">
-                                    <div className="bg-gray-50 rounded-lg p-4 text-center">
-                                      <p className="text-sm text-muted-foreground mb-1">Offer Amount</p>
-                                      <p className="text-3xl font-bold">NZ${parseFloat(submission.offerAmount).toFixed(2)}</p>
+                                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 text-center">
+                                      <p className="text-sm text-muted-foreground mb-1">Token Offer</p>
+                                      <p className="text-3xl font-bold flex items-center justify-center gap-2">
+                                        <Coins className="w-8 h-8 text-amber-500" />
+                                        {submission.tokenOffer}
+                                      </p>
+                                      <p className="text-sm text-muted-foreground mt-1">= ${submission.tokenOffer} NZD to shop or donate</p>
                                     </div>
                                     
                                     <div className="space-y-3">
@@ -233,7 +269,7 @@ export default function MySubmissions() {
                                         ) : (
                                           <Check className="h-4 w-4 mr-2" />
                                         )}
-                                        Accept Offer
+                                        Accept Token Offer
                                       </Button>
                                       
                                       <div className="relative">
@@ -249,21 +285,20 @@ export default function MySubmissions() {
                                         <label className="text-sm font-medium">Make a Counter Offer</label>
                                         <div className="flex gap-2">
                                           <div className="relative flex-1">
-                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                                            <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
                                             <Input
                                               type="number"
-                                              placeholder="Your price"
-                                              value={counterAmount}
-                                              onChange={(e) => setCounterAmount(e.target.value)}
-                                              className="pl-7"
-                                              step="0.01"
-                                              min="0"
+                                              placeholder="Your token request"
+                                              value={counterTokens}
+                                              onChange={(e) => setCounterTokens(e.target.value)}
+                                              className="pl-10"
+                                              min="1"
                                             />
                                           </div>
                                           <Button
                                             variant="outline"
                                             onClick={() => handleRespond(submission.id, 'counter')}
-                                            disabled={respondingId === submission.id || !counterAmount}
+                                            disabled={respondingId === submission.id || !counterTokens}
                                           >
                                             {respondingId === submission.id ? (
                                               <Loader2 className="h-4 w-4 animate-spin" />
@@ -300,7 +335,7 @@ export default function MySubmissions() {
                               </Dialog>
                             </div>
                             <p className="text-sm text-purple-700">
-                              Review our offer and accept, decline, or make a counter offer.
+                              Review our token offer and accept, decline, or make a counter offer.
                             </p>
                           </div>
                         )}
@@ -312,8 +347,9 @@ export default function MySubmissions() {
                               <MessageSquare className="h-4 w-4 text-indigo-600" />
                               <p className="text-sm font-medium text-indigo-700">Counter Offer Sent</p>
                             </div>
-                            <p className="text-lg font-bold text-indigo-900 mb-1">
-                              NZ${parseFloat(submission.counterOfferAmount || '0').toFixed(2)}
+                            <p className="text-lg font-bold text-indigo-900 mb-1 flex items-center gap-2">
+                              <Coins className="w-5 h-5 text-amber-500" />
+                              {submission.counterTokenOffer || 0} tokens
                             </p>
                             <p className="text-sm text-indigo-700">
                               We're reviewing your counter offer. We'll get back to you soon.
@@ -328,28 +364,42 @@ export default function MySubmissions() {
                               <Check className="h-4 w-4 text-green-600" />
                               <p className="text-sm font-medium text-green-700">Offer Accepted</p>
                             </div>
-                            <p className="text-lg font-bold text-green-900 mb-1">
-                              NZ${parseFloat(submission.finalAmount || submission.offerAmount || '0').toFixed(2)}
+                            <p className="text-lg font-bold text-green-900 mb-1 flex items-center gap-2">
+                              <Coins className="w-5 h-5 text-amber-500" />
+                              {submission.finalTokens || submission.tokenOffer || 0} tokens
                             </p>
                             <p className="text-sm text-green-700">
-                              Check your email for shipping instructions and next steps.
+                              Check your email for shipping instructions. Tokens will be added after we receive your item.
                             </p>
                           </div>
                         )}
 
                         {/* Completed */}
                         {submission.status === 'completed' && (
-                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
                             <div className="flex items-center gap-2 mb-2">
-                              <Check className="h-4 w-4 text-gray-600" />
-                              <p className="text-sm font-medium text-gray-700">Transaction Complete</p>
+                              <Coins className="h-4 w-4 text-amber-600" />
+                              <p className="text-sm font-medium text-amber-700">Tokens Awarded!</p>
                             </div>
-                            <p className="text-lg font-bold text-gray-900 mb-1">
-                              NZ${parseFloat(submission.finalAmount || submission.offerAmount || '0').toFixed(2)}
+                            <p className="text-lg font-bold text-amber-900 mb-1 flex items-center gap-2">
+                              <Coins className="w-5 h-5 text-amber-500" />
+                              {submission.finalTokens || submission.tokenOffer || 0} tokens added
                             </p>
-                            <p className="text-sm text-gray-600">
-                              Thank you for selling with Urban Refit!
+                            <p className="text-sm text-amber-700">
+                              Thank you for keeping fashion circular! Use your tokens to shop or donate.
                             </p>
+                            <div className="flex gap-2 mt-3">
+                              <Button size="sm" variant="outline" asChild>
+                                <Link href="/shop">
+                                  <ShoppingBag className="w-4 h-4 mr-1" /> Shop Now
+                                </Link>
+                              </Button>
+                              <Button size="sm" variant="outline" asChild>
+                                <Link href="/donate-tokens">
+                                  <Heart className="w-4 h-4 mr-1" /> Donate
+                                </Link>
+                              </Button>
+                            </div>
                           </div>
                         )}
                       </div>
@@ -362,7 +412,7 @@ export default function MySubmissions() {
 
           {/* CTA */}
           <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">Have more items to sell?</p>
+            <p className="text-muted-foreground mb-4">Have more items to trade?</p>
             <Button asChild variant="outline">
               <Link href="/sell-to-us">
                 Submit Another Item

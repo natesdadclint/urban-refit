@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Upload, X, CheckCircle, DollarSign, Recycle, Clock, ArrowRight, ArrowLeft } from "lucide-react";
+import { Upload, X, CheckCircle, Coins, Recycle, Clock, ArrowRight, ArrowLeft, Heart, ShoppingBag } from "lucide-react";
 import { Link } from "wouter";
 
 export default function SellToUs() {
@@ -30,7 +30,7 @@ export default function SellToUs() {
     condition: "" as "like_new" | "excellent" | "good" | "fair" | "",
     description: "",
     originalPrice: "",
-    askingPrice: "",
+    requestedTokens: "",
   });
 
   const submitMutation = trpc.sell.submit.useMutation({
@@ -98,6 +98,7 @@ export default function SellToUs() {
       ...formData,
       itemType: formData.itemType as "tops" | "bottoms" | "outerwear" | "shoes" | "accessories",
       condition: formData.condition as "like_new" | "excellent" | "good" | "fair",
+      requestedTokens: formData.requestedTokens ? parseInt(formData.requestedTokens) : undefined,
       image1Url: images[0] || undefined,
       image2Url: images[1] || undefined,
       image3Url: images[2] || undefined,
@@ -115,7 +116,7 @@ export default function SellToUs() {
             </div>
             <h1 className="text-3xl font-bold mb-4">Submission Received</h1>
             <p className="text-muted-foreground mb-8">
-              Thank you for submitting your item. Our team will review it and get back to you within 2-3 business days.
+              Thank you for contributing to the circular economy. Our team will review your item and get back to you within 2-3 business days.
               {submissionId && (
                 <span className="block mt-2 font-medium text-foreground">
                   Reference Number: #{submissionId}
@@ -127,20 +128,24 @@ export default function SellToUs() {
               <ol className="space-y-3 text-sm text-muted-foreground">
                 <li className="flex gap-3">
                   <span className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">1</span>
-                  <span>Our team reviews your submission and assesses the item's condition and market value.</span>
+                  <span>Our team reviews your submission and assesses the item's condition and value.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">2</span>
-                  <span>If accepted, we'll send you a prepaid shipping label to send us the item.</span>
+                  <span>We'll send you a <strong>token offer</strong> based on our assessment. You can accept, counter, or decline.</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">3</span>
-                  <span>Once received and verified, we'll process your payment or store credit within 48 hours.</span>
+                  <span>Once agreed, we'll send you a prepaid shipping label to send us the item.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">4</span>
+                  <span>After verification, tokens are added to your account. Use them to shop or donate to charity!</span>
                 </li>
               </ol>
             </div>
             <div className="flex gap-4 justify-center">
-              <Button variant="outline" onClick={() => { setSubmitted(false); setImages([]); setFormData({ ...formData, brand: "", itemType: "", itemName: "", size: "", condition: "", description: "", originalPrice: "", askingPrice: "" }); }}>
+              <Button variant="outline" onClick={() => { setSubmitted(false); setImages([]); setFormData({ ...formData, brand: "", itemType: "", itemName: "", size: "", condition: "", description: "", originalPrice: "", requestedTokens: "" }); }}>
                 Submit Another Item
               </Button>
               <Button asChild>
@@ -163,13 +168,14 @@ export default function SellToUs() {
             Back to Home
           </Link>
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-wider text-neutral-400 mb-4">Circular Fashion</p>
+            <p className="text-sm uppercase tracking-wider text-neutral-400 mb-4">Circular Fashion Economy</p>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Sell Your Clothes.<br />Get Paid. Do Good.
+              Trade Your Clothes.<br />Earn Tokens. Keep It Circular.
             </h1>
             <p className="text-base text-neutral-300 mb-8">
-              Turn your unwanted quality menswear into cash. We buy premium brands in good condition 
-              and give them a second life. No hassle, no fees, just fair prices.
+              Turn your quality menswear into Urban Refit tokens. Use them to refresh your wardrobe 
+              or donate directly to our partner charities. No cash payouts — just a closed-loop 
+              ecosystem that keeps fashion sustainable.
             </p>
           </div>
         </div>
@@ -191,21 +197,59 @@ export default function SellToUs() {
                 <Clock className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-semibold mb-2">Review</h3>
-              <p className="text-sm text-muted-foreground">We review your submission within 2-3 business days</p>
+              <p className="text-sm text-muted-foreground">We review and make you a token offer within 2-3 days</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
                 <Recycle className="w-6 h-6 text-white" />
               </div>
               <h3 className="font-semibold mb-2">Ship</h3>
-              <p className="text-sm text-muted-foreground">Send us your item with our prepaid shipping label</p>
+              <p className="text-sm text-muted-foreground">Accept the offer and send us your item with free shipping</p>
             </div>
             <div className="text-center">
               <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-6 h-6 text-white" />
+                <Coins className="w-6 h-6 text-white" />
               </div>
-              <h3 className="font-semibold mb-2">Get Paid</h3>
-              <p className="text-sm text-muted-foreground">Receive payment or store credit within 48 hours</p>
+              <h3 className="font-semibold mb-2">Earn Tokens</h3>
+              <p className="text-sm text-muted-foreground">Tokens added to your account — shop or donate!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Token Value Explainer */}
+      <section className="py-12 bg-white border-b">
+        <div className="container">
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-8">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Coins className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">What Are Urban Refit Tokens?</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Tokens are our circular currency. <strong>1 token = $1 NZD</strong> in store credit. 
+                    Unlike cash, tokens keep value circulating within our sustainable ecosystem.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 mt-4">
+                    <div className="flex items-start gap-3">
+                      <ShoppingBag className="w-5 h-5 text-amber-600 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-sm">Shop the Collection</p>
+                        <p className="text-xs text-muted-foreground">Use tokens to buy quality second-hand pieces</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <Heart className="w-5 h-5 text-amber-600 mt-0.5" />
+                      <div>
+                        <p className="font-medium text-sm">Donate to Charity</p>
+                        <p className="text-xs text-muted-foreground">Gift tokens directly to our partner charities</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -219,7 +263,7 @@ export default function SellToUs() {
               <CardHeader>
                 <CardTitle>Submit Your Item</CardTitle>
                 <CardDescription>
-                  Tell us about the item you'd like to sell. We accept premium menswear brands in good condition.
+                  Tell us about the item you'd like to trade for tokens. We accept premium menswear brands in good condition.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -342,15 +386,15 @@ export default function SellToUs() {
                     </div>
                   </div>
 
-                  {/* Pricing */}
+                  {/* Token Request */}
                   <div>
-                    <h3 className="font-semibold mb-4">Pricing (Optional)</h3>
+                    <h3 className="font-semibold mb-4">Token Request (Optional)</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Help us understand your expectations. Final offer will be based on our assessment.
+                      Help us understand your expectations. Final token offer will be based on our assessment.
                     </p>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="originalPrice">Original Purchase Price</Label>
+                        <Label htmlFor="originalPrice">Original Purchase Price (NZD)</Label>
                         <Input
                           id="originalPrice"
                           type="number"
@@ -359,17 +403,23 @@ export default function SellToUs() {
                           onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
                           placeholder="$0.00"
                         />
+                        <p className="text-xs text-muted-foreground">What you originally paid for this item</p>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="askingPrice">Your Asking Price</Label>
-                        <Input
-                          id="askingPrice"
-                          type="number"
-                          step="0.01"
-                          value={formData.askingPrice}
-                          onChange={(e) => setFormData({ ...formData, askingPrice: e.target.value })}
-                          placeholder="$0.00"
-                        />
+                        <Label htmlFor="requestedTokens">Requested Tokens</Label>
+                        <div className="relative">
+                          <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="requestedTokens"
+                            type="number"
+                            min="1"
+                            value={formData.requestedTokens}
+                            onChange={(e) => setFormData({ ...formData, requestedTokens: e.target.value })}
+                            placeholder="e.g., 50"
+                            className="pl-10"
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground">How many tokens you'd like (1 token = $1 NZD)</p>
                       </div>
                     </div>
                   </div>
@@ -417,7 +467,7 @@ export default function SellToUs() {
                   {/* Submit */}
                   <div className="pt-4 border-t">
                     <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Item for Review"}
+                      {isSubmitting ? "Submitting..." : "Submit Item for Token Review"}
                       <ArrowRight className="w-4 h-4 ml-2" />
                     </Button>
                     <p className="text-xs text-muted-foreground text-center mt-4">
@@ -441,7 +491,7 @@ export default function SellToUs() {
                 <div>
                   <h3 className="font-semibold mb-2">Free Prepaid Shipping</h3>
                   <p className="text-sm text-muted-foreground">
-                    Once your item is accepted, we will send you a prepaid shipping label via email. 
+                    Once you accept our token offer, we will send you a prepaid shipping label via email. 
                     Simply pack your item and drop it off at any courier pickup point. 
                     You pay nothing for shipping - we cover all postage costs.
                   </p>

@@ -455,3 +455,13 @@
 
 ## Homepage Visual Edit
 - [x] Remove homepage hero tagline (leave empty)
+
+## CRITICAL FIX: Sell Feature - Tokens Not Cash
+- [x] Audit all cash/payout references in sell submission system
+- [x] Update database schema: rename cash fields to token fields (requestedTokens, tokenOffer, counterTokenOffer, finalTokens)
+- [x] Update backend routers to use tokens instead of cash amounts
+- [x] Update SellToUs page copy to explain token rewards
+- [x] Update MySubmissions page to show token offers not cash
+- [x] Update AdminSellSubmissions to offer tokens not cash payouts
+- [x] Update all email templates to reference tokens not money
+- [ ] Add option to donate tokens directly to partner charities

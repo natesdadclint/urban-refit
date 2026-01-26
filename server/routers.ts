@@ -1193,7 +1193,7 @@ Keep insights concise and actionable.`;
         condition: z.enum(["like_new", "excellent", "good", "fair"]),
         description: z.string().optional(),
         originalPrice: z.string().optional(),
-        askingPrice: z.string().optional(),
+        requestedTokens: z.number().optional(),
         image1Url: z.string().optional(),
         image2Url: z.string().optional(),
         image3Url: z.string().optional(),
@@ -1264,7 +1264,7 @@ Keep insights concise and actionable.`;
         id: z.number(),
         status: z.enum(["pending", "reviewing", "offer_made", "offer_accepted", "offer_rejected", "counter_offered", "accepted", "rejected", "completed"]),
         adminNotes: z.string().optional(),
-        offerAmount: z.string().optional(),
+        tokenOffer: z.number().optional(),
         sendEmail: z.boolean().default(true),
       }))
       .mutation(async ({ input }) => {
@@ -1272,14 +1272,14 @@ Keep insights concise and actionable.`;
           input.id,
           input.status,
           input.adminNotes,
-          input.offerAmount
+          input.tokenOffer
         );
         if (!success) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update status" });
         }
         
         // Send email notification when offer is made
-        if (input.status === 'offer_made' && input.offerAmount && input.sendEmail) {
+        if (input.status === 'offer_made' && input.tokenOffer && input.sendEmail) {
           const submission = await db.getSellSubmissionById(input.id);
           if (submission) {
             try {
@@ -1289,7 +1289,7 @@ Keep insights concise and actionable.`;
                 customerName: submission.name,
                 itemName: submission.itemName,
                 brand: submission.brand,
-                offerAmount: input.offerAmount,
+                tokenOffer: input.tokenOffer,
                 submissionId: input.id,
               });
             } catch (emailError) {
@@ -1323,7 +1323,7 @@ Keep insights concise and actionable.`;
               customerName: submission.name,
               itemName: submission.itemName,
               brand: submission.brand,
-              finalAmount: submission.counterOfferAmount || submission.offerAmount || '0',
+              finalTokens: submission.counterTokenOffer || submission.tokenOffer || 0,
               submissionId: input.id,
             });
           } catch (emailError) {
@@ -1339,7 +1339,7 @@ Keep insights concise and actionable.`;
       .input(z.object({
         id: z.number(),
         response: z.enum(["accepted", "rejected", "counter"]),
-        counterOfferAmount: z.string().optional(),
+        counterTokenOffer: z.number().optional(),
         customerNotes: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
@@ -1358,7 +1358,7 @@ Keep insights concise and actionable.`;
         const success = await db.respondToSellOffer(
           input.id,
           input.response,
-          input.counterOfferAmount,
+          input.counterTokenOffer,
           input.customerNotes
         );
         if (!success) {
