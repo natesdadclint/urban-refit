@@ -12,10 +12,10 @@ import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
 
 const conditionLabels: Record<string, { label: string; description: string }> = {
-  like_new: { label: "Like New", description: "Worn once or twice, no visible signs of wear" },
-  excellent: { label: "Excellent", description: "Minimal signs of wear, well maintained" },
-  good: { label: "Good", description: "Some signs of wear, but still in great condition" },
-  fair: { label: "Fair", description: "Visible wear, priced accordingly" },
+  like_new: { label: "Like New", description: "Practically unworn – no visible signs of use. Ready for its first real adventure." },
+  excellent: { label: "Excellent", description: "Minimal wear, maximum life left. Well cared for by its previous owner." },
+  good: { label: "Good", description: "Honest wear that tells a story. Still plenty of life in this piece." },
+  fair: { label: "Fair", description: "Character marks included. Priced to reflect – still a solid find." },
 };
 
 export default function ProductDetail() {
@@ -228,15 +228,15 @@ export default function ProductDetail() {
             <div className="grid grid-cols-3 gap-4 text-center">
               <div className="flex flex-col items-center gap-2">
                 <Truck className="h-5 w-5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Free shipping over NZ$50</span>
+                <span className="text-xs text-muted-foreground">Free shipping on orders over $50</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <Shield className="h-5 w-5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Secure checkout</span>
+                <span className="text-xs text-muted-foreground">Secure payment via Stripe</span>
               </div>
               <div className="flex flex-col items-center gap-2">
                 <Recycle className="h-5 w-5 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Sustainable fashion</span>
+                <span className="text-xs text-muted-foreground">One less item in landfill</span>
               </div>
             </div>
           </div>

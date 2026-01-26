@@ -366,9 +366,9 @@ export default function Reviews() {
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
                 <Star className="h-10 w-10 text-neutral-400" />
               </div>
-              <h3 className="text-xl font-serif font-semibold mb-2">No reviews yet</h3>
+              <h3 className="text-xl font-serif font-semibold mb-2">Be the first to share your thoughts</h3>
               <p className="text-muted-foreground mb-6">
-                Be the first to share your experience with Urban Refit.
+                Your experience could help another guy find his next go-to piece.
               </p>
               <Link href="/shop">
                 <Button className="rounded-full bg-black text-white hover:bg-black/90">

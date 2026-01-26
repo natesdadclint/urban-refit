@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Recycle, Users, Sparkles } from "lucide-react";
 
 export default function About() {
   return (
@@ -16,7 +16,7 @@ export default function About() {
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
               About Urban Refit
             </h1>
-            <p className="text-base text-muted-foreground leading-relaxed">
+            <p className="text-xl text-muted-foreground leading-relaxed">
               Built from nothing. Designed for those grinding through the system.
             </p>
           </div>
@@ -24,83 +24,107 @@ export default function About() {
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
-          <div className="space-y-12">
+          <div className="space-y-16">
             {/* Founder Story Section */}
             <section>
               <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">The Beginning</h2>
-              <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                Urban Refit began in a flat where I ate two-minute noodles, teaching myself to code properly. Shopify, APIs, the works. Then AI arrived, and my tech brain met my creative instincts. Perfect storm. Dangerous enough to be useful.
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                Urban Refit started in a flat where two-minute noodles were the main course and learning to code was the side hustle. Shopify, APIs, the whole stack. Then AI arrived, and suddenly my tech brain met my creative instincts. Perfect storm. Dangerous enough to be useful.
               </p>
-              <p className="text-base text-muted-foreground leading-relaxed mb-4 italic">
-                E ako ana au, e whakakotahi ana ki taku Ko Papa.
-              </p>
-              <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                At the same time, I walked a different path. Learning and embracing my roots. Reconnecting with nature, with what matters when you strip away the corporate script.
+              <blockquote className="border-l-4 border-primary pl-6 py-2 my-8">
+                <p className="text-lg font-serif italic text-foreground">
+                  E ako ana au, e whakakotahi ana ki taku Ko Papa.
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  I am learning, reconnecting with my roots.
+                </p>
+              </blockquote>
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                At the same time, I walked a different path. Learning and embracing my heritage. Reconnecting with nature, with what matters when you strip away the corporate script. That journey shaped everything Urban Refit stands for.
               </p>
             </section>
 
             {/* The Why Section */}
             <section>
               <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">Why This Exists</h2>
-              <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                I am not a handbrake person. You know how it feels to be grinding an apprenticeship, drowning in university debt, or stacking Maccas shifts while deciding on your next move. The system is not built for us.
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6">
+                You know the feeling. Grinding through an apprenticeship. Drowning in university debt. Stacking shifts while figuring out your next move. The system wasn't built for us – it was built to extract from us.
               </p>
-              <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                This brand exists because I refused to keep funding the machine that chews through people and planet. Every garment here gets a second life. Affordable. Durable. Built for tight budgets and big dreams.
+              <p className="text-lg text-muted-foreground leading-relaxed">
+                Urban Refit exists because I refused to keep funding the machine that chews through people and planet. Every garment here gets a second life. Affordable. Durable. Built for tight budgets and big dreams.
               </p>
             </section>
 
             {/* The Promise Section */}
-            <section className="border-l-4 border-foreground pl-6">
-              <p className="text-base font-serif text-foreground leading-relaxed mb-4">
-                You do not need money to dress well.
-              </p>
-              <p className="text-base font-serif text-foreground leading-relaxed">
-                You do not need to be complicit to survive.
-              </p>
-            </section>
-
-            {/* Call to Action */}
-            <section>
-              <p className="text-base text-foreground font-semibold">
-                Let us prove it.
-              </p>
+            <section className="bg-primary/5 rounded-2xl p-8 md:p-12">
+              <div className="space-y-4">
+                <p className="text-2xl font-serif font-semibold text-foreground">
+                  You don't need money to dress well.
+                </p>
+                <p className="text-2xl font-serif font-semibold text-foreground">
+                  You don't need to be complicit to survive.
+                </p>
+                <p className="text-lg text-primary font-medium pt-4">
+                  Let us prove it.
+                </p>
+              </div>
             </section>
 
             {/* Values Section */}
-            <section className="pt-8 border-t border-border">
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">What We Stand For</h2>
+            <section>
+              <h2 className="text-3xl font-serif font-bold mb-8 text-foreground">What We Stand For</h2>
               <div className="grid md:grid-cols-3 gap-8">
-                <div className="space-y-3">
-                  <h3 className="text-base font-semibold text-foreground">No Waste</h3>
-                  <p className="text-base text-muted-foreground">
-                    Quality textiles stay out of landfills. Every piece gets another chapter.
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Recycle className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Zero Waste</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Quality textiles stay out of landfills. Every piece gets another chapter in someone's wardrobe.
                   </p>
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-base font-semibold text-foreground">Community First</h3>
-                  <p className="text-base text-muted-foreground">
-                    10% of every sale goes back to our thrift store partners. Their mission is our mission.
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Community First</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    10% of every sale goes directly to our thrift store partners. Their mission fuels ours.
                   </p>
                 </div>
-                <div className="space-y-3">
-                  <h3 className="text-base font-semibold text-foreground">Real Quality</h3>
-                  <p className="text-base text-muted-foreground">
-                    Hand-selected pieces. Premium brands. No fast fashion garbage.
+                <div className="space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Curated Quality</h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Hand-selected premium brands only. No fast fashion. No compromises on quality.
                   </p>
                 </div>
               </div>
             </section>
 
             {/* How It Works Section */}
-            <section>
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">The Model</h2>
-              <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                We partner with local thrift stores, hand-selecting the finest pieces from their inventory. Each item is photographed, measured, and described with the detail you need to buy with confidence.
-              </p>
-              <p className="text-base text-muted-foreground leading-relaxed">
-                When you purchase from Urban Refit, you are getting quality clothing at a fraction of retail price. You are supporting the thrift stores that anchor communities. You are keeping textiles out of landfills. And you are reclaiming your right to define your own style without breaking the bank.
-              </p>
+            <section className="border-t border-border pt-16">
+              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">How It Works</h2>
+              <div className="space-y-6">
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  We partner with local NZ thrift stores, hand-selecting the finest pieces from their inventory. Each item is professionally photographed, measured, and described with the detail you need to buy with confidence.
+                </p>
+                <p className="text-lg text-muted-foreground leading-relaxed">
+                  When you shop with Urban Refit, you're getting quality clothing at a fraction of retail. You're supporting the thrift stores that anchor communities. You're keeping textiles out of landfills. And you're reclaiming your right to define your own style – without breaking the bank.
+                </p>
+              </div>
+            </section>
+
+            {/* CTA Section */}
+            <section className="text-center py-8">
+              <Link 
+                href="/shop" 
+                className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+              >
+                Start Shopping
+              </Link>
             </section>
           </div>
         </div>

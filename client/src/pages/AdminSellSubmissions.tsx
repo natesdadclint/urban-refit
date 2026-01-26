@@ -208,7 +208,7 @@ export default function AdminSellSubmissions() {
         </div>
       ) : filteredSubmissions.length === 0 ? (
         <Card className="p-8 text-center">
-          <p className="text-muted-foreground">No submissions found</p>
+          <p className="text-muted-foreground">No submissions to review right now</p>
         </Card>
       ) : (
         <div className="space-y-4">

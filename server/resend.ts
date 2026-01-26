@@ -85,7 +85,7 @@ export async function sendContactReply(
         </p>
         
         <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
-          Thank you for reaching out to Urban Refit. Here's our response to your inquiry:
+          Thanks for getting in touch. Here's our reply:
         </p>
         
         <div style="background-color: #f5f5f4; border-left: 4px solid #1c1917; padding: 16px; margin: 0 0 24px 0;">
@@ -116,7 +116,7 @@ export async function sendContactReply(
   const textContent = `
 ${greeting}
 
-Thank you for reaching out to Urban Refit. Here's our response to your inquiry:
+Thanks for getting in touch. Here's our reply:
 
 ${replyContent}
 
@@ -131,7 +131,7 @@ Personally curated pre-loved fashion that gives back to the community.
 
   return sendEmail({
     to: customerEmail,
-    subject: "Re: Your inquiry to Urban Refit",
+    subject: "We've got your message – Urban Refit",
     html: htmlContent,
     text: textContent,
     replyTo: "help@urbanrefit.store",
@@ -262,8 +262,7 @@ export async function sendOrderConfirmationEmailViaResend(
           </p>
           
           <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
-            Thank you for your order! We're excited to send you some amazing pre-loved fashion. 
-            Your order has been received and is being prepared for shipment.
+            Thanks for shopping sustainably! Your order is confirmed and we're getting your pre-loved finds ready to ship.
           </p>
           
           <div style="background-color: #f5f5f4; border-radius: 8px; padding: 16px; margin: 0 0 24px 0;">
@@ -329,8 +328,7 @@ export async function sendOrderConfirmationEmailViaResend(
         <!-- Sustainability Message -->
         <div style="background-color: #dcfce7; padding: 24px; text-align: center;">
           <p style="color: #166534; font-size: 14px; margin: 0; line-height: 1.6;">
-            By shopping with Urban Refit, you've helped give pre-loved clothing a second life 
-            and supported our local thrift store partners. Thank you for being part of the circular fashion movement!
+            You just kept quality clothing out of landfill and supported a local thrift store. That's the kind of shopping we can all feel good about.
           </p>
         </div>
         
@@ -354,7 +352,7 @@ export async function sendOrderConfirmationEmailViaResend(
   const textContent = `
 Hi ${customerName},
 
-Thank you for your order! We're excited to send you some amazing pre-loved fashion.
+Thanks for shopping sustainably! Your order is confirmed and we're getting your pre-loved finds ready to ship.
 
 ORDER #${order.id}
 
@@ -390,7 +388,7 @@ Personally curated pre-loved fashion that gives back to the community.
 
   return sendEmail({
     to: order.customerEmail,
-    subject: `Order Confirmed - Urban Refit #${order.id}`,
+    subject: `Your order is confirmed! – Urban Refit #${order.id}`,
     html: htmlContent,
     text: textContent,
     replyTo: "help@urbanrefit.store",
@@ -506,7 +504,7 @@ Personally curated pre-loved fashion that gives back to the community.
 
   return sendEmail({
     to: order.customerEmail,
-    subject: `Your Order Has Shipped - Urban Refit #${order.id}`,
+    subject: `Your order is on its way! – Urban Refit #${order.id}`,
     html: htmlContent,
     text: textContent,
     replyTo: "help@urbanrefit.store",

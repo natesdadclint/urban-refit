@@ -457,11 +457,11 @@ export default function Shop() {
             ) : (
               <div className="text-center py-16 bg-secondary/30 rounded-lg">
                 <SlidersHorizontal className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-lg font-medium mb-2">No products found</p>
+                <p className="text-lg font-medium mb-2">Nothing matches those filters</p>
                 <p className="text-muted-foreground mb-4">
                   {searchQuery
-                    ? "No products match your search."
-                    : "Try adjusting your filters to find what you're looking for."}
+                    ? "We couldn't find anything matching your search. Try different keywords?"
+                    : "Try loosening your filters – there might be hidden gems waiting."}
                 </p>
                 <Button variant="outline" onClick={clearAllFilters}>
                   Clear All Filters

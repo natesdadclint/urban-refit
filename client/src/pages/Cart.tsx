@@ -100,7 +100,7 @@ export default function Cart() {
           ) : !cart || cart.items.length === 0 ? (
             <div className="text-center py-16 bg-secondary/30 rounded-lg">
               <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground mb-6">Your cart is empty</p>
+              <p className="text-muted-foreground mb-6">Your cart is waiting for some pre-loved gems</p>
               <Button asChild>
                 <Link href="/shop">Start Shopping</Link>
               </Button>

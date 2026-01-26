@@ -401,7 +401,7 @@ export default function Profile() {
                   </div>
                 ) : (
                   <p className="text-muted-foreground text-center py-8">
-                    No token activity yet. Start earning by returning garments or making purchases!
+                    No token activity yet. Shop or return items to start earning rewards!
                   </p>
                 )}
               </CardContent>
@@ -577,7 +577,7 @@ export default function Profile() {
                 ) : (
                   <div className="text-center py-12">
                     <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground mb-4">No orders yet</p>
+                    <p className="text-muted-foreground mb-4">No orders yet – your sustainable wardrobe awaits</p>
                     <Button asChild>
                       <Link href="/shop">Start Shopping</Link>
                     </Button>
@@ -629,7 +629,7 @@ export default function Profile() {
                 ) : (
                   <div className="text-center py-12">
                     <RefreshCw className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                    <p className="text-muted-foreground mb-4">No returns yet</p>
+                    <p className="text-muted-foreground mb-4">No returns yet – that's a good sign!</p>
                     <p className="text-sm text-muted-foreground mb-4">
                       Return garments you no longer wear and earn 25% of the resale value in tokens!
                     </p>

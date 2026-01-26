@@ -42,20 +42,20 @@ export default function Home() {
         <div className="container relative h-full min-h-[650px] md:min-h-[750px] flex flex-col justify-end pb-12 md:pb-16">
           <div className="max-w-2xl">
             <h1 className="text-3xl md:text-5xl font-serif font-semibold leading-tight mb-4 text-foreground">
-              
+              Dress Well. Do Good. Pay Less.
             </h1>
             <p className="text-base text-muted-foreground mb-6 max-w-lg">
-              Personally curated pre-loved fashion that gives back to the community – because great style shouldn't cost the earth.
+              Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 10% of every sale going back to the community.
             </p>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="gap-2">
                 <Link href="/shop">
-                  Shop Collection
+                  Shop Now
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="bg-white/90 hover:bg-white border-foreground/20">
-                <Link href="/shop">Browse All</Link>
+                <Link href="/shop">See What's New</Link>
               </Button>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function Home() {
           ) : (
             <div className="text-center py-16 bg-secondary/30 rounded-lg">
               <p className="text-muted-foreground mb-4">
-                No products available yet. Check back soon!
+                Fresh finds coming soon. We're out hunting for your next favourite piece.
               </p>
               <Button asChild variant="outline">
                 <Link href="/shop">Browse Shop</Link>
@@ -228,15 +228,14 @@ export default function Home() {
         <div className="container">
           <div className="bg-primary text-primary-foreground rounded-2xl p-8 md:p-16 text-center">
             <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-4">
-              Join the Circular Fashion Movement
+              Ready to Shop Sustainably?
             </h2>
             <p className="text-primary-foreground/80 max-w-2xl mx-auto mb-8">
-              Every garment you buy from Urban Refit helps reduce textile waste and supports 
-              local thrift stores. Shop sustainably, look amazing.
+              Every purchase keeps quality clothing out of landfill and puts money back into local thrift stores. Good style, good karma.
             </p>
             <Button asChild size="lg" variant="secondary" className="gap-2">
               <Link href="/shop">
-                Start Shopping
+                Find Your Next Favourite
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
