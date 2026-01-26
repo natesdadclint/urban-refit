@@ -1625,6 +1625,70 @@ Keep insights concise and actionable.`;
         return { success: true, count };
       }),
   }),
+
+  // ============ NOTIFICATION ROUTES ============
+  notification: router({
+    // Get user's notifications
+    list: protectedProcedure
+      .input(z.object({ limit: z.number().default(20) }).optional())
+      .query(async ({ ctx, input }) => {
+        return db.getUserNotifications(ctx.user.id, input?.limit || 20);
+      }),
+    
+    // Get unread count
+    unreadCount: protectedProcedure.query(async ({ ctx }) => {
+      return db.getUnreadNotificationCount(ctx.user.id);
+    }),
+    
+    // Mark single notification as read
+    markAsRead: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        await db.markNotificationAsRead(input.id, ctx.user.id);
+        return { success: true };
+      }),
+    
+    // Mark all notifications as read
+    markAllAsRead: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        await db.markAllNotificationsAsRead(ctx.user.id);
+        return { success: true };
+      }),
+    
+    // Delete a notification
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ ctx, input }) => {
+        await db.deleteNotification(input.id, ctx.user.id);
+        return { success: true };
+      }),
+    
+    // Admin: Create broadcast notification
+    createBroadcast: adminProcedure
+      .input(z.object({
+        title: z.string().min(1).max(255),
+        message: z.string().min(1),
+        type: z.enum(["info", "success", "warning", "order", "submission", "tokens", "promo"]).default("info"),
+        link: z.string().max(500).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const id = await db.createBroadcastNotification(input);
+        return { id, success: true };
+      }),
+    
+    // Admin: Get all broadcast notifications
+    listBroadcasts: adminProcedure.query(async () => {
+      return db.getAllBroadcastNotifications();
+    }),
+    
+    // Admin: Delete broadcast notification
+    deleteBroadcast: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteBroadcastNotification(input.id);
+        return { success: true };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -487,3 +487,31 @@
 - [x] Ensure admin Charities page is accessible (route exists at /admin/charities)
 - [x] Verify customer-facing charity donation flow works (Charities.tsx with donation dialog)
 - [x] Add Charities link to mobile navigation menu (already present at line 281-290)
+
+## Admin Back Buttons Fix
+- [ ] Investigate missing back buttons in Admin panel
+- [ ] Restore "Back to Store" and "My Profile" links in AdminLayout
+
+## Custom Notification System
+- [ ] Add custom notification functionality to the website
+
+## Admin Back Buttons Fix
+- [ ] Investigate missing back buttons in Admin panel
+- [ ] Restore back buttons to AdminLayout
+
+## Custom Notification System
+- [ ] Add custom notification feature to the website
+
+
+## In-App Notification System
+- [x] Create notifications database schema (user notifications, broadcast notifications, read status)
+- [x] Add notification database operations (create, list, mark as read, delete)
+- [x] Create tRPC notification routes (list, unreadCount, markAsRead, markAllAsRead, delete, createBroadcast, listBroadcasts, deleteBroadcast)
+- [x] Build NotificationBell component with dropdown for header
+- [x] Add notification bell to Layout header (shows for authenticated users)
+- [x] Create AdminNotifications page for broadcast management
+- [x] Add Notifications link to admin sidebar navigation
+- [x] Add route for /admin/notifications
+
+## Admin Panel Back Button Enhancement
+- [x] Enhanced admin back buttons with styled Button components for better visibility

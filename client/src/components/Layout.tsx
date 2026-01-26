@@ -5,6 +5,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShoppingBag, User, Menu, X, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package } from "lucide-react";
+import { NotificationBell } from "@/components/NotificationBell";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -146,6 +147,9 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Right side actions */}
             <div className="flex items-center gap-4">
+              {/* Notifications */}
+              {isAuthenticated && <NotificationBell />}
+              
               {/* Cart */}
               {isAuthenticated && (
                 <Link href="/cart" className="relative">

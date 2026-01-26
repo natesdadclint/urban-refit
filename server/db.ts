@@ -19,7 +19,9 @@ import {
   productMetadata, InsertProductMetadata, ProductMetadata,
   emailSubscribers, InsertEmailSubscriber, EmailSubscriber,
   contactMessages, InsertContactMessage, ContactMessage,
-  contactReplies, InsertContactReply, ContactReply
+  contactReplies, InsertContactReply, ContactReply,
+  notifications, InsertNotification, Notification,
+  broadcastReadStatus, InsertBroadcastReadStatus, BroadcastReadStatus
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -2078,4 +2080,256 @@ export async function markAllContactMessagesAsRead(): Promise<number> {
     console.error("Error marking all messages as read:", error);
     return 0;
   }
+}
+
+
+// ============ NOTIFICATION OPERATIONS ============
+
+export async function createNotification(notification: InsertNotification): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(notifications).values(notification);
+  return result[0].insertId;
+}
+
+export async function createBroadcastNotification(notification: Omit<InsertNotification, 'userId' | 'isBroadcast'>): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(notifications).values({
+    ...notification,
+    userId: null,
+    isBroadcast: true
+  });
+  return result[0].insertId;
+}
+
+export async function getUserNotifications(userId: number, limit = 20): Promise<Notification[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  // Get user-specific notifications
+  const userNotifications = await db.select()
+    .from(notifications)
+    .where(eq(notifications.userId, userId))
+    .orderBy(desc(notifications.createdAt))
+    .limit(limit);
+  
+  // Get broadcast notifications that user hasn't read
+  const broadcastNotifs = await db.select({
+    notification: notifications
+  })
+  .from(notifications)
+  .leftJoin(
+    broadcastReadStatus,
+    and(
+      eq(broadcastReadStatus.notificationId, notifications.id),
+      eq(broadcastReadStatus.userId, userId)
+    )
+  )
+  .where(eq(notifications.isBroadcast, true))
+  .orderBy(desc(notifications.createdAt))
+  .limit(limit);
+  
+  // Combine and sort by date
+  const allNotifications = [
+    ...userNotifications,
+    ...broadcastNotifs.map(b => ({
+      ...b.notification,
+      isRead: false // Broadcast notifications show as unread until user marks them
+    }))
+  ];
+  
+  // Sort by createdAt descending and limit
+  return allNotifications
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, limit);
+}
+
+export async function getUnreadNotificationCount(userId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  // Count unread user-specific notifications
+  const userUnread = await db.select({
+    count: sql<number>`COUNT(*)`
+  })
+  .from(notifications)
+  .where(and(
+    eq(notifications.userId, userId),
+    eq(notifications.isRead, false)
+  ));
+  
+  // Count unread broadcast notifications for this user
+  const broadcastUnread = await db.select({
+    count: sql<number>`COUNT(*)`
+  })
+  .from(notifications)
+  .leftJoin(
+    broadcastReadStatus,
+    and(
+      eq(broadcastReadStatus.notificationId, notifications.id),
+      eq(broadcastReadStatus.userId, userId)
+    )
+  )
+  .where(and(
+    eq(notifications.isBroadcast, true),
+    sql`${broadcastReadStatus.id} IS NULL`
+  ));
+  
+  return Number(userUnread[0]?.count || 0) + Number(broadcastUnread[0]?.count || 0);
+}
+
+export async function markNotificationAsRead(notificationId: number, userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  // Get the notification
+  const [notification] = await db.select().from(notifications).where(eq(notifications.id, notificationId));
+  if (!notification) return;
+  
+  if (notification.isBroadcast) {
+    // For broadcast notifications, add to read status table
+    await db.insert(broadcastReadStatus).values({
+      notificationId,
+      userId
+    }).onDuplicateKeyUpdate({ set: { readAt: new Date() } });
+  } else if (notification.userId === userId) {
+    // For user-specific notifications, update isRead
+    await db.update(notifications)
+      .set({ isRead: true })
+      .where(eq(notifications.id, notificationId));
+  }
+}
+
+export async function markAllNotificationsAsRead(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  // Mark all user-specific notifications as read
+  await db.update(notifications)
+    .set({ isRead: true })
+    .where(and(
+      eq(notifications.userId, userId),
+      eq(notifications.isRead, false)
+    ));
+  
+  // Mark all broadcast notifications as read for this user
+  const unreadBroadcasts = await db.select({ id: notifications.id })
+    .from(notifications)
+    .leftJoin(
+      broadcastReadStatus,
+      and(
+        eq(broadcastReadStatus.notificationId, notifications.id),
+        eq(broadcastReadStatus.userId, userId)
+      )
+    )
+    .where(and(
+      eq(notifications.isBroadcast, true),
+      sql`${broadcastReadStatus.id} IS NULL`
+    ));
+  
+  for (const notif of unreadBroadcasts) {
+    await db.insert(broadcastReadStatus).values({
+      notificationId: notif.id,
+      userId
+    });
+  }
+}
+
+export async function deleteNotification(notificationId: number, userId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  // Only delete user-specific notifications owned by the user
+  const result = await db.delete(notifications)
+    .where(and(
+      eq(notifications.id, notificationId),
+      eq(notifications.userId, userId),
+      eq(notifications.isBroadcast, false)
+    ));
+  
+  return true;
+}
+
+// Admin function to get all broadcast notifications
+export async function getAllBroadcastNotifications(): Promise<Notification[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return db.select()
+    .from(notifications)
+    .where(eq(notifications.isBroadcast, true))
+    .orderBy(desc(notifications.createdAt));
+}
+
+// Admin function to delete a broadcast notification
+export async function deleteBroadcastNotification(notificationId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  // Delete read statuses first
+  await db.delete(broadcastReadStatus).where(eq(broadcastReadStatus.notificationId, notificationId));
+  
+  // Delete the notification
+  await db.delete(notifications).where(and(
+    eq(notifications.id, notificationId),
+    eq(notifications.isBroadcast, true)
+  ));
+}
+
+// Helper to create notification when order status changes
+export async function createOrderNotification(userId: number, orderId: number, status: string): Promise<void> {
+  const statusMessages: Record<string, { title: string; message: string }> = {
+    paid: { title: "Order Confirmed", message: "Your order has been confirmed and is being processed." },
+    processing: { title: "Order Processing", message: "Your order is being prepared for shipment." },
+    shipped: { title: "Order Shipped", message: "Your order has been shipped and is on its way!" },
+    delivered: { title: "Order Delivered", message: "Your order has been delivered. Enjoy your new items!" },
+    cancelled: { title: "Order Cancelled", message: "Your order has been cancelled." },
+    refunded: { title: "Order Refunded", message: "Your order has been refunded." }
+  };
+  
+  const info = statusMessages[status];
+  if (!info) return;
+  
+  await createNotification({
+    userId,
+    title: info.title,
+    message: `${info.message} (Order #${orderId})`,
+    type: "order",
+    link: `/orders/${orderId}`
+  });
+}
+
+// Helper to create notification when sell submission status changes
+export async function createSellSubmissionNotification(userId: number, submissionId: number, status: string, tokenOffer?: number): Promise<void> {
+  const statusMessages: Record<string, { title: string; message: string }> = {
+    reviewing: { title: "Submission Under Review", message: "Your sell submission is being reviewed by our team." },
+    offer_made: { title: "Token Offer Received!", message: `We've made you a token offer${tokenOffer ? ` of ${tokenOffer} tokens` : ''}. Check your submissions to respond.` },
+    offer_accepted: { title: "Offer Accepted", message: "Great! Your token offer has been accepted. We'll be in touch about next steps." },
+    accepted: { title: "Submission Accepted", message: "Your item has been accepted! Tokens will be credited to your account." },
+    rejected: { title: "Submission Update", message: "Unfortunately, we couldn't accept your submission this time." },
+    completed: { title: "Submission Complete", message: "Your sell submission has been completed and tokens have been credited!" }
+  };
+  
+  const info = statusMessages[status];
+  if (!info) return;
+  
+  await createNotification({
+    userId,
+    title: info.title,
+    message: info.message,
+    type: "submission",
+    link: "/my-submissions"
+  });
+}
+
+// Helper to create token notification
+export async function createTokenNotification(userId: number, amount: number, reason: string): Promise<void> {
+  await createNotification({
+    userId,
+    title: amount > 0 ? "Tokens Earned!" : "Tokens Used",
+    message: `${amount > 0 ? '+' : ''}${amount} tokens: ${reason}`,
+    type: "tokens",
+    link: "/profile"
+  });
 }

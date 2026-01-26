@@ -42,6 +42,7 @@ import MySubmissions from "./pages/MySubmissions";
 import AdminSellSubmissions from "./pages/AdminSellSubmissions";
 import AdminBulkUpload from "./pages/AdminBulkUpload";
 import AdminPartnerProfitability from "./pages/AdminPartnerProfitability";
+import AdminNotifications from "./pages/AdminNotifications";
 import { HelpdeskChat } from "./components/HelpdeskChat";
 import { WeeklyRewardBanner } from "./components/WeeklyRewardBanner";
 import { useAuth } from "./hooks/useAuth";
@@ -93,6 +94,7 @@ function Router() {
       <Route path="/admin/bulk-upload" component={AdminBulkUpload} />
       <Route path="/admin/partner-profitability" component={AdminPartnerProfitability} />
       <Route path="/admin/contact-messages" component={AdminContactMessages} />
+      <Route path="/admin/notifications" component={AdminNotifications} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

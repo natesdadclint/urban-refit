@@ -657,3 +657,48 @@ export const contactReplies = mysqlTable("contact_replies", {
 
 export type ContactReply = typeof contactReplies.$inferSelect;
 export type InsertContactReply = typeof contactReplies.$inferInsert;
+
+
+/**
+ * User notifications - in-app notifications for users
+ */
+export const notifications = mysqlTable("notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Target user (null for broadcast to all users)
+  userId: int("userId"),
+  
+  // Notification content
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Notification type for styling/icons
+  type: mysqlEnum("type", ["info", "success", "warning", "order", "submission", "tokens", "promo"]).default("info").notNull(),
+  
+  // Link to navigate when clicked
+  link: varchar("link", { length: 500 }),
+  
+  // Status
+  isRead: boolean("isRead").default(false).notNull(),
+  
+  // For broadcast notifications
+  isBroadcast: boolean("isBroadcast").default(false).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+
+/**
+ * Broadcast read status - tracks which users have read broadcast notifications
+ */
+export const broadcastReadStatus = mysqlTable("broadcast_read_status", {
+  id: int("id").autoincrement().primaryKey(),
+  notificationId: int("notificationId").notNull(),
+  userId: int("userId").notNull(),
+  readAt: timestamp("readAt").defaultNow().notNull(),
+});
+
+export type BroadcastReadStatus = typeof broadcastReadStatus.$inferSelect;
+export type InsertBroadcastReadStatus = typeof broadcastReadStatus.$inferInsert;

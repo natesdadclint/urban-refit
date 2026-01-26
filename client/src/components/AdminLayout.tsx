@@ -20,6 +20,7 @@ import {
   Mail,
   Upload,
   User,
+  Bell,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -40,6 +41,7 @@ const navItems = [
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
   { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages", showBadge: true },
   { href: "/admin/sell-submissions", icon: DollarSign, label: "Sell Submissions" },
+  { href: "/admin/notifications", icon: Bell, label: "Notifications" },
   { href: "/admin/bulk-upload", icon: Upload, label: "Bulk Upload" },
 ];
 
@@ -122,19 +124,23 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           }`}
         >
           <div className="flex flex-col h-full">
-            {/* Logo */}
+            {/* Logo and Back Navigation */}
             <div className="p-6 border-b border-border">
+              <h1 className="text-xl font-serif font-semibold mb-4">Admin Panel</h1>
               <div className="space-y-2">
-                <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                  <ArrowLeft className="h-4 w-4" />
-                  <span className="text-sm">Back to Store</span>
+                <Link href="/">
+                  <Button variant="outline" size="sm" className="w-full justify-start gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    Back to Store
+                  </Button>
                 </Link>
-                <Link href="/profile" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                  <User className="h-4 w-4" />
-                  <span className="text-sm">My Profile</span>
+                <Link href="/profile">
+                  <Button variant="ghost" size="sm" className="w-full justify-start gap-2">
+                    <User className="h-4 w-4" />
+                    My Profile
+                  </Button>
                 </Link>
               </div>
-              <h1 className="text-xl font-serif font-semibold mt-4">Admin Panel</h1>
             </div>
 
             {/* Navigation */}
