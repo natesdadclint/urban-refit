@@ -1961,3 +1961,26 @@ export async function getContactMessageById(id: number): Promise<ContactMessage 
   const [message] = await db.select().from(contactMessages).where(eq(contactMessages.id, id));
   return message || null;
 }
+
+export async function markAllContactMessagesAsRead(): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  try {
+    // First get count of unread messages
+    const unreadMessages = await db.select().from(contactMessages)
+      .where(eq(contactMessages.status, "unread"));
+    const count = unreadMessages.length;
+    
+    if (count > 0) {
+      await db.update(contactMessages)
+        .set({ status: "read" })
+        .where(eq(contactMessages.status, "unread"));
+    }
+    
+    return count;
+  } catch (error) {
+    console.error("Error marking all messages as read:", error);
+    return 0;
+  }
+}

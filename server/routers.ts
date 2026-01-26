@@ -317,6 +317,34 @@ export const appRouter = router({
         
         return result;
       }),
+    
+    verifySession: publicProcedure
+      .input(z.object({ sessionId: z.string() }))
+      .query(async ({ input }) => {
+        if (!input.sessionId) {
+          return { success: false, orderId: null };
+        }
+        
+        try {
+          // Import stripe directly
+          const { stripe } = await import("./stripe");
+          const session = await stripe.checkout.sessions.retrieve(input.sessionId);
+          
+          if (session.metadata?.order_id) {
+            return {
+              success: true,
+              orderId: parseInt(session.metadata.order_id),
+              customerEmail: session.customer_email,
+              paymentStatus: session.payment_status,
+            };
+          }
+          
+          return { success: false, orderId: null };
+        } catch (error) {
+          console.error("[Checkout] Failed to verify session:", error);
+          return { success: false, orderId: null };
+        }
+      }),
   }),
 
   // ============ ORDER ROUTES ============
@@ -1500,6 +1528,13 @@ Keep insights concise and actionable.`;
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
         return db.getContactMessageById(input.id);
+      }),
+    
+    // Admin: Mark all unread messages as read
+    markAllAsRead: adminProcedure
+      .mutation(async () => {
+        const count = await db.markAllContactMessagesAsRead();
+        return { success: true, count };
       }),
   }),
 });

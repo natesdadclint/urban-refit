@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { ENV } from "./_core/env";
 import * as db from "./db";
 import { sendOrderConfirmationEmail, sendPayoutNotificationEmail } from "./email";
+import { sendOrderConfirmationEmailViaResend } from "./resend";
 
 // Initialize Stripe
 const stripe = new Stripe(ENV.stripeSecretKey || "", {
@@ -115,7 +116,7 @@ export async function createCheckoutSession(
     line_items: lineItems,
     mode: "payment",
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/cart`,
+    cancel_url: `${origin}/checkout/canceled`,
     customer_email: userEmail || undefined,
     client_reference_id: userId.toString(),
     metadata: {
@@ -226,8 +227,25 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Clear user's cart
   await db.clearCart(order.userId);
 
-  // Send order confirmation email
+  // Send order confirmation email via Resend (with fallback to owner notification)
   if (order.customerEmail) {
+    // Prepare items for Resend email
+    const itemsForEmail = orderItems.map(item => ({
+      name: item.product.name,
+      brand: item.product.brand,
+      size: item.product.size,
+      price: item.orderItem.price,
+      imageUrl: item.product.image1Url,
+    }));
+    
+    // Try sending via Resend first
+    const resendResult = await sendOrderConfirmationEmailViaResend(order, itemsForEmail);
+    
+    if (!resendResult.success) {
+      console.warn(`[Webhook] Resend email failed: ${resendResult.error}, falling back to owner notification`);
+    }
+    
+    // Always send owner notification as backup
     await sendOrderConfirmationEmail(order, orderItems);
   }
 

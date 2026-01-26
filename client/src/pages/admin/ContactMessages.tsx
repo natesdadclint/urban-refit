@@ -109,6 +109,21 @@ export default function AdminContactMessages() {
     },
   });
 
+  const markAllAsRead = trpc.contact.markAllAsRead.useMutation({
+    onSuccess: (data) => {
+      utils.contact.list.invalidate();
+      utils.contact.stats.invalidate();
+      if (data.count > 0) {
+        toast.success(`Marked ${data.count} message${data.count === 1 ? '' : 's'} as read`);
+      } else {
+        toast.info("No unread messages to mark");
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to mark messages as read");
+    },
+  });
+
   const filteredMessages = useMemo(() => {
     if (!messages) return [];
     
@@ -190,6 +205,16 @@ export default function AdminContactMessages() {
             Manage customer inquiries and feedback
           </p>
         </div>
+        {(stats?.unread || 0) > 0 && (
+          <Button
+            variant="outline"
+            onClick={() => markAllAsRead.mutate()}
+            disabled={markAllAsRead.isPending}
+          >
+            <CheckCircle2 className="h-4 w-4 mr-2" />
+            {markAllAsRead.isPending ? "Marking..." : `Mark All As Read (${stats?.unread})`}
+          </Button>
+        )}
       </div>
 
       {/* Stats Cards */}

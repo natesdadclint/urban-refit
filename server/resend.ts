@@ -164,3 +164,351 @@ export async function verifyResendConnection(): Promise<{ success: boolean; erro
     };
   }
 }
+
+
+/**
+ * Order item type for email templates
+ */
+interface OrderItemForEmail {
+  name: string;
+  brand: string | null;
+  size: string | null;
+  price: string;
+  imageUrl: string | null;
+}
+
+/**
+ * Order type for email templates
+ */
+interface OrderForEmail {
+  id: number;
+  subtotal: string;
+  gstAmount: string | null;
+  shippingCost: string;
+  total: string;
+  shippingName: string | null;
+  shippingAddress: string | null;
+  shippingCity: string | null;
+  shippingState: string | null;
+  shippingZip: string | null;
+  shippingCountry: string | null;
+  shippingPhone: string | null;
+  customerEmail: string | null;
+}
+
+/**
+ * Send order confirmation email to customer via Resend
+ */
+export async function sendOrderConfirmationEmailViaResend(
+  order: OrderForEmail,
+  items: OrderItemForEmail[]
+): Promise<SendEmailResult> {
+  if (!order.customerEmail) {
+    console.warn("[Resend] No customer email for order confirmation");
+    return { success: false, error: "No customer email provided" };
+  }
+
+  const customerName = order.shippingName?.split(" ")[0] || "there";
+  const gstAmount = order.gstAmount || (parseFloat(order.subtotal) * (15 / 115)).toFixed(2);
+
+  // Generate items HTML
+  const itemsHtml = items.map(item => `
+    <tr>
+      <td style="padding: 12px 0; border-bottom: 1px solid #e7e5e4;">
+        <div style="display: flex; align-items: center;">
+          ${item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; margin-right: 12px;" />` : ''}
+          <div>
+            <p style="margin: 0; font-weight: 500; color: #1c1917;">${item.name}</p>
+            <p style="margin: 4px 0 0 0; font-size: 12px; color: #78716c;">
+              ${item.brand || 'No brand'}${item.size ? ` • Size ${item.size}` : ''}
+            </p>
+          </div>
+        </div>
+      </td>
+      <td style="padding: 12px 0; border-bottom: 1px solid #e7e5e4; text-align: right; font-weight: 500; color: #1c1917;">
+        NZ$${parseFloat(item.price).toFixed(2)}
+      </td>
+    </tr>
+  `).join('');
+
+  // Generate items text
+  const itemsText = items.map(item => 
+    `- ${item.name} (${item.brand || 'No brand'}${item.size ? `, Size ${item.size}` : ''}) - NZ$${parseFloat(item.price).toFixed(2)}`
+  ).join('\n');
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f4;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <div style="background-color: #1c1917; padding: 32px 24px; text-align: center;">
+          <h1 style="color: #fafaf9; margin: 0; font-size: 28px; letter-spacing: 1px;">Urban Refit</h1>
+        </div>
+        
+        <!-- Success Banner -->
+        <div style="background-color: #22c55e; padding: 16px 24px; text-align: center;">
+          <p style="color: #ffffff; margin: 0; font-size: 18px; font-weight: 600;">Order Confirmed!</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div style="padding: 32px 24px;">
+          <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+            Hi ${customerName},
+          </p>
+          
+          <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+            Thank you for your order! We're excited to send you some amazing pre-loved fashion. 
+            Your order has been received and is being prepared for shipment.
+          </p>
+          
+          <div style="background-color: #f5f5f4; border-radius: 8px; padding: 16px; margin: 0 0 24px 0;">
+            <p style="color: #78716c; font-size: 14px; margin: 0 0 8px 0;">Order Number</p>
+            <p style="color: #1c1917; font-size: 20px; font-weight: 600; margin: 0;">#${order.id}</p>
+          </div>
+          
+          <!-- Order Items -->
+          <h2 style="color: #1c1917; font-size: 18px; margin: 0 0 16px 0; border-bottom: 2px solid #1c1917; padding-bottom: 8px;">
+            Your Items
+          </h2>
+          
+          <table style="width: 100%; border-collapse: collapse;">
+            ${itemsHtml}
+          </table>
+          
+          <!-- Order Summary -->
+          <div style="margin-top: 24px; padding-top: 16px; border-top: 2px solid #1c1917;">
+            <table style="width: 100%;">
+              <tr>
+                <td style="padding: 4px 0; color: #78716c;">Subtotal</td>
+                <td style="padding: 4px 0; text-align: right; color: #1c1917;">NZ$${parseFloat(order.subtotal).toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #a8a29e; font-size: 12px;">(Includes GST)</td>
+                <td style="padding: 4px 0; text-align: right; color: #a8a29e; font-size: 12px;">NZ$${parseFloat(gstAmount).toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #78716c;">Shipping</td>
+                <td style="padding: 4px 0; text-align: right; color: #1c1917;">NZ$${parseFloat(order.shippingCost).toFixed(2)}</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 0 0 0; font-size: 18px; font-weight: 600; color: #1c1917;">Total</td>
+                <td style="padding: 12px 0 0 0; text-align: right; font-size: 18px; font-weight: 600; color: #1c1917;">NZ$${parseFloat(order.total).toFixed(2)}</td>
+              </tr>
+            </table>
+          </div>
+          
+          <!-- Shipping Address -->
+          <h2 style="color: #1c1917; font-size: 18px; margin: 32px 0 16px 0; border-bottom: 2px solid #1c1917; padding-bottom: 8px;">
+            Shipping To
+          </h2>
+          
+          <div style="color: #44403c; line-height: 1.6;">
+            <p style="margin: 0; font-weight: 500;">${order.shippingName}</p>
+            <p style="margin: 4px 0 0 0;">${order.shippingAddress}</p>
+            <p style="margin: 4px 0 0 0;">${order.shippingCity}, ${order.shippingState} ${order.shippingZip}</p>
+            <p style="margin: 4px 0 0 0;">${order.shippingCountry}</p>
+            ${order.shippingPhone ? `<p style="margin: 8px 0 0 0;">${order.shippingPhone}</p>` : ''}
+          </div>
+          
+          <!-- What's Next -->
+          <div style="background-color: #fef3c7; border-radius: 8px; padding: 16px; margin: 32px 0 0 0;">
+            <h3 style="color: #92400e; font-size: 14px; margin: 0 0 8px 0;">What happens next?</h3>
+            <ul style="color: #78350f; font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
+              <li>We'll carefully package your items within 1-2 business days</li>
+              <li>You'll receive a shipping notification with tracking info</li>
+              <li>Your items will arrive within 5-7 business days</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Sustainability Message -->
+        <div style="background-color: #dcfce7; padding: 24px; text-align: center;">
+          <p style="color: #166534; font-size: 14px; margin: 0; line-height: 1.6;">
+            By shopping with Urban Refit, you've helped give pre-loved clothing a second life 
+            and supported our local thrift store partners. Thank you for being part of the circular fashion movement!
+          </p>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background-color: #1c1917; padding: 24px; text-align: center;">
+          <p style="color: #a8a29e; font-size: 12px; margin: 0 0 8px 0;">
+            Personally curated pre-loved fashion that gives back to the community.
+          </p>
+          <p style="color: #78716c; font-size: 11px; margin: 0 0 16px 0;">
+            Questions? Contact us at help@urbanrefit.store
+          </p>
+          <p style="color: #78716c; font-size: 11px; margin: 0;">
+            &copy; ${new Date().getFullYear()} Urban Refit. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const textContent = `
+Hi ${customerName},
+
+Thank you for your order! We're excited to send you some amazing pre-loved fashion.
+
+ORDER #${order.id}
+
+YOUR ITEMS:
+${itemsText}
+
+ORDER SUMMARY:
+Subtotal: NZ$${parseFloat(order.subtotal).toFixed(2)}
+(Includes GST: NZ$${parseFloat(gstAmount).toFixed(2)})
+Shipping: NZ$${parseFloat(order.shippingCost).toFixed(2)}
+Total: NZ$${parseFloat(order.total).toFixed(2)}
+
+SHIPPING TO:
+${order.shippingName}
+${order.shippingAddress}
+${order.shippingCity}, ${order.shippingState} ${order.shippingZip}
+${order.shippingCountry}
+${order.shippingPhone ? `Phone: ${order.shippingPhone}` : ''}
+
+WHAT HAPPENS NEXT:
+1. We'll carefully package your items within 1-2 business days
+2. You'll receive a shipping notification with tracking info
+3. Your items will arrive within 5-7 business days
+
+By shopping with Urban Refit, you've helped give pre-loved clothing a second life 
+and supported our local thrift store partners. Thank you for being part of the circular fashion movement!
+
+Questions? Contact us at help@urbanrefit.store
+
+Urban Refit
+Personally curated pre-loved fashion that gives back to the community.
+  `.trim();
+
+  return sendEmail({
+    to: order.customerEmail,
+    subject: `Order Confirmed - Urban Refit #${order.id}`,
+    html: htmlContent,
+    text: textContent,
+    replyTo: "help@urbanrefit.store",
+  });
+}
+
+/**
+ * Send shipping notification email to customer via Resend
+ */
+export async function sendShippingNotificationViaResend(
+  order: OrderForEmail,
+  trackingNumber?: string,
+  carrier?: string
+): Promise<SendEmailResult> {
+  if (!order.customerEmail) {
+    console.warn("[Resend] No customer email for shipping notification");
+    return { success: false, error: "No customer email provided" };
+  }
+
+  const customerName = order.shippingName?.split(" ")[0] || "there";
+
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f5f5f4;">
+      <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <div style="background-color: #1c1917; padding: 32px 24px; text-align: center;">
+          <h1 style="color: #fafaf9; margin: 0; font-size: 28px; letter-spacing: 1px;">Urban Refit</h1>
+        </div>
+        
+        <!-- Success Banner -->
+        <div style="background-color: #3b82f6; padding: 16px 24px; text-align: center;">
+          <p style="color: #ffffff; margin: 0; font-size: 18px; font-weight: 600;">Your Order Has Shipped!</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div style="padding: 32px 24px;">
+          <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+            Hi ${customerName},
+          </p>
+          
+          <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+            Great news! Your Urban Refit order #${order.id} is on its way to you.
+          </p>
+          
+          ${trackingNumber ? `
+          <div style="background-color: #f5f5f4; border-radius: 8px; padding: 16px; margin: 0 0 24px 0;">
+            <p style="color: #78716c; font-size: 14px; margin: 0 0 8px 0;">Tracking Number</p>
+            <p style="color: #1c1917; font-size: 18px; font-weight: 600; margin: 0;">${trackingNumber}</p>
+            ${carrier ? `<p style="color: #78716c; font-size: 12px; margin: 8px 0 0 0;">Carrier: ${carrier}</p>` : ''}
+          </div>
+          ` : `
+          <div style="background-color: #f5f5f4; border-radius: 8px; padding: 16px; margin: 0 0 24px 0;">
+            <p style="color: #78716c; font-size: 14px; margin: 0;">
+              Tracking information will be updated shortly.
+            </p>
+          </div>
+          `}
+          
+          <!-- Shipping Address -->
+          <h2 style="color: #1c1917; font-size: 18px; margin: 0 0 16px 0; border-bottom: 2px solid #1c1917; padding-bottom: 8px;">
+            Delivering To
+          </h2>
+          
+          <div style="color: #44403c; line-height: 1.6;">
+            <p style="margin: 0; font-weight: 500;">${order.shippingName}</p>
+            <p style="margin: 4px 0 0 0;">${order.shippingAddress}</p>
+            <p style="margin: 4px 0 0 0;">${order.shippingCity}, ${order.shippingState} ${order.shippingZip}</p>
+            <p style="margin: 4px 0 0 0;">${order.shippingCountry}</p>
+          </div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background-color: #1c1917; padding: 24px; text-align: center;">
+          <p style="color: #a8a29e; font-size: 12px; margin: 0 0 8px 0;">
+            Personally curated pre-loved fashion that gives back to the community.
+          </p>
+          <p style="color: #78716c; font-size: 11px; margin: 0 0 16px 0;">
+            Questions? Contact us at help@urbanrefit.store
+          </p>
+          <p style="color: #78716c; font-size: 11px; margin: 0;">
+            &copy; ${new Date().getFullYear()} Urban Refit. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const textContent = `
+Hi ${customerName},
+
+Great news! Your Urban Refit order #${order.id} is on its way to you.
+
+${trackingNumber ? `TRACKING NUMBER: ${trackingNumber}${carrier ? `\nCarrier: ${carrier}` : ''}` : 'Tracking information will be updated shortly.'}
+
+DELIVERING TO:
+${order.shippingName}
+${order.shippingAddress}
+${order.shippingCity}, ${order.shippingState} ${order.shippingZip}
+${order.shippingCountry}
+
+Questions? Contact us at help@urbanrefit.store
+
+Urban Refit
+Personally curated pre-loved fashion that gives back to the community.
+  `.trim();
+
+  return sendEmail({
+    to: order.customerEmail,
+    subject: `Your Order Has Shipped - Urban Refit #${order.id}`,
+    html: htmlContent,
+    text: textContent,
+    replyTo: "help@urbanrefit.store",
+  });
+}

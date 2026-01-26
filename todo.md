@@ -386,3 +386,21 @@
 - [x] Create backend procedure to get unread message count (already exists)
 - [x] Update AdminLayout sidebar to show badge on Contact Messages
 - [x] Auto-refresh badge count every 30 seconds
+
+## Mark All As Read Feature
+- [x] Create backend procedure to mark all unread messages as read
+- [x] Add "Mark All As Read" button to Contact Messages page
+- [x] Update unread count and badge after bulk action
+
+## Checkout Flow Implementation
+- [x] Update orders schema with fulfillment fields (already exists)
+- [x] Add updateOrderStatus database function (already exists as updateOrder)
+- [x] Add markProductsSold database function (already exists as markProductAsSold)
+- [x] Update Stripe webhook for checkout.session.completed (already implemented)
+- [x] Create CheckoutSuccess page with order details and session verification
+- [x] Create CheckoutCanceled page with return to cart option
+- [x] Add routes to App.tsx
+- [x] Add checkout.verifySession tRPC endpoint
+- [x] Implement order confirmation email via Resend
+- [x] Add shipping notification email template via Resend
+- [x] Write vitest tests for checkout flow (15 tests passing)
