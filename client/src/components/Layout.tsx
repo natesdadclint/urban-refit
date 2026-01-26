@@ -127,6 +127,14 @@ export default function Layout({ children }: LayoutProps) {
                 About Us
               </Link>
               <Link
+                href="/charities"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location === "/charities" ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                Charities
+              </Link>
+              <Link
                 href="/sell"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   location === "/sell" ? "text-primary" : "text-muted-foreground"
@@ -258,6 +266,39 @@ export default function Layout({ children }: LayoutProps) {
                   {cat.name}
                 </Link>
               ))}
+              <Link
+                href="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === "/about"
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                About Us
+              </Link>
+              <Link
+                href="/charities"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === "/charities"
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                Charities
+              </Link>
+              <Link
+                href="/sell"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === "/sell"
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                Sell
+              </Link>
             </nav>
           </div>
         )}
