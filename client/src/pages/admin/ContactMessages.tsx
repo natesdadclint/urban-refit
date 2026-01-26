@@ -1,3 +1,4 @@
+import AdminLayout from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -190,21 +191,23 @@ export default function AdminContactMessages() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-900"></div>
-      </div>
+      <AdminLayout title="Contact Messages">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-900"></div>
+        </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Contact Messages</h1>
-          <p className="text-muted-foreground">
-            Manage customer inquiries and feedback
-          </p>
-        </div>
+    <AdminLayout title="Contact Messages">
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-muted-foreground">
+              Manage customer inquiries and feedback
+            </p>
+          </div>
         {(stats?.unread || 0) > 0 && (
           <Button
             variant="outline"
@@ -574,6 +577,7 @@ export default function AdminContactMessages() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }

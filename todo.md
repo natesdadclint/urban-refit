@@ -404,3 +404,7 @@
 - [x] Implement order confirmation email via Resend
 - [x] Add shipping notification email template via Resend
 - [x] Write vitest tests for checkout flow (15 tests passing)
+
+## Admin Contacts Page Fixes
+- [x] Add back button to navigate to Home page from Admin Contacts (via AdminLayout sidebar)
+- [x] Fix formatting issues on Admin Contacts page (wrapped in AdminLayout)
