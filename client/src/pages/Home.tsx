@@ -42,7 +42,6 @@ export default function Home() {
         <div className="container relative h-full min-h-[650px] md:min-h-[750px] flex flex-col justify-end pb-12 md:pb-16">
           <div className="max-w-2xl">
             <h1 className="text-3xl md:text-5xl font-serif font-semibold leading-tight mb-4 text-foreground">
-              Dress Well. Do Good. Pay Less.
             </h1>
             <p className="text-base text-muted-foreground mb-6 max-w-lg">
               Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 10% of every sale going back to the community.

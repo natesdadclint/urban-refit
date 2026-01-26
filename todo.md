@@ -452,3 +452,6 @@
 - [x] Polish email subject lines and body copy
 - [x] Optimize button/CTA labels
 - [x] Enhance error and empty state messages
+
+## Homepage Visual Edit
+- [x] Remove homepage hero tagline (leave empty)
