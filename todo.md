@@ -435,3 +435,6 @@
 - [x] Add Sell Submissions to AdminLayout sidebar navigation
 - [x] Create MySubmissions page for customers to track submissions and respond to offers
 - [x] Add MySubmissions route to App.tsx
+
+## User Navigation Enhancement
+- [x] Add My Submissions link to user profile dropdown/navigation

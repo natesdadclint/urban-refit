@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingBag, User, Menu, X, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check } from "lucide-react";
+import { ShoppingBag, User, Menu, X, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -190,6 +190,12 @@ export default function Layout({ children }: LayoutProps) {
                       <Link href="/charities" className="cursor-pointer">
                         <Heart className="mr-2 h-4 w-4" />
                         Donate Tokens
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/my-submissions" className="cursor-pointer">
+                        <Package className="mr-2 h-4 w-4" />
+                        My Submissions
                       </Link>
                     </DropdownMenuItem>
                     {user?.role === "admin" && (
