@@ -1183,7 +1183,11 @@ export async function updateSellSubmissionStatus(
   try {
     const updateData: any = { status };
     if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
-    if (offerAmount !== undefined) updateData.offerAmount = offerAmount;
+    if (offerAmount !== undefined) {
+      updateData.offerAmount = offerAmount;
+      updateData.offerSentAt = new Date();
+      updateData.customerResponse = 'pending';
+    }
     
     await db.update(sellSubmissions)
       .set(updateData)
@@ -1192,6 +1196,97 @@ export async function updateSellSubmissionStatus(
   } catch (error) {
     console.error("[Database] Failed to update sell submission status:", error);
     return false;
+  }
+}
+
+// Customer responds to offer
+export async function respondToSellOffer(
+  id: number,
+  response: 'accepted' | 'rejected' | 'counter',
+  counterOfferAmount?: string,
+  customerNotes?: string
+): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    const updateData: any = {
+      customerResponse: response,
+      customerRespondedAt: new Date(),
+    };
+    
+    if (response === 'accepted') {
+      updateData.status = 'offer_accepted';
+      // Get the offer amount to set as final amount
+      const [submission] = await db.select({ offerAmount: sellSubmissions.offerAmount })
+        .from(sellSubmissions)
+        .where(eq(sellSubmissions.id, id))
+        .limit(1);
+      if (submission?.offerAmount) {
+        updateData.finalAmount = submission.offerAmount;
+      }
+    } else if (response === 'rejected') {
+      updateData.status = 'offer_rejected';
+    } else if (response === 'counter') {
+      updateData.status = 'counter_offered';
+      if (counterOfferAmount) updateData.counterOfferAmount = counterOfferAmount;
+    }
+    
+    if (customerNotes) updateData.customerNotes = customerNotes;
+    
+    await db.update(sellSubmissions)
+      .set(updateData)
+      .where(eq(sellSubmissions.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to respond to sell offer:", error);
+    return false;
+  }
+}
+
+// Admin accepts counter offer
+export async function acceptCounterOffer(
+  id: number,
+  adminNotes?: string
+): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    // Get the counter offer amount
+    const [submission] = await db.select({ counterOfferAmount: sellSubmissions.counterOfferAmount })
+      .from(sellSubmissions)
+      .where(eq(sellSubmissions.id, id))
+      .limit(1);
+    
+    const updateData: any = {
+      status: 'accepted',
+      finalAmount: submission?.counterOfferAmount,
+    };
+    if (adminNotes) updateData.adminNotes = adminNotes;
+    
+    await db.update(sellSubmissions)
+      .set(updateData)
+      .where(eq(sellSubmissions.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to accept counter offer:", error);
+    return false;
+  }
+}
+
+// Get submissions by user email (for guest users tracking)
+export async function getSellSubmissionsByEmail(email: string): Promise<SellSubmission[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    return await db.select().from(sellSubmissions)
+      .where(eq(sellSubmissions.email, email))
+      .orderBy(desc(sellSubmissions.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get sell submissions by email:", error);
+    return [];
   }
 }
 

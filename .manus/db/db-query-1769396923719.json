@@ -1,0 +1,31 @@
+{
+  "query": "SELECT id, productId, invoiceNumber, thriftStoreName, styleDescription FROM product_metadata;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, productId, invoiceNumber, thriftStoreName, styleDescription FROM product_metadata;",
+  "rows": [
+    {
+      "id": "3",
+      "productId": "1",
+      "invoiceNumber": "INV-2026-001",
+      "thriftStoreName": "Salvation Army Auckland",
+      "styleDescription": "Classic vintage denim with authentic worn-in look and original hardware"
+    },
+    {
+      "id": "4",
+      "productId": "2",
+      "invoiceNumber": "INV-2026-002",
+      "thriftStoreName": "Red Cross Wellington",
+      "styleDescription": "Contemporary streetwear style with bold graphic elements"
+    },
+    {
+      "id": "5",
+      "productId": "3",
+      "invoiceNumber": "INV-2026-003",
+      "thriftStoreName": "Hospice Shop Christchurch",
+      "styleDescription": "Timeless formal wear suitable for business or special occasions"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tproductId\tinvoiceNumber\tthriftStoreName\tstyleDescription\n3\t1\tINV-2026-001\tSalvation Army Auckland\tClassic vintage denim with authentic worn-in look and original hardware\n4\t2\tINV-2026-002\tRed Cross Wellington\tContemporary streetwear style with bold graphic elements\n5\t3\tINV-2026-003\tHospice Shop Christchurch\tTimeless formal wear suitable for business or special occasions\n",
+  "stderr": "",
+  "execution_time_ms": 1570
+}

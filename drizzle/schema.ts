@@ -511,9 +511,19 @@ export const sellSubmissions = mysqlTable("sell_submissions", {
   image4Url: text("image4Url"),
   
   // Submission status
-  status: mysqlEnum("status", ["pending", "reviewing", "accepted", "rejected", "completed"]).default("pending").notNull(),
+  status: mysqlEnum("status", ["pending", "reviewing", "offer_made", "offer_accepted", "offer_rejected", "counter_offered", "accepted", "rejected", "completed"]).default("pending").notNull(),
   adminNotes: text("adminNotes"),
   offerAmount: decimal("offerAmount", { precision: 10, scale: 2 }),
+  
+  // Customer response to offer
+  customerResponse: mysqlEnum("customerResponse", ["pending", "accepted", "rejected", "counter"]),
+  counterOfferAmount: decimal("counterOfferAmount", { precision: 10, scale: 2 }),
+  customerNotes: text("customerNotes"),
+  offerSentAt: timestamp("offerSentAt"),
+  customerRespondedAt: timestamp("customerRespondedAt"),
+  
+  // Final agreed amount
+  finalAmount: decimal("finalAmount", { precision: 10, scale: 2 }),
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

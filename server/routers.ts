@@ -1262,9 +1262,10 @@ Keep insights concise and actionable.`;
     updateStatus: adminProcedure
       .input(z.object({
         id: z.number(),
-        status: z.enum(["pending", "reviewing", "accepted", "rejected", "completed"]),
+        status: z.enum(["pending", "reviewing", "offer_made", "offer_accepted", "offer_rejected", "counter_offered", "accepted", "rejected", "completed"]),
         adminNotes: z.string().optional(),
         offerAmount: z.string().optional(),
+        sendEmail: z.boolean().default(true),
       }))
       .mutation(async ({ input }) => {
         const success = await db.updateSellSubmissionStatus(
@@ -1275,6 +1276,93 @@ Keep insights concise and actionable.`;
         );
         if (!success) {
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to update status" });
+        }
+        
+        // Send email notification when offer is made
+        if (input.status === 'offer_made' && input.offerAmount && input.sendEmail) {
+          const submission = await db.getSellSubmissionById(input.id);
+          if (submission) {
+            try {
+              const { sendSellOfferEmail } = await import('./resend');
+              await sendSellOfferEmail({
+                to: submission.email,
+                customerName: submission.name,
+                itemName: submission.itemName,
+                brand: submission.brand,
+                offerAmount: input.offerAmount,
+                submissionId: input.id,
+              });
+            } catch (emailError) {
+              console.error('[Sell] Failed to send offer email:', emailError);
+            }
+          }
+        }
+        
+        return { success: true };
+      }),
+    
+    // Admin: Accept counter offer
+    acceptCounterOffer: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        adminNotes: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const success = await db.acceptCounterOffer(input.id, input.adminNotes);
+        if (!success) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to accept counter offer" });
+        }
+        
+        // Send acceptance email
+        const submission = await db.getSellSubmissionById(input.id);
+        if (submission) {
+          try {
+            const { sendSellOfferAcceptedEmail } = await import('./resend');
+            await sendSellOfferAcceptedEmail({
+              to: submission.email,
+              customerName: submission.name,
+              itemName: submission.itemName,
+              brand: submission.brand,
+              finalAmount: submission.counterOfferAmount || submission.offerAmount || '0',
+              submissionId: input.id,
+            });
+          } catch (emailError) {
+            console.error('[Sell] Failed to send acceptance email:', emailError);
+          }
+        }
+        
+        return { success: true };
+      }),
+    
+    // Customer: Respond to offer
+    respondToOffer: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        response: z.enum(["accepted", "rejected", "counter"]),
+        counterOfferAmount: z.string().optional(),
+        customerNotes: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        // Verify ownership
+        const submission = await db.getSellSubmissionById(input.id);
+        if (!submission) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
+        }
+        if (submission.userId !== ctx.user.id && submission.email !== ctx.user.email) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+        }
+        if (submission.status !== 'offer_made') {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "No pending offer to respond to" });
+        }
+        
+        const success = await db.respondToSellOffer(
+          input.id,
+          input.response,
+          input.counterOfferAmount,
+          input.customerNotes
+        );
+        if (!success) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to respond to offer" });
         }
         return { success: true };
       }),

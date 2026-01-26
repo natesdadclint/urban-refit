@@ -38,6 +38,7 @@ const navItems = [
   { href: "/admin/charities", icon: Heart, label: "Charities" },
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
   { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages", showBadge: true },
+  { href: "/admin/sell-submissions", icon: DollarSign, label: "Sell Submissions" },
   { href: "/admin/bulk-upload", icon: Upload, label: "Bulk Upload" },
 ];
 

@@ -1,0 +1,30 @@
+{
+  "query": "SELECT * FROM product_metadata;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT * FROM product_metadata;",
+  "rows": [
+    {
+      "id": "1",
+      "productId": "1",
+      "invoiceNumber": "INV-TEST-001",
+      "thriftStoreName": "Test Thrift Store",
+      "styleDescription": "Classic vintage style with modern appeal",
+      "materialDescription": "100% cotton premium quality",
+      "customInformation": "Bulk upload test item",
+      "image1Alt": "Front view of test product",
+      "image2Alt": "NULL",
+      "image3Url": "NULL",
+      "image3Alt": "NULL",
+      "image4Url": "NULL",
+      "image4Alt": "NULL",
+      "careInstructions": "NULL",
+      "sizeGuide": "NULL",
+      "productHighlights": "NULL",
+      "createdAt": "2026-01-26 02:55:46",
+      "updatedAt": "2026-01-26 03:00:27"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tproductId\tinvoiceNumber\tthriftStoreName\tstyleDescription\tmaterialDescription\tcustomInformation\timage1Alt\timage2Alt\timage3Url\timage3Alt\timage4Url\timage4Alt\tcareInstructions\tsizeGuide\tproductHighlights\tcreatedAt\tupdatedAt\n1\t1\tINV-TEST-001\tTest Thrift Store\tClassic vintage style with modern appeal\t100% cotton premium quality\tBulk upload test item\tFront view of test product\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\tNULL\t2026-01-26 02:55:46\t2026-01-26 03:00:27\n",
+  "stderr": "",
+  "execution_time_ms": 1538
+}

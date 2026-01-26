@@ -1,0 +1,377 @@
+import { useState } from "react";
+import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { Loader2, Package, Clock, Check, X, DollarSign, ArrowRight, MessageSquare } from "lucide-react";
+import { Link } from "wouter";
+import Layout from "@/components/Layout";
+
+export default function MySubmissions() {
+  const { user, isAuthenticated, loading } = useAuth();
+  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
+  const [counterAmount, setCounterAmount] = useState("");
+  const [customerNotes, setCustomerNotes] = useState("");
+  const [respondingId, setRespondingId] = useState<number | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: submissions, isLoading, refetch } = trpc.sell.mySubmissions.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
+
+  const respondMutation = trpc.sell.respondToOffer.useMutation();
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center py-24">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Layout>
+        <div className="container mx-auto px-4 py-16 text-center">
+          <Package className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
+          <h1 className="text-3xl font-bold mb-4">My Submissions</h1>
+          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+            Sign in to view your sell submissions and respond to offers from Urban Refit.
+          </p>
+          <Button asChild size="lg">
+            <a href={getLoginUrl()}>Sign In</a>
+          </Button>
+        </div>
+      </Layout>
+    );
+  }
+
+  const handleRespond = async (submissionId: number, response: 'accepted' | 'rejected' | 'counter') => {
+    setRespondingId(submissionId);
+    try {
+      await respondMutation.mutateAsync({
+        id: submissionId,
+        response,
+        counterOfferAmount: response === 'counter' ? counterAmount : undefined,
+        customerNotes: customerNotes || undefined,
+      });
+      
+      if (response === 'accepted') {
+        toast.success("Offer accepted! We'll be in touch with next steps.");
+      } else if (response === 'rejected') {
+        toast.success("Offer declined. Thank you for considering Urban Refit.");
+      } else {
+        toast.success("Counter offer sent! We'll review and get back to you.");
+      }
+      
+      refetch();
+      setDialogOpen(false);
+      setCounterAmount("");
+      setCustomerNotes("");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to respond to offer");
+    } finally {
+      setRespondingId(null);
+    }
+  };
+
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case "pending":
+        return { label: "Pending Review", color: "bg-yellow-100 text-yellow-800", icon: Clock };
+      case "reviewing":
+        return { label: "Under Review", color: "bg-blue-100 text-blue-800", icon: Package };
+      case "offer_made":
+        return { label: "Offer Received", color: "bg-purple-100 text-purple-800", icon: DollarSign };
+      case "offer_accepted":
+        return { label: "Offer Accepted", color: "bg-emerald-100 text-emerald-800", icon: Check };
+      case "offer_rejected":
+        return { label: "Offer Declined", color: "bg-orange-100 text-orange-800", icon: X };
+      case "counter_offered":
+        return { label: "Counter Sent", color: "bg-indigo-100 text-indigo-800", icon: MessageSquare };
+      case "accepted":
+        return { label: "Accepted", color: "bg-green-100 text-green-800", icon: Check };
+      case "rejected":
+        return { label: "Not Accepted", color: "bg-red-100 text-red-800", icon: X };
+      case "completed":
+        return { label: "Completed", color: "bg-gray-100 text-gray-800", icon: Check };
+      default:
+        return { label: status, color: "bg-gray-100 text-gray-800", icon: Package };
+    }
+  };
+
+  return (
+    <Layout>
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">My Submissions</h1>
+            <p className="text-muted-foreground">
+              Track your sell submissions and respond to offers from Urban Refit.
+            </p>
+          </div>
+
+          {isLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : !submissions || submissions.length === 0 ? (
+            <Card className="p-12 text-center">
+              <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+              <h2 className="text-xl font-semibold mb-2">No Submissions Yet</h2>
+              <p className="text-muted-foreground mb-6">
+                Have quality pre-loved items to sell? Submit them to Urban Refit and earn cash.
+              </p>
+              <Button asChild>
+                <Link href="/sell-to-us">
+                  Sell Your Items
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+            </Card>
+          ) : (
+            <div className="space-y-4">
+              {submissions.map((submission) => {
+                const statusInfo = getStatusInfo(submission.status);
+                const StatusIcon = statusInfo.icon;
+                
+                return (
+                  <Card key={submission.id} className="p-6">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      {/* Image */}
+                      {submission.image1Url && (
+                        <div className="w-full md:w-32 h-32 flex-shrink-0">
+                          <img
+                            src={submission.image1Url}
+                            alt={submission.itemName}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        </div>
+                      )}
+                      
+                      {/* Details */}
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between gap-4 mb-3">
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {submission.brand} - {submission.itemName}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              Submitted {new Date(submission.createdAt).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <span className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}`}>
+                            <StatusIcon className="h-3.5 w-3.5" />
+                            {statusInfo.label}
+                          </span>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-4">
+                          <div>
+                            <p className="text-muted-foreground">Type</p>
+                            <p className="capitalize">{submission.itemType}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Size</p>
+                            <p>{submission.size}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Condition</p>
+                            <p className="capitalize">{submission.condition.replace(/_/g, " ")}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground">Your Asking Price</p>
+                            <p className="font-medium">{submission.askingPrice ? `$${submission.askingPrice}` : "Not set"}</p>
+                          </div>
+                        </div>
+
+                        {/* Offer Section */}
+                        {submission.status === 'offer_made' && submission.offerAmount && (
+                          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                            <div className="flex items-center justify-between mb-3">
+                              <div>
+                                <p className="text-sm text-purple-700 font-medium">Our Offer</p>
+                                <p className="text-2xl font-bold text-purple-900">
+                                  NZ${parseFloat(submission.offerAmount).toFixed(2)}
+                                </p>
+                              </div>
+                              <Dialog open={dialogOpen && selectedSubmission?.id === submission.id} onOpenChange={(open) => {
+                                setDialogOpen(open);
+                                if (open) setSelectedSubmission(submission);
+                              }}>
+                                <DialogTrigger asChild>
+                                  <Button className="bg-purple-600 hover:bg-purple-700">
+                                    Respond to Offer
+                                  </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>Respond to Offer</DialogTitle>
+                                  </DialogHeader>
+                                  
+                                  <div className="space-y-4 py-4">
+                                    <div className="bg-gray-50 rounded-lg p-4 text-center">
+                                      <p className="text-sm text-muted-foreground mb-1">Offer Amount</p>
+                                      <p className="text-3xl font-bold">NZ${parseFloat(submission.offerAmount).toFixed(2)}</p>
+                                    </div>
+                                    
+                                    <div className="space-y-3">
+                                      <Button
+                                        className="w-full bg-green-600 hover:bg-green-700"
+                                        size="lg"
+                                        onClick={() => handleRespond(submission.id, 'accepted')}
+                                        disabled={respondingId === submission.id}
+                                      >
+                                        {respondingId === submission.id ? (
+                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                        ) : (
+                                          <Check className="h-4 w-4 mr-2" />
+                                        )}
+                                        Accept Offer
+                                      </Button>
+                                      
+                                      <div className="relative">
+                                        <div className="absolute inset-0 flex items-center">
+                                          <span className="w-full border-t" />
+                                        </div>
+                                        <div className="relative flex justify-center text-xs uppercase">
+                                          <span className="bg-background px-2 text-muted-foreground">Or</span>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="space-y-2">
+                                        <label className="text-sm font-medium">Make a Counter Offer</label>
+                                        <div className="flex gap-2">
+                                          <div className="relative flex-1">
+                                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">$</span>
+                                            <Input
+                                              type="number"
+                                              placeholder="Your price"
+                                              value={counterAmount}
+                                              onChange={(e) => setCounterAmount(e.target.value)}
+                                              className="pl-7"
+                                              step="0.01"
+                                              min="0"
+                                            />
+                                          </div>
+                                          <Button
+                                            variant="outline"
+                                            onClick={() => handleRespond(submission.id, 'counter')}
+                                            disabled={respondingId === submission.id || !counterAmount}
+                                          >
+                                            {respondingId === submission.id ? (
+                                              <Loader2 className="h-4 w-4 animate-spin" />
+                                            ) : (
+                                              "Send"
+                                            )}
+                                          </Button>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="space-y-2">
+                                        <label className="text-sm font-medium">Add a Note (optional)</label>
+                                        <textarea
+                                          placeholder="Any additional comments..."
+                                          value={customerNotes}
+                                          onChange={(e) => setCustomerNotes(e.target.value)}
+                                          className="w-full px-3 py-2 border rounded-md text-sm"
+                                          rows={2}
+                                        />
+                                      </div>
+                                      
+                                      <Button
+                                        variant="outline"
+                                        className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                                        onClick={() => handleRespond(submission.id, 'rejected')}
+                                        disabled={respondingId === submission.id}
+                                      >
+                                        <X className="h-4 w-4 mr-2" />
+                                        Decline Offer
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                            </div>
+                            <p className="text-sm text-purple-700">
+                              Review our offer and accept, decline, or make a counter offer.
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Counter Offer Sent */}
+                        {submission.status === 'counter_offered' && (
+                          <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <MessageSquare className="h-4 w-4 text-indigo-600" />
+                              <p className="text-sm font-medium text-indigo-700">Counter Offer Sent</p>
+                            </div>
+                            <p className="text-lg font-bold text-indigo-900 mb-1">
+                              NZ${parseFloat(submission.counterOfferAmount || '0').toFixed(2)}
+                            </p>
+                            <p className="text-sm text-indigo-700">
+                              We're reviewing your counter offer. We'll get back to you soon.
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Accepted */}
+                        {(submission.status === 'offer_accepted' || submission.status === 'accepted') && (
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Check className="h-4 w-4 text-green-600" />
+                              <p className="text-sm font-medium text-green-700">Offer Accepted</p>
+                            </div>
+                            <p className="text-lg font-bold text-green-900 mb-1">
+                              NZ${parseFloat(submission.finalAmount || submission.offerAmount || '0').toFixed(2)}
+                            </p>
+                            <p className="text-sm text-green-700">
+                              Check your email for shipping instructions and next steps.
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Completed */}
+                        {submission.status === 'completed' && (
+                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Check className="h-4 w-4 text-gray-600" />
+                              <p className="text-sm font-medium text-gray-700">Transaction Complete</p>
+                            </div>
+                            <p className="text-lg font-bold text-gray-900 mb-1">
+                              NZ${parseFloat(submission.finalAmount || submission.offerAmount || '0').toFixed(2)}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              Thank you for selling with Urban Refit!
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
+
+          {/* CTA */}
+          <div className="mt-12 text-center">
+            <p className="text-muted-foreground mb-4">Have more items to sell?</p>
+            <Button asChild variant="outline">
+              <Link href="/sell-to-us">
+                Submit Another Item
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </main>
+    </Layout>
+  );
+}

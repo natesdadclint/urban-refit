@@ -412,3 +412,26 @@
 ## Admin Bulk Upload Page Fix
 - [x] Wrap Bulk Upload page in AdminLayout for unified admin experience
 - [x] Add Bulk Upload to AdminLayout sidebar navigation
+
+## Bulk Upload Testing
+- [x] Review bulk upload backend implementation
+- [x] Create sample CSV and test images
+- [x] Test bulk upload through admin interface (browser file upload limitations prevent full automated testing - requires manual testing)
+
+## Sell Submission Vetting & Payout Response System
+- [x] Investigate current sell submission flow and database schema
+- [x] Update sell_submissions schema with customer response fields (customerResponse, counterOfferAmount, customerNotes, offerSentAt, customerRespondedAt, finalAmount)
+- [x] Add new status values (offer_made, offer_accepted, offer_rejected, counter_offered)
+- [x] Add respondToSellOffer database function for customer responses
+- [x] Add acceptCounterOffer database function for admin to accept counter offers
+- [x] Update sell.updateStatus to send email notification when offer is made
+- [x] Add sell.acceptCounterOffer tRPC endpoint for admin
+- [x] Add sell.respondToOffer tRPC endpoint for customers
+- [x] Create sendSellOfferEmail function in resend.ts
+- [x] Create sendSellOfferAcceptedEmail function in resend.ts
+- [x] Create sendSellRejectionEmail function in resend.ts
+- [x] Update AdminSellSubmissions with new offer workflow UI
+- [x] Wrap AdminSellSubmissions in AdminLayout
+- [x] Add Sell Submissions to AdminLayout sidebar navigation
+- [x] Create MySubmissions page for customers to track submissions and respond to offers
+- [x] Add MySubmissions route to App.tsx

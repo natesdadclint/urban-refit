@@ -38,6 +38,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Reviews from "./pages/Reviews";
 import SellToUs from "./pages/SellToUs";
+import MySubmissions from "./pages/MySubmissions";
 import AdminSellSubmissions from "./pages/AdminSellSubmissions";
 import AdminBulkUpload from "./pages/AdminBulkUpload";
 import AdminPartnerProfitability from "./pages/AdminPartnerProfitability";
@@ -74,6 +75,8 @@ function Router() {
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/reviews" component={Reviews} />
       <Route path="/sell" component={SellToUs} />
+      <Route path="/my-submissions" component={MySubmissions} />
+      <Route path="/my-submissions/:id" component={MySubmissions} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />
