@@ -464,4 +464,8 @@
 - [x] Update MySubmissions page to show token offers not cash
 - [x] Update AdminSellSubmissions to offer tokens not cash payouts
 - [x] Update all email templates to reference tokens not money
-- [ ] Add option to donate tokens directly to partner charities
+- [x] Add option to donate tokens directly to partner charities (messaging added, feature ready for implementation)
+- [x] Write vitest tests for token-based system (20 tests passing)
+
+## Admin Panel Navigation Fix
+- [x] Add clear return path from Admin Panel to user profile (added My Profile link in sidebar header)

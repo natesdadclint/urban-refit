@@ -19,6 +19,7 @@ import {
   TrendingUp,
   Mail,
   Upload,
+  User,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -123,10 +124,16 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
           <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="p-6 border-b border-border">
-              <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
-                <ArrowLeft className="h-4 w-4" />
-                <span className="text-sm">Back to Store</span>
-              </Link>
+              <div className="space-y-2">
+                <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="text-sm">Back to Store</span>
+                </Link>
+                <Link href="/profile" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors">
+                  <User className="h-4 w-4" />
+                  <span className="text-sm">My Profile</span>
+                </Link>
+              </div>
               <h1 className="text-xl font-serif font-semibold mt-4">Admin Panel</h1>
             </div>
 
