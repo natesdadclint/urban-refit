@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Star, ThumbsUp, CheckCircle, User, ShieldCheck, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
+import { toast } from "sonner";
 
 function formatDate(date: Date | string | null) {
   if (!date) return "";
@@ -47,12 +48,98 @@ function FitBadge({ fit }: { fit: string | null }) {
   );
 }
 
+// Local storage key for tracking helpful votes
+const HELPFUL_VOTES_KEY = "urban_refit_helpful_votes";
+
+function getHelpfulVotes(): Set<number> {
+  try {
+    const stored = localStorage.getItem(HELPFUL_VOTES_KEY);
+    if (stored) {
+      return new Set(JSON.parse(stored));
+    }
+  } catch {
+    // Ignore localStorage errors
+  }
+  return new Set();
+}
+
+function saveHelpfulVote(reviewId: number) {
+  try {
+    const votes = getHelpfulVotes();
+    votes.add(reviewId);
+    localStorage.setItem(HELPFUL_VOTES_KEY, JSON.stringify(Array.from(votes)));
+  } catch {
+    // Ignore localStorage errors
+  }
+}
+
 export default function Reviews() {
   const { data: reviews, isLoading } = trpc.reviews.list.useQuery({ limit: 50 });
   const { data: stats } = trpc.reviews.stats.useQuery();
-  const markHelpful = trpc.reviews.markHelpful.useMutation();
+  const utils = trpc.useUtils();
+  
+  // Track which reviews the user has marked as helpful (optimistic local state)
+  const [helpfulVotes, setHelpfulVotes] = useState<Set<number>>(new Set());
+  // Track optimistic count increments
+  const [optimisticCounts, setOptimisticCounts] = useState<Record<number, number>>({});
+  
+  // Load helpful votes from localStorage on mount
+  useEffect(() => {
+    setHelpfulVotes(getHelpfulVotes());
+  }, []);
+  
+  const markHelpful = trpc.reviews.markHelpful.useMutation({
+    onMutate: async ({ reviewId }) => {
+      // Optimistically update the count
+      setOptimisticCounts(prev => ({
+        ...prev,
+        [reviewId]: (prev[reviewId] || 0) + 1
+      }));
+      
+      // Mark as voted
+      setHelpfulVotes(prev => new Set([...Array.from(prev), reviewId]));
+      saveHelpfulVote(reviewId);
+      
+      // Show toast
+      toast.success("Thanks for your feedback!", {
+        description: "You found this review helpful",
+        duration: 2000,
+      });
+    },
+    onError: (error, { reviewId }) => {
+      // Rollback optimistic update on error
+      setOptimisticCounts(prev => ({
+        ...prev,
+        [reviewId]: Math.max((prev[reviewId] || 0) - 1, 0)
+      }));
+      
+      // Remove from voted set
+      setHelpfulVotes(prev => {
+        const newSet = new Set(Array.from(prev));
+        newSet.delete(reviewId);
+        return newSet;
+      });
+      
+      toast.error("Failed to mark as helpful", {
+        description: "Please try again",
+      });
+    },
+    onSettled: () => {
+      // Refetch to sync with server
+      utils.reviews.list.invalidate();
+    },
+  });
 
   const handleHelpful = (reviewId: number) => {
+    // Check if already voted
+    if (helpfulVotes.has(reviewId)) {
+      toast.info("Already marked as helpful", {
+        description: "You've already found this review helpful",
+        duration: 2000,
+      });
+      return;
+    }
+    
     markHelpful.mutate({ reviewId });
   };
 
@@ -174,91 +261,105 @@ export default function Reviews() {
             </div>
           ) : reviews && reviews.length > 0 ? (
             <div className="grid gap-6">
-              {reviews.map(({ review, product, user }) => (
-                <article 
-                  key={review.id} 
-                  className="border border-border rounded-xl p-6 hover:border-neutral-400 transition-colors"
-                >
-                  <div className="flex gap-4">
-                    {/* Product Image */}
-                    <Link href={`/product/${product.id}`}>
-                      <div className="w-20 h-20 rounded-lg overflow-hidden bg-neutral-100 flex-shrink-0">
-                        {product.image1Url ? (
-                          <img 
-                            src={product.image1Url} 
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-neutral-400">
-                            No image
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-                    
-                    <div className="flex-1">
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <StarRating rating={review.rating} />
-                            {review.isVerifiedPurchase && (
-                              <Badge variant="outline" className="text-xs bg-neutral-100 text-neutral-700">
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Verified Purchase
-                              </Badge>
-                            )}
-                          </div>
-                          {review.title && (
-                            <h3 className="font-semibold">{review.title}</h3>
+              {reviews.map(({ review, product, user }) => {
+                const hasVoted = helpfulVotes.has(review.id);
+                const optimisticIncrement = optimisticCounts[review.id] || 0;
+                const displayCount = review.helpfulCount + optimisticIncrement;
+                
+                return (
+                  <article 
+                    key={review.id} 
+                    className="border border-border rounded-xl p-6 hover:border-neutral-400 transition-colors"
+                  >
+                    <div className="flex gap-4">
+                      {/* Product Image */}
+                      <Link href={`/product/${product.id}`}>
+                        <div className="w-20 h-20 rounded-lg overflow-hidden bg-neutral-100 flex-shrink-0">
+                          {product.image1Url ? (
+                            <img 
+                              src={product.image1Url} 
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-neutral-400">
+                              No image
+                            </div>
                           )}
                         </div>
-                        <span className="text-sm text-muted-foreground">
-                          {formatDate(review.createdAt)}
-                        </span>
-                      </div>
-                      
-                      {/* Product Info */}
-                      <Link href={`/product/${product.id}`}>
-                        <p className="text-sm text-muted-foreground mb-2 hover:text-black transition-colors">
-                          {product.brand} {product.name} - Size {product.size}
-                        </p>
                       </Link>
                       
-                      {/* Review Content */}
-                      {review.content && (
-                        <p className="text-muted-foreground mb-3">{review.content}</p>
-                      )}
-                      
-                      {/* Fit Feedback */}
-                      {review.fitFeedback && (
-                        <div className="mb-3">
-                          <FitBadge fit={review.fitFeedback} />
+                      <div className="flex-1">
+                        {/* Header */}
+                        <div className="flex items-start justify-between mb-2">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <StarRating rating={review.rating} />
+                              {review.isVerifiedPurchase && (
+                                <Badge variant="outline" className="text-xs bg-neutral-100 text-neutral-700">
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  Verified Purchase
+                                </Badge>
+                              )}
+                            </div>
+                            {review.title && (
+                              <h3 className="font-semibold">{review.title}</h3>
+                            )}
+                          </div>
+                          <span className="text-sm text-muted-foreground">
+                            {formatDate(review.createdAt)}
+                          </span>
                         </div>
-                      )}
-                      
-                      {/* Footer */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                          <User className="h-4 w-4" />
-                          <span>{user.name || "Anonymous"}</span>
+                        
+                        {/* Product Info */}
+                        <Link href={`/product/${product.id}`}>
+                          <p className="text-sm text-muted-foreground mb-2 hover:text-black transition-colors">
+                            {product.brand} {product.name} - Size {product.size}
+                          </p>
+                        </Link>
+                        
+                        {/* Review Content */}
+                        {review.content && (
+                          <p className="text-muted-foreground mb-3">{review.content}</p>
+                        )}
+                        
+                        {/* Fit Feedback */}
+                        {review.fitFeedback && (
+                          <div className="mb-3">
+                            <FitBadge fit={review.fitFeedback} />
+                          </div>
+                        )}
+                        
+                        {/* Footer */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <User className="h-4 w-4" />
+                            <span>{user.name || "Anonymous"}</span>
+                          </div>
+                          <Button
+                            variant={hasVoted ? "default" : "ghost"}
+                            size="sm"
+                            className={cn(
+                              "transition-all duration-200",
+                              hasVoted 
+                                ? "bg-green-600 hover:bg-green-700 text-white" 
+                                : "text-muted-foreground hover:text-black"
+                            )}
+                            onClick={() => handleHelpful(review.id)}
+                            disabled={markHelpful.isPending}
+                          >
+                            <ThumbsUp className={cn(
+                              "h-4 w-4 mr-1 transition-transform",
+                              hasVoted && "fill-current"
+                            )} />
+                            {hasVoted ? "Helpful" : "Helpful"} ({displayCount})
+                          </Button>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-muted-foreground hover:text-black"
-                          onClick={() => handleHelpful(review.id)}
-                          disabled={markHelpful.isPending}
-                        >
-                          <ThumbsUp className="h-4 w-4 mr-1" />
-                          Helpful ({review.helpfulCount})
-                        </Button>
                       </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-16 border border-border rounded-xl">
