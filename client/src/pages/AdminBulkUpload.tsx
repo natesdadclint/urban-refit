@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AdminLayout from "@/components/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -67,12 +68,9 @@ export default function AdminBulkUpload() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Bulk Image Upload</h1>
-          <p className="text-muted-foreground">Upload multiple product images with metadata</p>
-        </div>
+    <AdminLayout title="Bulk Image Upload">
+      <div className="space-y-6">
+        <p className="text-muted-foreground">Upload multiple product images with metadata</p>
 
         <div className="grid gap-6">
           {/* Instructions Card */}
@@ -207,6 +205,6 @@ export default function AdminBulkUpload() {
           </Card>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }

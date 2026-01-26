@@ -18,6 +18,7 @@ import {
   Heart,
   TrendingUp,
   Mail,
+  Upload,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -37,6 +38,7 @@ const navItems = [
   { href: "/admin/charities", icon: Heart, label: "Charities" },
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
   { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages", showBadge: true },
+  { href: "/admin/bulk-upload", icon: Upload, label: "Bulk Upload" },
 ];
 
 export default function AdminLayout({ children, title }: AdminLayoutProps) {

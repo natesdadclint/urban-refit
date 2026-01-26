@@ -408,3 +408,7 @@
 ## Admin Contacts Page Fixes
 - [x] Add back button to navigate to Home page from Admin Contacts (via AdminLayout sidebar)
 - [x] Fix formatting issues on Admin Contacts page (wrapped in AdminLayout)
+
+## Admin Bulk Upload Page Fix
+- [x] Wrap Bulk Upload page in AdminLayout for unified admin experience
+- [x] Add Bulk Upload to AdminLayout sidebar navigation
