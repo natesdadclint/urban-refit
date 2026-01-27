@@ -7,33 +7,31 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Eye, Check, X, Coins, Mail, MessageSquare } from "lucide-react";
+import { Loader2, Eye, Check, X, Coins, Mail, MessageSquare, Image as ImageIcon } from "lucide-react";
 import AdminLayout from "@/components/AdminLayout";
 
 export default function AdminSellSubmissions() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
   const [searchBrand, setSearchBrand] = useState("");
   const [tokenOffer, setTokenOffer] = useState("");
   const [adminNotes, setAdminNotes] = useState("");
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedSubmission, setSelectedSubmission] = useState<any>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  // Check if user is admin
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="container mx-auto px-4 py-12 text-center">
-        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-        <p className="text-muted-foreground">You must be an admin to access this page.</p>
-      </div>
-    );
-  }
-
+  // All hooks must be called before any conditional returns
   const { data: submissions, isLoading, refetch } = trpc.sell.listAll.useQuery({
     status: selectedStatus === "all" ? undefined : selectedStatus,
+  }, {
+    enabled: !!user && user.role === "admin",
   });
 
-  const { data: stats } = trpc.sell.stats.useQuery();
+  const { data: stats } = trpc.sell.stats.useQuery(undefined, {
+    enabled: !!user && user.role === "admin",
+  });
+  
   const updateStatusMutation = trpc.sell.updateStatus.useMutation();
   const acceptCounterMutation = trpc.sell.acceptCounterOffer.useMutation();
 
@@ -43,6 +41,24 @@ export default function AdminSellSubmissions() {
       sub.brand.toLowerCase().includes(searchBrand.toLowerCase())
     );
   }, [submissions, searchBrand]);
+
+  // Now we can have conditional returns after all hooks
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!user || user.role !== "admin") {
+    return (
+      <div className="container mx-auto px-4 py-12 text-center">
+        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+        <p className="text-muted-foreground">You must be an admin to access this page.</p>
+      </div>
+    );
+  }
 
   const handleStatusUpdate = async (
     submissionId: number,
@@ -71,6 +87,7 @@ export default function AdminSellSubmissions() {
       setDialogOpen(false);
       setTokenOffer("");
       setAdminNotes("");
+      setSelectedSubmission(null);
     } catch (error) {
       toast.error("Failed to update submission");
     } finally {
@@ -89,6 +106,7 @@ export default function AdminSellSubmissions() {
       refetch();
       setDialogOpen(false);
       setAdminNotes("");
+      setSelectedSubmission(null);
     } catch (error) {
       toast.error("Failed to accept counter offer");
     } finally {
@@ -136,6 +154,19 @@ export default function AdminSellSubmissions() {
       default:
         return status.charAt(0).toUpperCase() + status.slice(1);
     }
+  };
+
+  const getSubmissionImages = (submission: any): string[] => {
+    return [submission.image1Url, submission.image2Url, submission.image3Url, submission.image4Url]
+      .filter((url): url is string => Boolean(url));
+  };
+
+  const openReviewDialog = (submission: any) => {
+    setSelectedSubmission(submission);
+    setTokenOffer(submission.tokenOffer?.toString() || "");
+    setAdminNotes(submission.adminNotes || "");
+    setSelectedImageIndex(0);
+    setDialogOpen(true);
   };
 
   return (
@@ -227,358 +258,388 @@ export default function AdminSellSubmissions() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {filteredSubmissions.map((submission) => (
-            <Card key={submission.id} className="p-4">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-lg">
-                      {submission.brand} - {submission.itemName}
-                    </h3>
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(submission.status)}`}>
-                      {getStatusLabel(submission.status)}
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm text-muted-foreground mb-3">
-                    <div>
-                      <p className="font-medium text-foreground">Type</p>
-                      <p className="capitalize">{submission.itemType}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Size</p>
-                      <p>{submission.size}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Condition</p>
-                      <p className="capitalize">{submission.condition.replace(/_/g, " ")}</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Requested Tokens</p>
-                      <p className="flex items-center gap-1">
-                        {submission.requestedTokens ? (
-                          <><Coins className="w-3.5 h-3.5 text-amber-500" /> {submission.requestedTokens}</>
-                        ) : (
-                          "Not set"
+          {filteredSubmissions.map((submission) => {
+            const images = getSubmissionImages(submission);
+            return (
+              <Card key={submission.id} className="p-4">
+                <div className="flex items-start gap-4">
+                  {/* Thumbnail preview */}
+                  <div className="flex-shrink-0">
+                    {images.length > 0 ? (
+                      <div className="relative w-24 h-24 rounded-lg overflow-hidden border bg-muted">
+                        <img
+                          src={images[0]}
+                          alt={`${submission.brand} ${submission.itemName}`}
+                          className="w-full h-full object-cover"
+                        />
+                        {images.length > 1 && (
+                          <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-1.5 py-0.5 rounded">
+                            +{images.length - 1}
+                          </div>
                         )}
-                      </p>
+                      </div>
+                    ) : (
+                      <div className="w-24 h-24 rounded-lg border bg-muted flex items-center justify-center">
+                        <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Details */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h3 className="font-semibold text-lg truncate">
+                        {submission.brand} - {submission.itemName}
+                      </h3>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium whitespace-nowrap ${getStatusColor(submission.status)}`}>
+                        {getStatusLabel(submission.status)}
+                      </span>
                     </div>
-                    <div>
-                      <p className="font-medium text-foreground">Submitted</p>
-                      <p>{new Date(submission.createdAt).toLocaleDateString()}</p>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-sm text-muted-foreground mb-3">
+                      <div>
+                        <p className="font-medium text-foreground">Type</p>
+                        <p className="capitalize">{submission.itemType}</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Size</p>
+                        <p>{submission.size}</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Condition</p>
+                        <p className="capitalize">{submission.condition.replace(/_/g, " ")}</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Requested Tokens</p>
+                        <p className="flex items-center gap-1">
+                          {submission.requestedTokens ? (
+                            <><Coins className="w-3.5 h-3.5 text-amber-500" /> {submission.requestedTokens}</>
+                          ) : (
+                            "Not set"
+                          )}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">Submitted</p>
+                        <p>{new Date(submission.createdAt).toLocaleDateString()}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Token Offer/Counter info */}
+                    <div className="flex flex-wrap gap-4 text-sm">
+                      {submission.tokenOffer && (
+                        <div className="flex items-center gap-2 bg-purple-50 px-3 py-1 rounded">
+                          <Coins className="h-4 w-4 text-amber-500" />
+                          <span className="text-purple-700">Our Offer: {submission.tokenOffer} tokens</span>
+                        </div>
+                      )}
+                      {submission.counterTokenOffer && (
+                        <div className="flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded">
+                          <MessageSquare className="h-4 w-4 text-indigo-600" />
+                          <span className="text-indigo-700">Counter: {submission.counterTokenOffer} tokens</span>
+                        </div>
+                      )}
+                      {submission.finalTokens && (
+                        <div className="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded">
+                          <Check className="h-4 w-4 text-amber-600" />
+                          <span className="text-amber-700">Final: {submission.finalTokens} tokens</span>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  
-                  {/* Token Offer/Counter info */}
-                  <div className="flex flex-wrap gap-4 text-sm">
-                    {submission.tokenOffer && (
-                      <div className="flex items-center gap-2 bg-purple-50 px-3 py-1 rounded">
-                        <Coins className="h-4 w-4 text-amber-500" />
-                        <span className="text-purple-700">Our Offer: {submission.tokenOffer} tokens</span>
+
+                  {/* Review Button */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openReviewDialog(submission)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    Review
+                  </Button>
+                </div>
+              </Card>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Review Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (!open) {
+          setSelectedSubmission(null);
+          setTokenOffer("");
+          setAdminNotes("");
+          setSelectedImageIndex(0);
+        }
+      }}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          {selectedSubmission && (
+            <>
+              <DialogHeader>
+                <DialogTitle>
+                  {selectedSubmission.brand} - {selectedSubmission.itemName}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-6">
+                {/* Images Gallery */}
+                {(() => {
+                  const images = getSubmissionImages(selectedSubmission);
+                  if (images.length === 0) {
+                    return (
+                      <div className="bg-muted rounded-lg p-8 text-center">
+                        <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
+                        <p className="text-muted-foreground">No images uploaded</p>
                       </div>
-                    )}
-                    {submission.counterTokenOffer && (
-                      <div className="flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded">
-                        <MessageSquare className="h-4 w-4 text-indigo-600" />
-                        <span className="text-indigo-700">Counter: {submission.counterTokenOffer} tokens</span>
+                    );
+                  }
+                  return (
+                    <div className="space-y-3">
+                      {/* Main Image */}
+                      <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
+                        <img
+                          src={images[selectedImageIndex]}
+                          alt={`${selectedSubmission.brand} ${selectedSubmission.itemName} - Image ${selectedImageIndex + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-sm px-2 py-1 rounded">
+                          {selectedImageIndex + 1} / {images.length}
+                        </div>
                       </div>
-                    )}
-                    {submission.finalTokens && (
-                      <div className="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded">
-                        <Check className="h-4 w-4 text-amber-600" />
-                        <span className="text-amber-700">Final: {submission.finalTokens} tokens</span>
-                      </div>
-                    )}
+                      
+                      {/* Thumbnails */}
+                      {images.length > 1 && (
+                        <div className="flex gap-2 justify-center">
+                          {images.map((url, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setSelectedImageIndex(idx)}
+                              className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                                idx === selectedImageIndex 
+                                  ? "border-primary ring-2 ring-primary/20" 
+                                  : "border-transparent hover:border-muted-foreground/30"
+                              }`}
+                            >
+                              <img
+                                src={url}
+                                alt={`Thumbnail ${idx + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                {/* Details */}
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="font-medium text-foreground">Brand</p>
+                    <p>{selectedSubmission.brand}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Type</p>
+                    <p className="capitalize">{selectedSubmission.itemType}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Size</p>
+                    <p>{selectedSubmission.size}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Condition</p>
+                    <p className="capitalize">{selectedSubmission.condition.replace(/_/g, " ")}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Original Price</p>
+                    <p>{selectedSubmission.originalPrice ? `$${selectedSubmission.originalPrice}` : "Not provided"}</p>
+                  </div>
+                  <div>
+                    <p className="font-medium text-foreground">Requested Tokens</p>
+                    <p className="font-semibold text-amber-600 flex items-center gap-1">
+                      {selectedSubmission.requestedTokens ? (
+                        <><Coins className="w-4 h-4" /> {selectedSubmission.requestedTokens}</>
+                      ) : (
+                        "Not provided"
+                      )}
+                    </p>
                   </div>
                 </div>
 
-                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setTokenOffer(submission.tokenOffer?.toString() || "");
-                        setAdminNotes(submission.adminNotes || "");
-                        setDialogOpen(true);
-                      }}
-                    >
-                      <Eye className="h-4 w-4 mr-2" />
-                      Review
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>
-                        {submission.brand} - {submission.itemName}
-                      </DialogTitle>
-                    </DialogHeader>
+                {selectedSubmission.description && (
+                  <div className="border-t pt-4">
+                    <p className="font-medium text-foreground mb-2">Description</p>
+                    <p className="text-sm text-muted-foreground">{selectedSubmission.description}</p>
+                  </div>
+                )}
 
-                    <div className="space-y-4">
-                      {/* Images */}
-                      <div className="grid grid-cols-2 gap-4">
-                        {[submission.image1Url, submission.image2Url, submission.image3Url, submission.image4Url]
-                          .filter((url): url is string => Boolean(url))
-                          .map((url, idx) => (
-                            <img
-                              key={idx}
-                              src={url}
-                              alt={`Submission image ${idx + 1}`}
-                              className="w-full h-48 object-cover rounded border"
-                            />
-                          ))}
+                {/* Customer Info */}
+                <div className="border-t pt-4">
+                  <p className="font-medium text-foreground mb-2">Customer Information</p>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Name</p>
+                      <p>{selectedSubmission.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Email</p>
+                      <p>{selectedSubmission.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Phone</p>
+                      <p>{selectedSubmission.phone || "Not provided"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Customer Response (if any) */}
+                {selectedSubmission.customerResponse && (
+                  <div className="border-t pt-4">
+                    <p className="font-medium text-foreground mb-2">Customer Response</p>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          selectedSubmission.customerResponse === 'accepted' ? 'bg-green-100 text-green-800' :
+                          selectedSubmission.customerResponse === 'rejected' ? 'bg-red-100 text-red-800' :
+                          selectedSubmission.customerResponse === 'counter' ? 'bg-indigo-100 text-indigo-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {selectedSubmission.customerResponse === 'counter' ? 'Counter Offer' : 
+                           selectedSubmission.customerResponse.charAt(0).toUpperCase() + selectedSubmission.customerResponse.slice(1)}
+                        </span>
+                        {selectedSubmission.customerRespondedAt && (
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(selectedSubmission.customerRespondedAt).toLocaleString()}
+                          </span>
+                        )}
                       </div>
-
-                      {/* Details */}
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <p className="font-medium text-foreground">Brand</p>
-                          <p>{submission.brand}</p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">Type</p>
-                          <p className="capitalize">{submission.itemType}</p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">Size</p>
-                          <p>{submission.size}</p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">Condition</p>
-                          <p className="capitalize">{submission.condition.replace(/_/g, " ")}</p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">Original Price</p>
-                          <p>{submission.originalPrice ? `$${submission.originalPrice}` : "Not provided"}</p>
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">Requested Tokens</p>
-                          <p className="font-semibold text-amber-600 flex items-center gap-1">
-                            {submission.requestedTokens ? (
-                              <><Coins className="w-4 h-4" /> {submission.requestedTokens}</>
-                            ) : (
-                              "Not provided"
-                            )}
-                          </p>
-                        </div>
-                      </div>
-
-                      {submission.description && (
-                        <div className="border-t pt-4">
-                          <p className="font-medium text-foreground mb-2">Description</p>
-                          <p className="text-sm text-muted-foreground">{submission.description}</p>
-                        </div>
+                      {selectedSubmission.counterTokenOffer && (
+                        <p className="text-sm flex items-center gap-2">
+                          <Coins className="w-4 h-4 text-amber-500" />
+                          <span>Counter offer: <strong>{selectedSubmission.counterTokenOffer} tokens</strong></span>
+                        </p>
                       )}
-
-                      {/* Customer Info */}
-                      <div className="border-t pt-4">
-                        <p className="font-medium text-foreground mb-2">Customer Information</p>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                          <div>
-                            <p className="text-muted-foreground">Name</p>
-                            <p>{submission.name}</p>
-                          </div>
-                          <div>
-                            <p className="text-muted-foreground">Email</p>
-                            <p>{submission.email}</p>
-                          </div>
-                          <div>
-                            <p className="text-muted-foreground">Phone</p>
-                            <p>{submission.phone || "Not provided"}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Customer Response (if any) */}
-                      {submission.customerResponse && (
-                        <div className="border-t pt-4">
-                          <p className="font-medium text-foreground mb-2">Customer Response</p>
-                          <div className="bg-gray-50 rounded-lg p-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className={`px-2 py-1 rounded text-xs font-medium ${
-                                submission.customerResponse === 'accepted' ? 'bg-green-100 text-green-800' :
-                                submission.customerResponse === 'rejected' ? 'bg-red-100 text-red-800' :
-                                submission.customerResponse === 'counter' ? 'bg-indigo-100 text-indigo-800' :
-                                'bg-gray-100 text-gray-800'
-                              }`}>
-                                {submission.customerResponse === 'counter' ? 'Counter Offer' : submission.customerResponse}
-                              </span>
-                              {submission.customerRespondedAt && (
-                                <span className="text-xs text-muted-foreground">
-                                  {new Date(submission.customerRespondedAt).toLocaleString()}
-                                </span>
-                              )}
-                            </div>
-                            {submission.counterTokenOffer && (
-                              <p className="text-lg font-semibold text-indigo-700 mb-2 flex items-center gap-2">
-                                <Coins className="w-5 h-5 text-amber-500" />
-                                Counter Offer: {submission.counterTokenOffer} tokens
-                              </p>
-                            )}
-                            {submission.customerNotes && (
-                              <p className="text-sm text-muted-foreground">{submission.customerNotes}</p>
-                            )}
-                          </div>
-                        </div>
+                      {selectedSubmission.customerNotes && (
+                        <p className="text-sm text-muted-foreground mt-2">
+                          "{selectedSubmission.customerNotes}"
+                        </p>
                       )}
+                    </div>
+                  </div>
+                )}
 
-                      {/* Admin Actions */}
-                      <div className="border-t pt-4 space-y-4">
-                        <p className="font-medium text-foreground">Admin Actions</p>
-
-                        <div>
-                          <label className="text-sm font-medium flex items-center gap-2">
-                            <Coins className="w-4 h-4 text-amber-500" />
-                            Token Offer (1 token = $1 NZD)
-                          </label>
-                          <Input
-                            type="number"
-                            placeholder="Enter token amount"
-                            value={tokenOffer}
-                            onChange={(e) => setTokenOffer(e.target.value)}
-                            min="1"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="text-sm font-medium">Admin Notes (internal)</label>
-                          <textarea
-                            placeholder="Add internal notes..."
-                            value={adminNotes}
-                            onChange={(e) => setAdminNotes(e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md text-sm"
-                            rows={3}
-                          />
-                        </div>
-
-                        <div className="flex gap-2 flex-wrap">
-                          {/* Show different actions based on status */}
-                          {(submission.status === 'pending' || submission.status === 'reviewing') && (
-                            <>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "reviewing", undefined, adminNotes, false)}
-                                disabled={updatingId === submission.id}
-                              >
-                                {updatingId === submission.id && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                                Mark Reviewing
-                              </Button>
-
-                              <Button
-                                className="bg-purple-600 hover:bg-purple-700"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "offer_made", tokenOffer, adminNotes, true)}
-                                disabled={updatingId === submission.id || !tokenOffer}
-                              >
-                                {updatingId === submission.id ? (
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                ) : (
-                                  <Mail className="h-4 w-4 mr-2" />
-                                )}
-                                Send Token Offer
-                              </Button>
-
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "rejected", undefined, adminNotes, false)}
-                                disabled={updatingId === submission.id}
-                              >
-                                {updatingId === submission.id ? (
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                ) : (
-                                  <X className="h-4 w-4 mr-2" />
-                                )}
-                                Reject
-                              </Button>
-                            </>
-                          )}
-
-                          {submission.status === 'offer_made' && (
-                            <p className="text-sm text-muted-foreground">Waiting for customer response...</p>
-                          )}
-
-                          {submission.status === 'counter_offered' && (
-                            <>
-                              <Button
-                                className="bg-green-600 hover:bg-green-700"
-                                size="sm"
-                                onClick={() => handleAcceptCounter(submission.id)}
-                                disabled={updatingId === submission.id}
-                              >
-                                {updatingId === submission.id ? (
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                ) : (
-                                  <Check className="h-4 w-4 mr-2" />
-                                )}
-                                Accept Counter ({submission.counterTokenOffer} tokens)
-                              </Button>
-
-                              <Button
-                                className="bg-purple-600 hover:bg-purple-700"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "offer_made", tokenOffer, adminNotes, true)}
-                                disabled={updatingId === submission.id || !tokenOffer}
-                              >
-                                {updatingId === submission.id ? (
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                ) : (
-                                  <Mail className="h-4 w-4 mr-2" />
-                                )}
-                                Send New Offer
-                              </Button>
-
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "rejected", undefined, adminNotes, false)}
-                                disabled={updatingId === submission.id}
-                              >
-                                <X className="h-4 w-4 mr-2" />
-                                Reject
-                              </Button>
-                            </>
-                          )}
-
-                          {(submission.status === 'offer_accepted' || submission.status === 'accepted') && (
-                            <>
-                              <Button
-                                className="bg-amber-600 hover:bg-amber-700"
-                                size="sm"
-                                onClick={() => handleStatusUpdate(submission.id, "completed", undefined, adminNotes, false)}
-                                disabled={updatingId === submission.id}
-                              >
-                                {updatingId === submission.id ? (
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                ) : (
-                                  <Coins className="h-4 w-4 mr-2" />
-                                )}
-                                Award Tokens & Complete
-                              </Button>
-                              <p className="text-sm text-muted-foreground w-full">
-                                Click to award {submission.finalTokens || submission.tokenOffer || 0} tokens to customer's account.
-                              </p>
-                            </>
-                          )}
-
-                          {submission.status === 'completed' && (
-                            <div className="flex items-center gap-2 text-amber-700 bg-amber-50 px-4 py-2 rounded-lg">
-                              <Coins className="h-5 w-5" />
-                              <span className="font-medium">
-                                {submission.finalTokens || submission.tokenOffer || 0} tokens awarded to customer
-                              </span>
-                            </div>
-                          )}
-                        </div>
+                {/* Admin Actions */}
+                <div className="border-t pt-4 space-y-4">
+                  <p className="font-medium text-foreground">Admin Actions</p>
+                  
+                  {/* Token Offer Input */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <label className="text-sm text-muted-foreground mb-1 block">Token Offer</label>
+                      <div className="flex items-center gap-2">
+                        <Coins className="w-5 h-5 text-amber-500" />
+                        <Input
+                          type="number"
+                          placeholder="Enter token amount"
+                          value={tokenOffer}
+                          onChange={(e) => setTokenOffer(e.target.value)}
+                          className="w-32"
+                        />
+                        <span className="text-sm text-muted-foreground">tokens (= ${tokenOffer || "0"} NZD)</span>
                       </div>
                     </div>
-                  </DialogContent>
-                </Dialog>
+                  </div>
+
+                  {/* Admin Notes */}
+                  <div>
+                    <label className="text-sm text-muted-foreground mb-1 block">Admin Notes (internal)</label>
+                    <Input
+                      placeholder="Add internal notes..."
+                      value={adminNotes}
+                      onChange={(e) => setAdminNotes(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {selectedSubmission.status === "pending" && (
+                      <>
+                        <Button
+                          onClick={() => handleStatusUpdate(selectedSubmission.id, "reviewing", undefined, adminNotes, false)}
+                          disabled={updatingId === selectedSubmission.id}
+                          variant="outline"
+                        >
+                          {updatingId === selectedSubmission.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                          Mark as Reviewing
+                        </Button>
+                        <Button
+                          onClick={() => handleStatusUpdate(selectedSubmission.id, "rejected", undefined, adminNotes, false)}
+                          disabled={updatingId === selectedSubmission.id}
+                          variant="destructive"
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    )}
+
+                    {(selectedSubmission.status === "pending" || selectedSubmission.status === "reviewing") && (
+                      <Button
+                        onClick={() => handleStatusUpdate(selectedSubmission.id, "offer_made", tokenOffer, adminNotes, true)}
+                        disabled={updatingId === selectedSubmission.id || !tokenOffer}
+                        className="bg-purple-600 hover:bg-purple-700"
+                      >
+                        {updatingId === selectedSubmission.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Mail className="h-4 w-4 mr-2" />}
+                        Send Token Offer
+                      </Button>
+                    )}
+
+                    {selectedSubmission.status === "counter_offered" && (
+                      <>
+                        <Button
+                          onClick={() => handleAcceptCounter(selectedSubmission.id)}
+                          disabled={updatingId === selectedSubmission.id}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          {updatingId === selectedSubmission.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Check className="h-4 w-4 mr-2" />}
+                          Accept Counter ({selectedSubmission.counterTokenOffer} tokens)
+                        </Button>
+                        <Button
+                          onClick={() => handleStatusUpdate(selectedSubmission.id, "offer_made", tokenOffer, adminNotes, true)}
+                          disabled={updatingId === selectedSubmission.id || !tokenOffer}
+                          className="bg-purple-600 hover:bg-purple-700"
+                        >
+                          <Mail className="h-4 w-4 mr-2" />
+                          Send New Offer
+                        </Button>
+                        <Button
+                          onClick={() => handleStatusUpdate(selectedSubmission.id, "rejected", undefined, adminNotes, false)}
+                          disabled={updatingId === selectedSubmission.id}
+                          variant="destructive"
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    )}
+
+                    {selectedSubmission.status === "offer_accepted" && (
+                      <Button
+                        onClick={() => handleStatusUpdate(selectedSubmission.id, "completed", undefined, adminNotes, false)}
+                        disabled={updatingId === selectedSubmission.id}
+                        className="bg-amber-600 hover:bg-amber-700"
+                      >
+                        {updatingId === selectedSubmission.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Coins className="h-4 w-4 mr-2" />}
+                        Award Tokens ({selectedSubmission.tokenOffer || selectedSubmission.finalTokens})
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
-            </Card>
-          ))}
-        </div>
-      )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 }

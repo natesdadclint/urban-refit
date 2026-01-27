@@ -1,0 +1,55 @@
+{
+  "query": "SELECT id, brand, itemName, image1Url, image2Url, image3Url, image4Url FROM sell_submissions LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, brand, itemName, image1Url, image2Url, image3Url, image4Url FROM sell_submissions LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "brand": "Nike",
+      "itemName": "Air Jordans Mid Top",
+      "image1Url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663045015687/E6pe8Nu22gDSQMdPz9Svd5/sell-submissions/I0a9xYegYsSCe4wKt8WTo-IMG_0417~3.JPG",
+      "image2Url": "NULL",
+      "image3Url": "NULL",
+      "image4Url": "NULL"
+    },
+    {
+      "id": "2",
+      "brand": "Nike",
+      "itemName": "Air Jordans Mid Top",
+      "image1Url": "NULL",
+      "image2Url": "NULL",
+      "image3Url": "NULL",
+      "image4Url": "NULL"
+    },
+    {
+      "id": "3",
+      "brand": "Nike",
+      "itemName": "Air Jordans Mid Top",
+      "image1Url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663045015687/E6pe8Nu22gDSQMdPz9Svd5/sell-submissions/n_nFbgcTRki7ajja0p6Fc-IMG_0417~2.JPG",
+      "image2Url": "NULL",
+      "image3Url": "NULL",
+      "image4Url": "NULL"
+    },
+    {
+      "id": "4",
+      "brand": "Nike",
+      "itemName": "Air Jordans Mid Top",
+      "image1Url": "NULL",
+      "image2Url": "NULL",
+      "image3Url": "NULL",
+      "image4Url": "NULL"
+    },
+    {
+      "id": "30001",
+      "brand": "Nike",
+      "itemName": "Air Jordans Mid Top",
+      "image1Url": "NULL",
+      "image2Url": "NULL",
+      "image3Url": "NULL",
+      "image4Url": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tbrand\titemName\timage1Url\timage2Url\timage3Url\timage4Url\n1\tNike\tAir Jordans Mid Top\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663045015687/E6pe8Nu22gDSQMdPz9Svd5/sell-submissions/I0a9xYegYsSCe4wKt8WTo-IMG_0417~3.JPG\tNULL\tNULL\tNULL\n2\tNike\tAir Jordans Mid Top\tNULL\tNULL\tNULL\tNULL\n3\tNike\tAir Jordans Mid Top\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663045015687/E6pe8Nu22gDSQMdPz9Svd5/sell-submissions/n_nFbgcTRki7ajja0p6Fc-IMG_0417~2.JPG\tNULL\tNULL\tNULL\n4\tNike\tAir Jordans Mid Top\tNULL\tNULL\tNULL\tNULL\n30001\tNike\tAir Jordans Mid Top\tNULL\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1557
+}

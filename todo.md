@@ -515,3 +515,7 @@
 
 ## Admin Panel Back Button Enhancement
 - [x] Enhanced admin back buttons with styled Button components for better visibility
+
+
+## Bug Fixes
+- [x] Fix sell submission images not displaying in admin view (customers upload images for token offers)
