@@ -519,3 +519,10 @@
 
 ## Bug Fixes
 - [x] Fix sell submission images not displaying in admin view (customers upload images for token offers)
+
+
+## Shipping Label Generation
+- [x] Generate prepaid shipping label when admin accepts sell submission
+- [x] Store shipping label URL in database
+- [x] Display shipping label in admin UI
+- [x] Email shipping label to customer automatically

@@ -525,6 +525,12 @@ export const sellSubmissions = mysqlTable("sell_submissions", {
   // Final agreed tokens
   finalTokens: int("finalTokens"), // Final agreed token amount
   
+  // Shipping information
+  shippingLabelUrl: text("shippingLabelUrl"),
+  trackingNumber: varchar("trackingNumber", { length: 255 }),
+  courierService: varchar("courierService", { length: 100 }),
+  labelSentAt: timestamp("labelSentAt"),
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

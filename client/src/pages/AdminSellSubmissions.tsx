@@ -494,6 +494,35 @@ export default function AdminSellSubmissions() {
                   </div>
                 </div>
 
+                {/* Shipping Label (if generated) */}
+                {selectedSubmission.shippingLabelUrl && (
+                  <div className="border-t pt-4">
+                    <p className="font-medium text-foreground mb-2">Shipping Label</p>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-blue-900">Prepaid Label Generated</p>
+                          <p className="text-sm text-blue-700">Tracking: {selectedSubmission.trackingNumber}</p>
+                          <p className="text-xs text-blue-600">{selectedSubmission.courierService}</p>
+                          {selectedSubmission.labelSentAt && (
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Sent: {new Date(selectedSubmission.labelSentAt).toLocaleString()}
+                            </p>
+                          )}
+                        </div>
+                        <a
+                          href={selectedSubmission.shippingLabelUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                        >
+                          View Label
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Customer Response (if any) */}
                 {selectedSubmission.customerResponse && (
                   <div className="border-t pt-4">

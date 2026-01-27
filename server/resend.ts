@@ -641,7 +641,7 @@ Personally curated pre-loved fashion that gives back to the community.
 }
 
 /**
- * Send email when admin accepts customer's counter offer
+ * Send email when admin accepts customer's offer (includes shipping label if available)
  */
 export async function sendSellOfferAcceptedEmail(options: {
   to: string;
@@ -650,11 +650,26 @@ export async function sendSellOfferAcceptedEmail(options: {
   brand: string;
   finalTokens: number;
   submissionId: number;
+  shippingLabelUrl?: string;
+  trackingNumber?: string;
 }): Promise<SendEmailResult> {
-  const { to, customerName, itemName, brand, finalTokens, submissionId } = options;
+  const { to, customerName, itemName, brand, finalTokens, submissionId, shippingLabelUrl, trackingNumber } = options;
   const firstName = customerName.split(" ")[0];
   const baseUrl = process.env.VITE_APP_URL || "https://urbanrefit.store";
   const submissionUrl = `${baseUrl}/my-submissions/${submissionId}`;
+  
+  // Build shipping label section if available
+  const shippingLabelSection = shippingLabelUrl ? `
+          <!-- Shipping Label -->
+          <div style="background-color: #eff6ff; border: 2px solid #3b82f6; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
+            <p style="color: #1e40af; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">📦 Your Prepaid Shipping Label</p>
+            <p style="color: #1e40af; font-size: 14px; margin: 0 0 16px 0;">Tracking: <strong>${trackingNumber || 'Pending'}</strong></p>
+            <a href="${shippingLabelUrl}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 14px; font-weight: 600;">
+              Download Shipping Label
+            </a>
+            <p style="color: #6b7280; font-size: 12px; margin: 16px 0 0 0;">Print this label and attach it to your package</p>
+          </div>
+  ` : '';
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -699,10 +714,12 @@ export async function sendSellOfferAcceptedEmail(options: {
             <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $1 NZD value)</p>
           </div>
           
+          ${shippingLabelSection}
+          
           <h2 style="color: #1c1917; font-size: 18px; margin: 24px 0 16px 0;">What Happens Next?</h2>
           
           <ol style="color: #1c1917; font-size: 14px; line-height: 1.8; padding-left: 20px; margin: 0 0 24px 0;">
-            <li style="margin-bottom: 8px;">We'll send you a prepaid shipping label via email within 24 hours.</li>
+            <li style="margin-bottom: 8px;">${shippingLabelUrl ? 'Download and print the shipping label above.' : "We'll send you a prepaid shipping label via email within 24 hours."}</li>
             <li style="margin-bottom: 8px;">Pack your item securely and drop it off at your nearest courier location.</li>
             <li style="margin-bottom: 8px;">Once we receive and verify the item, your tokens will be added to your account within 48 hours.</li>
           </ol>
@@ -739,6 +756,12 @@ export async function sendSellOfferAcceptedEmail(options: {
     </html>
   `;
 
+  const shippingLabelText = shippingLabelUrl ? `
+SHIPPING LABEL
+Tracking Number: ${trackingNumber || 'Pending'}
+Download your label: ${shippingLabelUrl}
+` : '';
+
   const textContent = `
 Hi ${firstName},
 
@@ -749,9 +772,9 @@ ${brand} - ${itemName}
 Submission #${submissionId}
 
 AGREED TOKEN AMOUNT: ${finalTokens} Tokens (1 token = $1 NZD value)
-
+${shippingLabelText}
 WHAT HAPPENS NEXT?
-1. We'll send you a prepaid shipping label via email within 24 hours.
+1. ${shippingLabelUrl ? 'Download and print the shipping label above.' : "We'll send you a prepaid shipping label via email within 24 hours."}
 2. Pack your item securely and drop it off at your nearest courier location.
 3. Once we receive and verify the item, your tokens will be added to your account within 48 hours.
 

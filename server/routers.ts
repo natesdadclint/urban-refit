@@ -1298,10 +1298,53 @@ Keep insights concise and actionable.`;
           }
         }
         
+        // Generate shipping label when status is set to accepted
+        if (input.status === 'accepted') {
+          const submission = await db.getSellSubmissionById(input.id);
+          if (submission) {
+            try {
+              const { generateShippingLabel } = await import('./shippingLabel');
+              const labelResult = await generateShippingLabel({
+                submissionId: input.id,
+                senderName: submission.name,
+                senderEmail: submission.email,
+                senderPhone: submission.phone || undefined,
+                itemDescription: `${submission.brand} ${submission.itemName} (${submission.size})`,
+                tokenValue: submission.finalTokens || submission.tokenOffer || 0,
+              });
+              
+              await db.updateSellSubmissionShipping(
+                input.id,
+                labelResult.labelUrl,
+                labelResult.trackingNumber,
+                labelResult.courierService
+              );
+              
+              console.log('[Sell] Generated shipping label:', labelResult.trackingNumber);
+              
+              // Send acceptance email with shipping label
+              const updatedSubmission = await db.getSellSubmissionById(input.id);
+              const { sendSellOfferAcceptedEmail } = await import('./resend');
+              await sendSellOfferAcceptedEmail({
+                to: submission.email,
+                customerName: submission.name,
+                itemName: submission.itemName,
+                brand: submission.brand,
+                finalTokens: submission.finalTokens || submission.tokenOffer || 0,
+                submissionId: input.id,
+                shippingLabelUrl: updatedSubmission?.shippingLabelUrl || undefined,
+                trackingNumber: updatedSubmission?.trackingNumber || undefined,
+              });
+            } catch (error) {
+              console.error('[Sell] Failed to generate shipping label or send email:', error);
+            }
+          }
+        }
+        
         return { success: true };
       }),
     
-    // Admin: Accept counter offer
+    // Admin: Accept counter offer (generates shipping label automatically)
     acceptCounterOffer: adminProcedure
       .input(z.object({
         id: z.number(),
@@ -1313,10 +1356,37 @@ Keep insights concise and actionable.`;
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to accept counter offer" });
         }
         
-        // Send acceptance email
+        // Get submission details for label generation
         const submission = await db.getSellSubmissionById(input.id);
         if (submission) {
+          // Generate shipping label
           try {
+            const { generateShippingLabel } = await import('./shippingLabel');
+            const labelResult = await generateShippingLabel({
+              submissionId: input.id,
+              senderName: submission.name,
+              senderEmail: submission.email,
+              senderPhone: submission.phone || undefined,
+              itemDescription: `${submission.brand} ${submission.itemName} (${submission.size})`,
+              tokenValue: submission.counterTokenOffer || submission.tokenOffer || 0,
+            });
+            
+            // Save shipping info to database
+            await db.updateSellSubmissionShipping(
+              input.id,
+              labelResult.labelUrl,
+              labelResult.trackingNumber,
+              labelResult.courierService
+            );
+            
+            console.log('[Sell] Generated shipping label:', labelResult.trackingNumber);
+          } catch (labelError) {
+            console.error('[Sell] Failed to generate shipping label:', labelError);
+          }
+          
+          // Send acceptance email with shipping label
+          try {
+            const updatedSubmission = await db.getSellSubmissionById(input.id);
             const { sendSellOfferAcceptedEmail } = await import('./resend');
             await sendSellOfferAcceptedEmail({
               to: submission.email,
@@ -1325,6 +1395,8 @@ Keep insights concise and actionable.`;
               brand: submission.brand,
               finalTokens: submission.counterTokenOffer || submission.tokenOffer || 0,
               submissionId: input.id,
+              shippingLabelUrl: updatedSubmission?.shippingLabelUrl || undefined,
+              trackingNumber: updatedSubmission?.trackingNumber || undefined,
             });
           } catch (emailError) {
             console.error('[Sell] Failed to send acceptance email:', emailError);

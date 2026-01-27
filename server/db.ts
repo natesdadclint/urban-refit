@@ -1246,6 +1246,32 @@ export async function respondToSellOffer(
   }
 }
 
+// Update shipping label info for sell submission
+export async function updateSellSubmissionShipping(
+  id: number,
+  shippingLabelUrl: string,
+  trackingNumber: string,
+  courierService: string
+): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    await db.update(sellSubmissions)
+      .set({
+        shippingLabelUrl,
+        trackingNumber,
+        courierService,
+        labelSentAt: new Date(),
+      })
+      .where(eq(sellSubmissions.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to update sell submission shipping:", error);
+    return false;
+  }
+}
+
 // Admin accepts counter offer
 export async function acceptCounterOffer(
   id: number,
