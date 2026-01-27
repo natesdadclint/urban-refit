@@ -82,12 +82,12 @@ export default function Layout({ children }: LayoutProps) {
         <div className="container">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-3">
-              <span className="w-2.5 h-2.5 rounded-full bg-black"></span>
-              <span className="text-3xl md:text-4xl font-serif font-bold tracking-tight">
+            <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0">
+              <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
+              <span className="text-xl sm:text-2xl md:text-4xl font-serif font-bold tracking-tight whitespace-nowrap">
                 Urban Refit
               </span>
-              <span className="w-2.5 h-2.5 rounded-full bg-black"></span>
+              <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -146,7 +146,7 @@ export default function Layout({ children }: LayoutProps) {
             </nav>
 
             {/* Right side actions */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
               {/* Notifications */}
               {isAuthenticated && <NotificationBell />}
               
@@ -229,7 +229,7 @@ export default function Layout({ children }: LayoutProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-2">
                   <Button asChild variant="outline" size="sm">
                     <Link href="/join">Join</Link>
                   </Button>
@@ -303,6 +303,18 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Sell
               </Link>
+              
+              {/* Mobile login buttons for non-authenticated users */}
+              {!isAuthenticated && (
+                <div className="flex gap-2 pt-4 mt-2 border-t border-border">
+                  <Button asChild variant="outline" className="flex-1">
+                    <Link href="/join" onClick={() => setMobileMenuOpen(false)}>Join</Link>
+                  </Button>
+                  <Button asChild className="flex-1">
+                    <a href={getLoginUrl()}>Sign In</a>
+                  </Button>
+                </div>
+              )}
             </nav>
           </div>
         )}
@@ -313,12 +325,12 @@ export default function Layout({ children }: LayoutProps) {
 
       {/* Footer */}
       <footer className="border-t border-border bg-secondary/30">
-        <div className="container py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="container py-8 sm:py-12">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {/* Brand and Newsletter */}
-            <div className="md:col-span-2">
-              <h3 className="text-xl font-serif font-semibold mb-4">Urban Refit</h3>
-              <p className="text-muted-foreground text-sm max-w-md mb-6">
+            <div className="col-span-2 md:col-span-2">
+              <h3 className="text-lg sm:text-xl font-serif font-semibold mb-3 sm:mb-4">Urban Refit</h3>
+              <p className="text-muted-foreground text-xs sm:text-sm max-w-md mb-4 sm:mb-6">
                 Curated Premium brands. We source the finest pre-loved fashion
                 from local thrift stores, giving garments a second life while supporting
                 our community partners.
@@ -374,8 +386,8 @@ export default function Layout({ children }: LayoutProps) {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Shop</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-sm sm:text-base mb-3 sm:mb-4">Shop</h4>
+              <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
                 {categories.slice(0, 5).map((cat) => (
                   <li key={cat.href}>
                     <Link href={cat.href} className="hover:text-primary transition-colors">
@@ -386,8 +398,8 @@ export default function Layout({ children }: LayoutProps) {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h4 className="font-semibold text-sm sm:text-base mb-3 sm:mb-4">Company</h4>
+              <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
                 <li>
                   <Link href="/reviews" className="hover:text-primary transition-colors">
                     Reviews

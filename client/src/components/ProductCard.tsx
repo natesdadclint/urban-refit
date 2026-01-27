@@ -59,8 +59,8 @@ export default function ProductCard({
           />
           {/* New Arrivals Badge */}
           {isNew && (
-            <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1 shadow-sm">
-              <Sparkles className="h-3 w-3" />
+            <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-primary text-primary-foreground px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md text-[10px] sm:text-xs font-medium flex items-center gap-0.5 sm:gap-1 shadow-sm">
+              <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
               New
             </div>
           )}
@@ -68,36 +68,36 @@ export default function ProductCard({
       </Link>
 
       {/* Product Info */}
-      <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-2">
+      <div className="p-2.5 sm:p-4">
+        <div className="flex items-start justify-between gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
           <div className="flex-1 min-w-0">
             {brand && (
-              <p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+              <p className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wider mb-0.5 sm:mb-1 truncate">
                 {brand}
               </p>
             )}
             <Link href={`/product/${id}`}>
-              <h3 className="font-medium text-sm leading-tight hover:text-primary transition-colors line-clamp-2">
+              <h3 className="font-medium text-xs sm:text-sm leading-tight hover:text-primary transition-colors line-clamp-2">
                 {name}
               </h3>
             </Link>
           </div>
-          <span className={`condition-badge ${condition} shrink-0`}>
+          <span className={`condition-badge ${condition} shrink-0 text-[9px] sm:text-xs px-1 sm:px-1.5 py-0.5`}>
             {conditionLabels[condition] || condition}
           </span>
         </div>
 
         {size && (
-          <p className="text-xs text-muted-foreground mb-3">Size: {size}</p>
+          <p className="text-[10px] sm:text-xs text-muted-foreground mb-2 sm:mb-3">Size: {size}</p>
         )}
 
         {/* Price and Buy Now */}
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-border">
-          <div>
-            <span className="text-lg font-serif font-semibold">
+        <div className="flex items-center justify-between gap-1.5 sm:gap-2 pt-1.5 sm:pt-2 border-t border-border">
+          <div className="min-w-0">
+            <span className="text-sm sm:text-lg font-serif font-semibold">
               NZ${parseFloat(salePrice).toFixed(2)}
             </span>
-            <span className="text-xs text-muted-foreground ml-1">incl. GST</span>
+            <span className="hidden sm:inline text-xs text-muted-foreground ml-1">incl. GST</span>
           </div>
           
           {onAddToCart && (
@@ -109,10 +109,11 @@ export default function ProductCard({
                 onAddToCart();
               }}
               disabled={isAddingToCart}
-              className="gap-1.5"
+              className="gap-1 sm:gap-1.5 text-xs sm:text-sm px-2 sm:px-3 h-7 sm:h-9"
             >
-              <ShoppingBag className="h-4 w-4" />
-              {isAddingToCart ? "Adding..." : "Buy Now"}
+              <ShoppingBag className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">{isAddingToCart ? "Adding..." : "Buy Now"}</span>
+              <span className="sm:hidden">{isAddingToCart ? "..." : "Buy"}</span>
             </Button>
           )}
         </div>

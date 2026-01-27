@@ -283,18 +283,18 @@ export default function Shop() {
 
   return (
     <Layout>
-      <div className="container py-8 md:py-12">
-        <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-          <ArrowLeft className="w-4 h-4" />
+      <div className="container py-6 sm:py-8 md:py-12">
+        <Link href="/" className="inline-flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base font-medium text-foreground hover:text-primary transition-colors mb-4 sm:mb-6 py-1.5 sm:py-2 px-2 sm:px-3 -ml-2 sm:-ml-3 rounded-lg hover:bg-accent/20">
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           Back to Home
         </Link>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div>
-            <h1 className="text-3xl md:text-4xl font-serif font-semibold mb-1">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold mb-0.5 sm:mb-1">
               {categoryTitle}
             </h1>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               {filteredProducts.length} {filteredProducts.length === 1 ? "item" : "items"} available
             </p>
           </div>
@@ -419,20 +419,20 @@ export default function Shop() {
             )}
             
             {isLoading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {[...Array(6)].map((_, i) => (
                   <div key={i} className="bg-card rounded-lg overflow-hidden border border-border">
                     <div className="aspect-square skeleton" />
-                    <div className="p-4 space-y-3">
-                      <div className="h-4 skeleton rounded w-1/3" />
-                      <div className="h-5 skeleton rounded w-2/3" />
-                      <div className="h-8 skeleton rounded w-full" />
+                    <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
+                      <div className="h-3 sm:h-4 skeleton rounded w-1/3" />
+                      <div className="h-4 sm:h-5 skeleton rounded w-2/3" />
+                      <div className="h-6 sm:h-8 skeleton rounded w-full" />
                     </div>
                   </div>
                 ))}
               </div>
             ) : filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
@@ -455,15 +455,15 @@ export default function Shop() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-secondary/30 rounded-lg">
-                <SlidersHorizontal className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-lg font-medium mb-2">Nothing matches those filters</p>
-                <p className="text-muted-foreground mb-4">
+              <div className="text-center py-10 sm:py-16 bg-secondary/30 rounded-lg px-4">
+                <SlidersHorizontal className="h-8 w-8 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
+                <p className="text-base sm:text-lg font-medium mb-1.5 sm:mb-2">Nothing matches those filters</p>
+                <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
                   {searchQuery
                     ? "We couldn't find anything matching your search. Try different keywords?"
                     : "Try loosening your filters – there might be hidden gems waiting."}
                 </p>
-                <Button variant="outline" onClick={clearAllFilters}>
+                <Button variant="outline" size="sm" onClick={clearAllFilters}>
                   Clear All Filters
                 </Button>
               </div>
