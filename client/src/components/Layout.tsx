@@ -303,6 +303,17 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Sell
               </Link>
+              <Link
+                href="/how-tokens-work"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  location === "/how-tokens-work"
+                    ? "bg-secondary text-secondary-foreground"
+                    : "text-muted-foreground hover:bg-secondary"
+                }`}
+              >
+                How Tokens Work
+              </Link>
               
               {/* Mobile login buttons for non-authenticated users */}
               {!isAuthenticated && (

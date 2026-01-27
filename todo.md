@@ -554,3 +554,7 @@
 - [x] Add sections for spending tokens (discounts, charity donations)
 - [x] Add visual diagram/infographic showing token flow
 - [x] Add navigation link to the page
+
+
+## Bug Fixes
+- [x] Add How Tokens Work link to sidebar navigation
