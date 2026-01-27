@@ -558,3 +558,5 @@
 
 ## Bug Fixes
 - [x] Add How Tokens Work link to sidebar navigation
+
+- [x] Add How Tokens Work link to desktop navigation header

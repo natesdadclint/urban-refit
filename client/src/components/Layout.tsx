@@ -143,6 +143,14 @@ export default function Layout({ children }: LayoutProps) {
               >
                 Sell
               </Link>
+              <Link
+                href="/how-tokens-work"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  location === "/how-tokens-work" ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                Tokens
+              </Link>
             </nav>
 
             {/* Right side actions */}
