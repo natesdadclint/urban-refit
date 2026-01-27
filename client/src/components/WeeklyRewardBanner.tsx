@@ -1,14 +1,43 @@
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { Gift, X, Sparkles, Heart } from "lucide-react";
+import { Gift, X, Sparkles, Heart, ShoppingBag, AlertTriangle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 
+// Simple browser fingerprint generator (non-invasive)
+function generateFingerprint(): string {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillText('fingerprint', 2, 2);
+  }
+  
+  const data = [
+    navigator.userAgent,
+    navigator.language,
+    screen.width + 'x' + screen.height,
+    new Date().getTimezoneOffset(),
+    canvas.toDataURL(),
+  ].join('|');
+  
+  // Simple hash
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    const char = data.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash).toString(36);
+}
+
 export function WeeklyRewardBanner() {
   const [isVisible, setIsVisible] = useState(false);
-  const [bannerState, setBannerState] = useState<'claim' | 'celebration' | 'donate'>('claim');
+  const [bannerState, setBannerState] = useState<'claim' | 'celebration' | 'donate' | 'needsPurchase' | 'needsAge' | 'suspicious'>('claim');
   const [, setLocation] = useLocation();
+  const [fingerprint] = useState(() => generateFingerprint());
   
   const { data: rewardStatus, isLoading } = trpc.customerProfile.getWeeklyRewardStatus.useQuery(
     undefined,
@@ -31,12 +60,20 @@ export function WeeklyRewardBanner() {
           setBannerState('donate');
         }, 2500);
         return () => clearTimeout(timer);
+      } else if (data.requiresPurchase) {
+        setBannerState('needsPurchase');
+      } else if (data.requiresAccountAge) {
+        setBannerState('needsAge');
+        toast.info(data.message);
+      } else if (data.isSuspicious) {
+        setBannerState('suspicious');
+        toast.error(data.message);
       } else {
         toast.info(data.message);
         setIsVisible(false);
       }
     },
-    onError: (error) => {
+    onError: () => {
       toast.error("Failed to claim reward. Please try again.");
     }
   });
@@ -53,6 +90,11 @@ export function WeeklyRewardBanner() {
     setLocation('/charities');
   };
 
+  const handleShopClick = () => {
+    setIsVisible(false);
+    setLocation('/shop');
+  };
+
   if (!isVisible || isLoading) return null;
 
   return (
@@ -62,7 +104,13 @@ export function WeeklyRewardBanner() {
           ? 'bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500' 
           : bannerState === 'donate'
             ? 'bg-gradient-to-r from-pink-500 via-rose-500 to-red-500'
-            : 'bg-gradient-to-r from-primary/90 to-primary'
+            : bannerState === 'needsPurchase'
+              ? 'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500'
+              : bannerState === 'needsAge'
+                ? 'bg-gradient-to-r from-slate-500 via-gray-500 to-zinc-500'
+                : bannerState === 'suspicious'
+                  ? 'bg-gradient-to-r from-red-600 via-red-700 to-red-800'
+                  : 'bg-gradient-to-r from-primary/90 to-primary'
       }`}>
         {/* Celebration sparkles */}
         {bannerState === 'celebration' && (
@@ -86,6 +134,12 @@ export function WeeklyRewardBanner() {
             <div className={`p-2 rounded-full ${bannerState === 'celebration' || bannerState === 'donate' ? 'bg-white/30' : 'bg-white/20'}`}>
               {bannerState === 'donate' ? (
                 <Heart className="h-6 w-6" />
+              ) : bannerState === 'needsPurchase' ? (
+                <ShoppingBag className="h-6 w-6" />
+              ) : bannerState === 'needsAge' ? (
+                <Clock className="h-6 w-6" />
+              ) : bannerState === 'suspicious' ? (
+                <AlertTriangle className="h-6 w-6" />
               ) : (
                 <Gift className={`h-6 w-6 ${bannerState === 'celebration' ? 'animate-bounce' : ''}`} />
               )}
@@ -128,6 +182,66 @@ export function WeeklyRewardBanner() {
                   </div>
                 </>
               )}
+
+              {bannerState === 'needsPurchase' && (
+                <>
+                  <h3 className="font-semibold text-lg">Unlock Weekly Rewards!</h3>
+                  <p className="text-sm text-white/90 mt-1">
+                    Make your first purchase to start earning 5 free tokens every week!
+                  </p>
+                  <div className="flex gap-2 mt-3">
+                    <Button
+                      onClick={handleShopClick}
+                      className="bg-white text-indigo-600 hover:bg-white/90 font-medium"
+                      size="sm"
+                    >
+                      Shop Now
+                    </Button>
+                    <Button
+                      onClick={() => setIsVisible(false)}
+                      variant="ghost"
+                      className="text-white hover:bg-white/20 font-medium"
+                      size="sm"
+                    >
+                      Later
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {bannerState === 'needsAge' && (
+                <>
+                  <h3 className="font-semibold text-lg">Almost There!</h3>
+                  <p className="text-sm text-white/90 mt-1">
+                    Your account needs to be 7 days old to claim weekly rewards. Check back soon!
+                  </p>
+                  <Button
+                    onClick={() => setIsVisible(false)}
+                    variant="ghost"
+                    className="mt-3 text-white hover:bg-white/20 font-medium"
+                    size="sm"
+                  >
+                    Got It
+                  </Button>
+                </>
+              )}
+
+              {bannerState === 'suspicious' && (
+                <>
+                  <h3 className="font-semibold text-lg">Account Under Review</h3>
+                  <p className="text-sm text-white/90 mt-1">
+                    Please contact support if you believe this is an error.
+                  </p>
+                  <Button
+                    onClick={() => setIsVisible(false)}
+                    variant="ghost"
+                    className="mt-3 text-white hover:bg-white/20 font-medium"
+                    size="sm"
+                  >
+                    Close
+                  </Button>
+                </>
+              )}
               
               {bannerState === 'claim' && (
                 <>
@@ -136,7 +250,7 @@ export function WeeklyRewardBanner() {
                     Claim your 5 free tokens for logging in this week!
                   </p>
                   <Button
-                    onClick={() => claimReward.mutate()}
+                    onClick={() => claimReward.mutate({ fingerprint })}
                     disabled={claimReward.isPending}
                     className="mt-3 bg-white text-primary hover:bg-white/90 font-medium"
                     size="sm"

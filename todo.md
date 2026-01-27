@@ -560,3 +560,11 @@
 - [x] Add How Tokens Work link to sidebar navigation
 
 - [x] Add How Tokens Work link to desktop navigation header
+
+
+## Anti-Abuse Measures for Token System
+- [x] Require purchase history before earning weekly login tokens
+- [x] Track device fingerprint to detect multiple accounts
+- [x] Add rate limiting for token claims (built into weekly check)
+- [x] Flag suspicious accounts for admin review
+- [x] Add minimum account age requirement for weekly rewards (7 days)

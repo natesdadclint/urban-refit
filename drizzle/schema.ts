@@ -238,6 +238,13 @@ export const customerProfiles = mysqlTable("customer_profiles", {
   // Weekly login reward tracking
   lastWeeklyReward: timestamp("lastWeeklyReward"),
   
+  // Anti-abuse tracking
+  deviceFingerprint: varchar("deviceFingerprint", { length: 255 }), // Browser fingerprint hash
+  lastKnownIp: varchar("lastKnownIp", { length: 45 }), // IPv4 or IPv6
+  weeklyRewardClaimCount: int("weeklyRewardClaimCount").default(0).notNull(), // Total weekly rewards claimed
+  suspiciousActivityFlag: boolean("suspiciousActivityFlag").default(false).notNull(), // Flagged for review
+  suspiciousActivityReason: text("suspiciousActivityReason"), // Reason for flag
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

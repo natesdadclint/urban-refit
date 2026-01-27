@@ -498,8 +498,15 @@ export const appRouter = router({
     
     // Weekly login reward endpoints
     claimWeeklyReward: protectedProcedure
-      .mutation(async ({ ctx }) => {
-        return db.checkAndAwardWeeklyLoginReward(ctx.user.id);
+      .input(z.object({
+        fingerprint: z.string().optional(),
+      }).optional())
+      .mutation(async ({ ctx, input }) => {
+        // Get IP from request headers
+        const ip = ctx.req?.headers['x-forwarded-for']?.toString().split(',')[0] || 
+                   ctx.req?.socket?.remoteAddress || 
+                   undefined;
+        return db.checkAndAwardWeeklyLoginReward(ctx.user.id, input?.fingerprint, ip);
       }),
     
     getWeeklyRewardStatus: protectedProcedure

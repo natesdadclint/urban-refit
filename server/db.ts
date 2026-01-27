@@ -1,4 +1,4 @@
-import { eq, and, desc, asc, sql, inArray, gte, lte, isNotNull } from "drizzle-orm";
+import { eq, and, desc, asc, sql, inArray, gte, lte, isNotNull, ne } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { 
   InsertUser, users, 
@@ -1863,6 +1863,8 @@ export async function getStoreDetailedAnalytics(thriftStoreId: number): Promise<
 
 const WEEKLY_REWARD_TOKENS = 5;
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+const MIN_ACCOUNT_AGE_DAYS = 7; // Account must be at least 7 days old
+const MIN_PURCHASES_FOR_REWARD = 1; // Must have at least 1 completed purchase
 
 export interface WeeklyRewardResult {
   awarded: boolean;
@@ -1870,9 +1872,76 @@ export interface WeeklyRewardResult {
   newBalance: string;
   message: string;
   nextEligibleDate?: Date;
+  requiresPurchase?: boolean;
+  requiresAccountAge?: boolean;
+  isSuspicious?: boolean;
 }
 
-export async function checkAndAwardWeeklyLoginReward(userId: number): Promise<WeeklyRewardResult> {
+// Check if user has completed at least one purchase
+export async function getUserCompletedOrderCount(userId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const result = await db.select({ count: sql<number>`count(*)` })
+    .from(orders)
+    .where(and(
+      eq(orders.userId, userId),
+      inArray(orders.status, ['paid', 'shipped', 'delivered'])
+    ));
+  
+  return result[0]?.count || 0;
+}
+
+// Check for suspicious activity - same device fingerprint across multiple accounts
+export async function checkDeviceFingerprintAbuse(fingerprint: string, userId: number): Promise<{ isAbuse: boolean; otherAccounts: number }> {
+  const db = await getDb();
+  if (!db || !fingerprint) return { isAbuse: false, otherAccounts: 0 };
+  
+  const result = await db.select({ count: sql<number>`count(distinct userId)` })
+    .from(customerProfiles)
+    .where(and(
+      eq(customerProfiles.deviceFingerprint, fingerprint),
+      ne(customerProfiles.userId, userId)
+    ));
+  
+  const otherAccounts = result[0]?.count || 0;
+  return { isAbuse: otherAccounts >= 2, otherAccounts }; // Flag if 3+ accounts share same fingerprint
+}
+
+// Update device fingerprint and IP for tracking
+export async function updateAntiAbuseTracking(userId: number, fingerprint?: string, ip?: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  const updates: Partial<InsertCustomerProfile> = {};
+  if (fingerprint) updates.deviceFingerprint = fingerprint;
+  if (ip) updates.lastKnownIp = ip;
+  
+  if (Object.keys(updates).length > 0) {
+    await db.update(customerProfiles)
+      .set(updates)
+      .where(eq(customerProfiles.userId, userId));
+  }
+}
+
+// Flag account for suspicious activity
+export async function flagSuspiciousAccount(userId: number, reason: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  await db.update(customerProfiles)
+    .set({
+      suspiciousActivityFlag: true,
+      suspiciousActivityReason: reason
+    })
+    .where(eq(customerProfiles.userId, userId));
+}
+
+export async function checkAndAwardWeeklyLoginReward(
+  userId: number, 
+  fingerprint?: string, 
+  ipAddress?: string
+): Promise<WeeklyRewardResult> {
   const db = await getDb();
   if (!db) {
     return { awarded: false, tokensAwarded: 0, newBalance: "0", message: "Database not available" };
@@ -1883,6 +1952,63 @@ export async function checkAndAwardWeeklyLoginReward(userId: number): Promise<We
     let profile = await getOrCreateCustomerProfile(userId);
     if (!profile) {
       return { awarded: false, tokensAwarded: 0, newBalance: "0", message: "Could not create profile" };
+    }
+
+    // Update tracking info
+    if (fingerprint || ipAddress) {
+      await updateAntiAbuseTracking(userId, fingerprint, ipAddress);
+    }
+
+    // ANTI-ABUSE CHECK 1: Account flagged as suspicious
+    if (profile.suspiciousActivityFlag) {
+      return {
+        awarded: false,
+        tokensAwarded: 0,
+        newBalance: profile.tokenBalance,
+        message: "Account under review. Please contact support if you believe this is an error.",
+        isSuspicious: true
+      };
+    }
+
+    // ANTI-ABUSE CHECK 2: Device fingerprint abuse detection
+    if (fingerprint) {
+      const abuseCheck = await checkDeviceFingerprintAbuse(fingerprint, userId);
+      if (abuseCheck.isAbuse) {
+        await flagSuspiciousAccount(userId, `Multiple accounts detected sharing device fingerprint. Other accounts: ${abuseCheck.otherAccounts}`);
+        return {
+          awarded: false,
+          tokensAwarded: 0,
+          newBalance: profile.tokenBalance,
+          message: "Suspicious activity detected. Your account has been flagged for review.",
+          isSuspicious: true
+        };
+      }
+    }
+
+    // ANTI-ABUSE CHECK 3: Account age requirement
+    const accountAge = Date.now() - new Date(profile.createdAt).getTime();
+    const accountAgeDays = accountAge / (24 * 60 * 60 * 1000);
+    if (accountAgeDays < MIN_ACCOUNT_AGE_DAYS) {
+      const daysRemaining = Math.ceil(MIN_ACCOUNT_AGE_DAYS - accountAgeDays);
+      return {
+        awarded: false,
+        tokensAwarded: 0,
+        newBalance: profile.tokenBalance,
+        message: `Your account must be at least ${MIN_ACCOUNT_AGE_DAYS} days old to claim weekly rewards. ${daysRemaining} day(s) remaining.`,
+        requiresAccountAge: true
+      };
+    }
+
+    // ANTI-ABUSE CHECK 4: Purchase history requirement
+    const orderCount = await getUserCompletedOrderCount(userId);
+    if (orderCount < MIN_PURCHASES_FOR_REWARD) {
+      return {
+        awarded: false,
+        tokensAwarded: 0,
+        newBalance: profile.tokenBalance,
+        message: "Complete your first purchase to unlock weekly login rewards! Shop now to start earning tokens.",
+        requiresPurchase: true
+      };
     }
 
     const now = new Date();
@@ -1906,13 +2032,15 @@ export async function checkAndAwardWeeklyLoginReward(userId: number): Promise<We
     // Award tokens
     const newBalance = (parseFloat(profile.tokenBalance) + WEEKLY_REWARD_TOKENS).toFixed(2);
     const newTotalEarned = (parseFloat(profile.totalTokensEarned) + WEEKLY_REWARD_TOKENS).toFixed(2);
+    const newClaimCount = (profile.weeklyRewardClaimCount || 0) + 1;
 
-    // Update profile with new balance and last reward date
+    // Update profile with new balance, last reward date, and claim count
     await db.update(customerProfiles)
       .set({
         tokenBalance: newBalance,
         totalTokensEarned: newTotalEarned,
-        lastWeeklyReward: now
+        lastWeeklyReward: now,
+        weeklyRewardClaimCount: newClaimCount
       })
       .where(eq(customerProfiles.userId, userId));
 
