@@ -546,3 +546,11 @@
 - [x] Fix ProductCard for mobile (smaller padding, text, button sizes)
 - [x] Fix Shop page for mobile (2-column grid, smaller header)
 - [x] Add mobile login buttons to hamburger menu
+
+
+## How Tokens Work Page
+- [x] Create How Tokens Work page explaining circular economy model
+- [x] Add sections for earning tokens (weekly login, sell items, referrals)
+- [x] Add sections for spending tokens (discounts, charity donations)
+- [x] Add visual diagram/infographic showing token flow
+- [x] Add navigation link to the page

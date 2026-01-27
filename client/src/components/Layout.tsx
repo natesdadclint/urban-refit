@@ -416,6 +416,11 @@ export default function Layout({ children }: LayoutProps) {
                   </Link>
                 </li>
                 <li>
+                  <Link href="/how-tokens-work" className="hover:text-primary transition-colors">
+                    How Tokens Work
+                  </Link>
+                </li>
+                <li>
                   <Link href="/contact" className="hover:text-primary transition-colors">
                     Contact
                   </Link>
