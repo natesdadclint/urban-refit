@@ -568,3 +568,11 @@
 - [x] Add rate limiting for token claims (built into weekly check)
 - [x] Flag suspicious accounts for admin review
 - [x] Add minimum account age requirement for weekly rewards (7 days)
+
+
+## Store Performance Metrics
+- [x] Track revenue generated per thrift store (from sold products)
+- [x] Link store revenue to total payouts made to that store
+- [x] Calculate profit margin per store (revenue - payouts)
+- [x] Create admin dashboard showing store performance metrics
+- [x] Add performance ratio metric (revenue/payout) for partnership scaling

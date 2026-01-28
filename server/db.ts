@@ -2487,3 +2487,202 @@ export async function createTokenNotification(userId: number, amount: number, re
     link: "/profile"
   });
 }
+
+
+// ============ STORE PERFORMANCE METRICS ============
+
+export interface StorePerformanceMetrics {
+  storeId: number;
+  storeName: string;
+  city: string | null;
+  
+  // Revenue metrics (from sold products)
+  totalRevenue: number;           // Sum of sale prices from sold items
+  totalCost: number;              // Sum of original costs from sold items
+  grossProfit: number;            // Revenue - Cost
+  profitMargin: number;           // (Gross Profit / Revenue) * 100
+  
+  // Payout metrics
+  totalPayouts: number;           // Total amount paid to this store
+  pendingPayouts: number;         // Amount pending payment
+  
+  // Performance ratio (key metric for partnership scaling)
+  revenueToPayoutRatio: number;   // Revenue / Total Payouts - higher = better performing
+  netContribution: number;        // Revenue - Total Payouts - what Urban Refit keeps
+  contributionMargin: number;     // (Net Contribution / Revenue) * 100
+  
+  // Volume metrics
+  itemsSold: number;
+  itemsAvailable: number;
+  avgRevenuePerItem: number;
+  avgPayoutPerItem: number;
+  
+  // Partnership tier recommendation
+  partnershipTier: 'platinum' | 'gold' | 'silver' | 'bronze' | 'review';
+  tierReason: string;
+}
+
+export async function getStorePerformanceMetrics(): Promise<StorePerformanceMetrics[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Get all active thrift stores
+  const stores = await db.select({
+    id: thriftStores.id,
+    name: thriftStores.name,
+    city: thriftStores.city,
+    totalPayout: thriftStores.totalPayout,
+  })
+  .from(thriftStores)
+  .where(eq(thriftStores.isActive, true));
+
+  const results: StorePerformanceMetrics[] = [];
+
+  for (const store of stores) {
+    // Get revenue and cost from sold products
+    const salesMetrics = await db.select({
+      totalRevenue: sql<number>`COALESCE(SUM(${products.salePrice}), 0)`,
+      totalCost: sql<number>`COALESCE(SUM(${products.originalCost}), 0)`,
+      itemsSold: sql<number>`COUNT(*)`,
+    })
+    .from(products)
+    .where(and(
+      eq(products.thriftStoreId, store.id),
+      eq(products.status, "sold")
+    ));
+
+    // Get available items count
+    const availableMetrics = await db.select({
+      itemsAvailable: sql<number>`COUNT(*)`,
+    })
+    .from(products)
+    .where(and(
+      eq(products.thriftStoreId, store.id),
+      eq(products.status, "available")
+    ));
+
+    // Get pending payouts
+    const pendingPayoutsResult = await db.select({
+      pendingAmount: sql<number>`COALESCE(SUM(${payouts.amount}), 0)`,
+    })
+    .from(payouts)
+    .where(and(
+      eq(payouts.thriftStoreId, store.id),
+      eq(payouts.status, "pending")
+    ));
+
+    const totalRevenue = Number(salesMetrics[0]?.totalRevenue) || 0;
+    const totalCost = Number(salesMetrics[0]?.totalCost) || 0;
+    const itemsSold = Number(salesMetrics[0]?.itemsSold) || 0;
+    const itemsAvailable = Number(availableMetrics[0]?.itemsAvailable) || 0;
+    const totalPayouts = Number(store.totalPayout) || 0;
+    const pendingPayouts = Number(pendingPayoutsResult[0]?.pendingAmount) || 0;
+    
+    const grossProfit = totalRevenue - totalCost;
+    const profitMargin = totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0;
+    
+    // Key metrics for partnership scaling
+    const revenueToPayoutRatio = totalPayouts > 0 ? totalRevenue / totalPayouts : totalRevenue > 0 ? Infinity : 0;
+    const netContribution = totalRevenue - totalPayouts;
+    const contributionMargin = totalRevenue > 0 ? (netContribution / totalRevenue) * 100 : 0;
+    
+    const avgRevenuePerItem = itemsSold > 0 ? totalRevenue / itemsSold : 0;
+    const avgPayoutPerItem = itemsSold > 0 ? totalPayouts / itemsSold : 0;
+
+    // Determine partnership tier based on performance
+    let partnershipTier: StorePerformanceMetrics['partnershipTier'];
+    let tierReason: string;
+
+    if (itemsSold < 5) {
+      partnershipTier = 'review';
+      tierReason = 'Insufficient sales data (< 5 items sold)';
+    } else if (revenueToPayoutRatio >= 10 && contributionMargin >= 80) {
+      partnershipTier = 'platinum';
+      tierReason = `Exceptional performance: ${revenueToPayoutRatio.toFixed(1)}x revenue/payout ratio, ${contributionMargin.toFixed(1)}% contribution margin`;
+    } else if (revenueToPayoutRatio >= 7 && contributionMargin >= 70) {
+      partnershipTier = 'gold';
+      tierReason = `Strong performance: ${revenueToPayoutRatio.toFixed(1)}x revenue/payout ratio, ${contributionMargin.toFixed(1)}% contribution margin`;
+    } else if (revenueToPayoutRatio >= 5 && contributionMargin >= 60) {
+      partnershipTier = 'silver';
+      tierReason = `Good performance: ${revenueToPayoutRatio.toFixed(1)}x revenue/payout ratio, ${contributionMargin.toFixed(1)}% contribution margin`;
+    } else if (revenueToPayoutRatio >= 3 && contributionMargin >= 40) {
+      partnershipTier = 'bronze';
+      tierReason = `Acceptable performance: ${revenueToPayoutRatio.toFixed(1)}x revenue/payout ratio, ${contributionMargin.toFixed(1)}% contribution margin`;
+    } else {
+      partnershipTier = 'review';
+      tierReason = `Below target: ${revenueToPayoutRatio.toFixed(1)}x revenue/payout ratio, ${contributionMargin.toFixed(1)}% contribution margin - consider renegotiating terms`;
+    }
+
+    results.push({
+      storeId: store.id,
+      storeName: store.name,
+      city: store.city,
+      totalRevenue,
+      totalCost,
+      grossProfit,
+      profitMargin,
+      totalPayouts,
+      pendingPayouts,
+      revenueToPayoutRatio,
+      netContribution,
+      contributionMargin,
+      itemsSold,
+      itemsAvailable,
+      avgRevenuePerItem,
+      avgPayoutPerItem,
+      partnershipTier,
+      tierReason,
+    });
+  }
+
+  // Sort by net contribution descending (most valuable partners first)
+  return results.sort((a, b) => b.netContribution - a.netContribution);
+}
+
+// Summary metrics for all stores
+export interface StorePerformanceSummary {
+  totalStores: number;
+  totalRevenue: number;
+  totalPayouts: number;
+  totalNetContribution: number;
+  avgRevenueToPayoutRatio: number;
+  avgContributionMargin: number;
+  tierBreakdown: {
+    platinum: number;
+    gold: number;
+    silver: number;
+    bronze: number;
+    review: number;
+  };
+}
+
+export async function getStorePerformanceSummary(): Promise<StorePerformanceSummary> {
+  const metrics = await getStorePerformanceMetrics();
+  
+  const totalStores = metrics.length;
+  const totalRevenue = metrics.reduce((sum, m) => sum + m.totalRevenue, 0);
+  const totalPayouts = metrics.reduce((sum, m) => sum + m.totalPayouts, 0);
+  const totalNetContribution = metrics.reduce((sum, m) => sum + m.netContribution, 0);
+  
+  // Calculate weighted averages (by revenue)
+  const avgRevenueToPayoutRatio = totalPayouts > 0 ? totalRevenue / totalPayouts : 0;
+  const avgContributionMargin = totalRevenue > 0 ? (totalNetContribution / totalRevenue) * 100 : 0;
+  
+  const tierBreakdown = {
+    platinum: metrics.filter(m => m.partnershipTier === 'platinum').length,
+    gold: metrics.filter(m => m.partnershipTier === 'gold').length,
+    silver: metrics.filter(m => m.partnershipTier === 'silver').length,
+    bronze: metrics.filter(m => m.partnershipTier === 'bronze').length,
+    review: metrics.filter(m => m.partnershipTier === 'review').length,
+  };
+  
+  return {
+    totalStores,
+    totalRevenue,
+    totalPayouts,
+    totalNetContribution,
+    avgRevenueToPayoutRatio,
+    avgContributionMargin,
+    tierBreakdown,
+  };
+}

@@ -97,6 +97,15 @@ export const appRouter = router({
         await db.updateThriftStore(id, data);
         return { success: true };
       }),
+    
+    // Store performance metrics for partnership scaling
+    performanceMetrics: adminProcedure.query(async () => {
+      return db.getStorePerformanceMetrics();
+    }),
+    
+    performanceSummary: adminProcedure.query(async () => {
+      return db.getStorePerformanceSummary();
+    }),
   }),
 
   // ============ PRODUCT ROUTES ============
