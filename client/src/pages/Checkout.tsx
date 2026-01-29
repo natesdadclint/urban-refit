@@ -516,7 +516,7 @@ export default function Checkout() {
                   </div>
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
-                    10% of your purchase supports our thrift store partners
+                    5% of your purchase supports our thrift store partners
                   </p>
                 </div>
               </div>

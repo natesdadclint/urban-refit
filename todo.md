@@ -596,3 +596,8 @@
 - [x] Fix header bleed - Sign button cut off causing horizontal overflow
 
 - [x] Fix order_items insert failing when thriftStoreId is null
+
+- [ ] Change thrift store payout from 10% to 5%
+
+## Pricing Updates
+- [x] Change thrift store payout percentage from 10% to 5% across all code, tests, and UI text

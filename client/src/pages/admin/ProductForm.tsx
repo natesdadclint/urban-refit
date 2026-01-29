@@ -255,7 +255,7 @@ export default function AdminProductForm() {
   const originalCost = parseFloat(formData.originalCost) || 0;
   const markupPercentage = parseFloat(formData.markupPercentage) || 0;
   const salePrice = originalCost * (1 + markupPercentage / 100);
-  const thriftStorePayout = salePrice * 0.1;
+  const thriftStorePayout = salePrice * 0.05;
   const profit = salePrice - originalCost - thriftStorePayout;
 
   const isSubmitting = createProduct.isPending || updateProduct.isPending || isUploading;
@@ -532,7 +532,7 @@ export default function AdminProductForm() {
                       <span className="font-semibold">NZ${salePrice.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Thrift Store (10%)</span>
+                      <span className="text-muted-foreground">Thrift Store (5%)</span>
                       <span className="text-orange-600">-NZ${thriftStorePayout.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between text-sm pt-2 border-t border-border">
@@ -568,7 +568,7 @@ export default function AdminProductForm() {
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-muted-foreground mt-1">
-                    This store will receive 10% of the sale price
+                    This store will receive 5% of the sale price
                   </p>
                 </div>
               </CardContent>

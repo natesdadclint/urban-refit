@@ -322,7 +322,7 @@ export default function AdminPayouts() {
       <div className="mt-6 p-4 bg-secondary/50 rounded-lg">
         <h4 className="font-medium mb-2">About Thrift Store Payouts</h4>
         <p className="text-sm text-muted-foreground">
-          Each thrift store partner receives 10% of the sale price for garments sourced from their store.
+          Each thrift store partner receives 5% of the sale price for garments sourced from their store.
           Create payouts when you're ready to transfer funds to your partners. Track pending and completed
           payouts here.
         </p>

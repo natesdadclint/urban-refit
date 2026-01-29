@@ -126,20 +126,20 @@ describe("Urban Refit E-Commerce Backend", () => {
       expect(expectedSalePrice).toBe(30);
     });
 
-    it("calculates thrift store payout as 10% of sale price", () => {
+    it("calculates thrift store payout as 5% of sale price", () => {
       const salePrice = 30;
-      const expectedPayout = salePrice * 0.10; // 3
+      const expectedPayout = salePrice * 0.05; // 1.5
       
-      expect(expectedPayout).toBe(3);
+      expect(expectedPayout).toBe(1.5);
     });
 
     it("calculates profit correctly after payout", () => {
       const originalCost = 20;
       const salePrice = 30;
-      const thriftStorePayout = salePrice * 0.10; // 3
-      const profit = salePrice - originalCost - thriftStorePayout; // 7
+      const thriftStorePayout = salePrice * 0.05; // 1.5
+      const profit = salePrice - originalCost - thriftStorePayout; // 8.5
       
-      expect(profit).toBe(7);
+      expect(profit).toBe(8.5);
     });
 
     it("handles various markup percentages", () => {
@@ -253,12 +253,12 @@ describe("Urban Refit E-Commerce Backend", () => {
   });
 
   describe("Thrift Store Payout Calculation", () => {
-    it("calculates 10% payout for single item", () => {
+    it("calculates 5% payout for single item", () => {
       const salePrice = 50;
-      const payoutPercentage = 0.10;
+      const payoutPercentage = 0.05;
       const payout = salePrice * payoutPercentage;
       
-      expect(payout).toBe(5);
+      expect(payout).toBe(2.5);
     });
 
     it("calculates total payout for multiple items", () => {
@@ -269,18 +269,18 @@ describe("Urban Refit E-Commerce Backend", () => {
       ];
       
       const totalPayout = items.reduce(
-        (sum, item) => sum + item.salePrice * 0.10,
+        (sum, item) => sum + item.salePrice * 0.05,
         0
       );
       
-      expect(totalPayout).toBe(15.5);
+      expect(totalPayout).toBe(7.75);
     });
 
     it("handles decimal prices correctly", () => {
       const salePrice = 29.99;
-      const payout = salePrice * 0.10;
+      const payout = salePrice * 0.05;
       
-      expect(payout).toBeCloseTo(2.999, 2);
+      expect(payout).toBeCloseTo(1.4995, 2);
     });
   });
 

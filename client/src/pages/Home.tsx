@@ -44,7 +44,7 @@ export default function Home() {
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-semibold leading-tight mb-3 md:mb-4 text-foreground">
             </h1>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-lg">
-              Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 10% of every sale going back to the community.
+              Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 5% of every sale going back to the community.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Button asChild size="lg" className="gap-2">
@@ -83,7 +83,7 @@ export default function Home() {
               <div className="min-w-0">
                 <h3 className="font-semibold text-sm sm:text-base mb-0.5 sm:mb-1">Community Partners</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  10% of every sale goes back to our thrift store partners.
+                  5% of every sale goes back to our thrift store partners.
                 </p>
               </div>
             </div>

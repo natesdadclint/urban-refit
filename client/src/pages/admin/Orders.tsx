@@ -278,10 +278,10 @@ export default function AdminOrders() {
                 <div className="text-sm">
                   <div className="flex justify-between text-orange-600">
                     <span>Total Payout Due</span>
-                    <span>NZ${(parseFloat(selectedOrder.subtotal) * 0.1).toFixed(2)}</span>
+                    <span>NZ${(parseFloat(selectedOrder.subtotal) * 0.05).toFixed(2)}</span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    10% of subtotal goes to partner thrift stores
+                    5% of subtotal goes to partner thrift stores
                   </p>
                 </div>
               </div>
