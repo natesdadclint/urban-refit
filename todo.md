@@ -623,3 +623,6 @@
 
 ## Bug Fixes - Hero Text Box Too Harsh
 - [x] Make hero text subtle but readable - removed white box, using white text shadow glow instead
+
+## Bug Fixes - Product Images
+- [x] Fix product detail page to display all uploaded images (front and back views) - added thumbnail gallery
