@@ -586,3 +586,7 @@
 
 ## Checkpoint Update
 - [x] Ready for publishing - January 29, 2026
+
+- [ ] Fix featured products clickable links too wide for page width
+
+- [x] Fix header navigation - 'About Us' wrapping to two lines, items too crowded

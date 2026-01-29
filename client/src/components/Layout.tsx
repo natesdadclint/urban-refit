@@ -91,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
               <Link
                 href="/shop"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
@@ -121,7 +121,7 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
               <Link
                 href="/about"
-                className={`text-sm font-medium transition-colors hover:text-primary ${
+                className={`text-sm font-medium transition-colors hover:text-primary whitespace-nowrap ${
                   location === "/about" ? "text-primary" : "text-muted-foreground"
                 }`}
               >
@@ -251,7 +251,7 @@ export default function Layout({ children }: LayoutProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="md:hidden"
+                className="lg:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
