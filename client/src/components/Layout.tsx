@@ -91,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-4 xl:gap-6">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-6 ml-8">
               <Link
                 href="/shop"
                 className={`text-sm font-medium transition-colors hover:text-primary ${

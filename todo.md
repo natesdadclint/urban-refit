@@ -590,3 +590,5 @@
 - [ ] Fix featured products clickable links too wide for page width
 
 - [x] Fix header navigation - 'About Us' wrapping to two lines, items too crowded
+
+- [x] Fix logo touching 'Shop' navigation item - add spacing between logo and nav
