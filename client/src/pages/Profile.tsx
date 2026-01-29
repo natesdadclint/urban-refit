@@ -281,12 +281,12 @@ export default function Profile() {
         
         {/* Main Content Tabs */}
         <Tabs defaultValue="rewards" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="rewards">Rewards</TabsTrigger>
-            <TabsTrigger value="preferences">Preferences</TabsTrigger>
-            <TabsTrigger value="notifications">Notifications</TabsTrigger>
-            <TabsTrigger value="orders">Orders</TabsTrigger>
-            <TabsTrigger value="returns">Returns</TabsTrigger>
+          <TabsList className="flex w-full overflow-x-auto">
+            <TabsTrigger value="rewards" className="flex-shrink-0 px-4">Rewards</TabsTrigger>
+            <TabsTrigger value="preferences" className="flex-shrink-0 px-4">Preferences</TabsTrigger>
+            <TabsTrigger value="notifications" className="flex-shrink-0 px-4">Notifications</TabsTrigger>
+            <TabsTrigger value="orders" className="flex-shrink-0 px-4">Orders</TabsTrigger>
+            <TabsTrigger value="returns" className="flex-shrink-0 px-4">Returns</TabsTrigger>
           </TabsList>
           
           {/* Rewards Tab */}

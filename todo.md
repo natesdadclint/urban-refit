@@ -614,3 +614,6 @@
 
 ## Bug Fixes - 404 Error
 - [x] Fix 404 Page Not Found error - created dedicated /notifications page
+
+## Bug Fixes - Profile Tabs
+- [x] Fix Profile page tabs overlapping on mobile - changed to scrollable flex layout
