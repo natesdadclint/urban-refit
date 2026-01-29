@@ -43,7 +43,7 @@ export default function Home() {
           <div className="max-w-2xl">
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-semibold leading-tight mb-3 md:mb-4 text-foreground">
             </h1>
-            <p className="text-sm sm:text-base text-foreground/80 mb-4 sm:mb-6 max-w-lg bg-white/80 backdrop-blur-sm rounded-lg p-3 sm:p-4 shadow-sm">
+            <p className="text-sm sm:text-base text-foreground mb-4 sm:mb-6 max-w-lg drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]" style={{ textShadow: '0 1px 3px rgba(255,255,255,0.95), 0 2px 8px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.6)' }}>
               Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 5% of every sale going back to the community.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">

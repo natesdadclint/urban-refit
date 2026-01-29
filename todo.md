@@ -620,3 +620,6 @@
 
 ## Bug Fixes - Hero Text Visibility
 - [x] Fix hero text visibility on Home page - added white background card with blur effect to text
+
+## Bug Fixes - Hero Text Box Too Harsh
+- [x] Make hero text subtle but readable - removed white box, using white text shadow glow instead
