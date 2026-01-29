@@ -601,3 +601,6 @@
 
 ## Pricing Updates
 - [x] Change thrift store payout percentage from 10% to 5% across all code, tests, and UI text
+
+## Bug Fixes
+- [x] Fix notification dropdown visibility - content not showing when bell icon clicked

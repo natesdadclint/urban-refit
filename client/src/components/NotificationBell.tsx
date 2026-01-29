@@ -79,15 +79,21 @@ export function NotificationBell({ className }: NotificationBellProps) {
       </Button>
       
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-background border border-border rounded-lg shadow-lg z-50 max-h-[70vh] overflow-hidden flex flex-col">
+        <div 
+          className="absolute right-0 mt-2 w-80 sm:w-96 rounded-lg shadow-xl z-[100] max-h-[70vh] overflow-hidden flex flex-col border border-gray-200"
+          style={{ backgroundColor: '#ffffff' }}
+        >
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-            <h3 className="font-semibold">Notifications</h3>
+          <div 
+            className="flex items-center justify-between px-4 py-3 border-b border-gray-200"
+            style={{ backgroundColor: '#ffffff' }}
+          >
+            <h3 className="font-semibold text-gray-900">Notifications</h3>
             {unreadCount > 0 && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-xs text-muted-foreground hover:text-foreground"
+                className="text-xs text-gray-500 hover:text-gray-900"
                 onClick={() => markAllAsRead.mutate()}
               >
                 <CheckCheck className="h-3 w-3 mr-1" />
@@ -97,22 +103,28 @@ export function NotificationBell({ className }: NotificationBellProps) {
           </div>
           
           {/* Notification list */}
-          <div className="overflow-y-auto flex-1">
+          <div 
+            className="overflow-y-auto flex-1"
+            style={{ backgroundColor: '#ffffff' }}
+          >
             {notifications.length === 0 ? (
-              <div className="px-4 py-8 text-center text-muted-foreground">
-                <Bell className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No notifications yet</p>
+              <div 
+                className="px-4 py-8 text-center"
+                style={{ backgroundColor: '#ffffff' }}
+              >
+                <Bell className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <p className="text-sm text-gray-600">No notifications yet</p>
               </div>
             ) : (
-              <ul className="divide-y divide-border">
+              <ul className="divide-y divide-gray-100">
                 {notifications.map((notification: any) => (
                   <li key={notification.id}>
                     {notification.link ? (
                       <Link
                         href={notification.link}
                         onClick={() => handleNotificationClick(notification)}
-                        className={`block px-4 py-3 hover:bg-muted/50 transition-colors ${
-                          !notification.isRead ? "bg-muted/30" : ""
+                        className={`block px-4 py-3 hover:bg-gray-50 transition-colors ${
+                          !notification.isRead ? "bg-blue-50/50" : ""
                         }`}
                       >
                         <NotificationContent notification={notification} />
@@ -120,8 +132,8 @@ export function NotificationBell({ className }: NotificationBellProps) {
                     ) : (
                       <div
                         onClick={() => handleNotificationClick(notification)}
-                        className={`px-4 py-3 cursor-pointer hover:bg-muted/50 transition-colors ${
-                          !notification.isRead ? "bg-muted/30" : ""
+                        className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${
+                          !notification.isRead ? "bg-blue-50/50" : ""
                         }`}
                       >
                         <NotificationContent notification={notification} />
@@ -135,10 +147,13 @@ export function NotificationBell({ className }: NotificationBellProps) {
           
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="px-4 py-2 border-t border-border text-center">
+            <div 
+              className="px-4 py-2 border-t border-gray-200 text-center"
+              style={{ backgroundColor: '#ffffff' }}
+            >
               <Link
                 href="/notifications"
-                className="text-sm text-primary hover:underline"
+                className="text-sm text-blue-600 hover:underline"
                 onClick={() => setIsOpen(false)}
               >
                 View all notifications
@@ -159,17 +174,17 @@ function NotificationContent({ notification }: { notification: any }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
-          <p className={`text-sm font-medium truncate ${!notification.isRead ? "text-foreground" : "text-muted-foreground"}`}>
+          <p className={`text-sm font-medium truncate ${!notification.isRead ? "text-gray-900" : "text-gray-600"}`}>
             {notification.title}
           </p>
           {!notification.isRead && (
-            <span className="flex-shrink-0 h-2 w-2 rounded-full bg-primary" />
+            <span className="flex-shrink-0 h-2 w-2 rounded-full bg-blue-500" />
           )}
         </div>
-        <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">
+        <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">
           {notification.message}
         </p>
-        <p className="text-xs text-muted-foreground/70 mt-1">
+        <p className="text-xs text-gray-400 mt-1">
           {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
         </p>
       </div>
