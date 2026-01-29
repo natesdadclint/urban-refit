@@ -40,6 +40,7 @@ import Reviews from "./pages/Reviews";
 import SellToUs from "./pages/SellToUs";
 import MySubmissions from "./pages/MySubmissions";
 import HowTokensWork from "./pages/HowTokensWork";
+import Notifications from "./pages/Notifications";
 import AdminSellSubmissions from "./pages/AdminSellSubmissions";
 import AdminBulkUpload from "./pages/AdminBulkUpload";
 import AdminPartnerProfitability from "./pages/AdminPartnerProfitability";
@@ -81,6 +82,7 @@ function Router() {
       <Route path="/my-submissions" component={MySubmissions} />
       <Route path="/my-submissions/:id" component={MySubmissions} />
       <Route path="/how-tokens-work" component={HowTokensWork} />
+      <Route path="/notifications" component={Notifications} />
       
       {/* Admin routes */}
       <Route path="/admin" component={AdminDashboard} />

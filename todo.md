@@ -611,3 +611,6 @@
 - [x] Build notification preferences UI component with toggle switches
 - [x] Add preferences section to user profile/settings page
 - [x] Write vitest tests for notification preferences routes
+
+## Bug Fixes - 404 Error
+- [x] Fix 404 Page Not Found error - created dedicated /notifications page
