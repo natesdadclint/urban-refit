@@ -594,3 +594,5 @@
 - [x] Fix logo touching 'Shop' navigation item - add spacing between logo and nav
 
 - [x] Fix header bleed - Sign button cut off causing horizontal overflow
+
+- [x] Fix order_items insert failing when thriftStoreId is null

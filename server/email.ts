@@ -8,8 +8,8 @@ interface OrderItemWithDetails {
     orderId: number;
     productId: number;
     price: string;
-    thriftStoreId: number;
-    thriftStorePayoutAmount: string;
+    thriftStoreId: number | null;
+    thriftStorePayoutAmount: string | null;
   };
   product: {
     id: number;

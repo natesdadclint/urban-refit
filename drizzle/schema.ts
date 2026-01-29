@@ -146,9 +146,9 @@ export const orderItems = mysqlTable("order_items", {
   // Snapshot of price at time of purchase
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   
-  // Thrift store payout tracking (10% of sale price)
-  thriftStoreId: int("thriftStoreId").notNull(),
-  thriftStorePayoutAmount: decimal("thriftStorePayoutAmount", { precision: 10, scale: 2 }).notNull(),
+  // Thrift store payout tracking (10% of sale price) - nullable for products without store association
+  thriftStoreId: int("thriftStoreId"),
+  thriftStorePayoutAmount: decimal("thriftStorePayoutAmount", { precision: 10, scale: 2 }),
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

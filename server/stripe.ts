@@ -78,8 +78,8 @@ export async function createCheckoutSession(
       orderId,
       productId: item.product.id,
       price: item.product.salePrice,
-      thriftStoreId: item.product.thriftStoreId,
-      thriftStorePayoutAmount: item.product.thriftStorePayoutAmount,
+      thriftStoreId: item.product.thriftStoreId || null,
+      thriftStorePayoutAmount: item.product.thriftStorePayoutAmount || null,
     });
   }
 
@@ -200,13 +200,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     // Mark product as sold
     await db.markProductAsSold(item.product.id);
     
-    // Accumulate payout amounts
+    // Accumulate payout amounts (only if thrift store is associated)
     const storeId = item.orderItem.thriftStoreId;
-    const payoutAmount = parseFloat(item.orderItem.thriftStorePayoutAmount);
-    thriftStorePayouts[storeId] = (thriftStorePayouts[storeId] || 0) + payoutAmount;
+    const payoutAmountStr = item.orderItem.thriftStorePayoutAmount;
     
-    // Update thrift store total payout
-    await db.incrementThriftStorePayout(storeId, item.orderItem.thriftStorePayoutAmount);
+    if (storeId && payoutAmountStr) {
+      const payoutAmount = parseFloat(payoutAmountStr);
+      thriftStorePayouts[storeId] = (thriftStorePayouts[storeId] || 0) + payoutAmount;
+      
+      // Update thrift store total payout
+      await db.incrementThriftStorePayout(storeId, payoutAmountStr);
+    }
   }
 
   // Create payout records for each thrift store

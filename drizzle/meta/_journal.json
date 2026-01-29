@@ -127,6 +127,13 @@
       "when": 1769551035751,
       "tag": "0017_perfect_ultron",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1769672753657,
+      "tag": "0018_good_warstar",
+      "breakpoints": true
     }
   ]
 }
