@@ -576,3 +576,7 @@
 - [x] Calculate profit margin per store (revenue - payouts)
 - [x] Create admin dashboard showing store performance metrics
 - [x] Add performance ratio metric (revenue/payout) for partnership scaling
+
+
+## Bug Fixes
+- [x] Fix horizontal scrolling on hero page - content overflowing viewport width

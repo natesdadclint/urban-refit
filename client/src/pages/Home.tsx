@@ -29,7 +29,7 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-[500px] sm:min-h-[600px] md:min-h-[750px]">
+      <section className="relative overflow-hidden min-h-[500px] sm:min-h-[600px] md:min-h-[750px] w-full">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
