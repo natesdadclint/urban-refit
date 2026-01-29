@@ -35,15 +35,15 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url(/hero-background.jpg)' }}
         />
-        {/* Subtle overlay at bottom for text readability */}
-        <div className="absolute inset-x-0 bottom-0 h-48 sm:h-64 md:h-72 bg-gradient-to-t from-white via-white/90 to-transparent" />
+        {/* Stronger overlay at bottom for text readability */}
+        <div className="absolute inset-x-0 bottom-0 h-64 sm:h-80 md:h-96 bg-gradient-to-t from-white via-white/95 to-transparent" />
         
         {/* Content positioned at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-8 sm:pb-12 md:pb-16">
           <div className="max-w-2xl">
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-semibold leading-tight mb-3 md:mb-4 text-foreground">
             </h1>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 max-w-lg">
+            <p className="text-sm sm:text-base text-foreground/80 mb-4 sm:mb-6 max-w-lg bg-white/80 backdrop-blur-sm rounded-lg p-3 sm:p-4 shadow-sm">
               Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 5% of every sale going back to the community.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">

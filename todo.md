@@ -617,3 +617,6 @@
 
 ## Bug Fixes - Profile Tabs
 - [x] Fix Profile page tabs overlapping on mobile - changed to scrollable flex layout
+
+## Bug Fixes - Hero Text Visibility
+- [x] Fix hero text visibility on Home page - added white background card with blur effect to text
