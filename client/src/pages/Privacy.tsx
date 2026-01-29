@@ -66,7 +66,7 @@ export default function Privacy() {
               </p>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong className="text-foreground">Service Providers:</strong> Third parties who perform services on our behalf, such as payment processing (Stripe), shipping carriers, and email service providers.</li>
-                <li><strong className="text-foreground">Thrift Store Partners:</strong> We share limited transaction data with our thrift store partners to facilitate their 10% payout on sales of items they sourced. This includes only the item sold and sale amount, not your personal details.</li>
+                <li><strong className="text-foreground">Thrift Store Partners:</strong> We share limited transaction data with our thrift store partners to facilitate their 5% payout on sales of items they sourced. This includes only the item sold and sale amount, not your personal details.</li>
                 <li><strong className="text-foreground">Charity Partners:</strong> When you donate tokens to charity, we share your name (if you choose) with the selected charity organization.</li>
                 <li><strong className="text-foreground">Legal Requirements:</strong> When required by law or to protect our rights and safety.</li>
               </ul>

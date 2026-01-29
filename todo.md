@@ -626,3 +626,6 @@
 
 ## Bug Fixes - Product Images
 - [x] Fix product detail page to display all uploaded images (front and back views) - added thumbnail gallery
+
+## Bug Fixes - Remaining 10% References
+- [x] Find and fix all remaining 10% references to 5% for thrift store payouts (ProductDetail, Partners, Privacy pages)

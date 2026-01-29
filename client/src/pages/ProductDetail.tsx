@@ -239,7 +239,7 @@ export default function ProductDetail() {
                   <p className="text-sm text-muted-foreground">{thriftStore.city}</p>
                 )}
                 <p className="text-xs text-muted-foreground mt-2">
-                  10% of this sale goes back to this thrift store partner.
+                  5% of this sale goes back to this thrift store partner.
                 </p>
               </div>
             )}
