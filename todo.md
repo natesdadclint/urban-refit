@@ -592,3 +592,5 @@
 - [x] Fix header navigation - 'About Us' wrapping to two lines, items too crowded
 
 - [x] Fix logo touching 'Shop' navigation item - add spacing between logo and nav
+
+- [x] Fix header bleed - Sign button cut off causing horizontal overflow

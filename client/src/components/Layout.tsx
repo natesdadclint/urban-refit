@@ -78,8 +78,8 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="container">
+      <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border overflow-x-hidden">
+        <div className="container px-4">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0">
@@ -91,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-4 xl:gap-6 ml-8">
+            <nav className="hidden xl:flex items-center gap-3 2xl:gap-5 ml-6 shrink">
               <Link
                 href="/shop"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
@@ -251,7 +251,7 @@ export default function Layout({ children }: LayoutProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden"
+                className="xl:hidden"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -262,7 +262,7 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-border">
+          <div className="xl:hidden border-t border-border">
             <nav className="container py-4 flex flex-col gap-2">
               {categories.map((cat) => (
                 <Link
