@@ -1776,6 +1776,25 @@ Keep insights concise and actionable.`;
         await db.deleteBroadcastNotification(input.id);
         return { success: true };
       }),
+    
+    // Get user's notification preferences
+    getPreferences: protectedProcedure.query(async ({ ctx }) => {
+      return db.getNotificationPreferences(ctx.user.id);
+    }),
+    
+    // Update user's notification preferences
+    updatePreferences: protectedProcedure
+      .input(z.object({
+        orderUpdates: z.boolean().optional(),
+        tokenRewards: z.boolean().optional(),
+        promotions: z.boolean().optional(),
+        sellSubmissions: z.boolean().optional(),
+        systemUpdates: z.boolean().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.updateNotificationPreferences(ctx.user.id, input);
+        return { success: true };
+      }),
   }),
 });
 

@@ -17,8 +17,9 @@ import { Link } from "wouter";
 import { 
   User, Coins, Gift, TrendingUp, Package, Heart, 
   ArrowRight, Loader2, Calendar, Mail, Phone, MapPin,
-  Sparkles, RefreshCw, ShoppingBag
+  Sparkles, RefreshCw, ShoppingBag, Bell
 } from "lucide-react";
+import { NotificationPreferences } from "@/components/NotificationPreferences";
 
 const CATEGORIES = ["tops", "bottoms", "dresses", "outerwear", "accessories", "shoes", "bags"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -280,9 +281,10 @@ export default function Profile() {
         
         {/* Main Content Tabs */}
         <Tabs defaultValue="rewards" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="rewards">Rewards</TabsTrigger>
             <TabsTrigger value="preferences">Preferences</TabsTrigger>
+            <TabsTrigger value="notifications">Notifications</TabsTrigger>
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="returns">Returns</TabsTrigger>
           </TabsList>
@@ -525,6 +527,11 @@ export default function Profile() {
                 </Button>
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          {/* Notifications Tab */}
+          <TabsContent value="notifications">
+            <NotificationPreferences />
           </TabsContent>
           
           {/* Orders Tab */}

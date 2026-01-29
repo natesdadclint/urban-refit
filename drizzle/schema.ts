@@ -715,3 +715,33 @@ export const broadcastReadStatus = mysqlTable("broadcast_read_status", {
 
 export type BroadcastReadStatus = typeof broadcastReadStatus.$inferSelect;
 export type InsertBroadcastReadStatus = typeof broadcastReadStatus.$inferInsert;
+
+
+/**
+ * Notification preferences - user preferences for notification types
+ */
+export const notificationPreferences = mysqlTable("notification_preferences", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  
+  // Order-related notifications
+  orderUpdates: boolean("orderUpdates").default(true).notNull(), // Order confirmation, shipping, delivery
+  
+  // Token/Rewards notifications
+  tokenRewards: boolean("tokenRewards").default(true).notNull(), // Token earned, weekly rewards
+  
+  // Promotional notifications
+  promotions: boolean("promotions").default(true).notNull(), // Sales, discounts, new arrivals
+  
+  // Submission notifications (for sellers)
+  sellSubmissions: boolean("sellSubmissions").default(true).notNull(), // Sell submission status updates
+  
+  // System notifications
+  systemUpdates: boolean("systemUpdates").default(true).notNull(), // Account updates, policy changes
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type NotificationPreference = typeof notificationPreferences.$inferSelect;
+export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;

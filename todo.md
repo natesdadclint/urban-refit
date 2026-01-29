@@ -604,3 +604,10 @@
 
 ## Bug Fixes
 - [x] Fix notification dropdown visibility - content not showing when bell icon clicked
+
+## Notification Preferences Feature
+- [x] Add notification_preferences table to database schema
+- [x] Create backend routes for getting/updating notification preferences
+- [x] Build notification preferences UI component with toggle switches
+- [x] Add preferences section to user profile/settings page
+- [x] Write vitest tests for notification preferences routes

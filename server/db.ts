@@ -21,7 +21,8 @@ import {
   contactMessages, InsertContactMessage, ContactMessage,
   contactReplies, InsertContactReply, ContactReply,
   notifications, InsertNotification, Notification,
-  broadcastReadStatus, InsertBroadcastReadStatus, BroadcastReadStatus
+  broadcastReadStatus, InsertBroadcastReadStatus, BroadcastReadStatus,
+  notificationPreferences, InsertNotificationPreference, NotificationPreference
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -2685,4 +2686,98 @@ export async function getStorePerformanceSummary(): Promise<StorePerformanceSumm
     avgContributionMargin,
     tierBreakdown,
   };
+}
+
+
+// ============ NOTIFICATION PREFERENCES OPERATIONS ============
+
+// Default preferences for new users
+const defaultPreferences = {
+  orderUpdates: true,
+  tokenRewards: true,
+  promotions: true,
+  sellSubmissions: true,
+  systemUpdates: true,
+};
+
+// Get user's notification preferences (creates default if not exists)
+export async function getNotificationPreferences(userId: number): Promise<NotificationPreference | null> {
+  const db = await getDb();
+  if (!db) return null;
+  
+  // Try to get existing preferences
+  const existing = await db
+    .select()
+    .from(notificationPreferences)
+    .where(eq(notificationPreferences.userId, userId))
+    .limit(1);
+  
+  if (existing.length > 0) {
+    return existing[0];
+  }
+  
+  // Create default preferences for new user
+  await db.insert(notificationPreferences).values({
+    userId,
+    ...defaultPreferences,
+  });
+  
+  // Return the newly created preferences
+  const created = await db
+    .select()
+    .from(notificationPreferences)
+    .where(eq(notificationPreferences.userId, userId))
+    .limit(1);
+  
+  return created[0] || null;
+}
+
+// Update user's notification preferences
+export async function updateNotificationPreferences(
+  userId: number,
+  updates: Partial<{
+    orderUpdates: boolean;
+    tokenRewards: boolean;
+    promotions: boolean;
+    sellSubmissions: boolean;
+    systemUpdates: boolean;
+  }>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  // Ensure preferences exist first
+  await getNotificationPreferences(userId);
+  
+  // Update preferences
+  await db
+    .update(notificationPreferences)
+    .set(updates)
+    .where(eq(notificationPreferences.userId, userId));
+}
+
+// Check if user wants to receive a specific notification type
+export async function shouldSendNotification(
+  userId: number,
+  notificationType: 'order' | 'tokens' | 'promo' | 'submission' | 'info' | 'success' | 'warning'
+): Promise<boolean> {
+  const prefs = await getNotificationPreferences(userId);
+  if (!prefs) return true; // Default to sending if no preferences found
+  
+  switch (notificationType) {
+    case 'order':
+      return prefs.orderUpdates;
+    case 'tokens':
+      return prefs.tokenRewards;
+    case 'promo':
+      return prefs.promotions;
+    case 'submission':
+      return prefs.sellSubmissions;
+    case 'info':
+    case 'success':
+    case 'warning':
+      return prefs.systemUpdates;
+    default:
+      return true;
+  }
 }
