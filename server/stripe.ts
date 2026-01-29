@@ -112,7 +112,7 @@ export async function createCheckoutSession(
 
   // Create Stripe checkout session with multiple payment methods
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card", "paypal", "afterpay_clearpay"],
+    payment_method_types: ["card"],
     line_items: lineItems,
     mode: "payment",
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
