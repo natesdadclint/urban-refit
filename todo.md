@@ -638,3 +638,6 @@
 - [x] Remove unused DashboardLayout components
 - [x] Update all imports after file reorganization
 - [x] Test all routes and functionality after refactoring - verified admin pages work correctly
+
+## Security Fixes
+- [x] Fix IDOR vulnerability in sellSubmission.getById - changed to protectedProcedure with ownership verification

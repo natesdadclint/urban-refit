@@ -1234,7 +1234,7 @@ Keep insights concise and actionable.`;
     }),
     
     // Get submission by ID (for user to check status)
-    getById: publicProcedure
+    getById: protectedProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ ctx, input }) => {
         const submission = await db.getSellSubmissionById(input.id);
@@ -1242,7 +1242,7 @@ Keep insights concise and actionable.`;
           throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
         }
         // Only allow viewing own submissions or admin
-        if (ctx.user?.role !== "admin" && submission.userId !== ctx.user?.id) {
+        if (ctx.user.role !== "admin" && submission.userId !== ctx.user.id) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
         }
         return submission;
