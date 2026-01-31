@@ -629,3 +629,12 @@
 
 ## Bug Fixes - Remaining 10% References
 - [x] Find and fix all remaining 10% references to 5% for thrift store payouts (ProductDetail, Partners, Privacy pages)
+
+## Structural Refactoring
+- [x] Move all admin pages from /pages/ root to /pages/admin/
+- [x] Keep email services separate (serve distinct purposes: notifications, marketing, transactional)
+- [x] Remove ComponentShowcase.tsx from production
+- [x] Move seed-demo.ts to scripts directory
+- [x] Remove unused DashboardLayout components
+- [x] Update all imports after file reorganization
+- [x] Test all routes and functionality after refactoring - verified admin pages work correctly
