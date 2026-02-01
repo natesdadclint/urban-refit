@@ -1,0 +1,21 @@
+{
+  "query": "\nSELECT \n  COUNT(*) as total_products,\n  COUNT(DISTINCT image1Url) as unique_image1,\n  COUNT(DISTINCT image2Url) as unique_image2,\n  SUM(CASE WHEN image1Url IS NULL THEN 1 ELSE 0 END) as null_image1,\n  SUM(CASE WHEN image2Url IS NULL THEN 1 ELSE 0 END) as null_image2,\n  SUM(CASE WHEN image1Url LIKE '/products/%' THEN 1 ELSE 0 END) as local_image1,\n  SUM(CASE WHEN image1Url LIKE 'https://%' THEN 1 ELSE 0 END) as external_image1,\n  SUM(CASE WHEN image2Url LIKE '/products/%' THEN 1 ELSE 0 END) as local_image2,\n  SUM(CASE WHEN image2Url LIKE 'https://%' THEN 1 ELSE 0 END) as external_image2\nFROM products;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute \nSELECT \n  COUNT(*) as total_products,\n  COUNT(DISTINCT image1Url) as unique_image1,\n  COUNT(DISTINCT image2Url) as unique_image2,\n  SUM(CASE WHEN image1Url IS NULL THEN 1 ELSE 0 END) as null_image1,\n  SUM(CASE WHEN image2Url IS NULL THEN 1 ELSE 0 END) as null_image2,\n  SUM(CASE WHEN image1Url LIKE '/products/%' THEN 1 ELSE 0 END) as local_image1,\n  SUM(CASE WHEN image1Url LIKE 'https://%' THEN 1 ELSE 0 END) as external_image1,\n  SUM(CASE WHEN image2Url LIKE '/products/%' THEN 1 ELSE 0 END) as local_image2,\n  SUM(CASE WHEN image2Url LIKE 'https://%' THEN 1 ELSE 0 END) as external_image2\nFROM products;\n",
+  "rows": [
+    {
+      "total_products": "11",
+      "unique_image1": "8",
+      "unique_image2": "4",
+      "null_image1": "0",
+      "null_image2": "3",
+      "local_image1": "11",
+      "external_image1": "0",
+      "local_image2": "0",
+      "external_image2": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_products\tunique_image1\tunique_image2\tnull_image1\tnull_image2\tlocal_image1\texternal_image1\tlocal_image2\texternal_image2\n11\t8\t4\t0\t3\t11\t0\t0\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1621
+}

@@ -629,3 +629,102 @@
 
 ## Bug Fixes - Remaining 10% References
 - [x] Find and fix all remaining 10% references to 5% for thrift store payouts (ProductDetail, Partners, Privacy pages)
+
+## Structural Refactoring
+- [x] Move all admin pages from /pages/ root to /pages/admin/
+- [x] Keep email services separate (serve distinct purposes: notifications, marketing, transactional)
+- [x] Remove ComponentShowcase.tsx from production
+- [x] Move seed-demo.ts to scripts directory
+- [x] Remove unused DashboardLayout components
+- [x] Update all imports after file reorganization
+- [x] Test all routes and functionality after refactoring - verified admin pages work correctly
+
+## Security Fixes
+- [x] Fix IDOR vulnerability in sellSubmission.getById - changed to protectedProcedure with ownership verification
+
+## Image URL Monitoring Dashboard
+- [x] Create image_validation_logs table to track URL validity checks over time
+- [x] Add backend API endpoint to validate all product image URLs
+- [x] Add backend API endpoint to get validation history and statistics
+- [x] Create admin dashboard page for image URL monitoring
+- [x] Add real-time validation status display with pass/fail counts
+- [x] Add historical chart showing validation trends over time
+- [x] Add detailed table showing individual product image status
+- [x] Add manual "Run Validation" button for on-demand checks
+
+## Expanded Asset Monitoring
+- [x] Update image_validation_logs schema to support multiple asset types (category, blog, product)
+- [x] Add assetType field to distinguish between different image sources
+- [x] Create database helpers to fetch category and blog post images
+- [x] Update validateAllImages endpoint to check blog post images
+- [x] Add asset type breakdown to validation stats
+- [x] Update dashboard UI to show validation results by asset type
+- [x] Write vitest tests for blog image validation
+
+## Bug Fixes
+- [x] Fix product images not displaying on homepage New Arrivals section
+
+## Image URL Security Audit
+- [x] Analyze all image URL patterns in database (local, S3, CloudFront, external)
+- [x] Review validation rules in backend code
+- [x] Identify security vulnerabilities (XSS, path traversal, unauthorized access)
+- [x] Document current validation implementation
+- [x] Generate comprehensive security report with recommendations
+
+## Security Documentation Website
+- [x] Create /docs/security route structure
+- [x] Build documentation layout with sidebar navigation
+- [x] Implement full-text search functionality
+- [x] Convert security report to structured React components
+- [x] Add code syntax highlighting for code examples
+- [x] Create vulnerability cards with severity badges
+- [x] Add filtering by priority/category
+- [x] Implement table of contents navigation
+- [x] Add print-friendly view option
+
+## Image URL Migration to S3
+- [ ] Generate SQL UPDATE statements to migrate local paths to S3 URLs
+- [ ] Upload product images to S3 bucket
+- [ ] Execute migration SQL statements
+- [ ] Verify all images load correctly after migration
+
+## Admin Notifications System
+- [x] Create admin_notifications table in database schema
+- [x] Add API endpoints for fetching, marking read, and creating notifications
+- [x] Build notification center UI with bell icon and dropdown
+- [x] Add real-time notification count badge
+- [x] Trigger notifications on new orders
+- [x] Trigger notifications on new sell submissions
+- [x] Trigger notifications on new contact messages
+- [ ] Add email alerts for critical notifications
+- [x] Write vitest tests for notification system (16 tests passing)
+
+## Alternative S3 Upload Utility
+- [x] Create server/s3.ts with direct AWS SDK S3 upload utility
+- [x] Add uploadProductImage function for product image uploads
+- [x] Add uploadFile, deleteFile, fileExists helper functions
+- [x] Export both storagePut (Manus) and AWS SDK options from storage.ts
+- [x] Document when to use each approach
+- [x] Write vitest tests for S3 utility (13 tests passing)
+
+## Product Image Upload Endpoint
+- [x] Add uploadProductImage procedure to routers.ts for admin image uploads
+- [x] Import uploadProductImage from s3.ts
+- [x] Handle base64 to buffer conversion
+- [x] Update product image URL in database after upload
+- [x] Write vitest tests (9 tests passing)
+
+## Bug Fixes
+- [x] Fix broken product image previews in admin product edit form (added error handling with fallback UI)
+
+- [x] Fix image upload flow - now saves to client/public/products for local serving
+- [x] Fixed CloudFront URL products (240001, 210002) to use local paths
+
+## Image Processing Test Suite
+- [x] Write tests for /api/upload endpoint (file validation, storage, URL generation)
+- [x] Write tests for image URL validation (S3 pattern, local paths, null handling)
+- [x] Write tests for product.uploadProductImage tRPC endpoint
+- [x] Write tests for database image URL updates
+- [x] Write tests for image proxy/serving functionality
+- [x] Write tests for error handling (invalid files, oversized images, missing auth)
+- [x] All 66 tests passing

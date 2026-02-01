@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  COUNT(*) as total_posts,\n  SUM(CASE WHEN featuredImage IS NULL THEN 1 ELSE 0 END) as null_images,\n  SUM(CASE WHEN featuredImage LIKE '/blog/%' THEN 1 ELSE 0 END) as local_images,\n  SUM(CASE WHEN featuredImage LIKE 'https://%' THEN 1 ELSE 0 END) as external_images\nFROM blog_posts;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute \nSELECT \n  COUNT(*) as total_posts,\n  SUM(CASE WHEN featuredImage IS NULL THEN 1 ELSE 0 END) as null_images,\n  SUM(CASE WHEN featuredImage LIKE '/blog/%' THEN 1 ELSE 0 END) as local_images,\n  SUM(CASE WHEN featuredImage LIKE 'https://%' THEN 1 ELSE 0 END) as external_images\nFROM blog_posts;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'featuredimage' in ''"
+  ]
+}

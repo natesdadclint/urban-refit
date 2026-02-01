@@ -1,0 +1,9 @@
+{
+  "query": "\nUPDATE products SET image1Url = '/products/tommy-hilfiger-polo.png' WHERE image1Url LIKE '%3L_W0D6qJfrt_x_J7HJ1_%';\nUPDATE products SET image1Url = '/products/doc-martins.png' WHERE image1Url LIKE '%hROPWcCff3C7z2xhR3RfN%';\nUPDATE products SET image1Url = '/products/nike-air-force-1.png' WHERE image1Url LIKE '%fazt0mccz0HHZg5e9GRYd%';\nUPDATE products SET image2Url = '/products/doc-martins-2.png' WHERE image2Url LIKE '%2gkwkf1C6JbYEDfQ9KZmP%';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute \nUPDATE products SET image1Url = '/products/tommy-hilfiger-polo.png' WHERE image1Url LIKE '%3L_W0D6qJfrt_x_J7HJ1_%';\nUPDATE products SET image1Url = '/products/doc-martins.png' WHERE image1Url LIKE '%hROPWcCff3C7z2xhR3RfN%';\nUPDATE products SET image1Url = '/products/nike-air-force-1.png' WHERE image1Url LIKE '%fazt0mccz0HHZg5e9GRYd%';\nUPDATE products SET image2Url = '/products/doc-martins-2.png' WHERE image2Url LIKE '%2gkwkf1C6JbYEDfQ9KZmP%';\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 2171
+}

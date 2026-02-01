@@ -231,6 +231,14 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Clear user's cart
   await db.clearCart(order.userId);
 
+  // Notify admin about new order
+  try {
+    const customerName = order.shippingName || 'Customer';
+    await db.notifyAdminNewOrder(order.id, customerName, parseFloat(order.total));
+  } catch (error) {
+    console.error('[Webhook] Failed to create admin notification:', error);
+  }
+
   // Send order confirmation email via Resend (with fallback to owner notification)
   if (order.customerEmail) {
     // Prepare items for Resend email

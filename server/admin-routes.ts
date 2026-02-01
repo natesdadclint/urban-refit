@@ -106,4 +106,199 @@ export const adminRouter = router({
       }
       return analytics;
     }),
+
+  // ============ IMAGE VALIDATION MONITORING ============
+  
+  validateAllImages: adminProcedure.mutation(async () => {    
+    const runId = nanoid();
+    const validationResults = [];
+    
+    // Helper function to validate a single image URL
+    const validateImageUrl = async (url: string | null): Promise<{
+      isValid: boolean;
+      errorType: 'null' | 'empty' | 'invalid_format' | 'http_error' | 'timeout' | null;
+      httpStatus: number | null;
+      errorMessage: string | null;
+      responseTimeMs: number;
+    }> => {
+      if (!url) {
+        return {
+          isValid: false,
+          errorType: 'null',
+          httpStatus: null,
+          errorMessage: 'Image URL is null',
+          responseTimeMs: 0,
+        };
+      }
+      
+      const startTime = Date.now();
+      let isValid = true;
+      let errorType: 'null' | 'empty' | 'invalid_format' | 'http_error' | 'timeout' | null = null;
+      let httpStatus: number | null = null;
+      let errorMessage: string | null = null;
+      
+      try {
+        if (!url.startsWith('http') && !url.startsWith('/')) {
+          isValid = false;
+          errorType = 'invalid_format';
+          errorMessage = 'URL does not start with http or /';
+        } else if (url.startsWith('http')) {
+          const response = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(5000) });
+          httpStatus = response.status;
+          if (!response.ok) {
+            isValid = false;
+            errorType = 'http_error';
+            errorMessage = `HTTP ${response.status}`;
+          }
+        }
+      } catch (error: any) {
+        isValid = false;
+        if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+          errorType = 'timeout';
+          errorMessage = 'Request timeout after 5s';
+        } else {
+          errorType = 'http_error';
+          errorMessage = error.message;
+        }
+      }
+      
+      return {
+        isValid,
+        errorType,
+        httpStatus,
+        errorMessage,
+        responseTimeMs: Date.now() - startTime,
+      };
+    };
+    
+    // Validate product images
+    const allProducts = await db.getAllProductsBasic();
+    for (const product of allProducts) {
+      // Validate image1Url
+      const result1 = await validateImageUrl(product.image1Url);
+      await db.createImageValidationLog({
+        validationRunId: runId,
+        assetType: 'product',
+        assetId: product.id,
+        imageField: 'image1Url',
+        imageUrl: product.image1Url,
+        ...result1,
+      });
+      validationResults.push({ assetType: 'product', assetId: product.id, field: 'image1Url', isValid: result1.isValid });
+      
+      // Validate image2Url
+      if (product.image2Url) {
+        const result2 = await validateImageUrl(product.image2Url);
+        await db.createImageValidationLog({
+          validationRunId: runId,
+          assetType: 'product',
+          assetId: product.id,
+          imageField: 'image2Url',
+          imageUrl: product.image2Url,
+          ...result2,
+        });
+        validationResults.push({ assetType: 'product', assetId: product.id, field: 'image2Url', isValid: result2.isValid });
+      }
+    }
+    
+    // Validate blog post images
+    const allBlogs = await db.getAllBlogPostsForValidation();
+    for (const blog of allBlogs) {
+      const result = await validateImageUrl(blog.featuredImageUrl);
+      await db.createImageValidationLog({
+        validationRunId: runId,
+        assetType: 'blog',
+        assetId: blog.id,
+        imageField: 'featuredImageUrl',
+        imageUrl: blog.featuredImageUrl,
+        ...result,
+      });
+      validationResults.push({ assetType: 'blog', assetId: blog.id, field: 'featuredImageUrl', isValid: result.isValid });
+    }
+    
+    return {
+      runId,
+      totalChecked: validationResults.length,
+      validCount: validationResults.filter(r => r.isValid).length,
+      invalidCount: validationResults.filter(r => !r.isValid).length,
+      byAssetType: {
+        product: validationResults.filter(r => r.assetType === 'product').length,
+        blog: validationResults.filter(r => r.assetType === 'blog').length,
+      },
+    };
+  }),
+  
+  getValidationStats: adminProcedure.query(async () => {
+    return await db.getValidationStats();
+  }),
+  
+  getValidationHistory: adminProcedure
+    .input(z.object({ limit: z.number().optional().default(10) }))
+    .query(async ({ input }) => {
+      return await db.getValidationHistory(input.limit);
+    }),
+  
+  getValidationRunDetails: adminProcedure
+    .input(z.object({ runId: z.string() }))
+    .query(async ({ input }) => {
+      return await db.getImageValidationLogsByRunId(input.runId);
+    }),
+  
+  // ============ ADMIN NOTIFICATIONS ============
+  
+  getAdminNotifications: adminProcedure
+    .input(z.object({
+      unreadOnly: z.boolean().optional(),
+      type: z.string().optional(),
+      priority: z.string().optional(),
+      limit: z.number().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      return await db.getAdminNotifications(input);
+    }),
+  
+  getUnreadNotificationCount: adminProcedure.query(async () => {
+    return await db.getUnreadAdminNotificationCount();
+  }),
+  
+  getNotificationStats: adminProcedure.query(async () => {
+    return await db.getAdminNotificationStats();
+  }),
+  
+  markNotificationAsRead: adminProcedure
+    .input(z.object({ notificationId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await db.markAdminNotificationAsRead(input.notificationId, ctx.user.id);
+      return { success: true };
+    }),
+  
+  markAllNotificationsAsRead: adminProcedure
+    .mutation(async ({ ctx }) => {
+      const count = await db.markAllAdminNotificationsAsRead(ctx.user.id);
+      return { success: true, count };
+    }),
+  
+  deleteNotification: adminProcedure
+    .input(z.object({ notificationId: z.number() }))
+    .mutation(async ({ input }) => {
+      await db.deleteAdminNotification(input.notificationId);
+      return { success: true };
+    }),
+  
+  createTestNotification: adminProcedure
+    .input(z.object({
+      title: z.string(),
+      message: z.string(),
+      type: z.enum(["new_order", "order_cancelled", "new_submission", "submission_approved", "submission_rejected", "new_contact", "low_stock", "payout_due", "system_alert", "security_alert"]),
+      priority: z.enum(["low", "medium", "high", "critical"]).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const id = await db.createAdminNotification({
+        title: input.title,
+        message: input.message,
+        type: input.type,
+        priority: input.priority || "medium",
+      });
+      return { success: true, id };
+    }),
 });

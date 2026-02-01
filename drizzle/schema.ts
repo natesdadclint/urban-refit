@@ -745,3 +745,86 @@ export const notificationPreferences = mysqlTable("notification_preferences", {
 
 export type NotificationPreference = typeof notificationPreferences.$inferSelect;
 export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+
+/**
+ * Image validation logs - tracks image URL validity checks over time
+ */
+export const imageValidationLogs = mysqlTable("image_validation_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Validation run metadata
+  validationRunId: varchar("validationRunId", { length: 50 }).notNull(), // UUID for grouping checks in same run
+  
+  // Asset reference (polymorphic)
+  assetType: mysqlEnum("assetType", ["product", "blog", "category"]).notNull(),
+  assetId: int("assetId").notNull(), // ID of the product, blog post, or category
+  
+  // Image details
+  imageField: varchar("imageField", { length: 50 }).notNull(), // e.g., "image1Url", "image2Url", "featuredImageUrl"
+  imageUrl: text("imageUrl"),
+  
+  // Validation result
+  isValid: boolean("isValid").notNull(),
+  errorType: mysqlEnum("errorType", ["null", "empty", "invalid_format", "http_error", "timeout"]),
+  httpStatus: int("httpStatus"), // HTTP status code if applicable
+  errorMessage: text("errorMessage"),
+  
+  // Timing
+  responseTimeMs: int("responseTimeMs"), // Response time in milliseconds
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ImageValidationLog = typeof imageValidationLogs.$inferSelect;
+export type InsertImageValidationLog = typeof imageValidationLogs.$inferInsert;
+
+
+/**
+ * Admin notifications - alerts for admins about important events
+ */
+export const adminNotifications = mysqlTable("admin_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Notification content
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Notification type for categorization and icons
+  type: mysqlEnum("type", [
+    "new_order",
+    "order_cancelled",
+    "new_submission",
+    "submission_approved",
+    "submission_rejected",
+    "new_contact",
+    "low_stock",
+    "payout_due",
+    "system_alert",
+    "security_alert"
+  ]).notNull(),
+  
+  // Priority level
+  priority: mysqlEnum("priority", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  
+  // Link to relevant resource
+  link: varchar("link", { length: 500 }),
+  
+  // Reference to related entity
+  relatedEntityType: mysqlEnum("relatedEntityType", ["order", "submission", "contact", "product", "user"]),
+  relatedEntityId: int("relatedEntityId"),
+  
+  // Status
+  isRead: boolean("isRead").default(false).notNull(),
+  readAt: timestamp("readAt"),
+  readByUserId: int("readByUserId"), // Which admin marked it as read
+  
+  // Email notification status
+  emailSent: boolean("emailSent").default(false).notNull(),
+  emailSentAt: timestamp("emailSentAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AdminNotification = typeof adminNotifications.$inferSelect;
+export type InsertAdminNotification = typeof adminNotifications.$inferInsert;

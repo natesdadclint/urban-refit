@@ -90,21 +90,67 @@ async function startServer() {
       }
 
       const ext = req.file.originalname.split(".").pop() || "jpg";
-      const fileKey = `products/${nanoid()}.${ext}`;
+      const fileName = `${nanoid()}.${ext}`;
       
-      const { url } = await storagePut(
-        fileKey,
-        req.file.buffer,
-        req.file.mimetype
-      );
+      // Save to client/public/products for local serving
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const publicDir = path.join(process.cwd(), 'client', 'public', 'products');
+      
+      // Ensure directory exists
+      await fs.mkdir(publicDir, { recursive: true });
+      
+      // Write file
+      const filePath = path.join(publicDir, fileName);
+      await fs.writeFile(filePath, req.file.buffer);
 
-      res.json({ url, key: fileKey });
+      // Return URL that serves from public folder
+      const publicUrl = `/products/${fileName}`;
+      res.json({ url: publicUrl, key: fileName });
     } catch (error) {
       console.error("[Upload] Error:", error);
       res.status(500).json({ error: "Failed to upload file" });
     }
   });
   
+  // Image proxy endpoint - serves images from storage with proper authentication
+  app.get("/api/image/:key(*)", async (req, res) => {
+    try {
+      const key = req.params.key;
+      if (!key) {
+        return res.status(400).json({ error: "Missing image key" });
+      }
+
+      const { ENV } = await import('./env');
+      const baseUrl = ENV.forgeApiUrl.replace(/\/+$/, '') + '/';
+      
+      // Use the Forge API download endpoint directly
+      const downloadUrl = new URL('v1/storage/download', baseUrl);
+      downloadUrl.searchParams.set('path', key);
+      
+      const imageResponse = await fetch(downloadUrl.toString(), {
+        headers: { Authorization: `Bearer ${ENV.forgeApiKey}` }
+      });
+      
+      if (!imageResponse.ok) {
+        console.error(`[Image Proxy] Failed to fetch image: ${imageResponse.status}`);
+        return res.status(imageResponse.status).json({ error: "Failed to fetch image" });
+      }
+
+      // Set content type and caching headers
+      const contentType = imageResponse.headers.get('content-type') || 'image/jpeg';
+      res.setHeader('Content-Type', contentType);
+      res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours
+      
+      // Stream the image
+      const buffer = await imageResponse.arrayBuffer();
+      res.send(Buffer.from(buffer));
+    } catch (error) {
+      console.error("[Image Proxy] Error:", error);
+      res.status(500).json({ error: "Failed to get image" });
+    }
+  });
+
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   

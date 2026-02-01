@@ -100,3 +100,29 @@ export async function storageGet(relKey: string): Promise<{ key: string; url: st
     url: await buildDownloadUrl(baseUrl, key, apiKey),
   };
 }
+
+/**
+ * Alternative AWS S3 Upload Utilities
+ * 
+ * Use these when you need direct AWS SDK control or are deploying outside Manus.
+ * Requires AWS_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY env vars.
+ * 
+ * @example
+ * // For Manus-hosted (recommended):
+ * import { storagePut } from './storage';
+ * const { url } = await storagePut('products/123/image.jpg', buffer, 'image/jpeg');
+ * 
+ * // For direct AWS SDK:
+ * import { uploadProductImage, isAwsConfigured } from './storage';
+ * if (isAwsConfigured()) {
+ *   const { url } = await uploadProductImage({ productId: 123, fileBuffer, mimeType: 'image/jpeg', slot: 1 });
+ * }
+ */
+export {
+  uploadProductImage,
+  uploadFile,
+  deleteFile,
+  fileExists,
+  getProductImageUrl,
+  isAwsConfigured,
+} from './s3';
