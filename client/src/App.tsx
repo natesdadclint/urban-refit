@@ -41,14 +41,11 @@ import SellToUs from "./pages/SellToUs";
 import MySubmissions from "./pages/MySubmissions";
 import HowTokensWork from "./pages/HowTokensWork";
 import Notifications from "./pages/Notifications";
-import AdminSellSubmissions from "./pages/admin/SellSubmissions";
-import AdminBulkUpload from "./pages/admin/BulkUpload";
-import AdminPartnerProfitability from "./pages/admin/PartnerProfitability";
-import AdminNotifications from "./pages/admin/Notifications";
-import AdminStorePerformance from "./pages/admin/StorePerformance";
-import AdminImageMonitoring from "./pages/admin/ImageMonitoring";
-import AdminAlertsPage from "./pages/admin/AdminNotifications";
-import SecurityDocs from "./pages/docs/SecurityDocs";
+import AdminSellSubmissions from "./pages/AdminSellSubmissions";
+import AdminBulkUpload from "./pages/AdminBulkUpload";
+import AdminPartnerProfitability from "./pages/AdminPartnerProfitability";
+import AdminNotifications from "./pages/AdminNotifications";
+import AdminStorePerformance from "./pages/AdminStorePerformance";
 import { HelpdeskChat } from "./components/HelpdeskChat";
 import { WeeklyRewardBanner } from "./components/WeeklyRewardBanner";
 import { useAuth } from "./hooks/useAuth";
@@ -104,9 +101,6 @@ function Router() {
       <Route path="/admin/contact-messages" component={AdminContactMessages} />
       <Route path="/admin/notifications" component={AdminNotifications} />
       <Route path="/admin/store-performance" component={AdminStorePerformance} />
-      <Route path="/admin/image-monitoring" component={AdminImageMonitoring} />
-      <Route path="/admin/alerts" component={AdminAlertsPage} />
-      <Route path="/docs/security" component={SecurityDocs} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

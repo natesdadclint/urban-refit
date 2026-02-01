@@ -71,18 +71,7 @@ export default function AdminProductForm() {
 
   const [image1, setImage1] = useState<{ file?: File; preview: string; url?: string }>({ preview: "" });
   const [image2, setImage2] = useState<{ file?: File; preview: string; url?: string }>({ preview: "" });
-  const [image1Error, setImage1Error] = useState(false);
-  const [image2Error, setImage2Error] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-
-  // Handle image load error - show upload button instead of broken image
-  const handleImageError = (imageNum: 1 | 2) => {
-    if (imageNum === 1) {
-      setImage1Error(true);
-    } else {
-      setImage2Error(true);
-    }
-  };
 
   // Fetch existing product for editing
   const { data: existingProduct } = trpc.product.getById.useQuery(
@@ -420,19 +409,15 @@ export default function AdminProductForm() {
                       ref={fileInput1Ref}
                       type="file"
                       accept="image/*"
-                      onChange={(e) => {
-                        handleImageChange(e, 1);
-                        setImage1Error(false);
-                      }}
+                      onChange={(e) => handleImageChange(e, 1)}
                       className="hidden"
                     />
-                    {image1.preview && !image1Error ? (
+                    {image1.preview ? (
                       <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                         <img
                           src={image1.preview}
-                          alt="Product image 1"
+                          alt="Preview 1"
                           className="w-full h-full object-cover"
-                          onError={() => handleImageError(1)}
                         />
                         <Button
                           type="button"
@@ -444,16 +429,6 @@ export default function AdminProductForm() {
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
-                    ) : image1.preview && image1Error ? (
-                      <button
-                        type="button"
-                        onClick={() => fileInput1Ref.current?.click()}
-                        className="w-full aspect-square rounded-lg border-2 border-dashed border-destructive bg-destructive/5 transition-colors flex flex-col items-center justify-center gap-2 text-destructive"
-                      >
-                        <ImagePlus className="h-8 w-8" />
-                        <span className="text-sm font-medium">Image Failed to Load</span>
-                        <span className="text-xs">Click to upload new image</span>
-                      </button>
                     ) : (
                       <button
                         type="button"
@@ -473,19 +448,15 @@ export default function AdminProductForm() {
                       ref={fileInput2Ref}
                       type="file"
                       accept="image/*"
-                      onChange={(e) => {
-                        handleImageChange(e, 2);
-                        setImage2Error(false);
-                      }}
+                      onChange={(e) => handleImageChange(e, 2)}
                       className="hidden"
                     />
-                    {image2.preview && !image2Error ? (
+                    {image2.preview ? (
                       <div className="relative aspect-square rounded-lg overflow-hidden bg-muted">
                         <img
                           src={image2.preview}
-                          alt="Product image 2"
+                          alt="Preview 2"
                           className="w-full h-full object-cover"
-                          onError={() => handleImageError(2)}
                         />
                         <Button
                           type="button"
@@ -497,16 +468,6 @@ export default function AdminProductForm() {
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
-                    ) : image2.preview && image2Error ? (
-                      <button
-                        type="button"
-                        onClick={() => fileInput2Ref.current?.click()}
-                        className="w-full aspect-square rounded-lg border-2 border-dashed border-destructive bg-destructive/5 transition-colors flex flex-col items-center justify-center gap-2 text-destructive"
-                      >
-                        <ImagePlus className="h-8 w-8" />
-                        <span className="text-sm font-medium">Image Failed to Load</span>
-                        <span className="text-xs">Click to upload new image</span>
-                      </button>
                     ) : (
                       <button
                         type="button"

@@ -6,7 +6,7 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
-import { storagePut, uploadProductImage, isAwsConfigured } from "./storage";
+import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe";
 import { invokeLLM } from "./_core/llm";
@@ -223,7 +223,7 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    // Image upload endpoint (generic)
+    // Image upload endpoint
     uploadImage: adminProcedure
       .input(z.object({
         filename: z.string(),
@@ -235,45 +235,6 @@ export const appRouter = router({
         const fileKey = `products/${nanoid()}-${input.filename}`;
         const { url } = await storagePut(fileKey, buffer, input.contentType);
         return { url, fileKey };
-      }),
-    
-    // Upload product image to specific slot and update database
-    uploadProductImage: adminProcedure
-      .input(z.object({
-        productId: z.number(),
-        slot: z.union([z.literal(1), z.literal(2)]),
-        fileBase64: z.string(), // 'data:image/png;base64,...' or raw base64
-        mimeType: z.string(),
-      }))
-      .mutation(async ({ input }) => {
-        const base64Data = input.fileBase64.replace(/^data:.+;base64,/, '');
-        const fileBuffer = Buffer.from(base64Data, 'base64');
-        
-        let url: string;
-        let key: string;
-        
-        // Use AWS S3 if configured, otherwise fall back to Manus storage
-        if (isAwsConfigured()) {
-          const result = await uploadProductImage({
-            productId: input.productId,
-            fileBuffer,
-            mimeType: input.mimeType,
-            slot: input.slot,
-          });
-          url = result.url;
-          key = result.key;
-        } else {
-          const fileKey = `products/${input.productId}/image-${input.slot}-${nanoid()}.${input.mimeType.split('/')[1] || 'jpg'}`;
-          const result = await storagePut(fileKey, fileBuffer, input.mimeType);
-          url = result.url;
-          key = result.key;
-        }
-        
-        const field = input.slot === 1 ? 'image1Url' : 'image2Url';
-        
-        await db.updateProduct(input.productId, { [field]: url });
-        
-        return { url, key, field };
       }),
   }),
 
@@ -1264,13 +1225,6 @@ Keep insights concise and actionable.`;
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create submission" });
         }
         
-        // Notify admin about new submission
-        try {
-          await db.notifyAdminNewSubmission(submission.id, ctx.user?.name || 'Anonymous', 1);
-        } catch (error) {
-          console.error('Failed to create admin notification:', error);
-        }
-        
         return { id: submission.id, status: submission.status };
       }),
     
@@ -1280,7 +1234,7 @@ Keep insights concise and actionable.`;
     }),
     
     // Get submission by ID (for user to check status)
-    getById: protectedProcedure
+    getById: publicProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ ctx, input }) => {
         const submission = await db.getSellSubmissionById(input.id);
@@ -1288,7 +1242,7 @@ Keep insights concise and actionable.`;
           throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
         }
         // Only allow viewing own submissions or admin
-        if (ctx.user.role !== "admin" && submission.userId !== ctx.user.id) {
+        if (ctx.user?.role !== "admin" && submission.userId !== ctx.user?.id) {
           throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
         }
         return submission;
@@ -1656,13 +1610,6 @@ Keep insights concise and actionable.`;
           content: `New message from ${input.email}:\n\n${input.message}\n\n---\nNewsletter opt-in: ${input.subscribeToNewsletter ? "Yes" : "No"}`,
         });
         
-        // Create admin notification
-        try {
-          await db.notifyAdminNewContact(contactMessage.id, input.email, input.message.substring(0, 100));
-        } catch (error) {
-          console.error('Failed to create admin notification:', error);
-        }
-        
         return { 
           success: true, 
           message: "Your message has been sent! We'll get back to you soon." 
@@ -1848,16 +1795,6 @@ Keep insights concise and actionable.`;
         await db.updateNotificationPreferences(ctx.user.id, input);
         return { success: true };
       }),
-  }),
-
-  // Debug endpoint to fetch all product metadata
-  getAllProductMetadata: publicProcedure.query(async () => {
-    return await db.getAllProductMetadata();
-  }),
-
-  // Debug endpoint to fetch all products
-  getAllProductsBasic: publicProcedure.query(async () => {
-    return await db.getAllProductsBasic();
   }),
 });
 
