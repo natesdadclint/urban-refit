@@ -698,3 +698,11 @@
 - [x] Trigger notifications on new contact messages
 - [ ] Add email alerts for critical notifications
 - [x] Write vitest tests for notification system (16 tests passing)
+
+## Alternative S3 Upload Utility
+- [x] Create server/s3.ts with direct AWS SDK S3 upload utility
+- [x] Add uploadProductImage function for product image uploads
+- [x] Add uploadFile, deleteFile, fileExists helper functions
+- [x] Export both storagePut (Manus) and AWS SDK options from storage.ts
+- [x] Document when to use each approach
+- [x] Write vitest tests for S3 utility (13 tests passing)
