@@ -1,0 +1,42 @@
+{
+  "query": "\nSELECT image1Url, COUNT(*) as count \nFROM products \nWHERE image1Url IS NOT NULL \nGROUP BY image1Url \nORDER BY count DESC \nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute \nSELECT image1Url, COUNT(*) as count \nFROM products \nWHERE image1Url IS NOT NULL \nGROUP BY image1Url \nORDER BY count DESC \nLIMIT 10;\n",
+  "rows": [
+    {
+      "image1Url": "/products/nike-air-force-1.png",
+      "count": "3"
+    },
+    {
+      "image1Url": "/products/tommy-hilfiger-polo.png",
+      "count": "2"
+    },
+    {
+      "image1Url": "/products/patagonia-fleece.png",
+      "count": "1"
+    },
+    {
+      "image1Url": "/products/ralph-lauren-oxford.png",
+      "count": "1"
+    },
+    {
+      "image1Url": "/products/levis-501-jeans.png",
+      "count": "1"
+    },
+    {
+      "image1Url": "/products/dickies-work-pants.png",
+      "count": "1"
+    },
+    {
+      "image1Url": "/products/sneakers-white.jpg",
+      "count": "1"
+    },
+    {
+      "image1Url": "/products/new-era-cap.png",
+      "count": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "image1Url\tcount\n/products/nike-air-force-1.png\t3\n/products/tommy-hilfiger-polo.png\t2\n/products/patagonia-fleece.png\t1\n/products/ralph-lauren-oxford.png\t1\n/products/levis-501-jeans.png\t1\n/products/dickies-work-pants.png\t1\n/products/sneakers-white.jpg\t1\n/products/new-era-cap.png\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1521
+}

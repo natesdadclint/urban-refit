@@ -47,6 +47,7 @@ import AdminPartnerProfitability from "./pages/admin/PartnerProfitability";
 import AdminNotifications from "./pages/admin/Notifications";
 import AdminStorePerformance from "./pages/admin/StorePerformance";
 import AdminImageMonitoring from "./pages/admin/ImageMonitoring";
+import SecurityDocs from "./pages/docs/SecurityDocs";
 import { HelpdeskChat } from "./components/HelpdeskChat";
 import { WeeklyRewardBanner } from "./components/WeeklyRewardBanner";
 import { useAuth } from "./hooks/useAuth";
@@ -103,6 +104,7 @@ function Router() {
       <Route path="/admin/notifications" component={AdminNotifications} />
       <Route path="/admin/store-performance" component={AdminStorePerformance} />
       <Route path="/admin/image-monitoring" component={AdminImageMonitoring} />
+      <Route path="/docs/security" component={SecurityDocs} />
       
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
