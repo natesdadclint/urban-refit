@@ -737,3 +737,9 @@
 - [x] Add H1 heading to home page ("Premium Secondhand Fashion for Men")
 - [x] Add keywords/meta keywords to page (8 relevant keywords added)
 - [x] Optimize page title to 30-60 characters ("Urban Refit | Sustainable Secondhand Men's Fashion" = 52 chars)
+
+## Header & Byline SEO Optimization (Feb 1, 2026)
+- [x] Optimize header and byline to 30 SEO-optimized words
+- [x] Fixed pagination and display layout (better spacing and line breaks)
+- [x] Header: "Buy Premium Secondhand Men's Fashion Online from NZ Thrift Stores"
+- [x] Byline: "Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping."

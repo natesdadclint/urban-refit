@@ -56,11 +56,11 @@ export default function Home() {
         {/* Content positioned at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-8 sm:pb-12 md:pb-16">
           <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-semibold leading-tight mb-3 md:mb-4 text-foreground">
-              Premium Secondhand Fashion for Men
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold leading-tight mb-4 md:mb-6 text-foreground max-w-2xl">
+              Buy Premium Secondhand Men's Fashion Online from NZ Thrift Stores
             </h1>
-            <p className="text-sm sm:text-base text-foreground mb-4 sm:mb-6 max-w-lg drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]" style={{ textShadow: '0 1px 3px rgba(255,255,255,0.95), 0 2px 8px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.6)' }}>
-              Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 5% of every sale going back to the community.
+            <p className="text-sm sm:text-base text-foreground mb-6 sm:mb-8 max-w-xl leading-relaxed drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]" style={{ textShadow: '0 1px 3px rgba(255,255,255,0.95), 0 2px 8px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.6)' }}>
+              Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Button asChild size="lg" className="gap-2">
