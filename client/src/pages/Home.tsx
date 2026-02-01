@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import React from "react";
 import ProductCard from "@/components/ProductCard";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,20 @@ import { toast } from "sonner";
 export default function Home() {
   const { isAuthenticated } = useAuth();
   const { data: products, isLoading } = trpc.product.list.useQuery({});
+  
+  // Set page title and meta keywords for SEO
+  React.useEffect(() => {
+    document.title = "Urban Refit | Sustainable Secondhand Men's Fashion NZ";
+    
+    // Add or update meta keywords
+    let keywordsMeta = document.querySelector('meta[name="keywords"]');
+    if (!keywordsMeta) {
+      keywordsMeta = document.createElement('meta');
+      keywordsMeta.setAttribute('name', 'keywords');
+      document.head.appendChild(keywordsMeta);
+    }
+    keywordsMeta.setAttribute('content', 'secondhand fashion, sustainable clothing, thrift store, mens fashion NZ, eco-friendly apparel, circular economy, pre-loved brands, affordable fashion');
+  }, []);
   const utils = trpc.useUtils();
   
   const addToCart = trpc.cart.add.useMutation({
@@ -42,6 +57,7 @@ export default function Home() {
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-8 sm:pb-12 md:pb-16">
           <div className="max-w-2xl">
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-serif font-semibold leading-tight mb-3 md:mb-4 text-foreground">
+              Premium Secondhand Fashion for Men
             </h1>
             <p className="text-sm sm:text-base text-foreground mb-4 sm:mb-6 max-w-lg drop-shadow-[0_2px_4px_rgba(255,255,255,0.9)]" style={{ textShadow: '0 1px 3px rgba(255,255,255,0.95), 0 2px 8px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.6)' }}>
               Premium brands, second chances. Hand-picked from NZ thrift stores, styled for you – with 5% of every sale going back to the community.

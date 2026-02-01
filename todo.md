@@ -732,3 +732,8 @@
 ## Image Display Fix (Feb 1, 2026)
 - [x] Fixed product 270001 broken image URL (was /products/fUqFXdNgzu6Igc99Gaom_.JPG, now /products/tommy-hilfiger-polo.png)
 - [x] All 4 New Arrivals product images now display correctly
+
+## SEO Issues - Home Page (Feb 1, 2026)
+- [x] Add H1 heading to home page ("Premium Secondhand Fashion for Men")
+- [x] Add keywords/meta keywords to page (8 relevant keywords added)
+- [x] Optimize page title to 30-60 characters ("Urban Refit | Sustainable Secondhand Men's Fashion" = 52 chars)
