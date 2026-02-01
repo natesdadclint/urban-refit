@@ -56,10 +56,10 @@ export default function Home() {
         {/* Content positioned at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-8 sm:pb-12 md:pb-16">
           <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold leading-tight mb-4 md:mb-6 text-white max-w-2xl" style={{ textShadow: '-2px -2px 0 rgba(0,0,0,0.8), 2px -2px 0 rgba(0,0,0,0.8), -2px 2px 0 rgba(0,0,0,0.8), 2px 2px 0 rgba(0,0,0,0.8), -1px 0 0 rgba(0,0,0,0.8), 1px 0 0 rgba(0,0,0,0.8), 0 -1px 0 rgba(0,0,0,0.8), 0 1px 0 rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.6), 0 0 16px rgba(0,0,0,0.4)' }}>
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold leading-tight mb-4 md:mb-6 text-white max-w-2xl" style={{ textShadow: '0 0 20px rgba(0,0,0,0.4), 0 0 40px rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.3)' }}>
               Buy Premium Secondhand Men's Fashion Online from NZ Thrift Stores
             </h1>
-            <p className="text-sm sm:text-base text-white mb-6 sm:mb-8 max-w-xl leading-relaxed" style={{ textShadow: '-2px -2px 0 rgba(0,0,0,0.75), 2px -2px 0 rgba(0,0,0,0.75), -2px 2px 0 rgba(0,0,0,0.75), 2px 2px 0 rgba(0,0,0,0.75), -1px 0 0 rgba(0,0,0,0.75), 1px 0 0 rgba(0,0,0,0.75), 0 -1px 0 rgba(0,0,0,0.75), 0 1px 0 rgba(0,0,0,0.75), 0 0 6px rgba(0,0,0,0.5), 0 0 12px rgba(0,0,0,0.3)' }}>
+            <p className="text-sm sm:text-base text-white mb-6 sm:mb-8 max-w-xl leading-relaxed" style={{ textShadow: '0 0 16px rgba(0,0,0,0.35), 0 0 32px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.25)' }}>
               Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">

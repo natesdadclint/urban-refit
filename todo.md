@@ -747,3 +747,7 @@
 ## Header & Byline Readability Fix (Feb 1, 2026)
 - [x] Add halo effect around header and byline text (multi-layer black text-shadow)
 - [x] Improve contrast against hero image (changed text color to white with dark halo)
+
+## Halo Effect Refinement (Feb 1, 2026)
+- [x] Soften halo effect - replaced heavy directional shadows with soft blur-based glow
+- [x] Create subtle, elegant glow that matches hero page aesthetic (3-layer soft shadow: 20px, 40px, and 2px blur)
