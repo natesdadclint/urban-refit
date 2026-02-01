@@ -716,3 +716,6 @@
 
 ## Bug Fixes
 - [x] Fix broken product image previews in admin product edit form (added error handling with fallback UI)
+
+- [x] Fix image upload flow - now saves to client/public/products for local serving
+- [x] Fixed CloudFront URL products (240001, 210002) to use local paths
