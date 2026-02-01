@@ -106,4 +106,154 @@ export const adminRouter = router({
       }
       return analytics;
     }),
+
+  // ============ IMAGE VALIDATION MONITORING ============
+  
+  validateAllImages: adminProcedure.mutation(async () => {    
+    const runId = nanoid();
+    const allProducts = await db.getAllProductsBasic();
+    
+    const validationResults = [];
+    
+    for (const product of allProducts) {
+      // Validate image1Url
+      if (product.image1Url) {
+        const startTime = Date.now();
+        let isValid = true;
+        let errorType = null;
+        let httpStatus = null;
+        let errorMessage = null;
+        
+        try {
+          // Check if URL is valid format
+          if (!product.image1Url.startsWith('http') && !product.image1Url.startsWith('/')) {
+            isValid = false;
+            errorType = 'invalid_format';
+            errorMessage = 'URL does not start with http or /';
+          } else if (product.image1Url.startsWith('http')) {
+            // Make HEAD request to check if image exists
+            const response = await fetch(product.image1Url, { method: 'HEAD', signal: AbortSignal.timeout(5000) });
+            httpStatus = response.status;
+            if (!response.ok) {
+              isValid = false;
+              errorType = 'http_error';
+              errorMessage = `HTTP ${response.status}`;
+            }
+          }
+        } catch (error: any) {
+          isValid = false;
+          if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+            errorType = 'timeout';
+            errorMessage = 'Request timeout after 5s';
+          } else {
+            errorType = 'http_error';
+            errorMessage = error.message;
+          }
+        }
+        
+        const responseTimeMs = Date.now() - startTime;
+        
+        await db.createImageValidationLog({
+          validationRunId: runId,
+          productId: product.id,
+          imageField: 'image1Url',
+          imageUrl: product.image1Url,
+          isValid,
+          errorType: errorType as any,
+          httpStatus,
+          errorMessage,
+          responseTimeMs,
+        });
+        
+        validationResults.push({ productId: product.id, field: 'image1Url', isValid });
+      } else {
+        // Null image URL
+        await db.createImageValidationLog({
+          validationRunId: runId,
+          productId: product.id,
+          imageField: 'image1Url',
+          imageUrl: null,
+          isValid: false,
+          errorType: 'null',
+          httpStatus: null,
+          errorMessage: 'Image URL is null',
+          responseTimeMs: 0,
+        });
+        validationResults.push({ productId: product.id, field: 'image1Url', isValid: false });
+      }
+      
+      // Validate image2Url
+      if (product.image2Url) {
+        const startTime = Date.now();
+        let isValid = true;
+        let errorType = null;
+        let httpStatus = null;
+        let errorMessage = null;
+        
+        try {
+          if (!product.image2Url.startsWith('http') && !product.image2Url.startsWith('/')) {
+            isValid = false;
+            errorType = 'invalid_format';
+            errorMessage = 'URL does not start with http or /';
+          } else if (product.image2Url.startsWith('http')) {
+            const response = await fetch(product.image2Url, { method: 'HEAD', signal: AbortSignal.timeout(5000) });
+            httpStatus = response.status;
+            if (!response.ok) {
+              isValid = false;
+              errorType = 'http_error';
+              errorMessage = `HTTP ${response.status}`;
+            }
+          }
+        } catch (error: any) {
+          isValid = false;
+          if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+            errorType = 'timeout';
+            errorMessage = 'Request timeout after 5s';
+          } else {
+            errorType = 'http_error';
+            errorMessage = error.message;
+          }
+        }
+        
+        const responseTimeMs = Date.now() - startTime;
+        
+        await db.createImageValidationLog({
+          validationRunId: runId,
+          productId: product.id,
+          imageField: 'image2Url',
+          imageUrl: product.image2Url,
+          isValid,
+          errorType: errorType as any,
+          httpStatus,
+          errorMessage,
+          responseTimeMs,
+        });
+        
+        validationResults.push({ productId: product.id, field: 'image2Url', isValid });
+      }
+    }
+    
+    return {
+      runId,
+      totalChecked: validationResults.length,
+      validCount: validationResults.filter(r => r.isValid).length,
+      invalidCount: validationResults.filter(r => !r.isValid).length,
+    };
+  }),
+  
+  getValidationStats: adminProcedure.query(async () => {
+    return await db.getValidationStats();
+  }),
+  
+  getValidationHistory: adminProcedure
+    .input(z.object({ limit: z.number().optional().default(10) }))
+    .query(async ({ input }) => {
+      return await db.getValidationHistory(input.limit);
+    }),
+  
+  getValidationRunDetails: adminProcedure
+    .input(z.object({ runId: z.string() }))
+    .query(async ({ input }) => {
+      return await db.getImageValidationLogsByRunId(input.runId);
+    }),
 });

@@ -641,3 +641,13 @@
 
 ## Security Fixes
 - [x] Fix IDOR vulnerability in sellSubmission.getById - changed to protectedProcedure with ownership verification
+
+## Image URL Monitoring Dashboard
+- [x] Create image_validation_logs table to track URL validity checks over time
+- [x] Add backend API endpoint to validate all product image URLs
+- [x] Add backend API endpoint to get validation history and statistics
+- [x] Create admin dashboard page for image URL monitoring
+- [x] Add real-time validation status display with pass/fail counts
+- [x] Add historical chart showing validation trends over time
+- [x] Add detailed table showing individual product image status
+- [x] Add manual "Run Validation" button for on-demand checks

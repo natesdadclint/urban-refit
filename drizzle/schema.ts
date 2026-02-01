@@ -745,3 +745,35 @@ export const notificationPreferences = mysqlTable("notification_preferences", {
 
 export type NotificationPreference = typeof notificationPreferences.$inferSelect;
 export type InsertNotificationPreference = typeof notificationPreferences.$inferInsert;
+
+
+/**
+ * Image validation logs - tracks image URL validity checks over time
+ */
+export const imageValidationLogs = mysqlTable("image_validation_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Validation run metadata
+  validationRunId: varchar("validationRunId", { length: 50 }).notNull(), // UUID for grouping checks in same run
+  
+  // Product reference
+  productId: int("productId").notNull(),
+  
+  // Image details
+  imageField: mysqlEnum("imageField", ["image1Url", "image2Url"]).notNull(),
+  imageUrl: text("imageUrl"),
+  
+  // Validation result
+  isValid: boolean("isValid").notNull(),
+  errorType: mysqlEnum("errorType", ["null", "empty", "invalid_format", "http_error", "timeout"]),
+  httpStatus: int("httpStatus"), // HTTP status code if applicable
+  errorMessage: text("errorMessage"),
+  
+  // Timing
+  responseTimeMs: int("responseTimeMs"), // Response time in milliseconds
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ImageValidationLog = typeof imageValidationLogs.$inferSelect;
+export type InsertImageValidationLog = typeof imageValidationLogs.$inferInsert;

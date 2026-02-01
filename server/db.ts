@@ -22,7 +22,8 @@ import {
   contactReplies, InsertContactReply, ContactReply,
   notifications, InsertNotification, Notification,
   broadcastReadStatus, InsertBroadcastReadStatus, BroadcastReadStatus,
-  notificationPreferences, InsertNotificationPreference, NotificationPreference
+  notificationPreferences, InsertNotificationPreference, NotificationPreference,
+  imageValidationLogs, InsertImageValidationLog, ImageValidationLog
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -2780,4 +2781,109 @@ export async function shouldSendNotification(
     default:
       return true;
   }
+}
+
+export async function getAllProductMetadata(): Promise<ProductMetadata[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(productMetadata);
+}
+
+export async function getAllProductsBasic(): Promise<Array<{id: number, name: string, image1Url: string | null, image2Url: string | null}>> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    id: products.id,
+    name: products.name,
+    image1Url: products.image1Url,
+    image2Url: products.image2Url,
+  }).from(products);
+}
+
+// ============ IMAGE VALIDATION LOGS ============
+
+export async function createImageValidationLog(log: InsertImageValidationLog): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(imageValidationLogs).values(log);
+  return result[0].insertId;
+}
+
+export async function getImageValidationLogsByRunId(runId: string): Promise<ImageValidationLog[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(imageValidationLogs).where(eq(imageValidationLogs.validationRunId, runId));
+}
+
+export async function getLatestValidationRun(): Promise<{runId: string, createdAt: Date} | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [latest] = await db.select({
+    runId: imageValidationLogs.validationRunId,
+    createdAt: imageValidationLogs.createdAt,
+  })
+    .from(imageValidationLogs)
+    .orderBy(desc(imageValidationLogs.createdAt))
+    .limit(1);
+  return latest || null;
+}
+
+export async function getValidationStats(): Promise<{
+  totalProducts: number;
+  validImages: number;
+  invalidImages: number;
+  lastRunDate: Date | null;
+}> {
+  const db = await getDb();
+  if (!db) return { totalProducts: 0, validImages: 0, invalidImages: 0, lastRunDate: null };
+  
+  const latestRun = await getLatestValidationRun();
+  if (!latestRun) {
+    return { totalProducts: 0, validImages: 0, invalidImages: 0, lastRunDate: null };
+  }
+  
+  const logs = await getImageValidationLogsByRunId(latestRun.runId);
+  const validImages = logs.filter(log => log.isValid).length;
+  const invalidImages = logs.filter(log => !log.isValid).length;
+  
+  return {
+    totalProducts: new Set(logs.map(log => log.productId)).size,
+    validImages,
+    invalidImages,
+    lastRunDate: latestRun.createdAt,
+  };
+}
+
+export async function getValidationHistory(limit: number = 10): Promise<Array<{
+  runId: string;
+  createdAt: Date;
+  totalChecks: number;
+  validCount: number;
+  invalidCount: number;
+}>> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  // Get unique run IDs
+  const runs = await db.selectDistinct({
+    runId: imageValidationLogs.validationRunId,
+    createdAt: imageValidationLogs.createdAt,
+  })
+    .from(imageValidationLogs)
+    .orderBy(desc(imageValidationLogs.createdAt))
+    .limit(limit);
+  
+  // Get stats for each run
+  const history = await Promise.all(runs.map(async (run) => {
+    const logs = await getImageValidationLogsByRunId(run.runId);
+    return {
+      runId: run.runId,
+      createdAt: run.createdAt,
+      totalChecks: logs.length,
+      validCount: logs.filter(log => log.isValid).length,
+      invalidCount: logs.filter(log => !log.isValid).length,
+    };
+  }));
+  
+  return history;
 }

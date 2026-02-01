@@ -141,6 +141,13 @@
       "when": 1769675224693,
       "tag": "0019_purple_morlocks",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1769917933272,
+      "tag": "0020_empty_karma",
+      "breakpoints": true
     }
   ]
 }

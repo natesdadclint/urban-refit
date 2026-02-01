@@ -1796,6 +1796,16 @@ Keep insights concise and actionable.`;
         return { success: true };
       }),
   }),
+
+  // Debug endpoint to fetch all product metadata
+  getAllProductMetadata: publicProcedure.query(async () => {
+    return await db.getAllProductMetadata();
+  }),
+
+  // Debug endpoint to fetch all products
+  getAllProductsBasic: publicProcedure.query(async () => {
+    return await db.getAllProductsBasic();
+  }),
 });
 
 export type AppRouter = typeof appRouter;
