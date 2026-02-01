@@ -706,3 +706,10 @@
 - [x] Export both storagePut (Manus) and AWS SDK options from storage.ts
 - [x] Document when to use each approach
 - [x] Write vitest tests for S3 utility (13 tests passing)
+
+## Product Image Upload Endpoint
+- [x] Add uploadProductImage procedure to routers.ts for admin image uploads
+- [x] Import uploadProductImage from s3.ts
+- [x] Handle base64 to buffer conversion
+- [x] Update product image URL in database after upload
+- [x] Write vitest tests (9 tests passing)
