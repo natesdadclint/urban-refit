@@ -51,10 +51,10 @@ export default function Home() {
           style={{ backgroundImage: 'url(/hero-background.jpg)' }}
         />
         {/* Stronger overlay at bottom for text readability */}
-        <div className="absolute inset-x-0 bottom-0 h-64 sm:h-80 md:h-96 bg-gradient-to-t from-white via-white/95 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-80 sm:h-96 md:h-[480px] bg-gradient-to-t from-white via-white/95 to-transparent" />
         
         {/* Content positioned at bottom */}
-        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-8 sm:pb-12 md:pb-16">
+        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-24 sm:pb-32 md:pb-40">
           <div className="max-w-2xl">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold leading-tight mb-4 md:mb-6 text-white max-w-2xl" style={{ textShadow: '0 0 20px rgba(0,0,0,0.44), 0 0 40px rgba(0,0,0,0.275), 0 2px 4px rgba(0,0,0,0.33)' }}>
               Buy Premium Secondhand Men's Fashion Online from NZ Thrift Stores

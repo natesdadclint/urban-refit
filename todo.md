@@ -759,3 +759,7 @@
 ## Byline Outline Refinement (Feb 1, 2026)
 - [x] Thin the black outline around byline text (reduced from 1px to 0.5px offset)
 - [x] Maintain readability with reduced thickness (increased opacity to 0.9)
+
+## Header & Byline Positioning (Feb 1, 2026)
+- [x] Move header and byline further down the page (increased pb from 8/12/16 to 24/32/40)
+- [x] Maintain readability while improving aesthetic (extended overlay height to 80/96/480px)
