@@ -755,3 +755,7 @@
 ## Header & Byline Shadow Adjustments (Feb 1, 2026)
 - [x] Header: Increased halo darkness by 10% (0.44/0.275/0.33 opacity)
 - [x] Byline: Replaced soft glow with single black outline (4-corner directional shadow at 0.8 opacity)
+
+## Byline Outline Refinement (Feb 1, 2026)
+- [x] Thin the black outline around byline text (reduced from 1px to 0.5px offset)
+- [x] Maintain readability with reduced thickness (increased opacity to 0.9)
