@@ -660,3 +660,6 @@
 - [x] Add asset type breakdown to validation stats
 - [x] Update dashboard UI to show validation results by asset type
 - [x] Write vitest tests for blog image validation
+
+## Bug Fixes
+- [x] Fix product images not displaying on homepage New Arrivals section
