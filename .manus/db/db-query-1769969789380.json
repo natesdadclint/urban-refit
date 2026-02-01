@@ -1,0 +1,70 @@
+{
+  "query": "SELECT id, name, image1Url, image2Url FROM products LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name, image1Url, image2Url FROM products LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt",
+      "image1Url": "/products/ralph-lauren-oxford.png",
+      "image2Url": "/stitching-detail-1.jpg"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans",
+      "image1Url": "/products/levis-501-jeans.png",
+      "image2Url": "/stitching-detail-2.jpg"
+    },
+    {
+      "id": "3",
+      "name": "Carhartt Work Jacket",
+      "image1Url": "/products/nike-air-force-1.png",
+      "image2Url": "/stitching-detail-3.jpg"
+    },
+    {
+      "id": "4",
+      "name": "Nike Air Force 1 Low",
+      "image1Url": "/products/nike-air-force-1.png",
+      "image2Url": "/stitching-detail-4.jpg"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap",
+      "image1Url": "/products/new-era-cap.png",
+      "image2Url": "/stitching-detail-1.jpg"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo",
+      "image1Url": "/products/tommy-hilfiger-polo.png",
+      "image2Url": "/stitching-detail-2.jpg"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants",
+      "image1Url": "/products/dickies-work-pants.png",
+      "image2Url": "/stitching-detail-3.jpg"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket",
+      "image1Url": "/products/patagonia-fleece.png",
+      "image2Url": "/stitching-detail-4.jpg"
+    },
+    {
+      "id": "120002",
+      "name": "Nike Sports Shoes",
+      "image1Url": "/products/nike-air-force-1.png",
+      "image2Url": "NULL"
+    },
+    {
+      "id": "150001",
+      "name": "Doc Martins",
+      "image1Url": "/products/sneakers-white.jpg",
+      "image2Url": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\timage1Url\timage2Url\n1\tRalph Lauren Oxford Shirt\t/products/ralph-lauren-oxford.png\t/stitching-detail-1.jpg\n2\tLevi's 501 Original Jeans\t/products/levis-501-jeans.png\t/stitching-detail-2.jpg\n3\tCarhartt Work Jacket\t/products/nike-air-force-1.png\t/stitching-detail-3.jpg\n4\tNike Air Force 1 Low\t/products/nike-air-force-1.png\t/stitching-detail-4.jpg\n5\tNew Era Yankees Cap\t/products/new-era-cap.png\t/stitching-detail-1.jpg\n6\tTommy Hilfiger Polo\t/products/tommy-hilfiger-polo.png\t/stitching-detail-2.jpg\n7\tDickies 874 Work Pants\t/products/dickies-work-pants.png\t/stitching-detail-3.jpg\n8\tPatagonia Fleece Jacket\t/products/patagonia-fleece.png\t/stitching-detail-4.jpg\n120002\tNike Sports Shoes\t/products/nike-air-force-1.png\tNULL\n150001\tDoc Martins\t/products/sneakers-white.jpg\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 1689
+}

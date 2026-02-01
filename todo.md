@@ -728,3 +728,7 @@
 - [x] Write tests for image proxy/serving functionality
 - [x] Write tests for error handling (invalid files, oversized images, missing auth)
 - [x] All 66 tests passing
+
+## Image Display Fix (Feb 1, 2026)
+- [x] Fixed product 270001 broken image URL (was /products/fUqFXdNgzu6Igc99Gaom_.JPG, now /products/tommy-hilfiger-polo.png)
+- [x] All 4 New Arrivals product images now display correctly
