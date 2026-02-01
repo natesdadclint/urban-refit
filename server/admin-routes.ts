@@ -243,4 +243,62 @@ export const adminRouter = router({
     .query(async ({ input }) => {
       return await db.getImageValidationLogsByRunId(input.runId);
     }),
+  
+  // ============ ADMIN NOTIFICATIONS ============
+  
+  getAdminNotifications: adminProcedure
+    .input(z.object({
+      unreadOnly: z.boolean().optional(),
+      type: z.string().optional(),
+      priority: z.string().optional(),
+      limit: z.number().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      return await db.getAdminNotifications(input);
+    }),
+  
+  getUnreadNotificationCount: adminProcedure.query(async () => {
+    return await db.getUnreadAdminNotificationCount();
+  }),
+  
+  getNotificationStats: adminProcedure.query(async () => {
+    return await db.getAdminNotificationStats();
+  }),
+  
+  markNotificationAsRead: adminProcedure
+    .input(z.object({ notificationId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await db.markAdminNotificationAsRead(input.notificationId, ctx.user.id);
+      return { success: true };
+    }),
+  
+  markAllNotificationsAsRead: adminProcedure
+    .mutation(async ({ ctx }) => {
+      const count = await db.markAllAdminNotificationsAsRead(ctx.user.id);
+      return { success: true, count };
+    }),
+  
+  deleteNotification: adminProcedure
+    .input(z.object({ notificationId: z.number() }))
+    .mutation(async ({ input }) => {
+      await db.deleteAdminNotification(input.notificationId);
+      return { success: true };
+    }),
+  
+  createTestNotification: adminProcedure
+    .input(z.object({
+      title: z.string(),
+      message: z.string(),
+      type: z.enum(["new_order", "order_cancelled", "new_submission", "submission_approved", "submission_rejected", "new_contact", "low_stock", "payout_due", "system_alert", "security_alert"]),
+      priority: z.enum(["low", "medium", "high", "critical"]).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      const id = await db.createAdminNotification({
+        title: input.title,
+        message: input.message,
+        type: input.type,
+        priority: input.priority || "medium",
+      });
+      return { success: true, id };
+    }),
 });

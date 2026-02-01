@@ -778,3 +778,53 @@ export const imageValidationLogs = mysqlTable("image_validation_logs", {
 
 export type ImageValidationLog = typeof imageValidationLogs.$inferSelect;
 export type InsertImageValidationLog = typeof imageValidationLogs.$inferInsert;
+
+
+/**
+ * Admin notifications - alerts for admins about important events
+ */
+export const adminNotifications = mysqlTable("admin_notifications", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Notification content
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Notification type for categorization and icons
+  type: mysqlEnum("type", [
+    "new_order",
+    "order_cancelled",
+    "new_submission",
+    "submission_approved",
+    "submission_rejected",
+    "new_contact",
+    "low_stock",
+    "payout_due",
+    "system_alert",
+    "security_alert"
+  ]).notNull(),
+  
+  // Priority level
+  priority: mysqlEnum("priority", ["low", "medium", "high", "critical"]).default("medium").notNull(),
+  
+  // Link to relevant resource
+  link: varchar("link", { length: 500 }),
+  
+  // Reference to related entity
+  relatedEntityType: mysqlEnum("relatedEntityType", ["order", "submission", "contact", "product", "user"]),
+  relatedEntityId: int("relatedEntityId"),
+  
+  // Status
+  isRead: boolean("isRead").default(false).notNull(),
+  readAt: timestamp("readAt"),
+  readByUserId: int("readByUserId"), // Which admin marked it as read
+  
+  // Email notification status
+  emailSent: boolean("emailSent").default(false).notNull(),
+  emailSentAt: timestamp("emailSentAt"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AdminNotification = typeof adminNotifications.$inferSelect;
+export type InsertAdminNotification = typeof adminNotifications.$inferInsert;

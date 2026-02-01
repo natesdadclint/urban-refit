@@ -1225,6 +1225,13 @@ Keep insights concise and actionable.`;
           throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create submission" });
         }
         
+        // Notify admin about new submission
+        try {
+          await db.notifyAdminNewSubmission(submission.id, ctx.user?.name || 'Anonymous', 1);
+        } catch (error) {
+          console.error('Failed to create admin notification:', error);
+        }
+        
         return { id: submission.id, status: submission.status };
       }),
     
@@ -1609,6 +1616,13 @@ Keep insights concise and actionable.`;
           title: "New Contact Message from Urban Refit",
           content: `New message from ${input.email}:\n\n${input.message}\n\n---\nNewsletter opt-in: ${input.subscribeToNewsletter ? "Yes" : "No"}`,
         });
+        
+        // Create admin notification
+        try {
+          await db.notifyAdminNewContact(contactMessage.id, input.email, input.message.substring(0, 100));
+        } catch (error) {
+          console.error('Failed to create admin notification:', error);
+        }
         
         return { 
           success: true, 

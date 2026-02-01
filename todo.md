@@ -681,3 +681,20 @@
 - [x] Add filtering by priority/category
 - [x] Implement table of contents navigation
 - [x] Add print-friendly view option
+
+## Image URL Migration to S3
+- [ ] Generate SQL UPDATE statements to migrate local paths to S3 URLs
+- [ ] Upload product images to S3 bucket
+- [ ] Execute migration SQL statements
+- [ ] Verify all images load correctly after migration
+
+## Admin Notifications System
+- [x] Create admin_notifications table in database schema
+- [x] Add API endpoints for fetching, marking read, and creating notifications
+- [x] Build notification center UI with bell icon and dropdown
+- [x] Add real-time notification count badge
+- [x] Trigger notifications on new orders
+- [x] Trigger notifications on new sell submissions
+- [x] Trigger notifications on new contact messages
+- [ ] Add email alerts for critical notifications
+- [x] Write vitest tests for notification system (16 tests passing)

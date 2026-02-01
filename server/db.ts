@@ -23,7 +23,8 @@ import {
   notifications, InsertNotification, Notification,
   broadcastReadStatus, InsertBroadcastReadStatus, BroadcastReadStatus,
   notificationPreferences, InsertNotificationPreference, NotificationPreference,
-  imageValidationLogs, InsertImageValidationLog, ImageValidationLog
+  imageValidationLogs, InsertImageValidationLog, ImageValidationLog,
+  adminNotifications, InsertAdminNotification, AdminNotification
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -2936,4 +2937,214 @@ export async function getAllBlogPostsForValidation(): Promise<Array<{id: number,
     id: blogPosts.id,
     featuredImageUrl: blogPosts.featuredImageUrl,
   }).from(blogPosts);
+}
+
+
+// ============ ADMIN NOTIFICATION OPERATIONS ============
+
+export async function createAdminNotification(notification: InsertAdminNotification): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(adminNotifications).values(notification);
+  return result[0].insertId;
+}
+
+export async function getAdminNotifications(options?: {
+  unreadOnly?: boolean;
+  type?: string;
+  priority?: string;
+  limit?: number;
+}): Promise<AdminNotification[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const conditions: any[] = [];
+  
+  if (options?.unreadOnly) {
+    conditions.push(eq(adminNotifications.isRead, false));
+  }
+  if (options?.type) {
+    conditions.push(eq(adminNotifications.type, options.type as any));
+  }
+  if (options?.priority) {
+    conditions.push(eq(adminNotifications.priority, options.priority as any));
+  }
+  
+  let query = db.select().from(adminNotifications);
+  
+  if (conditions.length > 0) {
+    query = query.where(and(...conditions)) as any;
+  }
+  
+  return query
+    .orderBy(desc(adminNotifications.createdAt))
+    .limit(options?.limit || 50);
+}
+
+export async function getUnreadAdminNotificationCount(): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const [result] = await db.select({
+    count: sql<number>`COUNT(*)`
+  }).from(adminNotifications).where(eq(adminNotifications.isRead, false));
+  
+  return result?.count || 0;
+}
+
+export async function markAdminNotificationAsRead(notificationId: number, adminUserId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  await db.update(adminNotifications)
+    .set({
+      isRead: true,
+      readAt: new Date(),
+      readByUserId: adminUserId,
+    })
+    .where(eq(adminNotifications.id, notificationId));
+}
+
+export async function markAllAdminNotificationsAsRead(adminUserId: number): Promise<number> {
+  const db = await getDb();
+  if (!db) return 0;
+  
+  const unread = await db.select().from(adminNotifications).where(eq(adminNotifications.isRead, false));
+  const count = unread.length;
+  
+  if (count > 0) {
+    await db.update(adminNotifications)
+      .set({
+        isRead: true,
+        readAt: new Date(),
+        readByUserId: adminUserId,
+      })
+      .where(eq(adminNotifications.isRead, false));
+  }
+  
+  return count;
+}
+
+export async function deleteAdminNotification(notificationId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+  
+  await db.delete(adminNotifications).where(eq(adminNotifications.id, notificationId));
+}
+
+export async function getAdminNotificationStats(): Promise<{
+  total: number;
+  unread: number;
+  byType: Record<string, number>;
+  byPriority: Record<string, number>;
+}> {
+  const db = await getDb();
+  if (!db) return { total: 0, unread: 0, byType: {}, byPriority: {} };
+  
+  const all = await db.select().from(adminNotifications);
+  const unread = all.filter(n => !n.isRead).length;
+  
+  const byType: Record<string, number> = {};
+  const byPriority: Record<string, number> = {};
+  
+  for (const n of all) {
+    byType[n.type] = (byType[n.type] || 0) + 1;
+    byPriority[n.priority] = (byPriority[n.priority] || 0) + 1;
+  }
+  
+  return { total: all.length, unread, byType, byPriority };
+}
+
+// Helper functions to create specific admin notifications
+
+export async function notifyAdminNewOrder(orderId: number, customerName: string, total: number): Promise<void> {
+  await createAdminNotification({
+    title: "New Order Received",
+    message: `${customerName} placed an order for NZ$${total.toFixed(2)}`,
+    type: "new_order",
+    priority: "high",
+    link: `/admin/orders/${orderId}`,
+    relatedEntityType: "order",
+    relatedEntityId: orderId,
+  });
+}
+
+export async function notifyAdminOrderCancelled(orderId: number, customerName: string, reason?: string): Promise<void> {
+  await createAdminNotification({
+    title: "Order Cancelled",
+    message: `${customerName} cancelled order #${orderId}${reason ? `: ${reason}` : ''}`,
+    type: "order_cancelled",
+    priority: "medium",
+    link: `/admin/orders/${orderId}`,
+    relatedEntityType: "order",
+    relatedEntityId: orderId,
+  });
+}
+
+export async function notifyAdminNewSubmission(submissionId: number, customerName: string, itemCount: number): Promise<void> {
+  await createAdminNotification({
+    title: "New Sell Submission",
+    message: `${customerName} submitted ${itemCount} item(s) for review`,
+    type: "new_submission",
+    priority: "medium",
+    link: `/admin/submissions/${submissionId}`,
+    relatedEntityType: "submission",
+    relatedEntityId: submissionId,
+  });
+}
+
+export async function notifyAdminNewContact(contactId: number, senderName: string, subject: string): Promise<void> {
+  await createAdminNotification({
+    title: "New Contact Message",
+    message: `${senderName}: ${subject.substring(0, 100)}${subject.length > 100 ? '...' : ''}`,
+    type: "new_contact",
+    priority: "medium",
+    link: `/admin/contact/${contactId}`,
+    relatedEntityType: "contact",
+    relatedEntityId: contactId,
+  });
+}
+
+export async function notifyAdminLowStock(productId: number, productName: string): Promise<void> {
+  await createAdminNotification({
+    title: "Low Stock Alert",
+    message: `${productName} is running low on stock`,
+    type: "low_stock",
+    priority: "high",
+    link: `/admin/products/${productId}`,
+    relatedEntityType: "product",
+    relatedEntityId: productId,
+  });
+}
+
+export async function notifyAdminPayoutDue(storeId: number, storeName: string, amount: number): Promise<void> {
+  await createAdminNotification({
+    title: "Payout Due",
+    message: `${storeName} has NZ$${amount.toFixed(2)} pending payout`,
+    type: "payout_due",
+    priority: "high",
+    link: `/admin/payouts`,
+    relatedEntityType: "user",
+    relatedEntityId: storeId,
+  });
+}
+
+export async function notifyAdminSystemAlert(title: string, message: string, priority: "low" | "medium" | "high" | "critical" = "medium"): Promise<void> {
+  await createAdminNotification({
+    title,
+    message,
+    type: "system_alert",
+    priority,
+  });
+}
+
+export async function notifyAdminSecurityAlert(title: string, message: string, userId?: number): Promise<void> {
+  await createAdminNotification({
+    title,
+    message,
+    type: "security_alert",
+    priority: "critical",
+    relatedEntityType: userId ? "user" : undefined,
+    relatedEntityId: userId,
+  });
 }
