@@ -148,6 +148,13 @@
       "when": 1769917933272,
       "tag": "0020_empty_karma",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1769921174331,
+      "tag": "0021_neat_blacklash",
+      "breakpoints": true
     }
   ]
 }

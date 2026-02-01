@@ -651,3 +651,12 @@
 - [x] Add historical chart showing validation trends over time
 - [x] Add detailed table showing individual product image status
 - [x] Add manual "Run Validation" button for on-demand checks
+
+## Expanded Asset Monitoring
+- [x] Update image_validation_logs schema to support multiple asset types (category, blog, product)
+- [x] Add assetType field to distinguish between different image sources
+- [x] Create database helpers to fetch category and blog post images
+- [x] Update validateAllImages endpoint to check blog post images
+- [x] Add asset type breakdown to validation stats
+- [x] Update dashboard UI to show validation results by asset type
+- [x] Write vitest tests for blog image validation

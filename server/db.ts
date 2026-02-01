@@ -2829,28 +2829,68 @@ export async function getLatestValidationRun(): Promise<{runId: string, createdA
 }
 
 export async function getValidationStats(): Promise<{
+  totalAssets: number;
   totalProducts: number;
+  totalBlogs: number;
   validImages: number;
   invalidImages: number;
   lastRunDate: Date | null;
+  byAssetType: Record<string, { valid: number; invalid: number; total: number }>;
 }> {
   const db = await getDb();
-  if (!db) return { totalProducts: 0, validImages: 0, invalidImages: 0, lastRunDate: null };
+  if (!db) return { 
+    totalAssets: 0, 
+    totalProducts: 0, 
+    totalBlogs: 0, 
+    validImages: 0, 
+    invalidImages: 0, 
+    lastRunDate: null,
+    byAssetType: {}
+  };
   
   const latestRun = await getLatestValidationRun();
   if (!latestRun) {
-    return { totalProducts: 0, validImages: 0, invalidImages: 0, lastRunDate: null };
+    return { 
+      totalAssets: 0, 
+      totalProducts: 0, 
+      totalBlogs: 0, 
+      validImages: 0, 
+      invalidImages: 0, 
+      lastRunDate: null,
+      byAssetType: {}
+    };
   }
   
   const logs = await getImageValidationLogsByRunId(latestRun.runId);
   const validImages = logs.filter(log => log.isValid).length;
   const invalidImages = logs.filter(log => !log.isValid).length;
   
+  // Calculate stats by asset type
+  const byAssetType: Record<string, { valid: number; invalid: number; total: number }> = {};
+  for (const log of logs) {
+    const type = log.assetType;
+    if (!byAssetType[type]) {
+      byAssetType[type] = { valid: 0, invalid: 0, total: 0 };
+    }
+    byAssetType[type].total++;
+    if (log.isValid) {
+      byAssetType[type].valid++;
+    } else {
+      byAssetType[type].invalid++;
+    }
+  }
+  
+  const productAssets = new Set(logs.filter(l => l.assetType === 'product').map(l => l.assetId)).size;
+  const blogAssets = new Set(logs.filter(l => l.assetType === 'blog').map(l => l.assetId)).size;
+  
   return {
-    totalProducts: new Set(logs.map(log => log.productId)).size,
+    totalAssets: productAssets + blogAssets,
+    totalProducts: productAssets,
+    totalBlogs: blogAssets,
     validImages,
     invalidImages,
     lastRunDate: latestRun.createdAt,
+    byAssetType,
   };
 }
 
@@ -2886,4 +2926,14 @@ export async function getValidationHistory(limit: number = 10): Promise<Array<{
   }));
   
   return history;
+}
+
+
+export async function getAllBlogPostsForValidation(): Promise<Array<{id: number, featuredImageUrl: string | null}>> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select({
+    id: blogPosts.id,
+    featuredImageUrl: blogPosts.featuredImageUrl,
+  }).from(blogPosts);
 }

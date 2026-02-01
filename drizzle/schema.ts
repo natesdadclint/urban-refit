@@ -756,11 +756,12 @@ export const imageValidationLogs = mysqlTable("image_validation_logs", {
   // Validation run metadata
   validationRunId: varchar("validationRunId", { length: 50 }).notNull(), // UUID for grouping checks in same run
   
-  // Product reference
-  productId: int("productId").notNull(),
+  // Asset reference (polymorphic)
+  assetType: mysqlEnum("assetType", ["product", "blog", "category"]).notNull(),
+  assetId: int("assetId").notNull(), // ID of the product, blog post, or category
   
   // Image details
-  imageField: mysqlEnum("imageField", ["image1Url", "image2Url"]).notNull(),
+  imageField: varchar("imageField", { length: 50 }).notNull(), // e.g., "image1Url", "image2Url", "featuredImageUrl"
   imageUrl: text("imageUrl"),
   
   // Validation result
