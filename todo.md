@@ -751,3 +751,7 @@
 ## Halo Effect Refinement (Feb 1, 2026)
 - [x] Soften halo effect - replaced heavy directional shadows with soft blur-based glow
 - [x] Create subtle, elegant glow that matches hero page aesthetic (3-layer soft shadow: 20px, 40px, and 2px blur)
+
+## Header & Byline Shadow Adjustments (Feb 1, 2026)
+- [x] Header: Increased halo darkness by 10% (0.44/0.275/0.33 opacity)
+- [x] Byline: Replaced soft glow with single black outline (4-corner directional shadow at 0.8 opacity)
