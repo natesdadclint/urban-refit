@@ -743,3 +743,7 @@
 - [x] Fixed pagination and display layout (better spacing and line breaks)
 - [x] Header: "Buy Premium Secondhand Men's Fashion Online from NZ Thrift Stores"
 - [x] Byline: "Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping."
+
+## Header & Byline Readability Fix (Feb 1, 2026)
+- [x] Add halo effect around header and byline text (multi-layer black text-shadow)
+- [x] Improve contrast against hero image (changed text color to white with dark halo)
