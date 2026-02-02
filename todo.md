@@ -770,3 +770,8 @@
 ## Hero Image Enhancement (Feb 2, 2026)
 - [x] Strengthen overlay gradient for better text readability (enhanced white gradient to white/98 and white/90)
 - [x] Increase contrast between text and background (added dark overlay with black/20 and black/10)
+
+## Hero Gradient & Focal Point Enhancement (Feb 2, 2026)
+- [x] Add smooth gradient overlay without hard edges (full-page gradient from transparent to white/40)
+- [x] Enhance header and byline as focal points (increased text size and improved shadows)
+- [x] Improve visual hierarchy and text prominence (header text-5xl bold, byline text-lg medium)

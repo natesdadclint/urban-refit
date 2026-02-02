@@ -50,18 +50,18 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: 'url(/hero-background.jpg)' }}
         />
-        {/* Stronger overlay at bottom for text readability */}
-        <div className="absolute inset-x-0 bottom-0 h-80 sm:h-96 md:h-[480px] bg-gradient-to-t from-white via-white/98 via-white/90 to-transparent" />
-        {/* Additional dark overlay for enhanced contrast */}
-        <div className="absolute inset-x-0 bottom-0 h-80 sm:h-96 md:h-[480px] bg-gradient-to-t from-black/20 via-black/10 to-transparent" />
+        {/* Smooth full-page gradient overlay - no hard edges */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40" />
+        {/* Enhanced bottom gradient for text area */}
+        <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
         {/* Content positioned at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-24 sm:pb-32 md:pb-40">
           <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-semibold leading-tight mb-4 md:mb-6 text-white max-w-2xl" style={{ textShadow: '0 0 20px rgba(0,0,0,0.44), 0 0 40px rgba(0,0,0,0.275), 0 2px 4px rgba(0,0,0,0.33)' }}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight mb-4 md:mb-6 text-white max-w-2xl drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
             </h1>
-            <p className="text-sm sm:text-base text-white mb-6 sm:mb-8 max-w-xl leading-relaxed" style={{ textShadow: '-0.5px -0.5px 0 rgba(0,0,0,0.9), 0.5px -0.5px 0 rgba(0,0,0,0.9), -0.5px 0.5px 0 rgba(0,0,0,0.9), 0.5px 0.5px 0 rgba(0,0,0,0.9)' }}>
+            <p className="text-base sm:text-lg text-white mb-6 sm:mb-8 max-w-xl leading-relaxed font-medium" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)' }}>
               Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
