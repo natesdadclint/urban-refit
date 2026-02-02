@@ -766,3 +766,7 @@
 
 ## Header Text Update (Feb 1, 2026)
 - [x] Replace header with "Premium Preloved Men's Fashion"
+
+## Hero Image Enhancement (Feb 2, 2026)
+- [x] Strengthen overlay gradient for better text readability (enhanced white gradient to white/98 and white/90)
+- [x] Increase contrast between text and background (added dark overlay with black/20 and black/10)

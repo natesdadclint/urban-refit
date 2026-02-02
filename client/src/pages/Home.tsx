@@ -51,7 +51,9 @@ export default function Home() {
           style={{ backgroundImage: 'url(/hero-background.jpg)' }}
         />
         {/* Stronger overlay at bottom for text readability */}
-        <div className="absolute inset-x-0 bottom-0 h-80 sm:h-96 md:h-[480px] bg-gradient-to-t from-white via-white/95 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-80 sm:h-96 md:h-[480px] bg-gradient-to-t from-white via-white/98 via-white/90 to-transparent" />
+        {/* Additional dark overlay for enhanced contrast */}
+        <div className="absolute inset-x-0 bottom-0 h-80 sm:h-96 md:h-[480px] bg-gradient-to-t from-black/20 via-black/10 to-transparent" />
         
         {/* Content positioned at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-24 sm:pb-32 md:pb-40">
