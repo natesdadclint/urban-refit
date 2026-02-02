@@ -821,3 +821,8 @@
 - [x] Review Sustainability page for imperial units (found 2 instances)
 - [x] Convert all imperial units to metric (Pounds→Kilograms, Gallons→Liters)
 - [x] Update content and labels throughout page (all metric units applied)
+
+## Hero CTA Button Repositioning (Feb 2, 2026)
+- [x] Move Shop Now and See What's New buttons down (increased margin to mb-12/16/20)
+- [x] Center buttons between header/byline and Sustainable Fashion section
+- [x] Test visual balance and spacing (buttons now properly centered)
