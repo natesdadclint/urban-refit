@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Sparkles } from "lucide-react";
+import { ShoppingBag, Sparkles, Eye } from "lucide-react";
 
 interface ProductCardProps {
   id: number;
@@ -48,7 +48,7 @@ export default function ProductCard({
   const isNew = isNewArrival(createdAt);
 
   return (
-    <div className="product-card group bg-card rounded-lg overflow-hidden border border-border">
+    <div className="product-card group bg-card rounded-lg overflow-hidden border border-border transition-all duration-300 hover:shadow-xl hover:scale-105 hover:z-10">
       <Link href={`/product/${id}`}>
         {/* Single Image Display */}
         <div className="aspect-square overflow-hidden bg-muted relative">
@@ -64,6 +64,19 @@ export default function ProductCard({
               New
             </div>
           )}
+          {/* Quick View Button */}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <Button
+              size="sm"
+              className="gap-2 text-xs sm:text-sm"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+            >
+              Quick View
+            </Button>
+          </div>
         </div>
       </Link>
 
