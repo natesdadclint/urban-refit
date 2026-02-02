@@ -22,8 +22,8 @@ describe("Sustainability Calculator", () => {
       const metrics = calculateSustainabilityMetrics(1);
       
       expect(metrics.garmentsGivenSecondLife).toBe(1);
-      expect(metrics.landfillWasteDivertedLbs).toBe(GARMENT_IMPACT.LANDFILL_LBS);
-      expect(metrics.waterSavedGallons).toBe(GARMENT_IMPACT.WATER_GALLONS);
+      expect(metrics.landfillWasteDivertedKg).toBe(GARMENT_IMPACT.LANDFILL_KG);
+      expect(metrics.waterSavedLiters).toBe(GARMENT_IMPACT.WATER_LITERS);
       expect(metrics.carbonEmissionsAvoided).toBe(GARMENT_IMPACT.CARBON_KG);
     });
 
@@ -31,12 +31,12 @@ describe("Sustainability Calculator", () => {
       const metrics10 = calculateSustainabilityMetrics(10);
       const metrics20 = calculateSustainabilityMetrics(20);
       
-      expect(metrics20.landfillWasteDivertedLbs).toBeCloseTo(
-        metrics10.landfillWasteDivertedLbs * 2,
+      expect(metrics20.landfillWasteDivertedKg).toBeCloseTo(
+        metrics10.landfillWasteDivertedKg * 2,
         1
       );
-      expect(metrics20.waterSavedGallons).toBeCloseTo(
-        metrics10.waterSavedGallons * 2,
+      expect(metrics20.waterSavedLiters).toBeCloseTo(
+        metrics10.waterSavedLiters * 2,
         1
       );
       expect(metrics20.carbonEmissionsAvoided).toBeCloseTo(
@@ -58,8 +58,8 @@ describe("Sustainability Calculator", () => {
       const metrics = calculateSustainabilityMetrics(1000);
       
       expect(metrics.garmentsGivenSecondLife).toBe(1000);
-      expect(metrics.landfillWasteDivertedLbs).toBeGreaterThan(0);
-      expect(metrics.waterSavedGallons).toBeGreaterThan(0);
+      expect(metrics.landfillWasteDivertedKg).toBeGreaterThan(0);
+      expect(metrics.waterSavedLiters).toBeGreaterThan(0);
       expect(metrics.carbonEmissionsAvoided).toBeGreaterThan(0);
       expect(metrics.equivalentTreesPlanted).toBeGreaterThan(0);
     });
@@ -71,8 +71,8 @@ describe("Sustainability Calculator", () => {
       const formatted = formatMetrics(metrics);
       
       expect(typeof formatted.garmentsGivenSecondLife).toBe("string");
-      expect(typeof formatted.landfillWasteDivertedLbs).toBe("string");
-      expect(typeof formatted.waterSavedGallons).toBe("string");
+      expect(typeof formatted.landfillWasteDivertedKg).toBe("string");
+      expect(typeof formatted.waterSavedLiters).toBe("string");
       expect(typeof formatted.carbonEmissionsAvoided).toBe("string");
       expect(typeof formatted.equivalentTreesPlanted).toBe("string");
     });
@@ -88,8 +88,8 @@ describe("Sustainability Calculator", () => {
       const metrics = calculateSustainabilityMetrics(1);
       const formatted = formatMetrics(metrics);
       
-      // Water saved should be 700 gallons
-      expect(formatted.waterSavedGallons).toBe("700");
+      // Water saved should be 2650 liters
+      expect(formatted.waterSavedLiters).toBe("2,650");
       
       // Carbon should have 1 decimal place
       expect(formatted.carbonEmissionsAvoided).toMatch(/\d+\.\d/);
@@ -98,16 +98,16 @@ describe("Sustainability Calculator", () => {
 
   describe("Environmental Impact Constants", () => {
     it("should have realistic garment impact values", () => {
-      expect(GARMENT_IMPACT.WEIGHT_LBS).toBeGreaterThan(0);
-      expect(GARMENT_IMPACT.WATER_GALLONS).toBeGreaterThan(0);
+      expect(GARMENT_IMPACT.WEIGHT_KG).toBeGreaterThan(0);
+      expect(GARMENT_IMPACT.WATER_LITERS).toBeGreaterThan(0);
       expect(GARMENT_IMPACT.CARBON_KG).toBeGreaterThan(0);
-      expect(GARMENT_IMPACT.LANDFILL_LBS).toBeGreaterThan(0);
+      expect(GARMENT_IMPACT.LANDFILL_KG).toBeGreaterThan(0);
     });
 
     it("should have water consumption in expected range", () => {
-      // Industry average: 700-2700 gallons per shirt
-      expect(GARMENT_IMPACT.WATER_GALLONS).toBeGreaterThanOrEqual(700);
-      expect(GARMENT_IMPACT.WATER_GALLONS).toBeLessThanOrEqual(2700);
+      // Industry average: 2650-10220 liters per shirt
+      expect(GARMENT_IMPACT.WATER_LITERS).toBeGreaterThanOrEqual(2650);
+      expect(GARMENT_IMPACT.WATER_LITERS).toBeLessThanOrEqual(10220);
     });
 
     it("should have carbon emissions in expected range", () => {
@@ -122,13 +122,13 @@ describe("Sustainability Calculator", () => {
       const metrics = calculateSustainabilityMetrics(5);
       
       // Verify all metrics are positive
-      expect(metrics.landfillWasteDivertedLbs).toBeGreaterThan(0);
-      expect(metrics.waterSavedGallons).toBeGreaterThan(0);
+      expect(metrics.landfillWasteDivertedKg).toBeGreaterThan(0);
+      expect(metrics.waterSavedLiters).toBeGreaterThan(0);
       expect(metrics.carbonEmissionsAvoided).toBeGreaterThan(0);
       
       // Verify reasonable values
-      expect(metrics.landfillWasteDivertedLbs).toBeLessThan(10);
-      expect(metrics.waterSavedGallons).toBeLessThan(5000);
+      expect(metrics.landfillWasteDivertedKg).toBeLessThan(2);
+      expect(metrics.waterSavedLiters).toBeLessThan(20000);
       expect(metrics.carbonEmissionsAvoided).toBeLessThan(50);
     });
 
@@ -136,7 +136,7 @@ describe("Sustainability Calculator", () => {
       const metrics = calculateSustainabilityMetrics(50);
       
       // Should save significant water
-      expect(metrics.waterSavedGallons).toBeGreaterThan(30000);
+      expect(metrics.waterSavedLiters).toBeGreaterThan(130000);
       
       // Should avoid significant carbon
       expect(metrics.carbonEmissionsAvoided).toBeGreaterThan(300);

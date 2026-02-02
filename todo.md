@@ -802,3 +802,9 @@
 - [x] Build sustainability metrics display component (SustainabilityMetrics.tsx with 4 key metrics)
 - [x] Integrate with user purchase history (tRPC sustainability.myMetrics and sustainability.global endpoints)
 - [x] Test waste reduction calculations (vitest tests with real-world scenarios)
+
+## Metric System Conversion (Feb 2, 2026)
+- [x] Convert imperial units to metric (kg, liters, CO2 kg)
+- [x] Update sustainability calculation formulas (WATER_LITERS: 2650, LANDFILL_KG: 0.23)
+- [x] Update display component labels (kg waste, liters water)
+- [x] Update vitest tests for metric values (all tests passing)

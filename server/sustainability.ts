@@ -6,27 +6,28 @@
  */
 
 // Average environmental impact per garment (new production)
+// Using metric system: kg, liters, CO2 kg
 export const GARMENT_IMPACT = {
-  // Average weight of a garment (pounds)
-  WEIGHT_LBS: 0.5,
+  // Average weight of a garment (kilograms)
+  WEIGHT_KG: 0.23,
   
-  // Water consumption per garment (gallons)
-  // Industry average: 700-2700 gallons per shirt
-  WATER_GALLONS: 700,
+  // Water consumption per garment (liters)
+  // Industry average: 2650-10220 liters per shirt
+  WATER_LITERS: 2650,
   
   // Carbon emissions per garment (kg CO2e)
   // Industry average: 5-10 kg per garment
   CARBON_KG: 6.5,
   
-  // Landfill waste diverted (pounds)
+  // Landfill waste diverted (kilograms)
   // Assumes average garment prevents one new garment production
-  LANDFILL_LBS: 0.5,
+  LANDFILL_KG: 0.23,
 };
 
 export interface SustainabilityMetrics {
   garmentsGivenSecondLife: number;
-  landfillWasteDivertedLbs: number;
-  waterSavedGallons: number;
+  landfillWasteDivertedKg: number;
+  waterSavedLiters: number;
   carbonEmissionsAvoided: number; // kg CO2e
   equivalentTreesPlanted: number;
 }
@@ -37,8 +38,8 @@ export interface SustainabilityMetrics {
 export function calculateSustainabilityMetrics(
   garmentsPurchased: number
 ): SustainabilityMetrics {
-  const landfillWasteDiverted = garmentsPurchased * GARMENT_IMPACT.LANDFILL_LBS;
-  const waterSaved = garmentsPurchased * GARMENT_IMPACT.WATER_GALLONS;
+  const landfillWasteDiverted = garmentsPurchased * GARMENT_IMPACT.LANDFILL_KG;
+  const waterSaved = garmentsPurchased * GARMENT_IMPACT.WATER_LITERS;
   const carbonAvoided = garmentsPurchased * GARMENT_IMPACT.CARBON_KG;
   
   // 1 tree absorbs ~21 kg CO2 per year
@@ -47,8 +48,8 @@ export function calculateSustainabilityMetrics(
   
   return {
     garmentsGivenSecondLife: garmentsPurchased,
-    landfillWasteDivertedLbs: Math.round(landfillWasteDiverted * 100) / 100,
-    waterSavedGallons: Math.round(waterSaved * 100) / 100,
+    landfillWasteDivertedKg: Math.round(landfillWasteDiverted * 100) / 100,
+    waterSavedLiters: Math.round(waterSaved * 100) / 100,
     carbonEmissionsAvoided: Math.round(carbonAvoided * 100) / 100,
     equivalentTreesPlanted: equivalentTrees,
   };
@@ -60,11 +61,11 @@ export function calculateSustainabilityMetrics(
 export function formatMetrics(metrics: SustainabilityMetrics) {
   return {
     garmentsGivenSecondLife: metrics.garmentsGivenSecondLife.toLocaleString(),
-    landfillWasteDivertedLbs: metrics.landfillWasteDivertedLbs.toLocaleString('en-US', {
+    landfillWasteDivertedKg: metrics.landfillWasteDivertedKg.toLocaleString('en-US', {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
     }),
-    waterSavedGallons: metrics.waterSavedGallons.toLocaleString('en-US', {
+    waterSavedLiters: metrics.waterSavedLiters.toLocaleString('en-US', {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }),

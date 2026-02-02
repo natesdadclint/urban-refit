@@ -2,31 +2,31 @@ import { Leaf, Droplets, Zap, Trash2 } from "lucide-react";
 
 export interface SustainabilityMetricsProps {
   garmentsGivenSecondLife: number;
-  landfillWasteDivertedLbs: string;
-  waterSavedGallons: string;
+  landfillWasteDivertedKg: string;
+  waterSavedLiters: string;
   carbonEmissionsAvoided: string;
   equivalentTreesPlanted: string;
 }
 
 export default function SustainabilityMetrics({
   garmentsGivenSecondLife,
-  landfillWasteDivertedLbs,
-  waterSavedGallons,
+  landfillWasteDivertedKg,
+  waterSavedLiters,
   carbonEmissionsAvoided,
   equivalentTreesPlanted,
 }: SustainabilityMetricsProps) {
   const metrics = [
     {
       icon: Trash2,
-      label: "Pounds of waste diverted from landfills",
-      value: landfillWasteDivertedLbs,
+      label: "Kilograms of waste diverted from landfills",
+      value: landfillWasteDivertedKg,
       color: "text-amber-600",
       bgColor: "bg-amber-50",
     },
     {
       icon: Droplets,
-      label: "Gallons of water saved",
-      value: waterSavedGallons,
+      label: "Liters of water saved",
+      value: waterSavedLiters,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
     },
