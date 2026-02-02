@@ -763,3 +763,6 @@
 ## Header & Byline Positioning (Feb 1, 2026)
 - [x] Move header and byline further down the page (increased pb from 8/12/16 to 24/32/40)
 - [x] Maintain readability while improving aesthetic (extended overlay height to 80/96/480px)
+
+## Header Text Update (Feb 1, 2026)
+- [x] Replace header with "Premium Preloved Men's Fashion"
