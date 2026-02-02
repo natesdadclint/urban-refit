@@ -826,3 +826,8 @@
 - [x] Move Shop Now and See What's New buttons down (increased margin to mb-12/16/20)
 - [x] Center buttons between header/byline and Sustainable Fashion section
 - [x] Test visual balance and spacing (buttons now properly centered)
+
+## Hero Text Vertical Centering (Feb 2, 2026)
+- [x] Center header and byline between top of hero and Shop Now button (changed justify-end to justify-center)
+- [x] Adjust spacing to achieve visual balance (removed bottom padding)
+- [x] Test on different screen sizes (responsive layout maintained)

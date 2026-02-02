@@ -56,7 +56,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
         {/* Content positioned at bottom */}
-        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-24 sm:pb-32 md:pb-40">
+        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-center items-start">
           <div className="max-w-2xl" style={{marginTop: '-20px', marginRight: '-20px', marginBottom: '10px'}}>
             <h1 className="hero-header text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight mb-4 md:mb-6 text-white max-w-2xl drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
