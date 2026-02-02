@@ -816,3 +816,8 @@
 - [x] Create badge display components (BadgeDisplay, BadgeGrid, BadgeTierSection, UserBadgesDisplay)
 - [x] Integrate badges into user profile and dashboard (tRPC badges router with 4 endpoints)
 - [x] Test badge awards and milestone tracking (18 vitest tests, all passing)
+
+## Sustainability Page - Imperial to Metric Conversion (Feb 2, 2026)
+- [x] Review Sustainability page for imperial units (found 2 instances)
+- [x] Convert all imperial units to metric (Pounds→Kilograms, Gallons→Liters)
+- [x] Update content and labels throughout page (all metric units applied)

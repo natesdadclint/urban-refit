@@ -38,11 +38,11 @@ export default function Sustainability() {
                 </div>
                 <div className="space-y-3">
                   <div className="text-4xl font-bold text-primary">0</div>
-                  <p className="text-base text-muted-foreground">Pounds of waste diverted from landfills</p>
+                  <p className="text-base text-muted-foreground">Kilograms of waste diverted from landfills</p>
                 </div>
                 <div className="space-y-3">
                   <div className="text-4xl font-bold text-primary">0</div>
-                  <p className="text-base text-muted-foreground">Gallons of water saved</p>
+                  <p className="text-base text-muted-foreground">Liters of water saved</p>
                 </div>
               </div>
             </section>
