@@ -828,3 +828,65 @@ export const adminNotifications = mysqlTable("admin_notifications", {
 
 export type AdminNotification = typeof adminNotifications.$inferSelect;
 export type InsertAdminNotification = typeof adminNotifications.$inferInsert;
+
+
+/**
+ * User Badges - tracks sustainability achievement badges earned by users
+ */
+export const userBadges = mysqlTable("user_badges", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Reference to user
+  userId: int("userId").notNull(),
+  
+  // Badge identifier (matches badge ID from badges.ts)
+  badgeId: varchar("badgeId", { length: 100 }).notNull(),
+  
+  // Badge metadata (denormalized for quick display)
+  badgeName: varchar("badgeName", { length: 255 }).notNull(),
+  badgeDescription: text("badgeDescription"),
+  badgeIcon: varchar("badgeIcon", { length: 50 }),
+  badgeColor: varchar("badgeColor", { length: 50 }),
+  tier: mysqlEnum("tier", ["bronze", "silver", "gold", "platinum"]).notNull(),
+  
+  // When the badge was earned
+  awardedAt: timestamp("awardedAt").defaultNow().notNull(),
+  
+  // Notification status
+  notificationSent: boolean("notificationSent").default(false).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type UserBadge = typeof userBadges.$inferSelect;
+export type InsertUserBadge = typeof userBadges.$inferInsert;
+
+
+/**
+ * Sustainability Milestones - tracks user progress towards badges
+ */
+export const sustainabilityMilestones = mysqlTable("sustainability_milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Reference to user
+  userId: int("userId").notNull().unique(),
+  
+  // Current metrics (cached for quick access)
+  totalGarmentsCount: int("totalGarmentsCount").default(0).notNull(),
+  totalLandfillKgDiverted: decimal("totalLandfillKgDiverted", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  totalWaterLitersSaved: int("totalWaterLitersSaved").default(0).notNull(),
+  totalCarbonKgAvoided: decimal("totalCarbonKgAvoided", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  
+  // Badge counts by tier
+  bronzeBadgesCount: int("bronzeBadgesCount").default(0).notNull(),
+  silverBadgesCount: int("silverBadgesCount").default(0).notNull(),
+  goldBadgesCount: int("goldBadgesCount").default(0).notNull(),
+  platinumBadgesCount: int("platinumBadgesCount").default(0).notNull(),
+  
+  // Tracking
+  lastUpdated: timestamp("lastUpdated").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SustainabilityMilestone = typeof sustainabilityMilestones.$inferSelect;
+export type InsertSustainabilityMilestone = typeof sustainabilityMilestones.$inferInsert;

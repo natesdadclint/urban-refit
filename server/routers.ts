@@ -12,6 +12,7 @@ import { createCheckoutSession } from "./stripe";
 import { invokeLLM } from "./_core/llm";
 import { addSubscriberToMailchimp, removeSubscriberFromMailchimp } from "./mailchimp";
 import { calculateSustainabilityMetrics, formatMetrics } from "./sustainability";
+import { badgesRouter } from "./routers/badges";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -34,6 +35,7 @@ function calculatePricing(originalCost: number, markupPercentage: number) {
 export const appRouter = router({
   system: systemRouter,
   admin: adminRouter,
+  badges: badgesRouter,
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

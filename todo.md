@@ -808,3 +808,11 @@
 - [x] Update sustainability calculation formulas (WATER_LITERS: 2650, LANDFILL_KG: 0.23)
 - [x] Update display component labels (kg waste, liters water)
 - [x] Update vitest tests for metric values (all tests passing)
+
+## Sustainability Badges & Milestones (Feb 2, 2026)
+- [x] Design milestone tiers and badge system (16 badges across 4 tiers)
+- [x] Create database schema for badges and user achievements (user_badges, sustainability_milestones tables)
+- [x] Build badge calculation and award logic (awardBadgesToUser, updateSustainabilityMilestone functions)
+- [x] Create badge display components (BadgeDisplay, BadgeGrid, BadgeTierSection, UserBadgesDisplay)
+- [x] Integrate badges into user profile and dashboard (tRPC badges router with 4 endpoints)
+- [x] Test badge awards and milestone tracking (18 vitest tests, all passing)
