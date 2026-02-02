@@ -780,3 +780,8 @@
 - [x] Adjusted header container margins (top: -20px, right: -20px, bottom: 10px)
 - [x] Reduced byline font size (18px → 12px) and margin (32px → 3px)
 - [x] Adjusted CTA button font size (14px → 13px)
+
+## Customer Testimonials Carousel (Feb 2, 2026)
+- [x] Create testimonials carousel component (existing component pulls real reviews from database)
+- [x] Add carousel below hero section (positioned after categories, before CTA)
+- [x] Test carousel functionality and responsiveness (auto-play, navigation, dots indicator working)
