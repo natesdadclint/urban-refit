@@ -795,3 +795,10 @@
 - [x] Add hover enlargement effect to product cards (scale-105 with shadow-xl)
 - [x] Add quick view button on hover (dark overlay with Quick View button)
 - [x] Test hover interactions and animations (smooth transitions working)
+
+## Textile Waste Reduction Calculator (Feb 2, 2026)
+- [x] Find sustainability metrics placeholder location (Sustainability.tsx line 108)
+- [x] Create textile waste calculation logic (server/sustainability.ts with industry-standard metrics)
+- [x] Build sustainability metrics display component (SustainabilityMetrics.tsx with 4 key metrics)
+- [x] Integrate with user purchase history (tRPC sustainability.myMetrics and sustainability.global endpoints)
+- [x] Test waste reduction calculations (vitest tests with real-world scenarios)

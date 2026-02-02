@@ -11,6 +11,7 @@ import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe";
 import { invokeLLM } from "./_core/llm";
 import { addSubscriberToMailchimp, removeSubscriberFromMailchimp } from "./mailchimp";
+import { calculateSustainabilityMetrics, formatMetrics } from "./sustainability";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -1848,6 +1849,34 @@ Keep insights concise and actionable.`;
         await db.updateNotificationPreferences(ctx.user.id, input);
         return { success: true };
       }),
+  }),
+
+  // ============ SUSTAINABILITY ROUTES ============
+  sustainability: router({
+    myMetrics: protectedProcedure.query(async ({ ctx }) => {
+      const orders = await db.getUserOrders(ctx.user.id);
+      let totalGarmentsPurchased = 0;
+      for (const order of orders) {
+        if (order.status === "delivered" || order.status === "shipped" || order.status === "paid") {
+          const items = await db.getOrderItems(order.id);
+          totalGarmentsPurchased += items.length;
+        }
+      }
+      const metrics = calculateSustainabilityMetrics(totalGarmentsPurchased);
+      return formatMetrics(metrics);
+    }),
+    global: publicProcedure.query(async () => {
+      const allOrders = await db.getAllOrders();
+      let totalGarments = 0;
+      for (const order of allOrders) {
+        if (order.status === "delivered" || order.status === "shipped" || order.status === "paid") {
+          const items = await db.getOrderItems(order.id);
+          totalGarments += items.length;
+        }
+      }
+      const metrics = calculateSustainabilityMetrics(totalGarments);
+      return formatMetrics(metrics);
+    }),
   }),
 
   // Debug endpoint to fetch all product metadata
