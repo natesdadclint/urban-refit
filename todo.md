@@ -785,3 +785,8 @@
 - [x] Create testimonials carousel component (existing component pulls real reviews from database)
 - [x] Add carousel below hero section (positioned after categories, before CTA)
 - [x] Test carousel functionality and responsiveness (auto-play, navigation, dots indicator working)
+
+## Hero Fade-In Animation (Feb 2, 2026)
+- [x] Add CSS keyframe animations to index.css (fadeInUp animation with 0.8s duration)
+- [x] Apply staggered fade-in animations to header and byline (0.2s, 0.4s, 0.6s delays)
+- [x] Test animation timing and smoothness (all elements animating correctly)
