@@ -775,3 +775,8 @@
 - [x] Add smooth gradient overlay without hard edges (full-page gradient from transparent to white/40)
 - [x] Enhance header and byline as focal points (increased text size and improved shadows)
 - [x] Improve visual hierarchy and text prominence (header text-5xl bold, byline text-lg medium)
+
+## Visual Editor Adjustments (Feb 2, 2026)
+- [x] Adjusted header container margins (top: -20px, right: -20px, bottom: 10px)
+- [x] Reduced byline font size (18px → 12px) and margin (32px → 3px)
+- [x] Adjusted CTA button font size (14px → 13px)

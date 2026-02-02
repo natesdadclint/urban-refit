@@ -57,16 +57,16 @@ export default function Home() {
         
         {/* Content positioned at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-end pb-24 sm:pb-32 md:pb-40">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl" style={{marginTop: '-20px', marginRight: '-20px', marginBottom: '10px'}}>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight mb-4 md:mb-6 text-white max-w-2xl drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
             </h1>
-            <p className="text-base sm:text-lg text-white mb-6 sm:mb-8 max-w-xl leading-relaxed font-medium" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)' }}>
+            <p className="text-base sm:text-lg text-white mb-6 sm:mb-8 max-w-xl leading-relaxed font-medium" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px', marginBottom: '3px' }}>
               Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
             </p>
             <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Button asChild size="lg" className="gap-2">
-                <Link href="/shop">
+                <Link href="/shop" style={{fontSize: '13px'}}>
                   Shop Now
                   <ArrowRight className="h-4 w-4" />
                 </Link>
