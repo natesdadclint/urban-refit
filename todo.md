@@ -839,3 +839,8 @@
 - [x] Create tRPC endpoints for feedback submission (feedback router with 4 endpoints)
 - [x] Integrate feedback section into appropriate pages (App.tsx, site-wide)
 - [x] Test feedback submission and storage (9 vitest tests, all passing)
+
+## Image Restoration (Feb 2, 2026)
+- [x] Investigate missing hero image and product images (26 files moved to /home/ubuntu/webdev-static-assets/)
+- [x] Restore moved files from static assets directory (hero, categories, products, blog images)
+- [x] Verify all images display correctly (hero image and all product/category images restored)

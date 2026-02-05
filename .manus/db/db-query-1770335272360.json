@@ -1,0 +1,26 @@
+{
+  "query": "SELECT * FROM blog_posts LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT * FROM blog_posts LIMIT 1;",
+  "rows": [],
+  "messages": [
+    "1\tsustainable-fashion-guide-2026\tWhy Men Are Ditching Malls for Online Thrift\tThe modern man knows what he wants. No more wandering aimlessly through department stores or waiting outside fitting rooms. Here's why smart shoppers are going digital.\t# Why Men Are Ditching Malls for Online Thrift",
+    "Let's be honest - most men don't enjoy shopping. The crowds, the fluorescent lighting, the endless racks of clothes that all look the same. And if you've ever been dragged to a mall by a partner, you know the drill: stand around, give opinions on things you don't care about, and eventually end up buying something just to escape.",
+    "## Take Back Control",
+    "Urban Refit changes the game. Browse from your couch, during your lunch break, or at 2 AM when you can't sleep. No pressure, no salespeople hovering, no one asking \"can I help you find something?\"",
+    "### What Real Men Want",
+    "- **Quality brands** - Levi's, Carhartt, Dickies, Ralph Lauren. Names you trust.",
+    "- **Clear sizing** - Every measurement listed. No guessing.",
+    "- **Real photos** - What you see is what you get. No surprises.",
+    "- **Fast checkout** - In and out in under 2 minutes.",
+    "## The Numbers Don't Lie",
+    "Men spend an average of 26 minutes per shopping trip when forced to go in-store. Online? 8 minutes to find what you need and check out. That's 18 minutes back in your life, every single time.",
+    "## One-of-a-Kind Pieces",
+    "Here's the thing about secondhand - every item is unique. That vintage Carhartt jacket? There's only one. When it's gone, it's gone. No waiting for restocks, no \"out of your size.\" You see it, you want it, you get it.",
+    "## Built for Men Who Know What They Want",
+    "Urban Refit isn't about browsing for hours. It's about finding quality pieces, checking the specs, and making a decision. Simple. Efficient. Done.",
+    "Stop letting someone else pick your clothes. Your style, your choice, your time.\t/blog/mens-online-shopping.png\tstyle_tips\t[\"menswear\", \"online shopping\", \"efficiency\", \"lifestyle\"]\tNULL\tUrban Refit Team\t244\t45\tpublished\t2026-01-21 09:38:06\t6\t2026-01-21 09:38:06\t2026-02-03 20:55:43"
+  ],
+  "stdout": "id\tslug\ttitle\texcerpt\tcontent\tfeaturedImageUrl\tcategory\ttags\tauthorId\tauthorName\tviewCount\tlikeCount\tstatus\tpublishedAt\treadingTime\tcreatedAt\tupdatedAt\n1\tsustainable-fashion-guide-2026\tWhy Men Are Ditching Malls for Online Thrift\tThe modern man knows what he wants. No more wandering aimlessly through department stores or waiting outside fitting rooms. Here's why smart shoppers are going digital.\t# Why Men Are Ditching Malls for Online Thrift\n\nLet's be honest - most men don't enjoy shopping. The crowds, the fluorescent lighting, the endless racks of clothes that all look the same. And if you've ever been dragged to a mall by a partner, you know the drill: stand around, give opinions on things you don't care about, and eventually end up buying something just to escape.\n\n## Take Back Control\n\nUrban Refit changes the game. Browse from your couch, during your lunch break, or at 2 AM when you can't sleep. No pressure, no salespeople hovering, no one asking \"can I help you find something?\"\n\n### What Real Men Want\n\n- **Quality brands** - Levi's, Carhartt, Dickies, Ralph Lauren. Names you trust.\n- **Clear sizing** - Every measurement listed. No guessing.\n- **Real photos** - What you see is what you get. No surprises.\n- **Fast checkout** - In and out in under 2 minutes.\n\n## The Numbers Don't Lie\n\nMen spend an average of 26 minutes per shopping trip when forced to go in-store. Online? 8 minutes to find what you need and check out. That's 18 minutes back in your life, every single time.\n\n## One-of-a-Kind Pieces\n\nHere's the thing about secondhand - every item is unique. That vintage Carhartt jacket? There's only one. When it's gone, it's gone. No waiting for restocks, no \"out of your size.\" You see it, you want it, you get it.\n\n## Built for Men Who Know What They Want\n\nUrban Refit isn't about browsing for hours. It's about finding quality pieces, checking the specs, and making a decision. Simple. Efficient. Done.\n\nStop letting someone else pick your clothes. Your style, your choice, your time.\t/blog/mens-online-shopping.png\tstyle_tips\t[\"menswear\", \"online shopping\", \"efficiency\", \"lifestyle\"]\tNULL\tUrban Refit Team\t244\t45\tpublished\t2026-01-21 09:38:06\t6\t2026-01-21 09:38:06\t2026-02-03 20:55:43\n",
+  "stderr": "",
+  "execution_time_ms": 1545
+}

@@ -48,7 +48,7 @@ export default function Home() {
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(/hero-background.jpg)' }}
+          style={{ backgroundImage: 'url(https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/DcCMQJLdSCGIDxdq.jpg)' }}
         />
         {/* Smooth full-page gradient overlay - no hard edges */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40" />
@@ -206,12 +206,12 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-4">
             {[
-              { name: "All", href: "/shop", image: "/category-all.png" },
-              { name: "Tops", href: "/shop?category=tops", image: "/category-shirts.png" },
-              { name: "Bottoms", href: "/shop?category=bottoms", image: "/category-pants.png" },
-              { name: "Outerwear", href: "/shop?category=outerwear", image: "/category-jackets.png" },
-              { name: "Shoes", href: "/shop?category=shoes", image: "/category-shoes.png" },
-              { name: "Accessories", href: "/shop?category=accessories", image: "/category-caps.png" },
+              { name: "All", href: "/shop", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/sxkLgTbuuRgTDMhb.png" },
+              { name: "Tops", href: "/shop?category=tops", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/gTSIYpxNLaIjRYYZ.png" },
+              { name: "Bottoms", href: "/shop?category=bottoms", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/YAXIUSOoPLkCTSYt.png" },
+              { name: "Outerwear", href: "/shop?category=outerwear", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/RGNffKfQtOLOsbcI.png" },
+              { name: "Shoes", href: "/shop?category=shoes", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/CflSjTBtoXtxklPd.png" },
+              { name: "Accessories", href: "/shop?category=accessories", image: "https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/KmRHRTuZvvUGtxtJ.png" },
             ].map((category) => (
               <Link
                 key={category.href}
