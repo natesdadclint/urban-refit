@@ -13,6 +13,7 @@ import { invokeLLM } from "./_core/llm";
 import { addSubscriberToMailchimp, removeSubscriberFromMailchimp } from "./mailchimp";
 import { calculateSustainabilityMetrics, formatMetrics } from "./sustainability";
 import { badgesRouter } from "./routers/badges";
+import { feedbackRouter } from "./routers/feedback";
 
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -36,6 +37,7 @@ export const appRouter = router({
   system: systemRouter,
   admin: adminRouter,
   badges: badgesRouter,
+  feedback: feedbackRouter,
   
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

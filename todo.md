@@ -831,3 +831,11 @@
 - [x] Center header and byline between top of hero and Shop Now button (changed justify-end to justify-center)
 - [x] Adjust spacing to achieve visual balance (removed bottom padding)
 - [x] Test on different screen sizes (responsive layout maintained)
+
+## Feedback Section (Feb 2, 2026)
+- [x] Design feedback section structure and placement (floating button + dialog)
+- [x] Create database schema for feedback storage (site_feedback table)
+- [x] Build feedback form component with validation (FeedbackForm, FloatingFeedbackButton)
+- [x] Create tRPC endpoints for feedback submission (feedback router with 4 endpoints)
+- [x] Integrate feedback section into appropriate pages (App.tsx, site-wide)
+- [x] Test feedback submission and storage (9 vitest tests, all passing)

@@ -169,6 +169,13 @@
       "when": 1770007776068,
       "tag": "0023_oval_hardball",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1770327897615,
+      "tag": "0024_lonely_viper",
+      "breakpoints": true
     }
   ]
 }

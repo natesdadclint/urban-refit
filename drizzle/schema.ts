@@ -890,3 +890,37 @@ export const sustainabilityMilestones = mysqlTable("sustainability_milestones", 
 
 export type SustainabilityMilestone = typeof sustainabilityMilestones.$inferSelect;
 export type InsertSustainabilityMilestone = typeof sustainabilityMilestones.$inferInsert;
+
+
+/**
+ * Site Feedback - general user feedback about the website
+ */
+export const siteFeedback = mysqlTable("site_feedback", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Optional user reference (can be anonymous)
+  userId: int("userId"),
+  
+  // Feedback details
+  type: varchar("type", { length: 50 }).notNull(), // 'bug', 'feature', 'general', 'compliment', 'complaint'
+  category: varchar("category", { length: 100 }), // 'navigation', 'checkout', 'product', 'performance', etc.
+  subject: varchar("subject", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  
+  // Contact info (for anonymous users)
+  email: varchar("email", { length: 255 }),
+  
+  // Metadata
+  page: varchar("page", { length: 500 }), // URL where feedback was submitted
+  userAgent: text("userAgent"), // Browser info
+  
+  // Status tracking
+  status: varchar("status", { length: 50 }).default("new").notNull(), // 'new', 'reviewing', 'resolved', 'closed'
+  adminNotes: text("adminNotes"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SiteFeedback = typeof siteFeedback.$inferSelect;
+export type InsertSiteFeedback = typeof siteFeedback.$inferInsert;

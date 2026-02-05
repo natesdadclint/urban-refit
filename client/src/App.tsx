@@ -51,6 +51,7 @@ import AdminAlertsPage from "./pages/admin/AdminNotifications";
 import SecurityDocs from "./pages/docs/SecurityDocs";
 import { HelpdeskChat } from "./components/HelpdeskChat";
 import { WeeklyRewardBanner } from "./components/WeeklyRewardBanner";
+import { FloatingFeedbackButton } from "./components/FloatingFeedbackButton";
 import { useAuth } from "./hooks/useAuth";
 
 function Router() {
@@ -128,6 +129,7 @@ function AppContent() {
       <Router />
       <HelpdeskChat />
       {user && <WeeklyRewardBanner />}
+      <FloatingFeedbackButton />
     </>
   );
 }
