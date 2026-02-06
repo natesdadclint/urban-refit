@@ -863,3 +863,6 @@
 
 ## Chat Button Label (Feb 6, 2026)
 - [x] Show "Chat with Urban Refit" label on the chat button icon (pill button with icon + text)
+
+## Feedback Button Label (Feb 6, 2026)
+- [x] Show "Feedback" text label on the feedback button (pill button with icon + text)
