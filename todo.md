@@ -854,3 +854,9 @@
 ## Feedback & Chat Button Improvements (Feb 6, 2026)
 - [x] Add distinct color styling to feedback button (amber-600 vs neutral-800 chat)
 - [x] Add tooltip labels to both feedback and chat buttons ("Send Feedback" / "Chat with Refit")
+
+## Performance Optimization (Feb 6, 2026)
+- [x] Audit and fix slow loading time on desktop browser
+- [x] Optimize large images (lazy loading, compression, sizing)
+- [x] Add code splitting / lazy routes for heavy pages (React.lazy for all 40+ routes)
+- [x] Optimize homepage API calls and rendering (hero preload, vendor chunk splitting)

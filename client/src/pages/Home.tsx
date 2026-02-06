@@ -13,9 +13,20 @@ export default function Home() {
   const { isAuthenticated } = useAuth();
   const { data: products, isLoading } = trpc.product.list.useQuery({});
   
-  // Set page title and meta keywords for SEO
+  // Set page title and meta keywords for SEO + preload hero image
   React.useEffect(() => {
     document.title = "Urban Refit | Sustainable Secondhand Men's Fashion NZ";
+    
+    // Preload hero image for fast LCP
+    const heroUrl = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/DcCMQJLdSCGIDxdq.jpg';
+    let preloadLink = document.querySelector('link[rel="preload"][as="image"]') as HTMLLinkElement;
+    if (!preloadLink) {
+      preloadLink = document.createElement('link');
+      preloadLink.rel = 'preload';
+      preloadLink.as = 'image';
+      preloadLink.href = heroUrl;
+      document.head.appendChild(preloadLink);
+    }
     
     // Add or update meta keywords
     let keywordsMeta = document.querySelector('meta[name="keywords"]');
@@ -222,6 +233,8 @@ export default function Home() {
                   <img
                     src={category.image}
                     alt={category.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>

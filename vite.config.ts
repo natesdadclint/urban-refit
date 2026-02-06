@@ -24,6 +24,36 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Split heavy vendor libs into separate cacheable chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('@radix-ui') || id.includes('cmdk') || id.includes('class-variance-authority')) {
+              return 'vendor-ui';
+            }
+            if (id.includes('@trpc') || id.includes('@tanstack') || id.includes('superjson')) {
+              return 'vendor-data';
+            }
+            if (id.includes('react-dom')) {
+              return 'vendor-react-dom';
+            }
+            if (id.includes('react') || id.includes('wouter') || id.includes('sonner')) {
+              return 'vendor-react';
+            }
+            if (id.includes('recharts') || id.includes('d3-')) {
+              return 'vendor-charts';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('streamdown') || id.includes('shiki') || id.includes('mermaid') || id.includes('cytoscape')) {
+              return 'vendor-markdown';
+            }
+          }
+        },
+      },
+    },
   },
   server: {
     host: true,

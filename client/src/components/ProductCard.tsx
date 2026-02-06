@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Sparkles, Eye } from "lucide-react";
+import { ShoppingBag, Sparkles } from "lucide-react";
+import { useState } from "react";
 
 interface ProductCardProps {
   id: number;
@@ -46,16 +47,24 @@ export default function ProductCard({
 }: ProductCardProps) {
   const placeholderImage = "https://placehold.co/400x400/f5f5f4/a8a29e?text=No+Image";
   const isNew = isNewArrival(createdAt);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
     <div className="product-card group bg-card rounded-lg overflow-hidden border border-border transition-all duration-300 hover:shadow-xl hover:scale-105 hover:z-10">
       <Link href={`/product/${id}`}>
         {/* Single Image Display */}
         <div className="aspect-square overflow-hidden bg-muted relative">
+          {/* Low-quality placeholder */}
+          {!imageLoaded && (
+            <div className="absolute inset-0 bg-muted animate-pulse" />
+          )}
           <img
             src={image1Url || placeholderImage}
             alt={name}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+            decoding="async"
+            className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            onLoad={() => setImageLoaded(true)}
           />
           {/* New Arrivals Badge */}
           {isNew && (
