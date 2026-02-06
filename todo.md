@@ -847,3 +847,6 @@
 
 ## Thumbnail Fix (Feb 6, 2026)
 - [x] Fix product thumbnail images not displaying correctly (uploaded to CDN, updated database)
+
+## Feedback Button Fix (Feb 6, 2026)
+- [x] Fix feedback button not visible on website (moved above chat button to bottom-24)

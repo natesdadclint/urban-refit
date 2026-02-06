@@ -18,7 +18,7 @@ export function FloatingFeedbackButton() {
       {/* Floating button */}
       <Button
         onClick={() => setOpen(true)}
-        className="fixed right-6 bottom-6 z-50 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all"
+        className="fixed right-6 bottom-24 z-50 h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all"
         size="icon"
         aria-label="Send feedback"
       >
