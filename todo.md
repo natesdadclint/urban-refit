@@ -866,3 +866,6 @@
 
 ## Feedback Button Label (Feb 6, 2026)
 - [x] Show "Feedback" text label on the feedback button (pill button with icon + text)
+
+## Button Size Reduction (Feb 6, 2026)
+- [x] Reduce chat and feedback button sizes to be less intrusive (10x10 icons, labels on hover)

@@ -82,15 +82,20 @@ export function HelpdeskChat() {
 
   return (
     <>
-      {/* Floating Chat Button with label */}
+      {/* Floating Chat Button - compact icon with hover label */}
       {!isOpen && (
-        <button
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 h-12 px-5 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900"
-        >
-          <MessageCircle className="h-5 w-5 shrink-0" />
-          <span className="text-sm font-medium whitespace-nowrap">Chat with Urban Refit</span>
-        </button>
+        <div className="group fixed bottom-6 right-6 z-50">
+          <button
+            onClick={() => setIsOpen(true)}
+            className="flex items-center justify-center h-10 w-10 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900"
+            title="Chat with Urban Refit"
+          >
+            <MessageCircle className="h-4 w-4" />
+          </button>
+          <div className="absolute bottom-12 right-0 mb-2 px-3 py-1.5 bg-neutral-800 text-white text-xs font-medium rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">
+            Chat with Urban Refit
+          </div>
+        </div>
       )}
 
       {/* Chat Window */}
