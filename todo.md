@@ -860,3 +860,6 @@
 - [x] Optimize large images (lazy loading, compression, sizing)
 - [x] Add code splitting / lazy routes for heavy pages (React.lazy for all 40+ routes)
 - [x] Optimize homepage API calls and rendering (hero preload, vendor chunk splitting)
+
+## Chat Button Label (Feb 6, 2026)
+- [x] Show "Chat with Urban Refit" label on the chat button icon (pill button with icon + text)

@@ -25,7 +25,7 @@ export function FloatingFeedbackButton() {
         <TooltipTrigger asChild>
           <Button
             onClick={() => setOpen(true)}
-            className="fixed right-6 bottom-20 z-50 h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all bg-amber-600 hover:bg-amber-700 text-white"
+            className="fixed right-6 bottom-[5.5rem] z-50 h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all bg-amber-600 hover:bg-amber-700 text-white"
             size="icon"
             aria-label="Send feedback"
           >

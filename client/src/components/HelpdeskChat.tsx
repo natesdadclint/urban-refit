@@ -82,21 +82,15 @@ export function HelpdeskChat() {
 
   return (
     <>
-      {/* Floating Chat Button with tooltip */}
+      {/* Floating Chat Button with label */}
       {!isOpen && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={() => setIsOpen(true)}
-              className="fixed bottom-6 right-6 z-50 flex items-center justify-center h-12 w-12 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900"
-            >
-              <MessageCircle className="h-5 w-5" />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="left" sideOffset={8}>
-            <p>Chat with Refit</p>
-          </TooltipContent>
-        </Tooltip>
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-2 h-12 px-5 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900"
+        >
+          <MessageCircle className="h-5 w-5 shrink-0" />
+          <span className="text-sm font-medium whitespace-nowrap">Chat with Urban Refit</span>
+        </button>
       )}
 
       {/* Chat Window */}
