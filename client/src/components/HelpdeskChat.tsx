@@ -2,8 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { trpc } from "@/lib/trpc";
-import { MessageCircle, X, Send, Sparkles, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { nanoid } from "nanoid";
 
@@ -77,17 +82,22 @@ export function HelpdeskChat() {
 
   return (
     <>
-      {/* Floating Chat Button - Minimized subtle design */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className={cn(
-          "fixed bottom-4 right-4 z-50 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-neutral-400 to-neutral-300 px-3 py-2 text-neutral-700 text-sm font-medium shadow-sm transition-all duration-300 hover:shadow-md hover:from-neutral-500 hover:to-neutral-400 hover:text-neutral-800 opacity-70 hover:opacity-100",
-          isOpen && "hidden"
-        )}
-      >
-        <MessageCircle className="h-4 w-4" />
-        <span className="hidden sm:inline text-xs">Chat</span>
-      </button>
+      {/* Floating Chat Button with tooltip */}
+      {!isOpen && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button
+              onClick={() => setIsOpen(true)}
+              className="fixed bottom-6 right-6 z-50 flex items-center justify-center h-12 w-12 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900"
+            >
+              <MessageCircle className="h-5 w-5" />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent side="left" sideOffset={8}>
+            <p>Chat with Refit</p>
+          </TooltipContent>
+        </Tooltip>
+      )}
 
       {/* Chat Window */}
       <div

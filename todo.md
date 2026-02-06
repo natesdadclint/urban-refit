@@ -850,3 +850,7 @@
 
 ## Feedback Button Fix (Feb 6, 2026)
 - [x] Fix feedback button not visible on website (moved above chat button to bottom-24)
+
+## Feedback & Chat Button Improvements (Feb 6, 2026)
+- [x] Add distinct color styling to feedback button (amber-600 vs neutral-800 chat)
+- [x] Add tooltip labels to both feedback and chat buttons ("Send Feedback" / "Chat with Refit")
