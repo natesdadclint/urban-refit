@@ -97,7 +97,7 @@ function generateLabelSVG(input: ShippingLabelInput, trackingNumber: string): st
   <!-- Item Info -->
   <text x="20" y="325" fill="#666666" font-family="Arial, sans-serif" font-size="10" font-weight="bold">CONTENTS:</text>
   <text x="20" y="345" fill="black" font-family="Arial, sans-serif" font-size="12">${escapeXml(itemDescription)}</text>
-  <text x="20" y="365" fill="#666666" font-family="Arial, sans-serif" font-size="11">Token Value: ${tokenValue} tokens ($${tokenValue} NZD)</text>
+  <text x="20" y="365" fill="#666666" font-family="Arial, sans-serif" font-size="11">Token Value: ${tokenValue} tokens ($${(tokenValue * 0.5).toFixed(2)} NZD)</text>
   
   <!-- Barcode Area -->
   <rect x="40" y="370" width="320" height="70" fill="white" stroke="#cccccc"/>

@@ -632,8 +632,8 @@ export const appRouter = router({
           throw new TRPCError({ code: "NOT_FOUND", message: "Charity not found or inactive" });
         }
         
-        // Convert tokens to dollar value (1 token = $1)
-        const dollarValue = input.tokenAmount;
+        // Convert tokens to dollar value (1 token = $0.50 NZD)
+        const dollarValue = input.tokenAmount * 0.50;
         
         // Create donation record
         await db.createCharityDonation({
@@ -1040,6 +1040,7 @@ KEY INFORMATION:
 - 5% of every sale goes back to our thrift store partners
 - Each item is unique (one-of-one) since it is secondhand
 - Customers can return items for resale and earn tokens (25% of resale value)
+- Each token is worth $0.50 NZD
 - Tokens can be used for discounts or donated to charity partners
 - Shipping is calculated at checkout
 - We accept all major credit cards, PayPal, and Afterpay via Stripe
@@ -1054,7 +1055,7 @@ COMMON QUESTIONS:
 - Shipping: Standard shipping 5-7 business days, express 2-3 days
 - Sizing: Check product descriptions for measurements
 - Condition: Items are rated as Like New, Excellent, Good, or Fair
-- Tokens: Earn tokens by returning items or making purchases
+- Tokens: Earn tokens by returning items or making purchases (1 token = $0.50 NZD)
 
 WHEN CUSTOMER ASKS ABOUT A PRODUCT:
 1. Check the inventory list below to see if we have it or something similar

@@ -126,7 +126,7 @@ export default function MySubmissions() {
               <div>
                 <h3 className="font-semibold mb-1">Earn Tokens, Not Cash</h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Urban Refit operates on a circular economy. When we accept your items, you earn tokens (1 token = $1 NZD) 
+                  Urban Refit operates on a circular economy. When we accept your items, you earn tokens (1 token = $0.50 NZD) 
                   that you can use to shop our collection or donate to our partner charities.
                 </p>
                 <div className="flex gap-4 text-sm">
@@ -231,7 +231,7 @@ export default function MySubmissions() {
                                   <Coins className="w-6 h-6 text-amber-500" />
                                   {submission.tokenOffer} tokens
                                 </p>
-                                <p className="text-xs text-purple-600">= ${submission.tokenOffer} NZD store credit</p>
+                                <p className="text-xs text-purple-600">= $${(submission.tokenOffer * 0.5).toFixed(2)} NZD store credit</p>
                               </div>
                               <Dialog open={dialogOpen && selectedSubmission?.id === submission.id} onOpenChange={(open) => {
                                 setDialogOpen(open);
@@ -254,7 +254,7 @@ export default function MySubmissions() {
                                         <Coins className="w-8 h-8 text-amber-500" />
                                         {submission.tokenOffer}
                                       </p>
-                                      <p className="text-sm text-muted-foreground mt-1">= ${submission.tokenOffer} NZD to shop or donate</p>
+                                      <p className="text-sm text-muted-foreground mt-1">= $${(submission.tokenOffer * 0.5).toFixed(2)} NZD to shop or donate</p>
                                     </div>
                                     
                                     <div className="space-y-3">

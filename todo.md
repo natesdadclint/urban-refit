@@ -881,3 +881,6 @@
 - [x] Chatbot suggests complete outfit ensembles (shoes, trousers/jeans, tops, headwear)
 - [x] Chatbot handles size inquiries from database (size data included in inventory context)
 - [x] Frontend renders product links as clickable cards in chat (image, name, brand, price, link)
+
+## Token Value Fix (Feb 7, 2026)
+- [x] Update token value to 1 token = $0.50 NZD across all code (routers, emails, shipping labels, FAQ, Charities, CourierReturn, HowTokensWork, MySubmissions, tests)
