@@ -985,7 +985,7 @@ export async function getProductSummaryForChat() {
   const db = await getDb();
   if (!db) return null;
   
-  // Get all available products with key info
+  // Get all available products with key info including images and color
   const availableProducts = await db.select({
     id: products.id,
     name: products.name,
@@ -994,6 +994,8 @@ export async function getProductSummaryForChat() {
     category: products.category,
     salePrice: products.salePrice,
     condition: products.condition,
+    color: products.color,
+    image1Url: products.image1Url,
   }).from(products).where(eq(products.status, "available"));
   
   return availableProducts;

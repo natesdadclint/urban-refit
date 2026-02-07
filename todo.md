@@ -874,3 +874,10 @@
 - [x] Test chat and feedback buttons on mobile devices
 - [x] Fix hover labels to work on touch devices (show on tap, auto-hide after 3s)
 - [x] Verify buttons don't overlap with mobile navigation (positioned at bottom-6 and bottom-20)
+
+## Chatbot Database & Outfit Suggestions (Feb 7, 2026)
+- [x] Chatbot queries product database for stock availability (full inventory with IDs, colors, images)
+- [x] Chatbot provides direct links to products in responses ([[PRODUCT:id]] parsed to clickable cards)
+- [x] Chatbot suggests complete outfit ensembles (shoes, trousers/jeans, tops, headwear)
+- [x] Chatbot handles size inquiries from database (size data included in inventory context)
+- [x] Frontend renders product links as clickable cards in chat (image, name, brand, price, link)

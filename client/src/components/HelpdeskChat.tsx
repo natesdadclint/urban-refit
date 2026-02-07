@@ -2,20 +2,26 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { trpc } from "@/lib/trpc";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { nanoid } from "nanoid";
+import { useLocation } from "wouter";
+
+interface ChatProduct {
+  id: number;
+  name: string;
+  brand: string | null;
+  salePrice: string;
+  image1Url: string | null;
+  category: string;
+}
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
+  products?: ChatProduct[];
 }
 
 export function HelpdeskChat() {
@@ -27,12 +33,18 @@ export function HelpdeskChat() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const labelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [, navigate] = useLocation();
 
   const sendMessage = trpc.chat.send.useMutation({
     onSuccess: (data) => {
       setMessages((prev) => [
         ...prev,
-        { id: nanoid(), role: "assistant", content: data.message },
+        {
+          id: nanoid(),
+          role: "assistant",
+          content: data.message,
+          products: data.products && data.products.length > 0 ? data.products : undefined,
+        },
       ]);
     },
   });
@@ -57,6 +69,11 @@ export function HelpdeskChat() {
     }
   };
 
+  const handleProductClick = (productId: number) => {
+    navigate(`/product/${productId}`);
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -76,7 +93,7 @@ export function HelpdeskChat() {
         {
           id: "welcome",
           role: "assistant",
-          content: "Hello, I am Refit, your personal style assistant at Urban Refit. How can I help you today? I can check our current stock, answer questions about shipping and returns, or help you find the perfect pre-loved piece. Please note that I assist multiple customers at once, so if you find something you like, I recommend purchasing it quickly as all items are one-of-a-kind.",
+          content: "Hello, I am Refit, your personal style assistant at Urban Refit. How can I help you today? I can check our current stock, suggest complete outfits, answer questions about shipping and returns, or help you find the perfect pre-loved piece. Please note that I assist multiple customers at once, so if you find something you like, I recommend purchasing it quickly as all items are one-of-a-kind.",
         },
       ]);
     }
@@ -144,23 +161,58 @@ export function HelpdeskChat() {
         <ScrollArea className="h-[350px] p-4" ref={scrollRef}>
           <div className="space-y-4">
             {messages.map((message) => (
-              <div
-                key={message.id}
-                className={cn(
-                  "flex",
-                  message.role === "user" ? "justify-end" : "justify-start"
-                )}
-              >
+              <div key={message.id}>
                 <div
                   className={cn(
-                    "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm",
-                    message.role === "user"
-                      ? "bg-gradient-to-r from-neutral-500 to-neutral-400 text-white rounded-br-md"
-                      : "bg-muted text-foreground rounded-bl-md"
+                    "flex",
+                    message.role === "user" ? "justify-end" : "justify-start"
                   )}
                 >
-                  {message.content}
+                  <div
+                    className={cn(
+                      "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm",
+                      message.role === "user"
+                        ? "bg-gradient-to-r from-neutral-500 to-neutral-400 text-white rounded-br-md"
+                        : "bg-muted text-foreground rounded-bl-md"
+                    )}
+                  >
+                    {message.content}
+                  </div>
                 </div>
+
+                {/* Product Cards */}
+                {message.products && message.products.length > 0 && (
+                  <div className="mt-2 space-y-2">
+                    {message.products.map((product) => (
+                      <button
+                        key={product.id}
+                        onClick={() => handleProductClick(product.id)}
+                        className="w-full flex items-center gap-3 p-2 rounded-xl border border-border bg-card hover:bg-accent/50 transition-colors text-left group"
+                      >
+                        {product.image1Url ? (
+                          <img
+                            src={product.image1Url}
+                            alt={product.name}
+                            className="w-14 h-14 rounded-lg object-cover shrink-0"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-14 h-14 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                            <span className="text-xs text-muted-foreground">No img</span>
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate text-foreground">{product.name}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {product.brand || "Unbranded"} &middot; {product.category}
+                          </p>
+                          <p className="text-sm font-semibold text-foreground">${product.salePrice}</p>
+                        </div>
+                        <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-foreground shrink-0 transition-colors" />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
             {sendMessage.isPending && (
@@ -181,7 +233,7 @@ export function HelpdeskChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask me anything..."
+              placeholder="Ask about stock, outfits, sizes..."
               className="flex-1 rounded-full border-muted-foreground/20 focus-visible:ring-neutral-400"
               disabled={sendMessage.isPending}
             />
@@ -195,7 +247,7 @@ export function HelpdeskChat() {
             </Button>
           </div>
           <p className="text-[10px] text-muted-foreground text-center mt-2">
-            Powered by AI • Responses may vary
+            Powered by AI &middot; Responses may vary
           </p>
         </div>
       </div>

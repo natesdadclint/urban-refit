@@ -1001,8 +1001,16 @@ export const appRouter = router({
         // Get current product inventory for context
         const inventory = await db.getProductSummaryForChat();
         const inventoryContext = inventory && inventory.length > 0
-          ? `\n\nCURRENT INVENTORY (${inventory.length} items available):\n${inventory.map(p => `- ${p.name} (${p.brand || 'Unbranded'}) | Size: ${p.size || 'One Size'} | Category: ${p.category} | Price: $${p.salePrice} | Condition: ${p.condition || 'Good'}`).join('\n')}`
+          ? `\n\nCURRENT INVENTORY (${inventory.length} items available):\n${inventory.map(p => `- [ID:${p.id}] ${p.name} (${p.brand || 'Unbranded'}) | Size: ${p.size || 'One Size'} | Category: ${p.category} | Color: ${p.color || 'N/A'} | Price: $${p.salePrice} | Condition: ${p.condition || 'Good'}`).join('\n')}`
           : '\n\nNote: Unable to fetch current inventory. Suggest customer visits the shop page directly.';
+        
+        // Build a product lookup map for the response parser
+        const productMap = new Map<number, { id: number; name: string; brand: string | null; salePrice: string; image1Url: string | null; category: string }>(); 
+        if (inventory) {
+          for (const p of inventory) {
+            productMap.set(p.id, { id: p.id, name: p.name, brand: p.brand, salePrice: p.salePrice, image1Url: p.image1Url, category: p.category });
+          }
+        }
         
         // Build messages for LLM
         const systemPrompt = `You are Refit, the professional virtual assistant for Urban Refit - a curated secondhand clothing marketplace.
@@ -1012,6 +1020,20 @@ IMPORTANT RULES:
 - Be professional, helpful, and concise
 - You handle multiple customers simultaneously, so if they want a specific item, advise them to visit the Urban Refit online store immediately and purchase it before someone else does
 - Every item is one-of-a-kind since it is secondhand - once sold, it is gone forever
+
+PRODUCT LINK FORMAT:
+When mentioning any product from the inventory, you MUST use this exact format to create clickable links:
+[[PRODUCT:id]] where id is the product ID number.
+Example: "We have a great Ralph Lauren Polo Shirt [[PRODUCT:5]] available in size M."
+Always include the product link when referencing a specific item.
+
+OUTFIT STYLING:
+When a customer asks about a specific item or expresses interest, proactively suggest a complete outfit ensemble from available inventory. An ideal ensemble includes:
+- Top (category: tops or outerwear)
+- Bottom (category: bottoms - trousers, jeans)
+- Shoes (category: shoes)
+- Headwear/Accessories (category: accessories)
+Match items by compatible style, color coordination, and brand aesthetic where possible. Present the outfit as a styled suggestion, not a hard sell.
 
 KEY INFORMATION:
 - Urban Refit sells pre-loved, quality branded clothing from partner thrift stores
@@ -1036,10 +1058,10 @@ COMMON QUESTIONS:
 
 WHEN CUSTOMER ASKS ABOUT A PRODUCT:
 1. Check the inventory list below to see if we have it or something similar
-2. If exact match found, confirm availability and provide details (size, price, condition)
-3. If no exact match, suggest similar items from the inventory
-4. Always remind them that items sell quickly and they should purchase soon if interested
-5. Direct them to the shop page: urbanrefit.store/shop
+2. If exact match found, confirm availability with details (size, price, condition) and include [[PRODUCT:id]] link
+3. If no exact match, suggest similar items from the inventory with [[PRODUCT:id]] links
+4. Always suggest a complete outfit ensemble using items from the inventory
+5. Always remind them that items sell quickly and they should purchase soon if interested
 
 If you cannot find what they are looking for, suggest they check back regularly as new items are added weekly, or contact support@urbanrefit.com for special requests.${inventoryContext}`;
 
@@ -1057,15 +1079,31 @@ If you cannot find what they are looking for, suggest they check back regularly 
           const rawContent = response.choices[0]?.message?.content;
           const assistantMessage = typeof rawContent === 'string' ? rawContent : "I apologize, but I am experiencing technical difficulties. Please try again or email us at support@urbanrefit.com.";
           
-          // Save assistant response
+          // Parse [[PRODUCT:id]] tokens and extract referenced products
+          const productLinkRegex = /\[\[PRODUCT:(\d+)\]\]/g;
+          const referencedProducts: Array<{ id: number; name: string; brand: string | null; salePrice: string; image1Url: string | null; category: string }> = [];
+          const seenIds = new Set<number>();
+          let match;
+          while ((match = productLinkRegex.exec(assistantMessage)) !== null) {
+            const pid = parseInt(match[1], 10);
+            if (!seenIds.has(pid) && productMap.has(pid)) {
+              seenIds.add(pid);
+              referencedProducts.push(productMap.get(pid)!);
+            }
+          }
+          
+          // Clean the message text by removing [[PRODUCT:id]] tokens
+          const cleanMessage = assistantMessage.replace(/\[\[PRODUCT:\d+\]\]/g, '').replace(/\s{2,}/g, ' ').trim();
+          
+          // Save assistant response (clean version)
           await db.createChatMessage({
             sessionId: input.sessionId,
             userId: ctx.user?.id,
             role: "assistant",
-            content: assistantMessage,
+            content: cleanMessage,
           });
           
-          return { message: assistantMessage };
+          return { message: cleanMessage, products: referencedProducts };
         } catch (error) {
           console.error("[Chat] LLM error:", error);
           const fallbackMessage = "I apologize for the inconvenience. I am currently unable to process your request. Please try again shortly or email us at support@urbanrefit.com for assistance.";
@@ -1077,7 +1115,7 @@ If you cannot find what they are looking for, suggest they check back regularly 
             content: fallbackMessage,
           });
           
-          return { message: fallbackMessage };
+          return { message: fallbackMessage, products: [] };
         }
       }),
     
