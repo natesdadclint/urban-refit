@@ -176,6 +176,20 @@
       "when": 1770327897615,
       "tag": "0024_lonely_viper",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "5",
+      "when": 1770501176865,
+      "tag": "0025_flaky_susan_delgado",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "5",
+      "when": 1770501336342,
+      "tag": "0026_first_black_tom",
+      "breakpoints": true
     }
   ]
 }

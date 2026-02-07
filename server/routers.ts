@@ -1932,6 +1932,91 @@ Keep insights concise and actionable.`;
   getAllProductsBasic: publicProcedure.query(async () => {
     return await db.getAllProductsBasic();
   }),
+
+  // ============ REFERRAL ROUTES ============
+  referral: router({    
+    // Get or create user's referral code
+    getMyCode: protectedProcedure.query(async ({ ctx }) => {
+      return db.getOrCreateReferralCode(ctx.user.id, ctx.user.name || 'User');
+    }),
+    
+    // Get referral stats
+    getMyStats: protectedProcedure.query(async ({ ctx }) => {
+      return db.getReferralStats(ctx.user.id);
+    }),
+    
+    // Get user's referrals list
+    getMyReferrals: protectedProcedure.query(async ({ ctx }) => {
+      return db.getUserReferrals(ctx.user.id);
+    }),
+    
+    // Validate a referral code (public - for signup page)
+    validateCode: publicProcedure
+      .input(z.object({ code: z.string().min(1) }))
+      .query(async ({ input }) => {
+        const referralCode = await db.getReferralCodeByCode(input.code);
+        if (!referralCode || !referralCode.isActive) {
+          return { valid: false, referrerName: null };
+        }
+        
+        // Get referrer name
+        const referrer = await db.getUserById(referralCode.userId);
+        return { 
+          valid: true, 
+          referrerName: referrer?.name || 'A friend',
+          referralCodeId: referralCode.id,
+          referrerId: referralCode.userId
+        };
+      }),
+    
+    // Apply referral code during signup (called by auth system)
+    applyReferralCode: protectedProcedure
+      .input(z.object({ code: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+        // Check if user already has a referral
+        const existing = await db.getUserReferredBy(ctx.user.id);
+        if (existing) {
+          throw new TRPCError({ 
+            code: "BAD_REQUEST", 
+            message: "You have already used a referral code" 
+          });
+        }
+        
+        // Validate code
+        const referralCode = await db.getReferralCodeByCode(input.code);
+        if (!referralCode || !referralCode.isActive) {
+          throw new TRPCError({ 
+            code: "BAD_REQUEST", 
+            message: "Invalid or inactive referral code" 
+          });
+        }
+        
+        // Can't refer yourself
+        if (referralCode.userId === ctx.user.id) {
+          throw new TRPCError({ 
+            code: "BAD_REQUEST", 
+            message: "You cannot use your own referral code" 
+          });
+        }
+        
+        // Create referral
+        const referral = await db.createReferral(
+          referralCode.userId,
+          referralCode.id,
+          ctx.user.id,
+          input.code
+        );
+        
+        if (!referral) {
+          throw new TRPCError({ 
+            code: "INTERNAL_SERVER_ERROR", 
+            message: "Failed to apply referral code" 
+          });
+        }
+        
+        return { success: true, bonusTokens: 10 };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

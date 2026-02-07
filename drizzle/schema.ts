@@ -329,7 +329,7 @@ export const tokenTransactions = mysqlTable("token_transactions", {
   userId: int("userId").notNull(),
   
   // Transaction type
-  type: mysqlEnum("type", ["earned_return", "earned_purchase", "earned_weekly_login", "spent_discount", "spent_spend_limit", "donated_charity"]).notNull(),
+  type: mysqlEnum("type", ["earned_return", "earned_purchase", "earned_weekly_login", "earned_referral_bonus", "earned_referral_reward", "spent_discount", "spent_spend_limit", "donated_charity"]).notNull(),
   
   // Amount (positive for earned, negative for spent/donated)
   amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
@@ -924,3 +924,72 @@ export const siteFeedback = mysqlTable("site_feedback", {
 
 export type SiteFeedback = typeof siteFeedback.$inferSelect;
 export type InsertSiteFeedback = typeof siteFeedback.$inferInsert;
+
+
+/**
+ * Referral Codes - unique codes for each user to invite friends
+ */
+export const referralCodes = mysqlTable("referral_codes", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Owner of the referral code
+  userId: int("userId").notNull().unique(),
+  
+  // Unique referral code (e.g., "URBAN-ALEX-2024")
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  
+  // Statistics
+  totalReferrals: int("totalReferrals").default(0).notNull(), // Total signups using this code
+  completedReferrals: int("completedReferrals").default(0).notNull(), // Signups that made first purchase
+  totalTokensEarned: decimal("totalTokensEarned", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  
+  // Status
+  isActive: boolean("isActive").default(true).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ReferralCode = typeof referralCodes.$inferSelect;
+export type InsertReferralCode = typeof referralCodes.$inferInsert;
+
+
+/**
+ * Referrals - tracks individual referral relationships and rewards
+ */
+export const referrals = mysqlTable("referrals", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Referrer (the person who invited)
+  referrerId: int("referrerId").notNull(),
+  referralCodeId: int("referralCodeId").notNull(),
+  
+  // Referee (the person who was invited)
+  refereeId: int("refereeId").notNull(),
+  
+  // Referral code used
+  codeUsed: varchar("codeUsed", { length: 50 }).notNull(),
+  
+  // Reward tracking
+  status: mysqlEnum("status", ["pending", "completed", "expired"]).default("pending").notNull(),
+  
+  // Tokens awarded to referrer
+  tokensAwarded: decimal("tokensAwarded", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  
+  // Bonus tokens given to referee on signup
+  refereeBonus: decimal("refereeBonus", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  
+  // Completion tracking
+  signupAt: timestamp("signupAt").defaultNow().notNull(),
+  firstPurchaseAt: timestamp("firstPurchaseAt"),
+  rewardedAt: timestamp("rewardedAt"),
+  
+  // Notification status
+  referrerNotified: boolean("referrerNotified").default(false).notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Referral = typeof referrals.$inferSelect;
+export type InsertReferral = typeof referrals.$inferInsert;

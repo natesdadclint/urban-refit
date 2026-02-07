@@ -905,3 +905,14 @@
 - [x] Show reverse calculation (NZD to tokens)
 - [x] Add quick reference buttons (10, 25, 50, 100 tokens)
 - [x] Write vitest tests (15 passing)
+
+## Referral Code System (Feb 8, 2026)
+- [x] Create referral_codes and referrals database tables (schema.ts + migrations)
+- [x] Generate unique referral code for each user (URBAN-{NAME}-{RANDOM} format)
+- [x] Track referral signups and first purchases (referrals table with status)
+- [x] Award bonus tokens to referrer when friend makes first purchase (20 tokens)
+- [x] Create referral UI component with shareable code and copy button (ReferralCard)
+- [x] Add referral stats dashboard (invites sent, signups, tokens earned)
+- [ ] Integrate referral code input into signup/registration flow
+- [ ] Send notification when referral earns tokens (future enhancement)
+- [x] Write vitest tests for referral logic (24 tests passing)

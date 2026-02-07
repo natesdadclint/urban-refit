@@ -24,7 +24,9 @@ import {
   broadcastReadStatus, InsertBroadcastReadStatus, BroadcastReadStatus,
   notificationPreferences, InsertNotificationPreference, NotificationPreference,
   imageValidationLogs, InsertImageValidationLog, ImageValidationLog,
-  adminNotifications, InsertAdminNotification, AdminNotification
+  adminNotifications, InsertAdminNotification, AdminNotification,
+  referralCodes, InsertReferralCode, ReferralCode,
+  referrals, InsertReferral, Referral
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -3149,4 +3151,307 @@ export async function notifyAdminSecurityAlert(title: string, message: string, u
     relatedEntityType: userId ? "user" : undefined,
     relatedEntityId: userId,
   });
+}
+
+
+// ============ REFERRAL SYSTEM OPERATIONS ============
+
+/**
+ * Generate a unique referral code for a user
+ */
+export async function generateReferralCode(userId: number, userName: string): Promise<string> {
+  // Format: URBAN-{FIRSTNAME}-{RANDOM4}
+  const firstName = userName.split(' ')[0].toUpperCase().replace(/[^A-Z]/g, '').substring(0, 8) || 'USER';
+  const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `URBAN-${firstName}-${random}`;
+}
+
+/**
+ * Create or get referral code for a user
+ */
+export async function getOrCreateReferralCode(userId: number, userName: string): Promise<ReferralCode | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    // Check if user already has a referral code
+    const [existing] = await db.select().from(referralCodes).where(eq(referralCodes.userId, userId));
+    if (existing) return existing;
+
+    // Generate new code
+    let code = await generateReferralCode(userId, userName);
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    // Ensure uniqueness
+    while (attempts < maxAttempts) {
+      const [duplicate] = await db.select().from(referralCodes).where(eq(referralCodes.code, code));
+      if (!duplicate) break;
+      code = await generateReferralCode(userId, userName);
+      attempts++;
+    }
+
+    if (attempts >= maxAttempts) {
+      throw new Error("Failed to generate unique referral code");
+    }
+
+    // Create referral code
+    const result = await db.insert(referralCodes).values({
+      userId,
+      code,
+      totalReferrals: 0,
+      completedReferrals: 0,
+      totalTokensEarned: "0.00",
+      isActive: true
+    });
+
+    const [created] = await db.select().from(referralCodes).where(eq(referralCodes.id, result[0].insertId));
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create referral code:", error);
+    return null;
+  }
+}
+
+/**
+ * Get referral code by code string
+ */
+export async function getReferralCodeByCode(code: string): Promise<ReferralCode | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const [referralCode] = await db.select().from(referralCodes).where(eq(referralCodes.code, code.toUpperCase()));
+    return referralCode || null;
+  } catch (error) {
+    console.error("[Database] Failed to get referral code:", error);
+    return null;
+  }
+}
+
+/**
+ * Get referral code by user ID
+ */
+export async function getReferralCodeByUserId(userId: number): Promise<ReferralCode | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const [referralCode] = await db.select().from(referralCodes).where(eq(referralCodes.userId, userId));
+    return referralCode || null;
+  } catch (error) {
+    console.error("[Database] Failed to get referral code:", error);
+    return null;
+  }
+}
+
+/**
+ * Record a new referral signup
+ */
+export async function createReferral(
+  referrerId: number,
+  referralCodeId: number,
+  refereeId: number,
+  codeUsed: string
+): Promise<Referral | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const REFEREE_SIGNUP_BONUS = 10; // 10 tokens for new signups
+
+  try {
+    // Create referral record
+    const result = await db.insert(referrals).values({
+      referrerId,
+      referralCodeId,
+      refereeId,
+      codeUsed: codeUsed.toUpperCase(),
+      status: "pending",
+      tokensAwarded: "0.00",
+      refereeBonus: REFEREE_SIGNUP_BONUS.toFixed(2),
+      signupAt: new Date(),
+      referrerNotified: false
+    });
+
+    // Update referral code stats
+    await db.update(referralCodes)
+      .set({
+        totalReferrals: sql`${referralCodes.totalReferrals} + 1`
+      })
+      .where(eq(referralCodes.id, referralCodeId));
+
+    // Award signup bonus to referee
+    const refereeProfile = await getCustomerProfileByUserId(refereeId);
+    if (refereeProfile) {
+      const newBalance = (parseFloat(refereeProfile.tokenBalance) + REFEREE_SIGNUP_BONUS).toFixed(2);
+      const newTotalEarned = (parseFloat(refereeProfile.totalTokensEarned) + REFEREE_SIGNUP_BONUS).toFixed(2);
+
+      await db.update(customerProfiles)
+        .set({
+          tokenBalance: newBalance,
+          totalTokensEarned: newTotalEarned
+        })
+        .where(eq(customerProfiles.userId, refereeId));
+
+      // Create token transaction for referee
+      await createTokenTransaction({
+        userId: refereeId,
+        type: "earned_referral_bonus",
+        amount: REFEREE_SIGNUP_BONUS.toFixed(2),
+        balanceAfter: newBalance,
+        description: `Welcome bonus! You earned ${REFEREE_SIGNUP_BONUS} tokens for joining via referral code ${codeUsed}`
+      });
+    }
+
+    const [created] = await db.select().from(referrals).where(eq(referrals.id, result[0].insertId));
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create referral:", error);
+    return null;
+  }
+}
+
+/**
+ * Complete a referral when referee makes first purchase
+ */
+export async function completeReferral(referralId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  const REFERRER_REWARD = 20; // 20 tokens for completed referrals
+
+  try {
+    // Get referral details
+    const [referral] = await db.select().from(referrals).where(eq(referrals.id, referralId));
+    if (!referral || referral.status === "completed") return false;
+
+    // Update referral status
+    await db.update(referrals)
+      .set({
+        status: "completed",
+        tokensAwarded: REFERRER_REWARD.toFixed(2),
+        firstPurchaseAt: new Date(),
+        rewardedAt: new Date()
+      })
+      .where(eq(referrals.id, referralId));
+
+    // Update referral code stats
+    await db.update(referralCodes)
+      .set({
+        completedReferrals: sql`${referralCodes.completedReferrals} + 1`,
+        totalTokensEarned: sql`${referralCodes.totalTokensEarned} + ${REFERRER_REWARD}`
+      })
+      .where(eq(referralCodes.id, referral.referralCodeId));
+
+    // Award tokens to referrer
+    const referrerProfile = await getCustomerProfileByUserId(referral.referrerId);
+    if (referrerProfile) {
+      const newBalance = (parseFloat(referrerProfile.tokenBalance) + REFERRER_REWARD).toFixed(2);
+      const newTotalEarned = (parseFloat(referrerProfile.totalTokensEarned) + REFERRER_REWARD).toFixed(2);
+
+      await db.update(customerProfiles)
+        .set({
+          tokenBalance: newBalance,
+          totalTokensEarned: newTotalEarned
+        })
+        .where(eq(customerProfiles.userId, referral.referrerId));
+
+      // Create token transaction for referrer
+      await createTokenTransaction({
+        userId: referral.referrerId,
+        type: "earned_referral_reward",
+        amount: REFERRER_REWARD.toFixed(2),
+        balanceAfter: newBalance,
+        description: `Referral reward! Your friend made their first purchase using code ${referral.codeUsed}`
+      });
+    }
+
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to complete referral:", error);
+    return false;
+  }
+}
+
+/**
+ * Get all referrals for a user (as referrer)
+ */
+export async function getUserReferrals(userId: number): Promise<Referral[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    return await db.select().from(referrals)
+      .where(eq(referrals.referrerId, userId))
+      .orderBy(desc(referrals.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get user referrals:", error);
+    return [];
+  }
+}
+
+/**
+ * Check if user was referred by someone
+ */
+export async function getUserReferredBy(userId: number): Promise<Referral | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    const [referral] = await db.select().from(referrals).where(eq(referrals.refereeId, userId));
+    return referral || null;
+  } catch (error) {
+    console.error("[Database] Failed to check if user was referred:", error);
+    return null;
+  }
+}
+
+/**
+ * Get referral stats for a user
+ */
+export async function getReferralStats(userId: number): Promise<{
+  totalReferrals: number;
+  completedReferrals: number;
+  pendingReferrals: number;
+  totalTokensEarned: string;
+  code: string | null;
+}> {
+  const db = await getDb();
+  if (!db) return {
+    totalReferrals: 0,
+    completedReferrals: 0,
+    pendingReferrals: 0,
+    totalTokensEarned: "0.00",
+    code: null
+  };
+
+  try {
+    const referralCode = await getReferralCodeByUserId(userId);
+    if (!referralCode) {
+      return {
+        totalReferrals: 0,
+        completedReferrals: 0,
+        pendingReferrals: 0,
+        totalTokensEarned: "0.00",
+        code: null
+      };
+    }
+
+    return {
+      totalReferrals: referralCode.totalReferrals,
+      completedReferrals: referralCode.completedReferrals,
+      pendingReferrals: referralCode.totalReferrals - referralCode.completedReferrals,
+      totalTokensEarned: referralCode.totalTokensEarned,
+      code: referralCode.code
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get referral stats:", error);
+    return {
+      totalReferrals: 0,
+      completedReferrals: 0,
+      pendingReferrals: 0,
+      totalTokensEarned: "0.00",
+      code: null
+    };
+  }
 }

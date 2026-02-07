@@ -20,6 +20,7 @@ import {
   Sparkles, RefreshCw, ShoppingBag, Bell
 } from "lucide-react";
 import { NotificationPreferences } from "@/components/NotificationPreferences";
+import { ReferralCard } from "@/components/ReferralCard";
 
 const CATEGORIES = ["tops", "bottoms", "dresses", "outerwear", "accessories", "shoes", "bags"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -383,6 +384,9 @@ export default function Profile() {
                 </CardContent>
               </Card>
             </div>
+            
+            {/* Referral Program */}
+            <ReferralCard />
             
             {/* Recent Transactions */}
             <Card>
