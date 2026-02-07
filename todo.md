@@ -890,3 +890,11 @@
 - [x] Update admin offer form to display NZD equivalent when entering token amounts
 - [x] Update admin submission detail view to show $0.50 conversion
 - [x] Update admin CourierReturns to show NZD value at $0.50 per token (approve dialog, inspection dialog, return cards)
+
+## Token Value Correction (Feb 8, 2026)
+- [x] Audit and fix ALL remaining incorrect token-to-NZD conversions (1 token = NZ$0.50)
+  - Fixed Profile.tsx: display text + live NZD preview on convert
+  - Fixed server routers.ts: convertTokensToSpendLimit now applies 0.50 rate (was 1:1)
+  - Fixed SellToUs.tsx: two references updated
+  - Fixed Terms.tsx: legal terms updated
+  - All 39 token-related tests passing

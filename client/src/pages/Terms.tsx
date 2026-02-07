@@ -114,7 +114,7 @@ export default function Terms() {
               <ul className="list-disc list-inside space-y-2">
                 <li>Tokens are earned when you return garments through our courier return program</li>
                 <li>Token value is approximately 25% of the item's resale value</li>
-                <li>Tokens can be converted to spend limit (1 token = $1 NZD) for orders of 3+ items</li>
+                <li>Tokens can be converted to spend limit (1 token = $0.50 NZD) for orders of 3+ items</li>
                 <li>Alternatively, tokens can be donated to our charity partners</li>
                 <li>Tokens have no cash value and cannot be exchanged for cash</li>
                 <li>Urban Refit reserves the right to modify or discontinue the loyalty program at any time</li>

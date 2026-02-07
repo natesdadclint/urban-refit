@@ -229,7 +229,7 @@ export default function SellToUs() {
                 <div>
                   <h3 className="text-xl font-bold mb-2">What Are Urban Refit Tokens?</h3>
                   <p className="text-muted-foreground mb-4">
-                    Tokens are our circular currency. <strong>1 token = $1 NZD</strong> in store credit. 
+                    Tokens are our circular currency. <strong>1 token = $0.50 NZD</strong> in store credit. 
                     Unlike cash, tokens keep value circulating within our sustainable ecosystem.
                   </p>
                   <div className="grid md:grid-cols-2 gap-4 mt-4">
@@ -419,7 +419,7 @@ export default function SellToUs() {
                             className="pl-10"
                           />
                         </div>
-                        <p className="text-xs text-muted-foreground">How many tokens you'd like (1 token = $1 NZD)</p>
+                        <p className="text-xs text-muted-foreground">How many tokens you'd like (1 token = $0.50 NZD)</p>
                       </div>
                     </div>
                   </div>

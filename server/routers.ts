@@ -532,9 +532,10 @@ export const appRouter = router({
           throw new TRPCError({ code: "BAD_REQUEST", message: "Insufficient token balance" });
         }
         
-        // Deduct tokens and add to spend limit
+        // Deduct tokens and add to spend limit (1 token = $0.50 NZD)
+        const spendLimitValue = input.amount * 0.50;
         await db.updateTokenBalance(ctx.user.id, input.amount.toFixed(2), 'subtract');
-        await db.updateSpendLimit(ctx.user.id, input.amount.toFixed(2), 'add');
+        await db.updateSpendLimit(ctx.user.id, spendLimitValue.toFixed(2), 'add');
         
         // Record transaction
         const newBalance = currentBalance - input.amount;
@@ -543,10 +544,10 @@ export const appRouter = router({
           type: 'spent_spend_limit',
           amount: (-input.amount).toFixed(2),
           balanceAfter: newBalance.toFixed(2),
-          description: `Converted ${input.amount.toFixed(2)} tokens to spend limit`,
+          description: `Converted ${input.amount.toFixed(2)} tokens to NZ$${spendLimitValue.toFixed(2)} spend limit`,
         });
         
-        return { success: true, newBalance: newBalance.toFixed(2) };
+        return { success: true, newBalance: newBalance.toFixed(2), spendLimitAdded: spendLimitValue.toFixed(2) };
       }),
     
     // Weekly login reward endpoints
