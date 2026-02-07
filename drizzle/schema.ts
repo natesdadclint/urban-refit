@@ -984,6 +984,15 @@ export const referrals = mysqlTable("referrals", {
   firstPurchaseAt: timestamp("firstPurchaseAt"),
   rewardedAt: timestamp("rewardedAt"),
   
+  // Expiry: referral link expires after 1 week
+  expiresAt: timestamp("expiresAt"),
+  
+  // Whether bonus tokens are donation-only (from timer bonus)
+  bonusDonationOnly: boolean("bonusDonationOnly").default(false).notNull(),
+  
+  // Timer bonus tokens awarded (donation-only)
+  timerBonusTokens: decimal("timerBonusTokens", { precision: 10, scale: 2 }).default("0.00").notNull(),
+  
   // Notification status
   referrerNotified: boolean("referrerNotified").default(false).notNull(),
   

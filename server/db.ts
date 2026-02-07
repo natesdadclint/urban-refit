@@ -3312,6 +3312,95 @@ export async function createReferral(
 }
 
 /**
+ * Record a new referral signup with 1-week expiry and optional timer bonus
+ */
+export async function createReferralWithExpiry(
+  referrerId: number,
+  referralCodeId: number,
+  refereeId: number,
+  codeUsed: string,
+  expiresAt: Date,
+  timerBonusEligible: boolean
+): Promise<Referral | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const REFEREE_SIGNUP_BONUS = 10; // 10 tokens for new signups
+
+  try {
+    // Create referral record with expiry and timer bonus info
+    const result = await db.insert(referrals).values({
+      referrerId,
+      referralCodeId,
+      refereeId,
+      codeUsed: codeUsed.toUpperCase(),
+      status: "pending",
+      tokensAwarded: "0.00",
+      refereeBonus: REFEREE_SIGNUP_BONUS.toFixed(2),
+      signupAt: new Date(),
+      expiresAt,
+      bonusDonationOnly: timerBonusEligible,
+      timerBonusTokens: timerBonusEligible ? "10.00" : "0.00",
+      referrerNotified: false
+    });
+
+    // Update referral code stats
+    await db.update(referralCodes)
+      .set({
+        totalReferrals: sql`${referralCodes.totalReferrals} + 1`
+      })
+      .where(eq(referralCodes.id, referralCodeId));
+
+    // Award signup bonus to referee
+    const refereeProfile = await getCustomerProfileByUserId(refereeId);
+    if (refereeProfile) {
+      const newBalance = (parseFloat(refereeProfile.tokenBalance) + REFEREE_SIGNUP_BONUS).toFixed(2);
+      const newTotalEarned = (parseFloat(refereeProfile.totalTokensEarned) + REFEREE_SIGNUP_BONUS).toFixed(2);
+
+      await db.update(customerProfiles)
+        .set({
+          tokenBalance: newBalance,
+          totalTokensEarned: newTotalEarned
+        })
+        .where(eq(customerProfiles.userId, refereeId));
+
+      // Create token transaction for referee
+      await createTokenTransaction({
+        userId: refereeId,
+        type: "earned_referral_bonus",
+        amount: REFEREE_SIGNUP_BONUS.toFixed(2),
+        balanceAfter: newBalance,
+        description: `Welcome bonus! You earned ${REFEREE_SIGNUP_BONUS} tokens for joining via referral code ${codeUsed}`
+      });
+    }
+
+    const [created] = await db.select().from(referrals).where(eq(referrals.id, result[0].insertId));
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create referral with expiry:", error);
+    return null;
+  }
+}
+
+/**
+ * Check if a referral has expired (1-week window)
+ */
+export async function checkReferralExpiry(referralId: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return true;
+
+  try {
+    const [referral] = await db.select().from(referrals).where(eq(referrals.id, referralId));
+    if (!referral) return true;
+    if (!referral.expiresAt) return false; // Legacy referrals without expiry
+    return new Date() > new Date(referral.expiresAt);
+  } catch (error) {
+    console.error("[Database] Failed to check referral expiry:", error);
+    return true;
+  }
+}
+
+/**
  * Complete a referral when referee makes first purchase
  */
 export async function completeReferral(referralId: number): Promise<boolean> {

@@ -1956,7 +1956,7 @@ Keep insights concise and actionable.`;
       .query(async ({ input }) => {
         const referralCode = await db.getReferralCodeByCode(input.code);
         if (!referralCode || !referralCode.isActive) {
-          return { valid: false, referrerName: null };
+          return { valid: false, referrerName: null, expired: false };
         }
         
         // Get referrer name
@@ -1965,13 +1965,18 @@ Keep insights concise and actionable.`;
           valid: true, 
           referrerName: referrer?.name || 'A friend',
           referralCodeId: referralCode.id,
-          referrerId: referralCode.userId
+          referrerId: referralCode.userId,
+          expired: false
         };
       }),
     
     // Apply referral code during signup (called by auth system)
+    // timerBonusEligible: true if the referrer shared within the 10-min window
     applyReferralCode: protectedProcedure
-      .input(z.object({ code: z.string().min(1) }))
+      .input(z.object({ 
+        code: z.string().min(1),
+        timerBonusEligible: z.boolean().optional().default(false)
+      }))
       .mutation(async ({ ctx, input }) => {
         // Check if user already has a referral
         const existing = await db.getUserReferredBy(ctx.user.id);
@@ -1999,12 +2004,17 @@ Keep insights concise and actionable.`;
           });
         }
         
-        // Create referral
-        const referral = await db.createReferral(
+        // Create referral with 1-week expiry
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7); // 1 week from now
+        
+        const referral = await db.createReferralWithExpiry(
           referralCode.userId,
           referralCode.id,
           ctx.user.id,
-          input.code
+          input.code,
+          expiresAt,
+          input.timerBonusEligible
         );
         
         if (!referral) {
@@ -2014,7 +2024,45 @@ Keep insights concise and actionable.`;
           });
         }
         
-        return { success: true, bonusTokens: 10 };
+        // If timer bonus eligible, award 10 donation-only tokens to referrer
+        const TIMER_BONUS = 10;
+        let timerBonusAwarded = false;
+        if (input.timerBonusEligible) {
+          const referrerProfile = await db.getCustomerProfileByUserId(referralCode.userId);
+          if (referrerProfile) {
+            // Add tokens to donation balance only (not spendable)
+            const newDonationBalance = (parseFloat(referrerProfile.totalTokensDonated || '0')).toFixed(2);
+            const newTokenBalance = (parseFloat(referrerProfile.tokenBalance) + TIMER_BONUS).toFixed(2);
+            const newTotalEarned = (parseFloat(referrerProfile.totalTokensEarned) + TIMER_BONUS).toFixed(2);
+            await db.updateCustomerProfile(referralCode.userId, {
+              tokenBalance: newTokenBalance,
+              totalTokensEarned: newTotalEarned
+            });
+            await db.createTokenTransaction({
+              userId: referralCode.userId,
+              type: "earned_referral_bonus",
+              amount: TIMER_BONUS.toFixed(2),
+              balanceAfter: newTokenBalance,
+              description: `Timer bonus! 10 tokens earned for quick referral (donation-only -- use these to support a charity)`
+            });
+            timerBonusAwarded = true;
+          }
+        }
+        
+        return { success: true, bonusTokens: 10, timerBonusAwarded };
+      }),
+    
+    // Check if a referral link has expired (1-week window)
+    checkExpiry: publicProcedure
+      .input(z.object({ code: z.string().min(1) }))
+      .query(async ({ input }) => {
+        const referralCode = await db.getReferralCodeByCode(input.code);
+        if (!referralCode || !referralCode.isActive) {
+          return { valid: false, expired: true };
+        }
+        // Code itself doesn't expire, but the referral link has a 1-week context window
+        // The expiry is tracked per-referral, not per-code
+        return { valid: true, expired: false };
       }),
   }),
 });

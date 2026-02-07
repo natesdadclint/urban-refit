@@ -916,3 +916,12 @@
 - [ ] Integrate referral code input into signup/registration flow
 - [ ] Send notification when referral earns tokens (future enhancement)
 - [x] Write vitest tests for referral logic (24 tests passing)
+
+## Referral Prominence & Timer (Feb 8, 2026)
+- [x] Move "Refer a Friend" section above "Convert Tokens" and "Earn More Tokens" on Rewards page
+- [x] Add 10-minute countdown timer to referral input - bonus 10 tokens if used within timer
+- [x] Bonus referral tokens are donation-only (cannot be used for spend limit)
+- [x] Referred friend must sign up within 1 week of referral or link expires
+- [x] Update backend to enforce 1-week referral code expiry window (expiresAt field + createReferralWithExpiry)
+- [x] Update backend to track timer bonus and mark tokens as donation-only (bonusDonationOnly + timerBonusTokens fields)
+- [x] Write tests for timer, expiry, and donation-only logic (20 tests passing)

@@ -292,6 +292,9 @@ export default function Profile() {
           
           {/* Rewards Tab */}
           <TabsContent value="rewards" className="space-y-6">
+            {/* Referral Program - TOP PRIORITY */}
+            <ReferralCard />
+            
             <div className="grid md:grid-cols-2 gap-6">
               {/* Convert Tokens */}
               <Card>
@@ -384,9 +387,6 @@ export default function Profile() {
                 </CardContent>
               </Card>
             </div>
-            
-            {/* Referral Program */}
-            <ReferralCard />
             
             {/* Recent Transactions */}
             <Card>
