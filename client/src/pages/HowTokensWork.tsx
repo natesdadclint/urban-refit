@@ -1,7 +1,9 @@
+import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { 
   ArrowLeft, 
   Coins, 
@@ -16,7 +18,35 @@ import {
   Sparkles
 } from "lucide-react";
 
+const TOKEN_RATE = 0.50;
+
 export default function HowTokensWork() {
+  const [tokenInput, setTokenInput] = useState("");
+  const [nzdInput, setNzdInput] = useState("");
+  const [activeField, setActiveField] = useState<"token" | "nzd">("token");
+
+  const handleTokenChange = (val: string) => {
+    setTokenInput(val);
+    setActiveField("token");
+    const num = parseFloat(val);
+    if (!isNaN(num) && num >= 0) {
+      setNzdInput((num * TOKEN_RATE).toFixed(2));
+    } else {
+      setNzdInput("");
+    }
+  };
+
+  const handleNzdChange = (val: string) => {
+    setNzdInput(val);
+    setActiveField("nzd");
+    const num = parseFloat(val);
+    if (!isNaN(num) && num >= 0) {
+      setTokenInput((num / TOKEN_RATE).toFixed(2));
+    } else {
+      setTokenInput("");
+    }
+  };
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -49,6 +79,93 @@ export default function HowTokensWork() {
             <p className="text-3xl sm:text-4xl font-bold text-primary mb-2">1 Token = NZ$0.50</p>
             <p className="text-sm text-muted-foreground">Use tokens as real money towards your next purchase or charity donation</p>
           </div>
+        </div>
+
+        {/* Token Calculator Widget */}
+        <div className="container max-w-4xl py-8 sm:py-12">
+          <Card className="border-2 border-primary/20 overflow-hidden">
+            <CardContent className="p-0">
+              <div className="bg-primary/5 px-6 py-4 sm:px-8 sm:py-5 border-b border-primary/10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Coins className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg sm:text-xl font-serif font-bold text-foreground">Token Calculator</h2>
+                    <p className="text-xs sm:text-sm text-muted-foreground">See exactly what your tokens are worth</p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-6 sm:p-8">
+                <div className="grid sm:grid-cols-2 gap-6 items-center">
+                  {/* Tokens Input */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">Tokens</label>
+                    <div className="relative">
+                      <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        type="number"
+                        min="0"
+                        step="1"
+                        placeholder="Enter token amount"
+                        value={tokenInput}
+                        onChange={(e) => handleTokenChange(e.target.value)}
+                        onFocus={() => setActiveField("token")}
+                        className="pl-10 text-lg h-12"
+                      />
+                    </div>
+                  </div>
+
+                  {/* NZD Input */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">NZ Dollars</label>
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-sm">NZ$</span>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter NZD amount"
+                        value={nzdInput}
+                        onChange={(e) => handleNzdChange(e.target.value)}
+                        onFocus={() => setActiveField("nzd")}
+                        className="pl-12 text-lg h-12"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Result Summary */}
+                {(tokenInput || nzdInput) && (
+                  <div className="mt-6 p-4 bg-primary/5 rounded-lg text-center">
+                    <p className="text-sm text-muted-foreground mb-1">
+                      {activeField === "token" ? "Your tokens are worth" : "You would need"}
+                    </p>
+                    <p className="text-2xl sm:text-3xl font-bold text-primary">
+                      {activeField === "token"
+                        ? `NZ$${nzdInput || "0.00"}`
+                        : `${tokenInput || "0"} tokens`}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">at the rate of 1 token = NZ$0.50</p>
+                  </div>
+                )}
+
+                {/* Quick Reference */}
+                <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {[10, 25, 50, 100].map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => handleTokenChange(amount.toString())}
+                      className="p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/5 transition-colors text-center"
+                    >
+                      <p className="text-sm font-semibold text-foreground">{amount} tokens</p>
+                      <p className="text-xs text-muted-foreground">= NZ${(amount * TOKEN_RATE).toFixed(2)}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* The Circular Economy Model */}

@@ -898,3 +898,10 @@
   - Fixed SellToUs.tsx: two references updated
   - Fixed Terms.tsx: legal terms updated
   - All 39 token-related tests passing
+
+## Token Calculator Widget (Feb 8, 2026)
+- [x] Add interactive token calculator widget to How Tokens Work page
+- [x] Show NZD equivalent as user types token amount (1 token = NZ$0.50)
+- [x] Show reverse calculation (NZD to tokens)
+- [x] Add quick reference buttons (10, 25, 50, 100 tokens)
+- [x] Write vitest tests (15 passing)
