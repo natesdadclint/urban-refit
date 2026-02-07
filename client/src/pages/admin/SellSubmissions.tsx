@@ -183,7 +183,7 @@ export default function AdminSellSubmissions() {
           <div>
             <p className="font-medium text-amber-900">Circular Economy Model</p>
             <p className="text-sm text-amber-700">
-              Customers earn tokens (1 token = $1 NZD) to shop or donate. No cash payouts.
+              Customers earn tokens (1 token = NZ$0.50) to shop or donate. No cash payouts.
             </p>
           </div>
         </div>
@@ -312,7 +312,7 @@ export default function AdminSellSubmissions() {
                         <p className="font-medium text-foreground">Requested Tokens</p>
                         <p className="flex items-center gap-1">
                           {submission.requestedTokens ? (
-                            <><Coins className="w-3.5 h-3.5 text-amber-500" /> {submission.requestedTokens}</>
+                            <><Coins className="w-3.5 h-3.5 text-amber-500" /> {submission.requestedTokens} <span className="text-xs text-muted-foreground">(NZ${(submission.requestedTokens * 0.5).toFixed(2)})</span></>
                           ) : (
                             "Not set"
                           )}
@@ -329,19 +329,19 @@ export default function AdminSellSubmissions() {
                       {submission.tokenOffer && (
                         <div className="flex items-center gap-2 bg-purple-50 px-3 py-1 rounded">
                           <Coins className="h-4 w-4 text-amber-500" />
-                          <span className="text-purple-700">Our Offer: {submission.tokenOffer} tokens</span>
+                          <span className="text-purple-700">Our Offer: {submission.tokenOffer} tokens (NZ${(submission.tokenOffer * 0.5).toFixed(2)})</span>
                         </div>
                       )}
                       {submission.counterTokenOffer && (
                         <div className="flex items-center gap-2 bg-indigo-50 px-3 py-1 rounded">
                           <MessageSquare className="h-4 w-4 text-indigo-600" />
-                          <span className="text-indigo-700">Counter: {submission.counterTokenOffer} tokens</span>
+                          <span className="text-indigo-700">Counter: {submission.counterTokenOffer} tokens (NZ${(submission.counterTokenOffer * 0.5).toFixed(2)})</span>
                         </div>
                       )}
                       {submission.finalTokens && (
                         <div className="flex items-center gap-2 bg-amber-50 px-3 py-1 rounded">
                           <Check className="h-4 w-4 text-amber-600" />
-                          <span className="text-amber-700">Final: {submission.finalTokens} tokens</span>
+                          <span className="text-amber-700">Final: {submission.finalTokens} tokens (NZ${(submission.finalTokens * 0.5).toFixed(2)})</span>
                         </div>
                       )}
                     </div>
@@ -460,7 +460,7 @@ export default function AdminSellSubmissions() {
                     <p className="font-medium text-foreground">Requested Tokens</p>
                     <p className="font-semibold text-amber-600 flex items-center gap-1">
                       {selectedSubmission.requestedTokens ? (
-                        <><Coins className="w-4 h-4" /> {selectedSubmission.requestedTokens}</>
+                        <><Coins className="w-4 h-4" /> {selectedSubmission.requestedTokens} <span className="text-xs font-normal text-muted-foreground">(NZ${(selectedSubmission.requestedTokens * 0.5).toFixed(2)})</span></>
                       ) : (
                         "Not provided"
                       )}
@@ -547,7 +547,7 @@ export default function AdminSellSubmissions() {
                       {selectedSubmission.counterTokenOffer && (
                         <p className="text-sm flex items-center gap-2">
                           <Coins className="w-4 h-4 text-amber-500" />
-                          <span>Counter offer: <strong>{selectedSubmission.counterTokenOffer} tokens</strong></span>
+                          <span>Counter offer: <strong>{selectedSubmission.counterTokenOffer} tokens</strong> <span className="text-xs text-muted-foreground">(NZ${(selectedSubmission.counterTokenOffer * 0.5).toFixed(2)})</span></span>
                         </p>
                       )}
                       {selectedSubmission.customerNotes && (
@@ -576,7 +576,7 @@ export default function AdminSellSubmissions() {
                           onChange={(e) => setTokenOffer(e.target.value)}
                           className="w-32"
                         />
-                        <span className="text-sm text-muted-foreground">tokens (= ${tokenOffer || "0"} NZD)</span>
+                        <span className="text-sm text-muted-foreground">tokens (= NZ${tokenOffer ? (parseFloat(tokenOffer) * 0.5).toFixed(2) : "0.00"})</span>
                       </div>
                     </div>
                   </div>
@@ -632,7 +632,7 @@ export default function AdminSellSubmissions() {
                           className="bg-green-600 hover:bg-green-700"
                         >
                           {updatingId === selectedSubmission.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Check className="h-4 w-4 mr-2" />}
-                          Accept Counter ({selectedSubmission.counterTokenOffer} tokens)
+                          Accept Counter ({selectedSubmission.counterTokenOffer} tokens / NZ${(selectedSubmission.counterTokenOffer * 0.5).toFixed(2)})
                         </Button>
                         <Button
                           onClick={() => handleStatusUpdate(selectedSubmission.id, "offer_made", tokenOffer, adminNotes, true)}
@@ -659,7 +659,7 @@ export default function AdminSellSubmissions() {
                         className="bg-amber-600 hover:bg-amber-700"
                       >
                         {updatingId === selectedSubmission.id ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Coins className="h-4 w-4 mr-2" />}
-                        Award Tokens ({selectedSubmission.tokenOffer || selectedSubmission.finalTokens})
+                        Award Tokens ({selectedSubmission.tokenOffer || selectedSubmission.finalTokens} / NZ${((selectedSubmission.tokenOffer || selectedSubmission.finalTokens) * 0.5).toFixed(2)})
                       </Button>
                     )}
                   </div>

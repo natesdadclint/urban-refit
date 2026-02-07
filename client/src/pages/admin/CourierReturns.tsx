@@ -193,7 +193,7 @@ export default function AdminCourierReturns() {
               {returnItem.tokensAwarded && (
                 <div>
                   <span className="text-muted-foreground">Tokens:</span>{" "}
-                  {parseFloat(returnItem.tokensAwarded).toFixed(2)}
+                  {parseFloat(returnItem.tokensAwarded).toFixed(2)} <span className="text-xs text-muted-foreground">(NZ${(parseFloat(returnItem.tokensAwarded) * 0.5).toFixed(2)})</span>
                 </div>
               )}
             </div>
@@ -430,9 +430,10 @@ export default function AdminCourierReturns() {
                 step="0.01"
               />
               {estimatedValue && (
-                <p className="text-sm text-muted-foreground">
-                  Tokens to award: {(parseFloat(estimatedValue) * 0.25).toFixed(2)}
-                </p>
+                <div className="text-sm text-muted-foreground space-y-1">
+                  <p>Tokens to award: {(parseFloat(estimatedValue) * 0.25).toFixed(2)}</p>
+                  <p>NZD value of tokens: NZ${(parseFloat(estimatedValue) * 0.25 * 0.5).toFixed(2)} <span className="text-xs">(at NZ$0.50/token)</span></p>
+                </div>
               )}
             </div>
             <Button 
@@ -522,10 +523,15 @@ export default function AdminCourierReturns() {
               />
             </div>
             {selectedReturn?.tokensAwarded && (
-              <p className="text-sm p-3 bg-muted rounded">
-                <Coins className="h-4 w-4 inline mr-1" />
-                Tokens to award on approval: {parseFloat(selectedReturn.tokensAwarded).toFixed(2)}
-              </p>
+              <div className="text-sm p-3 bg-muted rounded space-y-1">
+                <p>
+                  <Coins className="h-4 w-4 inline mr-1" />
+                  Tokens to award on approval: {parseFloat(selectedReturn.tokensAwarded).toFixed(2)}
+                </p>
+                <p className="text-xs text-muted-foreground ml-5">
+                  NZD value: NZ${(parseFloat(selectedReturn.tokensAwarded) * 0.5).toFixed(2)} (at NZ$0.50/token)
+                </p>
+              </div>
             )}
             <div className="flex gap-2">
               <Button 

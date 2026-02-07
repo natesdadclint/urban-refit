@@ -884,3 +884,9 @@
 
 ## Token Value Fix (Feb 7, 2026)
 - [x] Update token value to 1 token = $0.50 NZD across all code (routers, emails, shipping labels, FAQ, Charities, CourierReturn, HowTokensWork, MySubmissions, tests)
+
+## Admin Sell Submission Token Valuation (Feb 7, 2026)
+- [x] Update admin sell submission UI to show NZD value at $0.50 per token
+- [x] Update admin offer form to display NZD equivalent when entering token amounts
+- [x] Update admin submission detail view to show $0.50 conversion
+- [x] Update admin CourierReturns to show NZD value at $0.50 per token (approve dialog, inspection dialog, return cards)
