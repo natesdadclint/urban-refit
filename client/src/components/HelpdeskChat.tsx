@@ -23,8 +23,10 @@ export function HelpdeskChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [sessionId] = useState(() => nanoid());
+  const [showLabel, setShowLabel] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const labelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const sendMessage = trpc.chat.send.useMutation({
     onSuccess: (data) => {
@@ -80,19 +82,31 @@ export function HelpdeskChat() {
     }
   }, [isOpen, messages.length]);
 
+  const handleButtonTouchStart = () => {
+    setShowLabel(true);
+    if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+    labelTimeoutRef.current = setTimeout(() => setShowLabel(false), 3000);
+  };
+
+  const handleButtonTouchEnd = () => {
+    if (labelTimeoutRef.current) clearTimeout(labelTimeoutRef.current);
+  };
+
   return (
     <>
-      {/* Floating Chat Button - compact icon with hover label */}
+      {/* Floating Chat Button - compact icon with hover/touch label */}
       {!isOpen && (
-        <div className="group fixed bottom-6 right-6 z-50">
+        <div className="fixed bottom-6 right-6 z-50">
           <button
             onClick={() => setIsOpen(true)}
-            className="flex items-center justify-center h-10 w-10 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900"
+            onTouchStart={handleButtonTouchStart}
+            onTouchEnd={handleButtonTouchEnd}
+            className="group flex items-center justify-center h-10 w-10 rounded-full bg-neutral-800 text-white shadow-lg transition-all duration-300 hover:shadow-xl hover:bg-neutral-900 active:bg-neutral-950"
             title="Chat with Urban Refit"
           >
             <MessageCircle className="h-4 w-4" />
           </button>
-          <div className="absolute bottom-12 right-0 mb-2 px-3 py-1.5 bg-neutral-800 text-white text-xs font-medium rounded-full whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">
+          <div className={cn("absolute bottom-12 right-0 mb-2 px-3 py-1.5 bg-neutral-800 text-white text-xs font-medium rounded-full whitespace-nowrap transition-opacity duration-200 pointer-events-none shadow-lg", showLabel ? "opacity-100" : "opacity-0 group-hover:opacity-100")}>
             Chat with Urban Refit
           </div>
         </div>

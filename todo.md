@@ -869,3 +869,8 @@
 
 ## Button Size Reduction (Feb 6, 2026)
 - [x] Reduce chat and feedback button sizes to be less intrusive (10x10 icons, labels on hover)
+
+## Mobile Button Testing (Feb 6, 2026)
+- [x] Test chat and feedback buttons on mobile devices
+- [x] Fix hover labels to work on touch devices (show on tap, auto-hide after 3s)
+- [x] Verify buttons don't overlap with mobile navigation (positioned at bottom-6 and bottom-20)
