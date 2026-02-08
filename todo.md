@@ -930,3 +930,21 @@
 - [x] Convert standalone roadmap HTML into React page component (Roadmap.tsx)
 - [x] Add /roadmap route to App.tsx (lazy loaded)
 - [x] Link roadmap from footer Company section
+
+## Sprint 1: Breadcrumbs & Microcopy (Feb 8, 2026)
+- [x] Create reusable PageBreadcrumb component using shadcn/ui breadcrumb primitives
+- [x] Add breadcrumbs to ProductDetail page (Home > Shop > Product Name)
+- [x] Add breadcrumbs to Shop page (Home > Shop)
+- [x] Add breadcrumbs to Cart page (Home > Cart)
+- [x] Add breadcrumbs to Checkout page (Home > Cart > Checkout)
+- [x] Add breadcrumbs to Blog page (Home > Blog)
+- [x] Add breadcrumbs to BlogPost page (Home > Blog > Article Title)
+- [x] Add breadcrumbs to Profile page (Home > My Profile)
+- [x] Add breadcrumbs to Sell to Us page (Home > Sell to Us)
+- [x] Add microcopy near "Add to Cart" CTA ("One-of-a-kind piece — once it's gone, it's gone")
+- [x] Add microcopy near Cart checkout CTA ("Secure payment via Stripe. Free shipping over NZ$50")
+- [x] Add microcopy near Checkout CTA ("Return within 14 days for Urban Refit Tokens")
+- [x] Add microcopy near "Sell to Us" submit CTA ("Token offer within 48 hours. 1 token = NZ$0.50")
+- [x] Add microcopy near Courier Return submit CTA ("Free prepaid shipping label. Tokens within 48 hours")
+- [x] Add microcopy near Hero CTAs ("Every piece is one-of-a-kind. Earn tokens when you sell back")
+- [x] Write 18 vitest tests for breadcrumb logic and microcopy content (all passing)

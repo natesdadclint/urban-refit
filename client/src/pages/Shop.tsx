@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -284,10 +285,13 @@ export default function Shop() {
   return (
     <Layout>
       <div className="container py-6 sm:py-8 md:py-12">
-        <Link href="/" className="inline-flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base font-medium text-foreground hover:text-primary transition-colors mb-4 sm:mb-6 py-1.5 sm:py-2 px-2 sm:px-3 -ml-2 sm:-ml-3 rounded-lg hover:bg-accent/20">
-          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          Back to Home
-        </Link>
+        <PageBreadcrumb
+          className="mb-4 sm:mb-6"
+          segments={[
+            { label: "Shop", href: category !== "all" ? "/shop" : undefined },
+            ...(category !== "all" ? [{ label: categories.find(c => c.value === category)?.name || category.charAt(0).toUpperCase() + category.slice(1) }] : []),
+          ]}
+        />
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
           <div>

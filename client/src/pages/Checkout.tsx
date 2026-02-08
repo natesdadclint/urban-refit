@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -201,11 +202,15 @@ export default function Checkout() {
     <Layout>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
+          <PageBreadcrumb className="mb-6" segments={[
+            { label: "Cart", href: "/cart" },
+            { label: "Checkout" },
+          ]} />
           {/* Back button */}
           <Button
             variant="ghost"
             size="sm"
-            className="mb-6 gap-2"
+            className="mb-4 gap-2"
             asChild
           >
             <Link href="/cart">
@@ -515,8 +520,9 @@ export default function Checkout() {
                     Secure checkout powered by Stripe
                   </div>
 
-                  <p className="text-xs text-muted-foreground text-center mt-4">
-                    5% of your purchase supports our thrift store partners
+                  <p className="text-xs text-muted-foreground text-center mt-3">
+                    5% of your purchase supports our thrift store partners.
+                    Changed your mind? Return within 14 days for Urban Refit Tokens.
                   </p>
                 </div>
               </div>

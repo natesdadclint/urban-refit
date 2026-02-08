@@ -438,6 +438,9 @@ export default function CourierReturn() {
                     )}
                   </Button>
                 </div>
+                <p className="text-xs text-muted-foreground text-center mt-3">
+                  Free prepaid shipping label included. Tokens credited within 48 hours of inspection. 1 token = NZ$0.50.
+                </p>
               </CardContent>
             </Card>
           )}

@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -163,10 +164,7 @@ export default function SellToUs() {
       {/* Hero Section */}
       <section className="bg-black text-white py-16">
         <div className="container">
-          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-white hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-white/10">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
+          <PageBreadcrumb className="mb-6 [&_*]:text-neutral-400 [&_[aria-current]]:text-white" segments={[{ label: "Sell to Us" }]} />
           <div className="max-w-3xl">
             <p className="text-sm uppercase tracking-wider text-neutral-400 mb-4">Circular Fashion Economy</p>
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
@@ -472,6 +470,7 @@ export default function SellToUs() {
                     </Button>
                     <p className="text-xs text-muted-foreground text-center mt-4">
                       By submitting, you agree to our terms of service and confirm that the item is authentic and accurately described.
+                      You'll receive a token offer within 48 hours. 1 token = NZ$0.50 spend credit on Urban Refit.
                     </p>
                   </div>
                 </form>

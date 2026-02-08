@@ -1,4 +1,5 @@
 import { useParams, Link } from "wouter";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -123,14 +124,12 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Back Button */}
+      {/* Breadcrumb navigation */}
       <div className="container py-6">
-        <Link href="/blog">
-          <Button variant="ghost" className="rounded-full -ml-2">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Blog
-          </Button>
-        </Link>
+        <PageBreadcrumb segments={[
+          { label: "Blog", href: "/blog" },
+          { label: post?.title || "Article" },
+        ]} />
       </div>
 
       {/* Hero Image */}

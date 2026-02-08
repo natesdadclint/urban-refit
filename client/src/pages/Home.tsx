@@ -86,6 +86,9 @@ export default function Home() {
                 <Link href="/shop">See What's New</Link>
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground/80 mt-3">
+              Every piece is one-of-a-kind. Free shipping over NZ$50. Earn tokens when you sell back.
+            </p>
           </div>
         </div>
       </section>

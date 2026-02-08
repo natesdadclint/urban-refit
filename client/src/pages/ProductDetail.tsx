@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import ImageZoom from "@/components/ImageZoom";
 import SocialShare from "@/components/SocialShare";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -89,16 +90,15 @@ export default function ProductDetail() {
   return (
     <Layout>
       <div className="container py-8">
-        {/* Back button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="mb-6 gap-2"
-          onClick={() => window.history.back()}
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
+        {/* Breadcrumb navigation */}
+        <PageBreadcrumb
+          className="mb-6"
+          segments={[
+            { label: "Shop", href: "/shop" },
+            { label: product.category.charAt(0).toUpperCase() + product.category.slice(1), href: `/shop/${product.category}` },
+            { label: product.name },
+          ]}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image Gallery */}
@@ -195,6 +195,9 @@ export default function ProductDetail() {
                     </a>
                   </Button>
                 )}
+                <p className="text-xs text-muted-foreground mt-2">
+                  One-of-a-kind piece — once it's gone, it's gone. Free shipping on orders over NZ$50.
+                </p>
               </div>
             )}
 

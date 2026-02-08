@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
@@ -77,6 +78,7 @@ export default function Cart() {
     <Layout>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
+          <PageBreadcrumb className="mb-6" segments={[{ label: "Cart" }]} />
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-3xl font-serif font-semibold">Your Cart</h1>
             {cart && cart.items.length > 0 && (
@@ -199,7 +201,8 @@ export default function Cart() {
                   </Button>
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
-                    5% of your purchase supports our thrift store partners
+                    Secure payment via Stripe. Free shipping on orders over NZ$50.
+                    5% of your purchase supports our thrift store partners.
                   </p>
                 </div>
               </div>

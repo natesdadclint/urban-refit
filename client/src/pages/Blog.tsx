@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
+import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,10 +85,7 @@ export default function Blog() {
       {/* Hero Section - Clean, minimal design matching Urban Refit */}
       <section className="py-16 md:py-24 border-b border-border">
         <div className="container">
-          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
+          <PageBreadcrumb className="mb-6" segments={[{ label: "Blog" }]} />
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
               The Refit Journal
