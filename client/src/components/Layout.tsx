@@ -449,6 +449,21 @@ export default function Layout({ children }: LayoutProps) {
                     Roadmap
                   </Link>
                 </li>
+                <li>
+                  <Link href="/our-process" className="hover:text-primary transition-colors">
+                    Our Process
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/quality-standards" className="hover:text-primary transition-colors">
+                    Quality Standards
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/founder" className="hover:text-primary transition-colors">
+                    Meet the Founder
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>

@@ -114,6 +114,46 @@ export default function About() {
               </div>
             </section>
 
+            {/* Trust Pages */}
+            <section className="border-t border-border pt-16">
+              <SectionHeader title="Dig Deeper" subtitle="Learn more about how we operate." centered />
+              <div className="grid md:grid-cols-3 gap-6 mt-8">
+                <Link href="/our-process">
+                  <div className="group border border-border rounded-xl p-6 hover:border-primary/50 hover:bg-accent/5 transition-all cursor-pointer h-full">
+                    <h3 className="text-lg font-serif font-semibold tracking-tight text-foreground mb-2">Our Process</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      From thrift store shelf to your wardrobe — every step explained.
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:gap-2 transition-all">
+                      Learn More
+                    </span>
+                  </div>
+                </Link>
+                <Link href="/quality-standards">
+                  <div className="group border border-border rounded-xl p-6 hover:border-primary/50 hover:bg-accent/5 transition-all cursor-pointer h-full">
+                    <h3 className="text-lg font-serif font-semibold tracking-tight text-foreground mb-2">Quality Standards</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Our condition grading system — what each grade means for you.
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:gap-2 transition-all">
+                      View Standards
+                    </span>
+                  </div>
+                </Link>
+                <Link href="/founder">
+                  <div className="group border border-border rounded-xl p-6 hover:border-primary/50 hover:bg-accent/5 transition-all cursor-pointer h-full">
+                    <h3 className="text-lg font-serif font-semibold tracking-tight text-foreground mb-2">Meet the Founder</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      The personal story and kaupapa behind Urban Refit.
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-sm font-medium text-primary group-hover:gap-2 transition-all">
+                      Read the Story
+                    </span>
+                  </div>
+                </Link>
+              </div>
+            </section>
+
             {/* CTA Section */}
             <section className="text-center py-8">
               <Link 

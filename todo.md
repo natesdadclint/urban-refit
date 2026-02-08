@@ -968,3 +968,14 @@
 - [ ] Audit and update admin pages headings (deferred to Sprint 2)
 - [x] Audit and update HowTokensWork/Roadmap page headings
 - [x] Write tests for heading hierarchy consistency (82 tests passing)
+
+## Sprint 1C: Trust Pages (Feb 9, 2026)
+- [x] Create "Our Process" page (/our-process) — sourcing, inspection, photography, listing workflow
+- [x] Create "Quality Standards" page (/quality-standards) — visual condition grading scale (Like New → Excellent → Good → Fair) with descriptions
+- [x] Create "Meet the Founder" page (/founder) — Clint's personal story, kaupapa, mission
+- [x] Add routes to App.tsx with lazy loading
+- [x] Link trust pages from footer and About page
+- [ ] Link Quality Standards from ProductDetail condition badge (deferred — requires ProductDetail refactor)
+- [x] Add PageHeader and SectionHeader components (Sprint 1A consistency)
+- [x] Add breadcrumbs to all three trust pages
+- [x] Write vitest tests for trust pages content and structure (58 tests passing)

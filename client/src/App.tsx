@@ -39,6 +39,9 @@ const HowTokensWork = lazy(() => import("./pages/HowTokensWork"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const SecurityDocs = lazy(() => import("./pages/docs/SecurityDocs"));
 const Roadmap = lazy(() => import("./pages/Roadmap"));
+const OurProcess = lazy(() => import("./pages/OurProcess"));
+const QualityStandards = lazy(() => import("./pages/QualityStandards"));
+const Founder = lazy(() => import("./pages/Founder"));
 
 // Admin pages - lazy loaded
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -107,6 +110,9 @@ function Router() {
         <Route path="/my-submissions/:id" component={MySubmissions} />
         <Route path="/how-tokens-work" component={HowTokensWork} />
         <Route path="/notifications" component={Notifications} />
+        <Route path="/our-process" component={OurProcess} />
+        <Route path="/quality-standards" component={QualityStandards} />
+        <Route path="/founder" component={Founder} />
         
         {/* Admin routes */}
         <Route path="/admin" component={AdminDashboard} />
