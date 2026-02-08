@@ -38,6 +38,7 @@ const MySubmissions = lazy(() => import("./pages/MySubmissions"));
 const HowTokensWork = lazy(() => import("./pages/HowTokensWork"));
 const Notifications = lazy(() => import("./pages/Notifications"));
 const SecurityDocs = lazy(() => import("./pages/docs/SecurityDocs"));
+const Roadmap = lazy(() => import("./pages/Roadmap"));
 
 // Admin pages - lazy loaded
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -127,6 +128,7 @@ function Router() {
         <Route path="/admin/image-monitoring" component={AdminImageMonitoring} />
         <Route path="/admin/alerts" component={AdminAlertsPage} />
         <Route path="/docs/security" component={SecurityDocs} />
+        <Route path="/roadmap" component={Roadmap} />
         
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />

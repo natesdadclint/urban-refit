@@ -444,6 +444,11 @@ export default function Layout({ children }: LayoutProps) {
                     Contact
                   </Link>
                 </li>
+                <li>
+                  <Link href="/roadmap" className="hover:text-primary transition-colors">
+                    Roadmap
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>

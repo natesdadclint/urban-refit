@@ -925,3 +925,8 @@
 - [x] Update backend to enforce 1-week referral code expiry window (expiresAt field + createReferralWithExpiry)
 - [x] Update backend to track timer bonus and mark tokens as donation-only (bonusDonationOnly + timerBonusTokens fields)
 - [x] Write tests for timer, expiry, and donation-only logic (20 tests passing)
+
+## Roadmap Page Integration (Feb 8, 2026)
+- [x] Convert standalone roadmap HTML into React page component (Roadmap.tsx)
+- [x] Add /roadmap route to App.tsx (lazy loaded)
+- [x] Link roadmap from footer Company section
