@@ -948,3 +948,8 @@
 - [x] Add microcopy near Courier Return submit CTA ("Free prepaid shipping label. Tokens within 48 hours")
 - [x] Add microcopy near Hero CTAs ("Every piece is one-of-a-kind. Earn tokens when you sell back")
 - [x] Write 18 vitest tests for breadcrumb logic and microcopy content (all passing)
+
+## Terms & Conditions - Authenticity Refund Policy (Feb 9, 2026)
+- [x] Add authenticity refund clause allowing refunds for non-authentic items (Section 5A)
+- [x] Add triage acknowledgment that mistakes may occasionally occur
+- [x] Add commitment to swift remediation and customer interaction (24hr response, 5 business day resolution)

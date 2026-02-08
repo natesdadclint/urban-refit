@@ -84,12 +84,39 @@ export default function Terms() {
               </p>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong className="text-foreground">Eligible Returns:</strong> Items that are significantly not as described, have undisclosed damage, or were shipped incorrectly may be returned within 14 days of delivery.</li>
+                <li><strong className="text-foreground">Authenticity Issues:</strong> If an item is found to not be authentic or does not match the brand or description as listed, you are entitled to a full refund. See Section 5A below for details.</li>
                 <li><strong className="text-foreground">Non-Returnable:</strong> Items returned due to change of mind, fit preferences, or minor variations consistent with secondhand goods are not eligible for refund.</li>
                 <li><strong className="text-foreground">Condition:</strong> Returned items must be unworn (after receipt), unwashed, and in the same condition as received, with all tags attached.</li>
                 <li><strong className="text-foreground">Process:</strong> Contact help@urbanrefit.store within 14 days of delivery with photos and description of the issue.</li>
               </ul>
               <p className="mt-4">
                 Refunds, when approved, will be processed to the original payment method within 5-10 business days of receiving the returned item.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">5A. Authenticity Guarantee &amp; Remediation</h2>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6 mb-4">
+                <p className="text-emerald-800 font-semibold mb-2">Our Commitment to Authenticity</p>
+                <p className="text-emerald-700">
+                  Urban Refit is committed to offering only genuine, authentic branded garments. Every item undergoes a careful triage and inspection process before it is listed on our platform. However, we acknowledge that with the volume and variety of secondhand goods we handle, mistakes may from time to time occur.
+                </p>
+              </div>
+              <p className="mb-4">
+                In the event that an item you receive is found to be inauthentic or misrepresented in terms of its brand or origin, Urban Refit will work with you promptly to resolve the matter. Our authenticity remediation process is as follows:
+              </p>
+              <ul className="list-disc list-inside space-y-2">
+                <li><strong className="text-foreground">Full Refund:</strong> You are entitled to a full refund of the purchase price, including any shipping costs, for any item that is determined to not be authentic.</li>
+                <li><strong className="text-foreground">Swift Remediation:</strong> Urban Refit is more than willing to interact at pace to remediate the situation. Upon notification, we will respond within 24 hours and aim to resolve all authenticity claims within 5 business days.</li>
+                <li><strong className="text-foreground">Return Shipping:</strong> Urban Refit will cover all return shipping costs for items returned due to authenticity concerns. A prepaid shipping label will be provided.</li>
+                <li><strong className="text-foreground">Token Compensation:</strong> In addition to a full refund, affected customers will receive 10 bonus Urban Refit Tokens as a gesture of goodwill for the inconvenience.</li>
+                <li><strong className="text-foreground">Reporting:</strong> Contact help@urbanrefit.store with the subject line "Authenticity Concern" along with your order number, photos of the item, and a description of your concern. We take every report seriously.</li>
+              </ul>
+              <p className="mt-4">
+                We do our best to triage and verify every garment that enters our inventory. Our team inspects labels, stitching, materials, and other markers of authenticity. Despite these efforts, the nature of secondhand sourcing means that occasional errors may occur. When they do, we stand behind our customers and prioritise a fair and timely resolution.
+              </p>
+              <p className="mt-4 text-sm">
+                Urban Refit reserves the right to request the return of the item in question for independent verification. Fraudulent authenticity claims may result in account suspension.
               </p>
             </section>
 
