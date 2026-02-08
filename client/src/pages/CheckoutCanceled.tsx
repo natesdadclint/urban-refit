@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { XCircle, ArrowLeft, ShoppingBag, HelpCircle } from "lucide-react";
@@ -12,9 +13,7 @@ export default function CheckoutCanceled() {
             <XCircle className="h-20 w-20 mx-auto text-muted-foreground" />
           </div>
           
-          <h1 className="text-3xl font-serif font-semibold mb-4">
-            Payment Canceled
-          </h1>
+          <PageHeader title="Payment Canceled" variant="compact" className="mb-4" />
           
           <p className="text-muted-foreground mb-8">
             Your payment was canceled and no charges were made. 

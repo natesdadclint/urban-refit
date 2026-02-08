@@ -953,3 +953,18 @@
 - [x] Add authenticity refund clause allowing refunds for non-authentic items (Section 5A)
 - [x] Add triage acknowledgment that mistakes may occasionally occur
 - [x] Add commitment to swift remediation and customer interaction (24hr response, 5 business day resolution)
+
+## Sprint 1A: Global Page Hierarchy Standardisation (Feb 9, 2026)
+- [x] Create PageHeader component (H1 with consistent size, spacing, optional subtitle)
+- [x] Create SectionHeader component (H2/H3 with enforced type scale)
+- [x] Audit and update Home page headings (exempt - special animation classes)
+- [x] Audit and update Shop page headings (exempt - dynamic heading with filters)
+- [x] Audit and update ProductDetail page headings (exempt - dynamic product title)
+- [x] Audit and update Cart/Checkout page headings
+- [x] Audit and update Blog/BlogPost page headings
+- [x] Audit and update Profile page headings (exempt - tab-based layout)
+- [x] Audit and update SellToUs/CourierReturn page headings
+- [x] Audit and update informational pages (About, FAQ, Terms, Privacy, Sustainability, Charities)
+- [ ] Audit and update admin pages headings (deferred to Sprint 2)
+- [x] Audit and update HowTokensWork/Roadmap page headings
+- [x] Write tests for heading hierarchy consistency (82 tests passing)

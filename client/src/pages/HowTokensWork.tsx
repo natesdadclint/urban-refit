@@ -4,13 +4,15 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { 
-  ArrowLeft, 
-  Coins, 
-  Gift, 
-  ShoppingBag, 
-  Heart, 
-  Recycle, 
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
+import {
+  ArrowLeft,
+  Coins,
+  Gift,
+  ShoppingBag,
+  Heart,
+  Recycle,
   ArrowRight,
   CheckCircle2,
   Calendar,
@@ -51,26 +53,15 @@ export default function HowTokensWork() {
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-primary/5 to-background py-12 sm:py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <Link href="/" className="inline-flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base font-medium text-foreground hover:text-primary transition-colors mb-4 sm:mb-6 py-1.5 sm:py-2 px-2 sm:px-3 -ml-2 sm:-ml-3 rounded-lg hover:bg-accent/20">
-              <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              Back to Home
-            </Link>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                <Coins className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground">
-                How Tokens Work
-              </h1>
-            </div>
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl">
-              Urban Refit tokens are at the heart of our circular economy. Earn tokens by participating in sustainable fashion, 
-              then use them to save on future purchases or support charities you care about.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="How Tokens Work"
+          subtitle="Urban Refit tokens are at the heart of our circular economy. Earn tokens by participating in sustainable fashion, then use them to save on future purchases or support charities you care about."
+        >
+          <Link href="/" className="inline-flex items-center gap-1.5 sm:gap-2 text-sm sm:text-base font-medium text-foreground hover:text-primary transition-colors mb-4 sm:mb-6 py-1.5 sm:py-2 px-2 sm:px-3 -ml-2 sm:-ml-3 rounded-lg hover:bg-accent/20">
+            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            Back to Home
+          </Link>
+        </PageHeader>
 
         {/* Token Value */}
         <div className="container max-w-4xl py-8 sm:py-12">
@@ -170,12 +161,11 @@ export default function HowTokensWork() {
 
         {/* The Circular Economy Model */}
         <div className="container max-w-4xl py-8 sm:py-12">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-6 text-foreground text-center">
-            The Circular Economy
-          </h2>
-          <p className="text-sm sm:text-base text-muted-foreground text-center mb-8 max-w-2xl mx-auto">
-            Our token system keeps value circulating within our community, reducing waste and supporting sustainable fashion.
-          </p>
+          <SectionHeader 
+            title="The Circular Economy" 
+            subtitle="Our token system keeps value circulating within our community, reducing waste and supporting sustainable fashion."
+            centered 
+          />
           
           {/* Circular Flow Diagram */}
           <div className="relative py-8">
@@ -233,14 +223,13 @@ export default function HowTokensWork() {
         {/* Ways to Earn Tokens */}
         <div className="bg-secondary/30 py-12 sm:py-16">
           <div className="container max-w-4xl">
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-2 text-foreground text-center">
-              Ways to Earn Tokens
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground text-center mb-8">
-              Multiple ways to build your token balance
-            </p>
+            <SectionHeader 
+              title="Ways to Earn Tokens" 
+              subtitle="Multiple ways to build your token balance"
+              centered 
+            />
 
-            <div className="grid gap-4 sm:gap-6">
+            <div className="grid gap-4 sm:gap-6 mt-8">
               {/* Weekly Login Reward */}
               <Card className="overflow-hidden">
                 <CardContent className="p-0">
@@ -318,14 +307,13 @@ export default function HowTokensWork() {
 
         {/* Ways to Spend Tokens */}
         <div className="container max-w-4xl py-12 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-2 text-foreground text-center">
-            Ways to Spend Tokens
-          </h2>
-          <p className="text-sm sm:text-base text-muted-foreground text-center mb-8">
-            Your tokens, your choice
-          </p>
+          <SectionHeader 
+            title="Ways to Spend Tokens" 
+            subtitle="Your tokens, your choice"
+            centered 
+          />
 
-          <div className="grid sm:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-6 mt-8">
             {/* Discount on Purchases */}
             <Card className="border-2 hover:border-primary/40 transition-colors">
               <CardContent className="p-6 sm:p-8">
@@ -402,11 +390,9 @@ export default function HowTokensWork() {
 
         {/* FAQ Section */}
         <div className="container max-w-4xl py-12 sm:py-16">
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-8 text-foreground text-center">
-            Frequently Asked Questions
-          </h2>
+          <SectionHeader title="Frequently Asked Questions" centered />
 
-          <div className="space-y-4">
+          <div className="space-y-4 mt-8">
             <Card>
               <CardContent className="p-5 sm:p-6">
                 <h3 className="font-semibold mb-2">Do tokens expire?</h3>
@@ -448,13 +434,12 @@ export default function HowTokensWork() {
         {/* CTA Section */}
         <div className="bg-primary/5 py-12 sm:py-16">
           <div className="container max-w-4xl text-center">
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold mb-4 text-foreground">
-              Ready to Start Earning?
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-6 max-w-xl mx-auto">
-              Join our circular economy today. Shop sustainably, earn tokens, and make a difference.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <SectionHeader 
+              title="Ready to Start Earning?" 
+              subtitle="Join our circular economy today. Shop sustainably, earn tokens, and make a difference."
+              centered 
+            />
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
               <Link href="/shop">
                 <Button size="lg" className="w-full sm:w-auto">
                   <ShoppingBag className="w-4 h-4 mr-2" />

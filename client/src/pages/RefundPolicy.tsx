@@ -1,20 +1,16 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function RefundPolicy() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Refund Policy
-            </h1>
-            <p className="text-muted-foreground">
-              Last updated: January 2026
-            </p>
-          </div>
-        </div>
+        <PageHeader 
+          title="Refund Policy"
+          subtitle="Last updated: January 2026"
+        />
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
@@ -30,7 +26,7 @@ export default function RefundPolicy() {
             </div>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Eligibility for Refunds</h2>
+              <SectionHeader title="Eligibility for Refunds" />
               <p className="mb-4">
                 We want you to be satisfied with your purchase. Refunds may be issued in the following circumstances:
               </p>
@@ -43,13 +39,13 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Non-Refundable Situations</h2>
+              <SectionHeader title="Non-Refundable Situations" />
               <p className="mb-4">
                 Due to the nature of secondhand items, we cannot offer refunds for:
               </p>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong className="text-foreground">Change of Mind:</strong> Deciding you no longer want the item after purchase.</li>
-                <li><strong className="text-foreground">Fit Issues:</strong> Items that don't fit as expected (please check measurements carefully before ordering).</li>
+                <li><strong className="text-foreground">Fit Issues:</strong> Items that don'''t fit as expected (please check measurements carefully before ordering).</li>
                 <li><strong className="text-foreground">Minor Wear Consistent with Secondhand:</strong> Small signs of previous use that are typical for pre-owned clothing and consistent with the stated condition rating.</li>
                 <li><strong className="text-foreground">Color Variations:</strong> Slight differences in color between photos and the actual item due to lighting or monitor settings.</li>
                 <li><strong className="text-foreground">Vintage Characteristics:</strong> Age-appropriate characteristics of vintage items.</li>
@@ -58,7 +54,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Refund Request Process</h2>
+              <SectionHeader title="Refund Request Process" />
               <div className="bg-muted/50 rounded-lg p-6 mb-4">
                 <p className="font-semibold text-foreground mb-2">Time Limit</p>
                 <p>You must contact us within <strong className="text-foreground">14 days of delivery</strong> to request a refund.</p>
@@ -81,7 +77,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Return Shipping</h2>
+              <SectionHeader title="Return Shipping" />
               <ul className="list-disc list-inside space-y-2">
                 <li>If the return is due to our error (wrong item, undisclosed damage), we will cover return shipping costs.</li>
                 <li>For other approved returns, the customer is responsible for return shipping costs.</li>
@@ -91,7 +87,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Condition of Returned Items</h2>
+              <SectionHeader title="Condition of Returned Items" />
               <p className="mb-4">
                 To be eligible for a refund, returned items must be:
               </p>
@@ -108,7 +104,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Refund Processing</h2>
+              <SectionHeader title="Refund Processing" />
               <ul className="list-disc list-inside space-y-2">
                 <li>Refunds are processed within 5-10 business days after we receive and inspect the returned item.</li>
                 <li>Refunds will be issued to the original payment method.</li>
@@ -118,7 +114,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Exchanges</h2>
+              <SectionHeader title="Exchanges" />
               <p>
                 Due to the unique nature of secondhand items, we do not offer direct exchanges. If you would like 
                 a different item, please return the original item for a refund (if eligible) and place a new order.
@@ -126,7 +122,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Loyalty Tokens and Refunds</h2>
+              <SectionHeader title="Loyalty Tokens and Refunds" />
               <p className="mb-4">
                 If you used loyalty tokens or spend limit credit on your purchase:
               </p>
@@ -138,7 +134,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Damaged in Transit</h2>
+              <SectionHeader title="Damaged in Transit" />
               <p>
                 If your item arrives damaged due to shipping, please contact us immediately with photos of the 
                 packaging and item. We will work with the shipping carrier to resolve the issue and provide 
@@ -147,7 +143,7 @@ export default function RefundPolicy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Contact Us</h2>
+              <SectionHeader title="Contact Us" />
               <p>
                 If you have any questions about our refund policy or need assistance with a return, please contact us:
               </p>

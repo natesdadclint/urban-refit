@@ -1,33 +1,29 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function Privacy() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Privacy Policy
-            </h1>
-            <p className="text-muted-foreground">
-              Last updated: January 2026
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Privacy Policy"
+          subtitle="Last updated: January 2026"
+        />
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="prose prose-stone max-w-none space-y-8 text-muted-foreground">
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">1. Introduction</h2>
+              <SectionHeader title="1. Introduction" />
               <p>
                 Urban Refit ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and purchase secondhand clothing through our platform. Please read this privacy policy carefully. If you do not agree with the terms of this privacy policy, please do not access the site.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">2. Information We Collect</h2>
+              <SectionHeader title="2. Information We Collect" />
               <p className="mb-4">
                 We collect information that you provide directly to us, including:
               </p>
@@ -42,7 +38,7 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">3. How We Use Your Information</h2>
+              <SectionHeader title="3. How We Use Your Information" />
               <p className="mb-4">
                 We use the information we collect to:
               </p>
@@ -60,7 +56,7 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">4. Information Sharing</h2>
+              <SectionHeader title="4. Information Sharing" />
               <p className="mb-4">
                 We may share your information with:
               </p>
@@ -76,21 +72,21 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">5. Data Security</h2>
+              <SectionHeader title="5. Data Security" />
               <p>
                 We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. All payment transactions are processed through Stripe's secure payment infrastructure. However, no method of transmission over the Internet or electronic storage is 100% secure, and we cannot guarantee absolute security.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">6. Cookies and Tracking</h2>
+              <SectionHeader title="6. Cookies and Tracking" />
               <p>
                 We use cookies and similar tracking technologies to enhance your browsing experience, analyze site traffic, and understand where our visitors come from. You can control cookies through your browser settings, though disabling cookies may affect some website functionality.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">7. Your Rights</h2>
+              <SectionHeader title="7. Your Rights" />
               <p className="mb-4">
                 Depending on your location, you may have the following rights regarding your personal information:
               </p>
@@ -108,28 +104,28 @@ export default function Privacy() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">8. Data Retention</h2>
+              <SectionHeader title="8. Data Retention" />
               <p>
                 We retain your personal information for as long as necessary to fulfill the purposes outlined in this policy, unless a longer retention period is required by law. Transaction records are kept for accounting and tax purposes as required by applicable regulations.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">9. Children's Privacy</h2>
+              <SectionHeader title="9. Children's Privacy" />
               <p>
                 Our website is not intended for children under 16 years of age. We do not knowingly collect personal information from children under 16. If you are a parent or guardian and believe your child has provided us with personal information, please contact us at help@urbanrefit.store.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">10. Changes to This Policy</h2>
+              <SectionHeader title="10. Changes to This Policy" />
               <p>
                 We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date. You are advised to review this Privacy Policy periodically for any changes.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">11. Contact Us</h2>
+              <SectionHeader title="11. Contact Us" />
               <p>
                 If you have any questions about this Privacy Policy or our data practices, please contact us at:
               </p>

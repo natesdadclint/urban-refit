@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { Loader2, Package, Clock, Check, X, Coins, ArrowRight, MessageSquare, ShoppingBag, Heart } from "lucide-react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function MySubmissions() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -40,11 +42,13 @@ export default function MySubmissions() {
       <Layout>
         <div className="container mx-auto px-4 py-16 text-center">
           <Package className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
-          <h1 className="text-3xl font-bold mb-4">My Submissions</h1>
-          <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-            Sign in to view your submissions and respond to token offers from Urban Refit.
-          </p>
-          <Button asChild size="lg">
+          <PageHeader
+            title="My Submissions"
+            subtitle="Sign in to view your submissions and respond to token offers from Urban Refit."
+            variant="compact"
+            className="text-center"
+          />
+          <Button asChild size="lg" className="mt-8">
             <a href={getLoginUrl()}>Sign In</a>
           </Button>
         </div>
@@ -110,12 +114,12 @@ export default function MySubmissions() {
     <Layout>
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">My Submissions</h1>
-            <p className="text-muted-foreground">
-              Track your submissions and respond to token offers from Urban Refit.
-            </p>
-          </div>
+          <PageHeader
+            title="My Submissions"
+            subtitle="Track your submissions and respond to token offers from Urban Refit."
+            variant="compact"
+            className="mb-8"
+          />
 
           {/* Token Info Banner */}
           <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6 mb-8">
@@ -148,10 +152,12 @@ export default function MySubmissions() {
           ) : !submissions || submissions.length === 0 ? (
             <Card className="p-12 text-center">
               <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-xl font-semibold mb-2">No Submissions Yet</h2>
-              <p className="text-muted-foreground mb-6">
-                Have quality pre-loved items? Submit them to Urban Refit and earn tokens for your next wardrobe refresh.
-              </p>
+              <SectionHeader
+                title="No Submissions Yet"
+                subtitle="Have quality pre-loved items? Submit them to Urban Refit and earn tokens for your next wardrobe refresh."
+                centered
+                className="mb-6"
+              />
               <Button asChild>
                 <Link href="/sell-to-us">
                   Trade Your Items for Tokens
@@ -234,172 +240,68 @@ export default function MySubmissions() {
                                 <p className="text-xs text-purple-600">= $${(submission.tokenOffer * 0.5).toFixed(2)} NZD store credit</p>
                               </div>
                               <Dialog open={dialogOpen && selectedSubmission?.id === submission.id} onOpenChange={(open) => {
+                                if (!open) {
+                                  setSelectedSubmission(null);
+                                }
                                 setDialogOpen(open);
-                                if (open) setSelectedSubmission(submission);
                               }}>
                                 <DialogTrigger asChild>
-                                  <Button className="bg-purple-600 hover:bg-purple-700">
-                                    Respond to Offer
-                                  </Button>
+                                  <Button onClick={() => setSelectedSubmission(submission)}>Respond to Offer</Button>
                                 </DialogTrigger>
-                                <DialogContent>
+                                <DialogContent className="sm:max-w-md">
                                   <DialogHeader>
                                     <DialogTitle>Respond to Token Offer</DialogTitle>
                                   </DialogHeader>
-                                  
-                                  <div className="space-y-4 py-4">
-                                    <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-lg p-4 text-center">
-                                      <p className="text-sm text-muted-foreground mb-1">Token Offer</p>
-                                      <p className="text-3xl font-bold flex items-center justify-center gap-2">
-                                        <Coins className="w-8 h-8 text-amber-500" />
-                                        {submission.tokenOffer}
-                                      </p>
-                                      <p className="text-sm text-muted-foreground mt-1">= $${(submission.tokenOffer * 0.5).toFixed(2)} NZD to shop or donate</p>
+                                  <div className="py-4 space-y-4">
+                                    <p>You can accept, reject, or make a counter offer.</p>
+                                    <div>
+                                      <label className="text-sm font-medium">Counter Offer (Tokens)</label>
+                                      <Input 
+                                        type="number"
+                                        value={counterTokens}
+                                        onChange={(e) => setCounterTokens(e.target.value)}
+                                        placeholder={`Our offer: ${submission.tokenOffer}`}
+                                      />
                                     </div>
-                                    
-                                    <div className="space-y-3">
-                                      <Button
-                                        className="w-full bg-green-600 hover:bg-green-700"
-                                        size="lg"
-                                        onClick={() => handleRespond(submission.id, 'accepted')}
-                                        disabled={respondingId === submission.id}
-                                      >
-                                        {respondingId === submission.id ? (
-                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                        ) : (
-                                          <Check className="h-4 w-4 mr-2" />
-                                        )}
-                                        Accept Token Offer
-                                      </Button>
-                                      
-                                      <div className="relative">
-                                        <div className="absolute inset-0 flex items-center">
-                                          <span className="w-full border-t" />
-                                        </div>
-                                        <div className="relative flex justify-center text-xs uppercase">
-                                          <span className="bg-background px-2 text-muted-foreground">Or</span>
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="space-y-2">
-                                        <label className="text-sm font-medium">Make a Counter Offer</label>
-                                        <div className="flex gap-2">
-                                          <div className="relative flex-1">
-                                            <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-amber-500" />
-                                            <Input
-                                              type="number"
-                                              placeholder="Your token request"
-                                              value={counterTokens}
-                                              onChange={(e) => setCounterTokens(e.target.value)}
-                                              className="pl-10"
-                                              min="1"
-                                            />
-                                          </div>
-                                          <Button
-                                            variant="outline"
-                                            onClick={() => handleRespond(submission.id, 'counter')}
-                                            disabled={respondingId === submission.id || !counterTokens}
-                                          >
-                                            {respondingId === submission.id ? (
-                                              <Loader2 className="h-4 w-4 animate-spin" />
-                                            ) : (
-                                              "Send"
-                                            )}
-                                          </Button>
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="space-y-2">
-                                        <label className="text-sm font-medium">Add a Note (optional)</label>
-                                        <textarea
-                                          placeholder="Any additional comments..."
-                                          value={customerNotes}
-                                          onChange={(e) => setCustomerNotes(e.target.value)}
-                                          className="w-full px-3 py-2 border rounded-md text-sm"
-                                          rows={2}
-                                        />
-                                      </div>
-                                      
-                                      <Button
-                                        variant="outline"
-                                        className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
-                                        onClick={() => handleRespond(submission.id, 'rejected')}
-                                        disabled={respondingId === submission.id}
-                                      >
-                                        <X className="h-4 w-4 mr-2" />
-                                        Decline Offer
-                                      </Button>
+                                    <div>
+                                      <label className="text-sm font-medium">Notes (Optional)</label>
+                                      <Input 
+                                        value={customerNotes}
+                                        onChange={(e) => setCustomerNotes(e.target.value)}
+                                        placeholder="e.g., condition notes, price justification"
+                                      />
                                     </div>
+                                  </div>
+                                  <div className="flex justify-end gap-2 pt-4 border-t">
+                                    <Button 
+                                      variant="outline" 
+                                      onClick={() => handleRespond(submission.id, 'rejected')}
+                                      disabled={respondingId === submission.id}
+                                    >
+                                      {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Decline"}
+                                    </Button>
+                                    <Button 
+                                      variant="default" 
+                                      onClick={() => handleRespond(submission.id, 'accepted')}
+                                      disabled={respondingId === submission.id}
+                                      className="bg-emerald-600 hover:bg-emerald-700"
+                                    >
+                                      {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Accept Offer"}
+                                    </Button>
+                                    <Button 
+                                      variant="secondary" 
+                                      onClick={() => handleRespond(submission.id, 'counter')}
+                                      disabled={!counterTokens || respondingId === submission.id}
+                                    >
+                                      {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Counter"}
+                                    </Button>
                                   </div>
                                 </DialogContent>
                               </Dialog>
                             </div>
-                            <p className="text-sm text-purple-700">
-                              Review our token offer and accept, decline, or make a counter offer.
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Counter Offer Sent */}
-                        {submission.status === 'counter_offered' && (
-                          <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <MessageSquare className="h-4 w-4 text-indigo-600" />
-                              <p className="text-sm font-medium text-indigo-700">Counter Offer Sent</p>
-                            </div>
-                            <p className="text-lg font-bold text-indigo-900 mb-1 flex items-center gap-2">
-                              <Coins className="w-5 h-5 text-amber-500" />
-                              {submission.counterTokenOffer || 0} tokens
-                            </p>
-                            <p className="text-sm text-indigo-700">
-                              We're reviewing your counter offer. We'll get back to you soon.
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Accepted */}
-                        {(submission.status === 'offer_accepted' || submission.status === 'accepted') && (
-                          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Check className="h-4 w-4 text-green-600" />
-                              <p className="text-sm font-medium text-green-700">Offer Accepted</p>
-                            </div>
-                            <p className="text-lg font-bold text-green-900 mb-1 flex items-center gap-2">
-                              <Coins className="w-5 h-5 text-amber-500" />
-                              {submission.finalTokens || submission.tokenOffer || 0} tokens
-                            </p>
-                            <p className="text-sm text-green-700">
-                              Check your email for shipping instructions. Tokens will be added after we receive your item.
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Completed */}
-                        {submission.status === 'completed' && (
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Coins className="h-4 w-4 text-amber-600" />
-                              <p className="text-sm font-medium text-amber-700">Tokens Awarded!</p>
-                            </div>
-                            <p className="text-lg font-bold text-amber-900 mb-1 flex items-center gap-2">
-                              <Coins className="w-5 h-5 text-amber-500" />
-                              {submission.finalTokens || submission.tokenOffer || 0} tokens added
-                            </p>
-                            <p className="text-sm text-amber-700">
-                              Thank you for keeping fashion circular! Use your tokens to shop or donate.
-                            </p>
-                            <div className="flex gap-2 mt-3">
-                              <Button size="sm" variant="outline" asChild>
-                                <Link href="/shop">
-                                  <ShoppingBag className="w-4 h-4 mr-1" /> Shop Now
-                                </Link>
-                              </Button>
-                              <Button size="sm" variant="outline" asChild>
-                                <Link href="/donate-tokens">
-                                  <Heart className="w-4 h-4 mr-1" /> Donate
-                                </Link>
-                              </Button>
-                            </div>
+                            {submission.adminNotes && (
+                              <p className="text-sm text-purple-600 border-t border-purple-200 pt-3 mt-3"><b>Admin Notes:</b> {submission.adminNotes}</p>
+                            )}
                           </div>
                         )}
                       </div>
@@ -409,17 +311,6 @@ export default function MySubmissions() {
               })}
             </div>
           )}
-
-          {/* CTA */}
-          <div className="mt-12 text-center">
-            <p className="text-muted-foreground mb-4">Have more items to trade?</p>
-            <Button asChild variant="outline">
-              <Link href="/sell-to-us">
-                Submit Another Item
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
         </div>
       </main>
     </Layout>

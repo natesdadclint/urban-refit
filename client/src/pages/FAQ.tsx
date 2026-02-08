@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import {
   Accordion,
   AccordionContent,
@@ -146,7 +148,7 @@ export default function FAQ() {
         },
         {
           q: "How do I earn tokens?",
-          a: "You earn tokens by returning garments you've purchased through our Courier Return system. When your returned item is resold, you receive tokens worth 25% of the resale value. You also earn bonus tokens on bulk purchases (3+ items)."
+          a: "You earn tokens by returning garments you've purchased from our Courier Return system. When your returned item is resold, you receive tokens worth 25% of the resale value. You also earn bonus tokens on bulk purchases (3+ items)."
         },
         {
           q: "What can I do with my tokens?",
@@ -209,7 +211,7 @@ export default function FAQ() {
       questions: [
         {
           q: "Where do you ship to?",
-          a: "We currently ship within our service area. Shipping destinations and rates are displayed at checkout based on your delivery address."
+          a: "We currently ship to addresses within New Zealand. We are working on expanding our shipping options to other countries in the future."
         },
         {
           q: "How long does shipping take?",
@@ -268,32 +270,24 @@ export default function FAQ() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-base text-muted-foreground max-w-2xl">
-              Everything you need to know about Urban Refit, our secondhand fashion marketplace, 
-              and how we're making sustainable style accessible.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Frequently Asked Questions"
+          subtitle="Everything you need to know about Urban Refit, our secondhand fashion marketplace, and how we're making sustainable style accessible."
+          className="max-w-4xl"
+        >
+          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </PageHeader>
 
         {/* FAQ Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="space-y-12">
             {faqCategories.map((category, categoryIndex) => (
               <div key={categoryIndex}>
-                <h2 className="text-2xl font-serif font-bold text-foreground mb-6 pb-2 border-b border-border">
-                  {category.title}
-                </h2>
-                <Accordion type="single" collapsible className="space-y-2">
+                <SectionHeader title={category.title} className="pb-2 border-b border-border" />
+                <Accordion type="single" collapsible className="space-y-2 mt-6">
                   {category.questions.map((item, questionIndex) => (
                     <AccordionItem 
                       key={questionIndex} 
@@ -315,14 +309,13 @@ export default function FAQ() {
 
           {/* Contact CTA with Email Collection */}
           <div className="mt-16 p-8 bg-muted/50 rounded-lg">
-            <div className="text-center mb-6">
-              <h3 className="text-xl font-serif font-bold text-foreground mb-3">
-                Still have questions?
-              </h3>
-              <p className="text-muted-foreground">
-                We're here to help. Send us a message and we'll get back to you.
-              </p>
-            </div>
+            <SectionHeader 
+              title="Still have questions?" 
+              subtitle="We're here to help. Send us a message and we'll get back to you."
+              level="h3" 
+              centered 
+              className="mb-6"
+            />
             
             {messageSent ? (
               <div className="max-w-md mx-auto text-center space-y-4">

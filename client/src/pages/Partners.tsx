@@ -1,33 +1,30 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function Partners() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Our Partners
-            </h1>
-            <p className="text-base text-muted-foreground leading-relaxed">
-              We work with local thrift stores to source premium clothing and support sustainable fashion.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Our Partners"
+          subtitle="We work with local thrift stores to source premium clothing and support sustainable fashion."
+        >
+          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </PageHeader>
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="space-y-12">
             {/* Partnership Model */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-4 text-foreground">Our Partnership Model</h2>
+              <SectionHeader title="Our Partnership Model" />
               <p className="text-base text-muted-foreground leading-relaxed mb-4">
                 Every thrift store partner receives 5% of the sale price for each garment sourced from their store. This creates a sustainable partnership that supports their mission while ensuring quality inventory for Urban Refit.
               </p>
@@ -38,7 +35,7 @@ export default function Partners() {
 
             {/* Partner Benefits */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">Partner Benefits</h2>
+              <SectionHeader title="Partner Benefits" />
               <div className="grid md:grid-cols-2 gap-8">
                 <div className="space-y-3">
                   <h3 className="text-base font-semibold text-foreground">Revenue Share</h3>
@@ -69,7 +66,7 @@ export default function Partners() {
 
             {/* Current Partners */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">Our Partners</h2>
+              <SectionHeader title="Our Partners" />
               <p className="text-base text-muted-foreground mb-8">
                 [Your partner list will appear here. Each partner will display their name, location, and contribution metrics.]
               </p>
@@ -85,7 +82,7 @@ export default function Partners() {
 
             {/* Become a Partner */}
             <section className="bg-accent/5 rounded-lg p-8 space-y-4">
-              <h2 className="text-2xl font-serif font-bold text-foreground">Interested in Becoming a Partner?</h2>
+              <SectionHeader title="Interested in Becoming a Partner?" />
               <p className="text-base text-muted-foreground">
                 We're always looking for quality thrift stores that share our commitment to sustainability and community impact. Contact us to learn more about partnership opportunities.
               </p>

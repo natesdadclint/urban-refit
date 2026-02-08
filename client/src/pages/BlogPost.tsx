@@ -1,5 +1,7 @@
 import { useParams, Link } from "wouter";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -105,7 +107,7 @@ export default function BlogPost() {
           <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
             <Grid3X3 className="h-10 w-10 text-neutral-400" />
           </div>
-          <h1 className="text-2xl font-serif font-bold mb-2">Post not found</h1>
+          <h2 className="text-2xl font-serif font-bold mb-2">Post not found</h2>
           <p className="text-muted-foreground mb-6">
             This post might have been moved or deleted.
           </p>
@@ -124,17 +126,9 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Breadcrumb navigation */}
-      <div className="container py-6">
-        <PageBreadcrumb segments={[
-          { label: "Blog", href: "/blog" },
-          { label: post?.title || "Article" },
-        ]} />
-      </div>
-
       {/* Hero Image */}
       {post.featuredImageUrl && (
-        <div className="container mb-8">
+        <div className="container mt-8 mb-8">
           <div className="aspect-[21/9] rounded-xl overflow-hidden">
             <img
               src={post.featuredImageUrl}
@@ -148,6 +142,13 @@ export default function BlogPost() {
       {/* Article Content */}
       <article className="container pb-16">
         <div className="max-w-3xl mx-auto">
+          <PageHeader title={post.title} variant="compact" className="mb-4">
+            <PageBreadcrumb segments={[
+              { label: "Blog", href: "/blog" },
+              { label: post?.title || "Article" },
+            ]} />
+          </PageHeader>
+
           {/* Meta */}
           <div className="flex items-center gap-3 flex-wrap mb-4">
             <Badge
@@ -164,11 +165,6 @@ export default function BlogPost() {
               {post.readingTime} min read
             </span>
           </div>
-
-          {/* Title */}
-          <h1 className="text-3xl md:text-5xl font-serif font-bold mb-4 leading-tight">
-            {post.title}
-          </h1>
 
           {/* Author & Date */}
           <div className="flex items-center justify-between flex-wrap gap-4 mb-8 pb-8 border-b border-border">
@@ -259,14 +255,13 @@ export default function BlogPost() {
       <section className="py-16 border-t border-border bg-neutral-50">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4">
-              Ready to shop sustainably?
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              Discover unique pre-loved pieces that look good and do good.
-            </p>
+            <SectionHeader
+              centered
+              title="Ready to shop sustainably?"
+              subtitle="Discover unique pre-loved pieces that look good and do good."
+            />
             <Link href="/shop">
-              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-8">
+              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-8 mt-6">
                 Shop Now
               </Button>
             </Link>

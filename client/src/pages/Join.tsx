@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -144,47 +146,24 @@ export default function Join() {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary/5 via-background to-primary/10 py-16 md:py-24">
-        <div className="container">
-          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </Link>
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
-              <Sparkles className="w-4 h-4" />
-              Join the Sustainable Fashion Movement
-            </div>
-            <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-6">
-              Become an Urban Refit Member
-            </h1>
-            <p className="text-base text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Unlock exclusive discounts, earn rewards on every purchase, and be part of a community 
-              that's redefining sustainable men's fashion. Membership is free – forever.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button size="lg" onClick={handleJoin} className="gap-2">
-                Join Now – It's Free <ArrowRight className="w-4 h-4" />
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <a href="/shop">Browse First</a>
-              </Button>
-            </div>
-          </div>
+      <PageHeader 
+        title="Become an Urban Refit Member"
+        subtitle="Unlock exclusive discounts, earn rewards on every purchase, and be part of a community that's redefining sustainable men's fashion. Membership is free – forever."
+      >
+        <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <Sparkles className="w-4 h-4" />
+          Join the Sustainable Fashion Movement
         </div>
-      </section>
+      </PageHeader>
 
       {/* Benefits Grid */}
       <section className="py-16 md:py-24">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif font-semibold mb-4">Member Benefits</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              As an Urban Refit member, you'll enjoy exclusive perks designed to reward your 
-              commitment to sustainable fashion.
-            </p>
-          </div>
+          <SectionHeader 
+            centered
+            title="Member Benefits"
+            subtitle="As an Urban Refit member, you'll enjoy exclusive perks designed to reward your commitment to sustainable fashion."
+          />
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {benefits.map((benefit, index) => (
               <Card key={index} className="border-2 hover:border-primary/50 transition-colors">
@@ -206,12 +185,11 @@ export default function Join() {
       {/* Membership Tiers */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-serif font-semibold mb-4">Membership Tiers</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              The more you shop, the more you save. Unlock higher tiers based on your annual spend.
-            </p>
-          </div>
+          <SectionHeader 
+            centered
+            title="Membership Tiers"
+            subtitle="The more you shop, the more you save. Unlock higher tiers based on your annual spend."
+          />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {membershipTiers.map((tier, index) => (
               <Card key={index} className="text-center">
@@ -278,7 +256,7 @@ export default function Join() {
                         onCheckedChange={() => handlePreferenceChange('sustainabilityNews')}
                       />
                       <Label htmlFor="sustainabilityNews" className="cursor-pointer">
-                        Sustainability news and impact reports
+                        Sustainability news and tips
                       </Label>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -288,92 +266,56 @@ export default function Join() {
                         onCheckedChange={() => handlePreferenceChange('partnerUpdates')}
                       />
                       <Label htmlFor="partnerUpdates" className="cursor-pointer">
-                        Partner thrift store updates
+                        Updates from our charity partners
                       </Label>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="border-t pt-6 space-y-4">
                   <Button size="lg" className="w-full gap-2" onClick={handleJoin}>
-                    Create My Free Account <ArrowRight className="w-4 h-4" />
+                    Create Free Account <ArrowRight className="w-4 h-4" />
                   </Button>
-                  <p className="text-xs text-muted-foreground text-center mt-4">
-                    By joining, you agree to our{" "}
-                    <a href="/terms" className="underline hover:text-primary">Terms of Service</a>
-                    {" "}and{" "}
-                    <a href="/privacy" className="underline hover:text-primary">Privacy Policy</a>.
+                  <p className="text-xs text-center text-muted-foreground">
+                    By creating an account, you agree to our Terms of Service.
                   </p>
                 </div>
 
-                {/* Email-only subscription option */}
-                <div className="pt-4 border-t">
-                  {!showEmailForm ? (
-                    <button
-                      onClick={() => setShowEmailForm(true)}
-                      className="w-full text-center text-sm text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      Not ready to join? <span className="underline">Subscribe to our newsletter instead</span>
-                    </button>
-                  ) : (
-                    <form onSubmit={handleEmailSubscribe} className="space-y-4">
-                      <div className="text-center mb-4">
-                        <p className="text-sm text-muted-foreground">
-                          Stay updated without creating an account
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        <div className="relative flex-1">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="pl-10"
-                            required
-                          />
-                        </div>
-                        <Button type="submit" disabled={subscribeMutation.isPending}>
-                          {subscribeMutation.isPending ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                          ) : (
-                            "Subscribe"
-                          )}
-                        </Button>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setShowEmailForm(false)}
-                        className="w-full text-center text-xs text-muted-foreground hover:text-primary"
-                      >
-                        Cancel
-                      </button>
-                    </form>
-                  )}
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">
+                      Or subscribe for updates
+                    </span>
+                  </div>
                 </div>
+
+                {
+                  showEmailForm ? (
+                    <form onSubmit={handleEmailSubscribe} className="flex gap-2">
+                      <Input 
+                        type="email"
+                        placeholder="Enter your email..."
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="flex-grow"
+                      />
+                      <Button type="submit" disabled={subscribeMutation.isPending}>
+                        {subscribeMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : "Subscribe"}
+                      </Button>
+                    </form>
+                  ) : (
+                    <Button variant="secondary" className="w-full gap-2" onClick={() => setShowEmailForm(true)}>
+                      <Mail className="w-4 h-4" />
+                      Subscribe to Newsletter
+                    </Button>
+                  )
+                }
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <p className="text-4xl font-bold mb-2">5,000+</p>
-              <p className="text-primary-foreground/80">Happy Members</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold mb-2">NZ$50,000+</p>
-              <p className="text-primary-foreground/80">Donated to Thrift Partners</p>
-            </div>
-            <div>
-              <p className="text-4xl font-bold mb-2">10,000+</p>
-              <p className="text-primary-foreground/80">Garments Given New Life</p>
-            </div>
           </div>
         </div>
       </section>

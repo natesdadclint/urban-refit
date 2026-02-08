@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, ArrowLeft, Clock, Eye, Heart, TrendingUp, Leaf, Users, Star, Zap, Grid3X3, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 const CATEGORIES = [
   { value: undefined, label: "All", icon: Grid3X3 },
@@ -82,24 +84,12 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section - Clean, minimal design matching Urban Refit */}
-      <section className="py-16 md:py-24 border-b border-border">
-        <div className="container">
-          <PageBreadcrumb className="mb-6" segments={[{ label: "Blog" }]} />
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
-              The Refit Journal
-            </p>
-            <h1 className="text-4xl md:text-6xl font-serif font-bold mb-6 tracking-tight">
-              Stories that inspire
-            </h1>
-            <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-              Discover sustainable fashion tips, brand stories, and community highlights. 
-              Your guide to looking good while doing good.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader 
+        title="Stories that inspire"
+        subtitle="Discover sustainable fashion tips, brand stories, and community highlights. Your guide to looking good while doing good."
+      >
+        <PageBreadcrumb segments={[{ label: "Blog" }]} />
+      </PageHeader>
 
       {/* Category Filter - Neutral styling */}
       <section className="sticky top-16 z-30 bg-background/95 backdrop-blur-lg border-b border-border">
@@ -230,7 +220,7 @@ export default function Blog() {
               <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-neutral-100 flex items-center justify-center">
                 <Grid3X3 className="h-10 w-10 text-neutral-400" />
               </div>
-              <h3 className="text-xl font-serif font-semibold mb-2">No posts yet</h3>
+              <SectionHeader title="No posts yet" level="h3" centered />
               <p className="text-muted-foreground mb-6">
                 {selectedCategory
                   ? "No posts in this category yet. Check back soon."
@@ -254,15 +244,11 @@ export default function Blog() {
       <section className="py-16 border-t border-border bg-neutral-50">
         <div className="container">
           <div className="max-w-2xl mx-auto text-center">
-            <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
-              Stay in the loop
-            </p>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4">
-              Get the freshest drops in your inbox
-            </h2>
-            <p className="text-muted-foreground mb-6">
-              Style tips, exclusive deals, and sustainability stories. No spam, just quality content.
-            </p>
+            <SectionHeader 
+              title="Get the freshest drops in your inbox"
+              subtitle="Style tips, exclusive deals, and sustainability stories. No spam, just quality content."
+              centered 
+            />
             <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
               <input
                 type="email"

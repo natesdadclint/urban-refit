@@ -6,6 +6,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Link } from "wouter";
 import { Package, ShoppingBag } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import PageHeader from "@/components/PageHeader";
 
 const statusColors: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -46,8 +47,8 @@ export default function Orders() {
       <Layout>
         <div className="container py-16 text-center">
           <Package className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-          <h1 className="text-2xl font-serif font-semibold mb-4">My Orders</h1>
-          <p className="text-muted-foreground mb-6">
+          <PageHeader title="My Orders" variant="compact" />
+          <p className="text-muted-foreground mb-6 mt-4">
             Sign in to view your order history.
           </p>
           <Button asChild>
@@ -62,7 +63,7 @@ export default function Orders() {
     <Layout>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-serif font-semibold mb-8">My Orders</h1>
+          <PageHeader title="My Orders" variant="compact" />
 
           {isLoading ? (
             <div className="space-y-4">

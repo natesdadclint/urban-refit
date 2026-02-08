@@ -1,33 +1,30 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function Sustainability() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Sustainability
-            </h1>
-            <p className="text-base text-muted-foreground leading-relaxed">
-              Urban Refit is committed to reducing fashion waste and supporting the circular economy.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Sustainability"
+          subtitle="Urban Refit is committed to reducing fashion waste and supporting the circular economy."
+        >
+          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </PageHeader>
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="space-y-12">
             {/* Impact */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-4 text-foreground">Our Environmental Impact</h2>
+              <SectionHeader title="Our Environmental Impact" />
               <p className="text-base text-muted-foreground leading-relaxed mb-4">
                 The fashion industry is one of the world's largest polluters. By extending the life of quality clothing, Urban Refit helps reduce waste, conserve resources, and support a more sustainable future.
               </p>
@@ -49,7 +46,7 @@ export default function Sustainability() {
 
             {/* Circular Economy */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-4 text-foreground">The Circular Economy</h2>
+              <SectionHeader title="The Circular Economy" />
               <p className="text-base text-muted-foreground leading-relaxed mb-4">
                 Urban Refit operates on circular economy principles, where clothing is continuously cycled through new owners rather than discarded. This model:
               </p>
@@ -75,7 +72,7 @@ export default function Sustainability() {
 
             {/* How You Can Help */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-4 text-foreground">How You Can Help</h2>
+              <SectionHeader title="How You Can Help" />
               <div className="space-y-6">
                 <div className="border-l-4 border-primary pl-6 space-y-2">
                   <h3 className="text-base font-semibold text-foreground">Shop Secondhand</h3>
@@ -100,7 +97,7 @@ export default function Sustainability() {
 
             {/* Commitment */}
             <section className="bg-accent/5 rounded-lg p-8 space-y-4">
-              <h2 className="text-2xl font-serif font-bold text-foreground">Our Commitment</h2>
+              <SectionHeader title="Our Commitment" />
               <p className="text-base text-muted-foreground">
                 We're committed to transparency and continuous improvement in our sustainability practices. We track our environmental impact and share our progress with our community.
               </p>

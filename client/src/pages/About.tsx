@@ -1,33 +1,30 @@
 import Layout from "@/components/Layout";
 import { Link } from "wouter";
 import { ArrowLeft, Recycle, Users, Sparkles } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function About() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Link>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              About Urban Refit
-            </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Built from nothing. Designed for those grinding through the system.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="About Urban Refit"
+          subtitle="Built from nothing. Designed for those grinding through the system."
+        >
+          <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </Link>
+        </PageHeader>
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="space-y-16">
             {/* Founder Story Section */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">The Beginning</h2>
+              <SectionHeader title="The Beginning" />
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                 Urban Refit started in a flat where two-minute noodles were the main course and learning to code was the side hustle. Shopify, APIs, the whole stack. Then AI arrived, and suddenly my tech brain met my creative instincts. Perfect storm. Dangerous enough to be useful.
               </p>
@@ -46,7 +43,7 @@ export default function About() {
 
             {/* The Why Section */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">Why This Exists</h2>
+              <SectionHeader title="Why This Exists" />
               <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                 You know the feeling. Grinding through an apprenticeship. Drowning in university debt. Stacking shifts while figuring out your next move. The system wasn't built for us – it was built to extract from us.
               </p>
@@ -72,7 +69,7 @@ export default function About() {
 
             {/* Values Section */}
             <section>
-              <h2 className="text-3xl font-serif font-bold mb-8 text-foreground">What We Stand For</h2>
+              <SectionHeader title="What We Stand For" />
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
@@ -106,7 +103,7 @@ export default function About() {
 
             {/* How It Works Section */}
             <section className="border-t border-border pt-16">
-              <h2 className="text-3xl font-serif font-bold mb-6 text-foreground">How It Works</h2>
+              <SectionHeader title="How It Works" />
               <div className="space-y-6">
                 <p className="text-lg text-muted-foreground leading-relaxed">
                   We partner with local NZ thrift stores, hand-selecting the finest pieces from their inventory. Each item is professionally photographed, measured, and described with the detail you need to buy with confidence.

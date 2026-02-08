@@ -1,5 +1,7 @@
 import Layout from "@/components/Layout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
@@ -60,7 +62,7 @@ export default function Cart() {
       <Layout>
         <div className="container py-16 text-center">
           <ShoppingBag className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-          <h1 className="text-2xl font-serif font-semibold mb-4">Your Cart</h1>
+          <PageHeader title="Your Cart" variant="compact" className="justify-center mb-4" />
           <p className="text-muted-foreground mb-6">
             Sign in to view your cart and start shopping.
           </p>
@@ -78,10 +80,12 @@ export default function Cart() {
     <Layout>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
-          <PageBreadcrumb className="mb-6" segments={[{ label: "Cart" }]} />
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-serif font-semibold">Your Cart</h1>
-            {cart && cart.items.length > 0 && (
+          <PageHeader title="Your Cart" variant="compact" className="mb-8">
+            <PageBreadcrumb segments={[{ label: "Cart" }]} />
+          </PageHeader>
+
+          {cart && cart.items.length > 0 && (
+            <div className="flex justify-end mb-4 -mt-4">
               <Button
                 variant="ghost"
                 size="sm"
@@ -90,8 +94,8 @@ export default function Cart() {
               >
                 Clear Cart
               </Button>
-            )}
-          </div>
+            </div>
+          )}
 
           {isLoading ? (
             <div className="space-y-4">
@@ -168,7 +172,7 @@ export default function Cart() {
               {/* Order Summary */}
               <div className="lg:col-span-1">
                 <div className="bg-card rounded-lg border border-border p-6 sticky top-24">
-                  <h2 className="font-semibold text-lg mb-4">Order Summary</h2>
+                  <SectionHeader title="Order Summary" className="mb-4" />
                   
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">

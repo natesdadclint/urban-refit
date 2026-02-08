@@ -1,5 +1,3 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -15,6 +15,8 @@ import {
   Package, Upload, RefreshCw, Loader2, CheckCircle, 
   ArrowRight, Coins, Info
 } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 const CATEGORIES = [
   { value: "tops", label: "Tops" },
@@ -123,10 +125,12 @@ export default function CourierReturn() {
         <div className="container py-16">
           <div className="max-w-md mx-auto text-center">
             <RefreshCw className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
-            <h1 className="text-2xl font-serif font-bold mb-4">Sign In Required</h1>
-            <p className="text-muted-foreground mb-8">
-              Please sign in to return garments and earn tokens.
-            </p>
+            <PageHeader
+              title="Sign In Required"
+              subtitle="Please sign in to return garments and earn tokens."
+              variant="compact"
+              className="mb-8"
+            />
             <Button asChild size="lg">
               <a href={getLoginUrl()}>Sign In</a>
             </Button>
@@ -141,12 +145,12 @@ export default function CourierReturn() {
       <div className="container py-8 md:py-12">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">Return Garments</h1>
-            <p className="text-muted-foreground">
-              Give your clothes a second life and earn tokens
-            </p>
-          </div>
+          <PageHeader
+            title="Return Garments"
+            subtitle="Give your clothes a second life and earn tokens"
+            variant="compact"
+            className="text-center mb-8"
+          />
           
           {/* How it Works */}
           {step === 1 && (
@@ -450,7 +454,7 @@ export default function CourierReturn() {
             <Card>
               <CardContent className="pt-8 text-center">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h2 className="text-2xl font-serif font-bold mb-2">Return Request Submitted!</h2>
+                <SectionHeader title="Return Request Submitted!" centered className="mb-2" />
                 <p className="text-muted-foreground mb-6">
                   We'll review your submission and send you a prepaid shipping label within 24-48 hours.
                 </p>

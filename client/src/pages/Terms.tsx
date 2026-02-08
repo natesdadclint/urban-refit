@@ -1,33 +1,29 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function Terms() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
-          <div className="container max-w-4xl">
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Terms of Service
-            </h1>
-            <p className="text-muted-foreground">
-              Last updated: January 2026
-            </p>
-          </div>
-        </div>
+        <PageHeader 
+          title="Terms of Service"
+          subtitle="Last updated: January 2026"
+        />
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="prose prose-stone max-w-none space-y-8 text-muted-foreground">
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">1. Agreement to Terms</h2>
+              <SectionHeader title="1. Agreement to Terms" />
               <p>
                 By accessing or using the Urban Refit website and services, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site. The materials contained in this website are protected by applicable copyright and trademark law.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">2. Nature of Products - Secondhand Clothing</h2>
+              <SectionHeader title="2. Nature of Products - Secondhand Clothing" />
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mb-4">
                 <p className="text-amber-800 font-semibold mb-2">Important Notice</p>
                 <p className="text-amber-700">
@@ -47,7 +43,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">3. Condition Ratings</h2>
+              <SectionHeader title="3. Condition Ratings" />
               <p className="mb-4">
                 We rate all items based on their condition. These ratings are subjective assessments made in good faith:
               </p>
@@ -63,7 +59,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">4. Pricing and Payment</h2>
+              <SectionHeader title="4. Pricing and Payment" />
               <p className="mb-4">
                 All prices are listed in NZD (New Zealand Dollars) and include the following components:
               </p>
@@ -78,7 +74,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">5. Returns and Refunds</h2>
+              <SectionHeader title="5. Returns and Refunds" />
               <p className="mb-4">
                 Due to the unique nature of secondhand items, our return policy is as follows:
               </p>
@@ -95,7 +91,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">5A. Authenticity Guarantee &amp; Remediation</h2>
+              <SectionHeader title="5A. Authenticity Guarantee & Remediation" />
               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-6 mb-4">
                 <p className="text-emerald-800 font-semibold mb-2">Our Commitment to Authenticity</p>
                 <p className="text-emerald-700">
@@ -121,7 +117,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">6. Shipping</h2>
+              <SectionHeader title="6. Shipping" />
               <p className="mb-4">
                 Shipping costs and delivery times vary based on location. We are not responsible for:
               </p>
@@ -134,7 +130,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">7. Loyalty Program and Tokens</h2>
+              <SectionHeader title="7. Loyalty Program and Tokens" />
               <p className="mb-4">
                 Urban Refit offers a loyalty program where customers can earn tokens through various activities:
               </p>
@@ -149,7 +145,7 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">8. Courier Return Program</h2>
+              <SectionHeader title="8. Courier Return Program" />
               <p className="mb-4">
                 Our courier return program allows you to send back garments for resale:
               </p>
@@ -162,56 +158,45 @@ export default function Terms() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">9. User Accounts</h2>
+              <SectionHeader title="9. User Accounts" />
               <p>
                 You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must notify us immediately of any unauthorized use of your account. We reserve the right to terminate accounts that violate these terms or engage in fraudulent activity.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">10. Intellectual Property</h2>
+              <SectionHeader title="10. Intellectual Property" />
               <p>
-                The Urban Refit name, logo, website design, and original content are the property of Urban Refit and are protected by intellectual property laws. You may not use, reproduce, or distribute our intellectual property without written permission. Product images and descriptions are for informational purposes only.
+                The Urban Refit name, logo, and all related names, logos, product and service names, designs, and slogans are trademarks of Urban Refit or its affiliates or licensors. You must not use such marks without the prior written permission of Urban Refit. All other names, logos, product and service names, designs, and slogans on this Website are the trademarks of their respective owners.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">11. Limitation of Liability</h2>
+              <SectionHeader title="11. Limitation of Liability" />
               <p>
-                Urban Refit shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our services or products. Our total liability shall not exceed the amount you paid for the specific item in question. We make no warranties, express or implied, regarding the fitness of secondhand items for any particular purpose.
+                In no event shall Urban Refit, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">12. Indemnification</h2>
+              <SectionHeader title="12. Governing Law" />
               <p>
-                You agree to indemnify and hold harmless Urban Refit, its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from your use of our services or violation of these terms.
+                These Terms shall be governed and construed in accordance with the laws of New Zealand, without regard to its conflict of law provisions.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">13. Governing Law</h2>
+              <SectionHeader title="13. Changes to Terms" />
               <p>
-                These Terms of Service shall be governed by and construed in accordance with applicable laws, without regard to conflict of law principles. Any disputes arising from these terms shall be resolved through binding arbitration or in the courts of competent jurisdiction.
+                We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">14. Changes to Terms</h2>
+              <SectionHeader title="14. Contact Us" />
               <p>
-                We reserve the right to modify these Terms of Service at any time. Changes will be effective immediately upon posting to the website. Your continued use of the service after changes constitutes acceptance of the modified terms. We encourage you to review these terms periodically.
+                If you have any questions about these Terms, please contact us at <a href="mailto:help@urbanrefit.store">help@urbanrefit.store</a>.
               </p>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-serif font-bold text-foreground mb-4">15. Contact Us</h2>
-              <p>
-                If you have any questions about these Terms of Service, please contact us at:
-              </p>
-              <div className="mt-4 p-6 bg-muted/50 rounded-lg">
-                <p className="font-semibold text-foreground">Urban Refit</p>
-                <p>Email: <a href="mailto:help@urbanrefit.store" className="text-primary hover:underline">help@urbanrefit.store</a></p>
-              </div>
             </section>
           </div>
         </div>

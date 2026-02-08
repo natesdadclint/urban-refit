@@ -1,31 +1,33 @@
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Link, useSearch } from "wouter";
-import { CheckCircle, Package, ArrowRight, ShoppingBag, Mail, Truck, Loader2 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { ArrowRight, CheckCircle, Loader2, Mail, Package, ShoppingBag, Truck } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link, useSearch } from "wouter";
 
 export default function CheckoutSuccess() {
   const searchString = useSearch();
   const params = new URLSearchParams(searchString);
   const sessionId = params.get("session_id");
-  
+
   const [orderId, setOrderId] = useState<number | null>(null);
-  
+
   // Verify the checkout session and get order details
   const { data: verifyData, isLoading: verifyLoading } = trpc.checkout.verifySession.useQuery(
     { sessionId: sessionId || "" },
     { enabled: !!sessionId }
   );
-  
+
   useEffect(() => {
     if (verifyData?.orderId) {
       setOrderId(verifyData.orderId);
     }
   }, [verifyData]);
-  
+
   // Get order details
   const { data: orderData, isLoading: orderLoading } = trpc.order.getById.useQuery(
     { id: orderId! },
@@ -57,17 +59,15 @@ export default function CheckoutSuccess() {
             <div className="mb-6">
               <CheckCircle className="h-20 w-20 mx-auto text-green-500" />
             </div>
-            
-            <h1 className="text-3xl font-serif font-semibold mb-4">
-              Thank You for Your Order!
-            </h1>
-            
-            <p className="text-muted-foreground mb-2">
-              Your payment was successful. We've sent a confirmation email with your order details.
-            </p>
-            
+
+            <PageHeader
+              title="Thank You for Your Order!"
+              subtitle="Your payment was successful. We've sent a confirmation email with your order details."
+              variant="compact"
+            />
+
             {order && (
-              <p className="text-sm font-medium">
+              <p className="text-sm font-medium mt-4">
                 Order #{order.id}
               </p>
             )}
@@ -77,11 +77,15 @@ export default function CheckoutSuccess() {
           {order && items.length > 0 && (
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                  <ShoppingBag className="h-5 w-5" />
-                  Order Summary
-                </h2>
-                
+                <SectionHeader
+                  title={
+                    <div className="flex items-center gap-2">
+                      <ShoppingBag className="h-5 w-5" />
+                      Order Summary
+                    </div>
+                  }
+                />
+
                 {/* Items */}
                 <div className="space-y-3 mb-4">
                   {items.map(({ product, orderItem }) => (
@@ -139,10 +143,14 @@ export default function CheckoutSuccess() {
           {order && (
             <Card className="mb-8">
               <CardContent className="p-6">
-                <h2 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                  <Truck className="h-5 w-5" />
-                  Shipping To
-                </h2>
+                <SectionHeader
+                  title={
+                    <div className="flex items-center gap-2">
+                      <Truck className="h-5 w-5" />
+                      Shipping To
+                    </div>
+                  }
+                />
                 <div className="text-sm space-y-1">
                   <p className="font-medium">{order.shippingName}</p>
                   <p className="text-muted-foreground">{order.shippingAddress}</p>
@@ -163,7 +171,7 @@ export default function CheckoutSuccess() {
             <div className="flex items-start gap-4">
               <Mail className="h-6 w-6 text-primary shrink-0 mt-1" />
               <div>
-                <h3 className="font-medium mb-2">What happens next?</h3>
+                <SectionHeader title="What happens next?" level="h3" />
                 <ul className="text-sm text-muted-foreground space-y-2">
                   <li>1. You'll receive an order confirmation email shortly</li>
                   <li>2. We'll carefully package your items within 1-2 business days</li>

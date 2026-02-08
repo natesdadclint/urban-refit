@@ -1,12 +1,14 @@
-import { useAuth } from "@/_core/hooks/useAuth";
-import { getLoginUrl } from "@/const";
 import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { useState } from "react";
 import { 
@@ -83,16 +85,12 @@ export default function Charities() {
           <ArrowLeft className="w-4 h-4" />
           Back to Home
         </Link>
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-            Donate Your Tokens
-          </h1>
-          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-            Make a difference by donating your earned tokens to charitable organizations. 
-            Every token counts towards creating positive change.
-          </p>
-        </div>
+        
+        <PageHeader 
+          title="Donate Your Tokens"
+          subtitle="Make a difference by donating your earned tokens to charitable organizations. Every token counts towards creating positive change."
+          className="mb-12"
+        />
         
         {/* Token Balance Card */}
         {isAuthenticated && (
@@ -229,12 +227,12 @@ export default function Charities() {
                                 <>
                                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                                   Processing...
-                                </>
+                                </> 
                               ) : (
                                 <>
                                   <Heart className="h-4 w-4 mr-2" />
                                   Donate {donationAmount ? `$${parseFloat(donationAmount).toFixed(2)}` : ''}
-                                </>
+                                </> 
                               )}
                             </Button>
                           </div>
@@ -253,10 +251,11 @@ export default function Charities() {
         ) : (
           <div className="text-center py-12">
             <Heart className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-medium mb-2">No Charities Yet</h2>
-            <p className="text-muted-foreground">
-              Charity partners will be added soon. Check back later!
-            </p>
+            <SectionHeader 
+              title="No Charities Yet"
+              subtitle="Charity partners will be added soon. Check back later!"
+              centered 
+            />
           </div>
         )}
         
@@ -296,7 +295,7 @@ export default function Charities() {
         
         {/* Info Section */}
         <div className="mt-12 p-6 bg-muted rounded-lg">
-          <h3 className="font-medium mb-2">About Token Donations</h3>
+          <SectionHeader title="About Token Donations" level="h3" />
           <p className="text-sm text-muted-foreground">
             When you donate tokens, they are converted to their dollar equivalent and 
             contributed to your chosen charity. Urban Refit processes all donations 

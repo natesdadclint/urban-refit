@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -115,7 +117,7 @@ export default function SellToUs() {
             <div className="w-20 h-20 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold mb-4">Submission Received</h1>
+            <h2 className="text-3xl font-bold mb-4">Submission Received</h2>
             <p className="text-muted-foreground mb-8">
               Thank you for contributing to the circular economy. Our team will review your item and get back to you within 2-3 business days.
               {submissionId && (
@@ -161,23 +163,12 @@ export default function SellToUs() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="bg-black text-white py-16">
-        <div className="container">
-          <PageBreadcrumb className="mb-6 [&_*]:text-neutral-400 [&_[aria-current]]:text-white" segments={[{ label: "Sell to Us" }]} />
-          <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-wider text-neutral-400 mb-4">Circular Fashion Economy</p>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Trade Your Clothes.<br />Earn Tokens. Keep It Circular.
-            </h1>
-            <p className="text-base text-neutral-300 mb-8">
-              Turn your quality menswear into Urban Refit tokens. Use them to refresh your wardrobe 
-              or donate directly to our partner charities. No cash payouts — just a closed-loop 
-              ecosystem that keeps fashion sustainable.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        title={<>Trade Your Clothes.<br />Earn Tokens. Keep It Circular.</>}
+        subtitle="Turn your quality menswear into Urban Refit tokens. Use them to refresh your wardrobe or donate directly to our partner charities. No cash payouts — just a closed-loop ecosystem that keeps fashion sustainable."
+      >
+        <PageBreadcrumb className="mb-6 [&_*]:text-neutral-400 [&_[aria-current]]:text-white" segments={[{ label: "Sell to Us" }]} />
+      </PageHeader>
 
       {/* How It Works */}
       <section className="py-12 bg-neutral-50">
@@ -225,26 +216,28 @@ export default function SellToUs() {
                   <Coins className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold mb-2">What Are Urban Refit Tokens?</h3>
+                  <SectionHeader title="What Are Urban Refit Tokens?" level="h3" />
                   <p className="text-muted-foreground mb-4">
                     Tokens are our circular currency. <strong>1 token = $0.50 NZD</strong> in store credit. 
                     Unlike cash, tokens keep value circulating within our sustainable ecosystem.
                   </p>
                   <div className="grid md:grid-cols-2 gap-4 mt-4">
-                    <div className="flex items-start gap-3">
-                      <ShoppingBag className="w-5 h-5 text-amber-600 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-sm">Shop the Collection</p>
-                        <p className="text-xs text-muted-foreground">Use tokens to buy quality second-hand pieces</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Heart className="w-5 h-5 text-amber-600 mt-0.5" />
-                      <div>
-                        <p className="font-medium text-sm">Donate to Charity</p>
-                        <p className="text-xs text-muted-foreground">Gift tokens directly to our partner charities</p>
-                      </div>
-                    </div>
+                    <Card className="bg-white/60">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base font-semibold">Shop New Styles</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">Use your tokens to buy any item from our curated collection.</p>
+                      </CardContent>
+                    </Card>
+                    <Card className="bg-white/60">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="text-base font-semibold">Donate to Charity</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">Convert your tokens into a cash donation to our partner charities.</p>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               </div>
@@ -257,248 +250,203 @@ export default function SellToUs() {
       <section className="py-16">
         <div className="container">
           <div className="max-w-3xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Submit Your Item</CardTitle>
-                <CardDescription>
-                  Tell us about the item you'd like to trade for tokens. We accept premium menswear brands in good condition.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  {/* Contact Information */}
-                  <div>
-                    <h3 className="font-semibold mb-4">Contact Information</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Full Name *</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="phone">Phone (Optional)</Label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="For faster communication"
-                        />
-                      </div>
+            <SectionHeader title="Submit Your Item" subtitle="Fill in the details below to get a token offer for your pre-loved menswear." centered />
+
+            <form onSubmit={handleSubmit} className="space-y-8 mt-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Contact Info</CardTitle>
+                  <CardDescription>So we can get in touch about your submission.</CardDescription>
+                </CardHeader>
+                <CardContent className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address</Label>
+                    <Input id="email" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} required />
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Item Details</CardTitle>
+                  <CardDescription>Tell us about the item you want to trade.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="brand">Brand</Label>
+                      <Input id="brand" placeholder="e.g. Levi's, Carhartt, Nike" value={formData.brand} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="itemName">Item Name / Style</Label>
+                      <Input id="itemName" placeholder="e.g. 501 Original Fit Jeans" value={formData.itemName} onChange={(e) => setFormData({ ...formData, itemName: e.target.value })} required />
                     </div>
                   </div>
-
-                  {/* Item Details */}
-                  <div>
-                    <h3 className="font-semibold mb-4">Item Details</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="brand">Brand *</Label>
-                        <Input
-                          id="brand"
-                          value={formData.brand}
-                          onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                          placeholder="e.g., Levi's, Carhartt, Nike"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="itemType">Item Type *</Label>
-                        <Select
-                          value={formData.itemType}
-                          onValueChange={(value) => setFormData({ ...formData, itemType: value as any })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select type" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="tops">Tops (Shirts, Polos, T-Shirts)</SelectItem>
-                            <SelectItem value="bottoms">Bottoms (Pants, Jeans, Shorts)</SelectItem>
-                            <SelectItem value="outerwear">Outerwear (Jackets, Coats, Hoodies)</SelectItem>
-                            <SelectItem value="shoes">Shoes (Sneakers, Boots, Loafers)</SelectItem>
-                            <SelectItem value="accessories">Accessories (Caps, Belts, Bags)</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="itemName">Item Name *</Label>
-                        <Input
-                          id="itemName"
-                          value={formData.itemName}
-                          onChange={(e) => setFormData({ ...formData, itemName: e.target.value })}
-                          placeholder="e.g., 501 Original Fit Jeans"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="size">Size *</Label>
-                        <Input
-                          id="size"
-                          value={formData.size}
-                          onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-                          placeholder="e.g., M, L, 32x32, US 10"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="condition">Condition *</Label>
-                        <Select
-                          value={formData.condition}
-                          onValueChange={(value) => setFormData({ ...formData, condition: value as any })}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select condition" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="like_new">Like New - Tags attached or worn once</SelectItem>
-                            <SelectItem value="excellent">Excellent - Minimal wear, no visible flaws</SelectItem>
-                            <SelectItem value="good">Good - Light wear, minor imperfections</SelectItem>
-                            <SelectItem value="fair">Fair - Visible wear but still wearable</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="description">Description (Optional)</Label>
-                        <Textarea
-                          id="description"
-                          value={formData.description}
-                          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                          placeholder="Any additional details about the item (color, material, special features, flaws to note)"
-                          rows={3}
-                        />
-                      </div>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="itemType">Item Type</Label>
+                      <Select value={formData.itemType} onValueChange={(value) => setFormData({ ...formData, itemType: value as any })} required>
+                        <SelectTrigger><SelectValue placeholder="Select type..." /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="tops">Tops</SelectItem>
+                          <SelectItem value="bottoms">Bottoms</SelectItem>
+                          <SelectItem value="outerwear">Outerwear</SelectItem>
+                          <SelectItem value="shoes">Shoes</SelectItem>
+                          <SelectItem value="accessories">Accessories</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="size">Size</Label>
+                      <Input id="size" placeholder="e.g. Medium, 32x32, US 10" value={formData.size} onChange={(e) => setFormData({ ...formData, size: e.target.value })} required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="condition">Condition</Label>
+                      <Select value={formData.condition} onValueChange={(value) => setFormData({ ...formData, condition: value as any })} required>
+                        <SelectTrigger><SelectValue placeholder="Select condition..." /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="like_new">Like New</SelectItem>
+                          <SelectItem value="excellent">Excellent</SelectItem>
+                          <SelectItem value="good">Good</SelectItem>
+                          <SelectItem value="fair">Fair</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
-
-                  {/* Token Request */}
-                  <div>
-                    <h3 className="font-semibold mb-4">Token Request (Optional)</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Help us understand your expectations. Final token offer will be based on our assessment.
-                    </p>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="originalPrice">Original Purchase Price (NZD)</Label>
-                        <Input
-                          id="originalPrice"
-                          type="number"
-                          step="0.01"
-                          value={formData.originalPrice}
-                          onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                          placeholder="$0.00"
-                        />
-                        <p className="text-xs text-muted-foreground">What you originally paid for this item</p>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="requestedTokens">Requested Tokens</Label>
-                        <div className="relative">
-                          <Coins className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input
-                            id="requestedTokens"
-                            type="number"
-                            min="1"
-                            value={formData.requestedTokens}
-                            onChange={(e) => setFormData({ ...formData, requestedTokens: e.target.value })}
-                            placeholder="e.g., 50"
-                            className="pl-10"
-                          />
-                        </div>
-                        <p className="text-xs text-muted-foreground">How many tokens you'd like (1 token = $0.50 NZD)</p>
-                      </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea id="description" placeholder="Any additional details, flaws, or features to note?" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="originalPrice">Original Price (Optional)</Label>
+                      <Input id="originalPrice" type="number" placeholder="e.g. 150" value={formData.originalPrice} onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="requestedTokens">Requested Tokens (Optional)</Label>
+                      <Input id="requestedTokens" type="number" placeholder="e.g. 75 (1 token = $0.50)" value={formData.requestedTokens} onChange={(e) => setFormData({ ...formData, requestedTokens: e.target.value })} />
                     </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  {/* Images */}
-                  <div>
-                    <h3 className="font-semibold mb-4">Photos</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Upload up to 4 photos showing the item clearly. Include front, back, labels, and any flaws.
-                    </p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      {images.map((url, index) => (
-                        <div key={index} className="relative aspect-square bg-neutral-100 rounded-lg overflow-hidden">
-                          <img src={url} alt={`Upload ${index + 1}`} className="w-full h-full object-cover" />
-                          <button
-                            type="button"
-                            onClick={() => removeImage(index)}
-                            className="absolute top-2 right-2 w-6 h-6 bg-black/70 rounded-full flex items-center justify-center text-white hover:bg-black"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ))}
-                      {images.length < 4 && (
-                        <button
+              <Card>
+                <CardHeader>
+                  <CardTitle>Upload Photos</CardTitle>
+                  <CardDescription>Add up to 4 clear photos of your item. Max 5MB each.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                    {images.map((src, index) => (
+                      <div key={index} className="relative aspect-square rounded-lg overflow-hidden border">
+                        <img src={src} alt={`Upload preview ${index + 1}`} className="w-full h-full object-cover" />
+                        <Button
                           type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="aspect-square border-2 border-dashed border-neutral-300 rounded-lg flex flex-col items-center justify-center text-muted-foreground hover:border-neutral-400 hover:text-foreground transition-colors"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-1 right-1 h-6 w-6"
+                          onClick={() => removeImage(index)}
                         >
-                          <Upload className="w-6 h-6 mb-2" />
-                          <span className="text-xs">Add Photo</span>
-                        </button>
-                      )}
-                    </div>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    {images.length < 4 && (
+                      <div 
+                        className="relative aspect-square rounded-lg border-2 border-dashed border-muted-foreground/50 flex flex-col items-center justify-center text-center cursor-pointer hover:bg-muted/50 transition-colors"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="w-8 h-8 text-muted-foreground mb-2" />
+                        <span className="text-sm text-muted-foreground">Add Image</span>
+                      </div>
+                    )}
                   </div>
+                  <Input 
+                    ref={fileInputRef} 
+                    type="file" 
+                    className="hidden" 
+                    accept="image/png, image/jpeg, image/webp"
+                    multiple
+                    onChange={handleImageUpload}
+                  />
+                </CardContent>
+              </Card>
 
-                  {/* Submit */}
-                  <div className="pt-4 border-t">
-                    <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? "Submitting..." : "Submit Item for Token Review"}
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                    <p className="text-xs text-muted-foreground text-center mt-4">
-                      By submitting, you agree to our terms of service and confirm that the item is authentic and accurately described.
-                      You'll receive a token offer within 48 hours. 1 token = NZ$0.50 spend credit on Urban Refit.
-                    </p>
-                  </div>
-                </form>
-              </CardContent>
-            </Card>
+              <div className="text-center">
+                <Button type="submit" size="lg" disabled={isSubmitting || uploadMutation.isPending}>
+                  {isSubmitting ? "Submitting..." : "Submit Item for Review"}
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
       </section>
 
-      {/* Shipping & Packaging */}
-      <section className="py-16 bg-white border-t">
+      {/* FAQ Section */}
+      <section className="py-16 bg-neutral-50 border-t">
         <div className="container">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-8">Shipping & Packaging</h2>
-            <div className="bg-neutral-50 rounded-lg p-8">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-semibold mb-2">Free Prepaid Shipping</h3>
+            <SectionHeader title="Frequently Asked Questions" centered />
+            <div className="space-y-4 mt-8">
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold">What brands do you accept?</h3>
+                </CardHeader>
+                <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Once you accept our token offer, we will send you a prepaid shipping label via email. 
-                    Simply pack your item and drop it off at any courier pickup point. 
-                    You pay nothing for shipping - we cover all postage costs.
+                    We focus on high-quality, durable menswear brands that have a proven track record of longevity. 
+                    Think brands like Patagonia, Carhartt, Levi's, R.M. Williams, and similar. We generally do not 
+                    accept fast-fashion brands as they do not align with our circular model.
                   </p>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-2">Packaging Guidelines</h3>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold">How is the token value determined?</h3>
+                </CardHeader>
+                <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    Please ensure your item is clean and folded neatly. Use a sturdy box or padded envelope 
+                    Our team assesses each item based on brand, condition, item type, style, and current market demand. 
+                    We then make a token offer based on what we believe is a fair resale value within our closed-loop system. 
+                    Remember, 1 token is equivalent to $0.50 NZD in store credit.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <h3 className="font-semibold">What if I don't like my token offer?</h3>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">
+                    You are free to accept, decline, or make a counter-offer. Our goal is to find a value that works for both 
+                    parties. If we can't reach an agreement, there's no obligation to proceed.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Shipping Info */}
+      <section className="py-16 bg-white border-b">
+        <div className="container">
+          <div className="max-w-3xl mx-auto">
+            <SectionHeader title="Shipping Your Item To Us" centered />
+            <div className="mt-8 text-center text-muted-foreground">
+              <p>Once you accept our token offer, we make shipping your item to us simple and free.</p>
+            </div>
+            <div className="mt-8 bg-neutral-100/80 rounded-xl p-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="font-semibold mb-2">Prepaid Shipping Label</h3>
+                  <p className="text-sm text-muted-foreground">
+                    We will email you a prepaid, tracked shipping label. Simply print it out, attach it to your package, 
+                    and drop it off at your nearest post office. Please ensure your item is securely packaged 
                     to protect the garment during transit. If you do not have suitable packaging, 
                     we can arrange for a prepaid satchel to be sent to you.
                   </p>
@@ -528,7 +476,7 @@ export default function SellToUs() {
       <section className="py-16 bg-neutral-50">
         <div className="container">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-8">What We Accept</h2>
+            <SectionHeader title="What We Accept" centered />
             <div className="grid md:grid-cols-2 gap-8">
               <div>
                 <h3 className="font-semibold text-green-700 mb-3">We Love</h3>

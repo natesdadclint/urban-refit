@@ -1,5 +1,7 @@
 import Layout from "@/components/Layout";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -145,7 +147,7 @@ export default function Checkout() {
       <Layout>
         <div className="container py-16 text-center">
           <Lock className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-          <h1 className="text-2xl font-serif font-semibold mb-4">Checkout</h1>
+          <PageHeader title="Checkout" variant="compact" />
           <p className="text-muted-foreground mb-6">
             Sign in to complete your purchase.
           </p>
@@ -161,7 +163,7 @@ export default function Checkout() {
     return (
       <Layout>
         <div className="container py-16 text-center">
-          <h1 className="text-2xl font-serif font-semibold mb-4">Your cart is empty</h1>
+          <PageHeader title="Your cart is empty" variant="compact" />
           <p className="text-muted-foreground mb-6">
             Add some items to your cart before checking out.
           </p>
@@ -202,10 +204,12 @@ export default function Checkout() {
     <Layout>
       <div className="container py-8">
         <div className="max-w-4xl mx-auto">
-          <PageBreadcrumb className="mb-6" segments={[
-            { label: "Cart", href: "/cart" },
-            { label: "Checkout" },
-          ]} />
+          <PageHeader variant="compact" title="Checkout">
+            <PageBreadcrumb className="mb-6" segments={[
+              { label: "Cart", href: "/cart" },
+              { label: "Checkout" },
+            ]} />
+          </PageHeader>
           {/* Back button */}
           <Button
             variant="ghost"
@@ -218,8 +222,6 @@ export default function Checkout() {
               Back to Cart
             </Link>
           </Button>
-
-          <h1 className="text-3xl font-serif font-semibold mb-8">Checkout</h1>
 
           {/* Tiered Discount Banner */}
           {discountPercentage > 0 && (
@@ -258,7 +260,7 @@ export default function Checkout() {
               {/* Shipping Form */}
               <div className="space-y-6">
                 <div>
-                  <h2 className="font-semibold text-lg mb-4">Shipping Information</h2>
+                  <SectionHeader title="Shipping Information" />
                   
                   <div className="space-y-4">
                     <div>
@@ -433,7 +435,7 @@ export default function Checkout() {
               {/* Order Summary */}
               <div>
                 <div className="bg-card rounded-lg border border-border p-6 sticky top-24">
-                  <h2 className="font-semibold text-lg mb-4">Order Summary</h2>
+                  <SectionHeader title="Order Summary" />
 
                   {/* Items */}
                   <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">

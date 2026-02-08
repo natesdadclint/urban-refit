@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
-import { trpc } from "@/lib/trpc";
-import { Mail, Phone, MapPin, Clock, ArrowLeft } from "lucide-react";
+import { Mail, Clock, MapPin, ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import PageHeader from "@/components/PageHeader";
+import SectionHeader from "@/components/SectionHeader";
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -25,19 +26,16 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
-      // Create mailto link with form data
       const mailtoLink = `mailto:help@urbanrefit.store?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
       )}`;
-      
-      // Open email client
+
       window.location.href = mailtoLink;
-      
+
       toast.success("Opening your email client...");
-      
-      // Reset form after a short delay
+
       setTimeout(() => {
         setFormData({ name: "", email: "", subject: "", message: "" });
       }, 1000);
@@ -51,28 +49,24 @@ export default function Contact() {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-b from-accent/10 to-background py-16 md:py-24">
+        <PageHeader
+          title="Get in Touch"
+          subtitle="Have questions about our products, orders, or the circular fashion movement? We are here to help."
+        >
           <div className="container max-w-4xl">
             <Link href="/" className="inline-flex items-center gap-2 text-base font-medium text-foreground hover:text-primary transition-colors mb-6 py-2 px-3 -ml-3 rounded-lg hover:bg-accent/20">
               <ArrowLeft className="w-4 h-4" />
               Back to Home
             </Link>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 text-foreground">
-              Get in Touch
-            </h1>
-            <p className="text-base text-muted-foreground leading-relaxed">
-              Have questions about our products, orders, or the circular fashion movement? We are here to help.
-            </p>
           </div>
-        </div>
+        </PageHeader>
 
         {/* Main Content */}
         <div className="container max-w-4xl py-16 md:py-24">
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-serif font-bold mb-6 text-foreground">Send us a Message</h2>
+              <SectionHeader title="Send us a Message" />
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -137,7 +131,7 @@ export default function Contact() {
             {/* Contact Info */}
             <div className="space-y-8">
               <div>
-                <h2 className="text-2xl font-serif font-bold mb-6 text-foreground">Contact Information</h2>
+                <SectionHeader title="Contact Information" />
               </div>
 
               <div className="space-y-6">
@@ -147,15 +141,15 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">Email</h3>
-                    <a 
-                      href="mailto:help@urbanrefit.store" 
+                    <a
+                      href="mailto:help@urbanrefit.store"
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
                       help@urbanrefit.store
                     </a>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-full bg-secondary">
                     <Clock className="h-5 w-5 text-primary" />
@@ -165,7 +159,7 @@ export default function Contact() {
                     <p className="text-muted-foreground">1-2 business days</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-4">
                   <div className="p-3 rounded-full bg-secondary">
                     <MapPin className="h-5 w-5 text-primary" />
@@ -180,10 +174,10 @@ export default function Contact() {
               <div className="bg-accent/5 rounded-lg p-6 space-y-3">
                 <h3 className="font-semibold text-foreground">Interested in Partnership?</h3>
                 <p className="text-sm text-muted-foreground">
-                  If you are a thrift store interested in partnering with Urban Refit, we would love to hear from you. 
+                  If you are a thrift store interested in partnering with Urban Refit, we would love to hear from you.
                   Email us at{" "}
-                  <a 
-                    href="mailto:help@urbanrefit.store?subject=Partnership Inquiry" 
+                  <a
+                    href="mailto:help@urbanrefit.store?subject=Partnership Inquiry"
                     className="text-primary hover:underline"
                   >
                     help@urbanrefit.store
@@ -196,8 +190,8 @@ export default function Contact() {
                 <p className="text-sm text-muted-foreground">
                   Turn your unwanted quality menswear into cash. We buy premium brands in good condition.
                 </p>
-                <a 
-                  href="/sell" 
+                <a
+                  href="/sell"
                   className="inline-block text-sm font-medium text-primary hover:underline"
                 >
                   Submit your items here
