@@ -979,3 +979,10 @@
 - [x] Add PageHeader and SectionHeader components (Sprint 1A consistency)
 - [x] Add breadcrumbs to all three trust pages
 - [x] Write vitest tests for trust pages content and structure (58 tests passing)
+
+## Mobile Header Navigation Fix (Feb 11, 2026)
+- [x] Implement two-row mobile header: Row 1 = Logo + cart/user, Row 2 = horizontal scrollable nav
+- [x] Ensure all page links are large enough to tap on mobile (min 44px touch targets)
+- [x] Keep desktop navigation unchanged (single-row layout)
+- [x] Hide scrollbar on mobile nav for clean look
+- [x] Write vitest tests for mobile header structure (23 tests passing)

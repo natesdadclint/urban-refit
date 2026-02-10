@@ -201,6 +201,15 @@
   background: oklch(0.60 0.01 80);
 }
 
+/* Hide scrollbar for mobile nav */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Image zoom container */
 .image-zoom-container {
   overflow: hidden;

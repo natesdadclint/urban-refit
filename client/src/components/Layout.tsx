@@ -4,7 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingBag, User, Menu, X, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package } from "lucide-react";
+import { ShoppingBag, User, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -33,7 +33,7 @@ const categories = [
 export default function Layout({ children }: LayoutProps) {
   const { user, isAuthenticated, logout, loading } = useAuth();
   const [location] = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
   
@@ -79,18 +79,19 @@ export default function Layout({ children }: LayoutProps) {
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+        {/* Row 1: Logo + Desktop Nav + Actions */}
         <div className="container px-4">
-          <div className="flex items-center justify-between h-20">
+          <div className="flex items-center justify-between h-14 xl:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 md:gap-3 shrink-0">
-              <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
-              <span className="text-xl sm:text-2xl md:text-4xl font-serif font-bold tracking-tight whitespace-nowrap">
+            <Link href="/" className="flex items-center gap-1.5 md:gap-3 shrink-0">
+              <span className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
+              <span className="text-lg sm:text-xl md:text-4xl font-serif font-bold tracking-tight whitespace-nowrap">
                 Urban Refit
               </span>
-              <span className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
+              <span className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation — hidden below xl */}
             <nav className="hidden xl:flex items-center gap-3 2xl:gap-5 ml-6 shrink">
               <Link
                 href="/shop"
@@ -237,106 +238,48 @@ export default function Layout({ children }: LayoutProps) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <div className="hidden sm:flex items-center gap-2">
-                  <Button asChild variant="outline" size="sm">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <Button asChild variant="outline" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
                     <Link href="/join">Join</Link>
                   </Button>
-                  <Button asChild variant="default" size="sm">
+                  <Button asChild variant="default" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
                     <a href={getLoginUrl()}>Sign In</a>
                   </Button>
                 </div>
               )}
-
-              {/* Mobile menu button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="xl:hidden"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </Button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="xl:hidden border-t border-border">
-            <nav className="container py-4 flex flex-col gap-2">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.href}
-                  href={cat.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    location === cat.href
-                      ? "bg-secondary text-secondary-foreground"
-                      : "text-muted-foreground hover:bg-secondary"
-                  }`}
-                >
-                  {cat.name}
-                </Link>
-              ))}
+        {/* Row 2: Scrollable nav — visible on mobile/tablet, hidden on xl+ (where desktop nav shows) */}
+        <nav className="xl:hidden border-t border-border/50">
+          <div className="flex items-center overflow-x-auto scrollbar-hide px-4 gap-1">
+            {[
+              { label: "Shop", href: "/shop", match: (loc: string) => loc.startsWith("/shop") },
+              { label: "Tops", href: "/shop?category=tops", match: (loc: string) => loc === "/shop?category=tops" },
+              { label: "Bottoms", href: "/shop?category=bottoms", match: (loc: string) => loc === "/shop?category=bottoms" },
+              { label: "Outerwear", href: "/shop?category=outerwear", match: (loc: string) => loc === "/shop?category=outerwear" },
+              { label: "Shoes", href: "/shop?category=shoes", match: (loc: string) => loc === "/shop?category=shoes" },
+              { label: "Blog", href: "/blog", match: (loc: string) => loc.startsWith("/blog") },
+              { label: "About", href: "/about", match: (loc: string) => loc === "/about" },
+              { label: "Charities", href: "/charities", match: (loc: string) => loc === "/charities" },
+              { label: "Sell", href: "/sell", match: (loc: string) => loc === "/sell" },
+              { label: "Tokens", href: "/how-tokens-work", match: (loc: string) => loc === "/how-tokens-work" },
+            ].map((item) => (
               <Link
-                href="/about"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location === "/about"
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:bg-secondary"
+                key={item.href}
+                href={item.href}
+                className={`shrink-0 px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors border-b-2 ${
+                  item.match(location)
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
-                About Us
+                {item.label}
               </Link>
-              <Link
-                href="/charities"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location === "/charities"
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                Charities
-              </Link>
-              <Link
-                href="/sell"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location === "/sell"
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                Sell
-              </Link>
-              <Link
-                href="/how-tokens-work"
-                onClick={() => setMobileMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  location === "/how-tokens-work"
-                    ? "bg-secondary text-secondary-foreground"
-                    : "text-muted-foreground hover:bg-secondary"
-                }`}
-              >
-                How Tokens Work
-              </Link>
-              
-              {/* Mobile login buttons for non-authenticated users */}
-              {!isAuthenticated && (
-                <div className="flex gap-2 pt-4 mt-2 border-t border-border">
-                  <Button asChild variant="outline" className="flex-1">
-                    <Link href="/join" onClick={() => setMobileMenuOpen(false)}>Join</Link>
-                  </Button>
-                  <Button asChild className="flex-1">
-                    <a href={getLoginUrl()}>Sign In</a>
-                  </Button>
-                </div>
-              )}
-            </nav>
+            ))}
           </div>
-        )}
+        </nav>
       </header>
 
       {/* Main content */}
