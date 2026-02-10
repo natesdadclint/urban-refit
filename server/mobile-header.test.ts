@@ -88,6 +88,56 @@ describe("Mobile Header: Two-Row Layout", () => {
     });
   });
 
+  describe("Scroll Direction Arrows", () => {
+    it("should have a left scroll arrow button with aria-label", () => {
+      expect(layoutContent).toContain('aria-label="Scroll navigation left"');
+    });
+
+    it("should have a right scroll arrow button with aria-label", () => {
+      expect(layoutContent).toContain('aria-label="Scroll navigation right"');
+    });
+
+    it("should use ChevronLeft and ChevronRight icons", () => {
+      expect(layoutContent).toContain("ChevronLeft");
+      expect(layoutContent).toContain("ChevronRight");
+    });
+
+    it("should conditionally show left arrow based on canScrollLeft state", () => {
+      expect(layoutContent).toContain("canScrollLeft");
+    });
+
+    it("should conditionally show right arrow based on canScrollRight state", () => {
+      expect(layoutContent).toContain("canScrollRight");
+    });
+
+    it("should have fade gradient on left arrow (bg-gradient-to-r from-background)", () => {
+      expect(layoutContent).toContain("bg-gradient-to-r from-background");
+    });
+
+    it("should have fade gradient on right arrow (bg-gradient-to-l from-background)", () => {
+      expect(layoutContent).toContain("bg-gradient-to-l from-background");
+    });
+
+    it("should use a ref for scroll tracking", () => {
+      expect(layoutContent).toContain("navScrollRef");
+    });
+
+    it("should have a scrollNav function for smooth scrolling", () => {
+      expect(layoutContent).toContain("scrollNav");
+      expect(layoutContent).toContain('behavior: "smooth"');
+    });
+
+    it("should use ResizeObserver to update arrows on resize", () => {
+      expect(layoutContent).toContain("ResizeObserver");
+    });
+
+    it("should have data-testid attributes for testing", () => {
+      expect(layoutContent).toContain('data-testid="mobile-nav"');
+      expect(layoutContent).toContain('data-testid="nav-arrow-left"');
+      expect(layoutContent).toContain('data-testid="nav-arrow-right"');
+    });
+  });
+
   describe("No Hamburger Menu", () => {
     it("should NOT have a hamburger menu button (no mobileMenuOpen state)", () => {
       expect(layoutContent).not.toContain("mobileMenuOpen");

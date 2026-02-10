@@ -986,3 +986,11 @@
 - [x] Keep desktop navigation unchanged (single-row layout)
 - [x] Hide scrollbar on mobile nav for clean look
 - [x] Write vitest tests for mobile header structure (23 tests passing)
+
+## Mobile Nav Scroll Arrows (Feb 11, 2026)
+- [x] Add arrow indicators showing scroll direction on mobile nav
+- [x] Show right arrow when more links are off-screen to the right
+- [x] Show left arrow when user has scrolled past the start
+- [x] Hide arrows when no more content in that direction
+- [x] Add fade gradient behind arrows for clean visual
+- [x] Update vitest tests for scroll arrow indicators (34 tests passing)

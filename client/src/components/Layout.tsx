@@ -4,9 +4,9 @@ import { trpc } from "@/lib/trpc";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ShoppingBag, User, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package } from "lucide-react";
+import { ShoppingBag, User, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import {
   DropdownMenu,
@@ -36,6 +36,37 @@ export default function Layout({ children }: LayoutProps) {
 
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
+
+  // Mobile nav scroll arrow state
+  const navScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const updateScrollArrows = useCallback(() => {
+    const el = navScrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  }, []);
+
+  useEffect(() => {
+    const el = navScrollRef.current;
+    if (!el) return;
+    updateScrollArrows();
+    el.addEventListener("scroll", updateScrollArrows, { passive: true });
+    const ro = new ResizeObserver(updateScrollArrows);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener("scroll", updateScrollArrows);
+      ro.disconnect();
+    };
+  }, [updateScrollArrows]);
+
+  const scrollNav = (direction: "left" | "right") => {
+    const el = navScrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: direction === "right" ? 150 : -150, behavior: "smooth" });
+  };
   
   const { data: cartCount } = trpc.cart.count.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -252,8 +283,24 @@ export default function Layout({ children }: LayoutProps) {
         </div>
 
         {/* Row 2: Scrollable nav — visible on mobile/tablet, hidden on xl+ (where desktop nav shows) */}
-        <nav className="xl:hidden border-t border-border/50">
-          <div className="flex items-center overflow-x-auto scrollbar-hide px-4 gap-1">
+        <nav className="xl:hidden border-t border-border/50 relative" data-testid="mobile-nav">
+          {/* Left scroll arrow */}
+          {canScrollLeft && (
+            <button
+              onClick={() => scrollNav("left")}
+              className="absolute left-0 top-0 bottom-0 z-10 flex items-center pl-1 pr-2 bg-gradient-to-r from-background via-background/90 to-transparent"
+              aria-label="Scroll navigation left"
+              data-testid="nav-arrow-left"
+            >
+              <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+            </button>
+          )}
+
+          {/* Scrollable links */}
+          <div
+            ref={navScrollRef}
+            className="flex items-center overflow-x-auto scrollbar-hide px-4 gap-1"
+          >
             {[
               { label: "Shop", href: "/shop", match: (loc: string) => loc.startsWith("/shop") },
               { label: "Tops", href: "/shop?category=tops", match: (loc: string) => loc === "/shop?category=tops" },
@@ -279,6 +326,18 @@ export default function Layout({ children }: LayoutProps) {
               </Link>
             ))}
           </div>
+
+          {/* Right scroll arrow */}
+          {canScrollRight && (
+            <button
+              onClick={() => scrollNav("right")}
+              className="absolute right-0 top-0 bottom-0 z-10 flex items-center pr-1 pl-2 bg-gradient-to-l from-background via-background/90 to-transparent"
+              aria-label="Scroll navigation right"
+              data-testid="nav-arrow-right"
+            >
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            </button>
+          )}
         </nav>
       </header>
 
