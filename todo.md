@@ -1001,3 +1001,6 @@
 
 ## Hero Tagline Fix (Feb 11, 2026)
 - [x] Center the hero tagline text and increase spacing below CTA buttons
+
+## Hero Tagline Vertical Centering Fix (Feb 11, 2026)
+- [x] Fix tagline to be vertically centered in the hero section
