@@ -67,15 +67,15 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
         {/* Content positioned at bottom */}
-        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-center items-start">
-          <div className="max-w-2xl" style={{marginTop: '-20px', marginRight: '-20px', marginBottom: '10px'}}>
-            <h1 className="hero-header text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight mb-4 md:mb-6 text-white max-w-2xl drop-shadow-lg" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
+        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col justify-center items-center text-center">
+          <div className="max-w-2xl" style={{marginTop: '-20px', marginBottom: '10px'}}>
+            <h1 className="hero-header text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight mb-4 md:mb-6 text-white max-w-2xl drop-shadow-lg mx-auto" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
             </h1>
-            <p className="hero-byline text-base sm:text-lg text-white mb-12 sm:mb-16 md:mb-20 max-w-xl leading-relaxed font-medium" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
+            <p className="hero-byline text-base sm:text-lg text-white mb-12 sm:mb-16 md:mb-20 max-w-xl leading-relaxed font-medium mx-auto" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
               Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
             </p>
-            <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3">
+            <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
               <Button asChild size="lg" className="gap-2">
                 <Link href="/shop" style={{fontSize: '13px'}}>
                   Shop Now

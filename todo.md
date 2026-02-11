@@ -994,3 +994,7 @@
 - [x] Hide arrows when no more content in that direction
 - [x] Add fade gradient behind arrows for clean visual
 - [x] Update vitest tests for scroll arrow indicators (34 tests passing)
+
+## UI Fixes (Feb 11, 2026)
+- [x] Move Notifications card to first position in Admin portal
+- [x] Center hero CTA buttons (Shop Now / See What's New) instead of left-aligned

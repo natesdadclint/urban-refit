@@ -31,6 +31,7 @@ interface AdminLayoutProps {
 
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
+  { href: "/admin/notifications", icon: Bell, label: "Notifications" },
   { href: "/admin/products", icon: Package, label: "Products" },
   { href: "/admin/thrift-stores", icon: Store, label: "Thrift Stores" },
   { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
@@ -42,7 +43,6 @@ const navItems = [
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
   { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages", showBadge: true },
   { href: "/admin/sell-submissions", icon: DollarSign, label: "Sell Submissions" },
-  { href: "/admin/notifications", icon: Bell, label: "Notifications" },
   { href: "/admin/bulk-upload", icon: Upload, label: "Bulk Upload" },
 ];
 
