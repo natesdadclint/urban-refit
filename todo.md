@@ -998,3 +998,6 @@
 ## UI Fixes (Feb 11, 2026)
 - [x] Move Notifications card to first position in Admin portal
 - [x] Center hero CTA buttons (Shop Now / See What's New) instead of left-aligned
+
+## Hero Tagline Fix (Feb 11, 2026)
+- [x] Center the hero tagline text and increase spacing below CTA buttons

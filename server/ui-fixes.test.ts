@@ -65,4 +65,13 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(homeContent).toContain("Shop Now");
     expect(homeContent).toContain("See What's New");
   });
+
+  it("should have the tagline centered with mx-auto and increased spacing (mt-6)", () => {
+    const taglineLine = homeContent.split("\n").find(l => l.includes("Every piece is one-of-a-kind"));
+    expect(taglineLine).toBeDefined();
+    const parentLine = homeContent.split("\n").find(l => l.includes("Every piece is one-of-a-kind"));
+    // Check the className on the <p> wrapping the tagline
+    const pLine = homeContent.split("\n").find(l => l.includes("mt-6") && l.includes("mx-auto") && l.includes("tracking-wide"));
+    expect(pLine).toBeDefined();
+  });
 });
