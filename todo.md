@@ -1004,3 +1004,18 @@
 
 ## Hero Tagline Vertical Centering Fix (Feb 11, 2026)
 - [x] Fix tagline to be vertically centered in the hero section
+
+## Hero Heading Position Fix (Feb 13, 2026)
+- [x] Move "Premium Preloved Men's Fashion" heading above the clothes rack, parallel with the top of the rack
+
+## Hero Heading Position Fix v2 (Feb 13, 2026)
+- [x] Centre heading between the cap shelf and clothes rack — not covering the shelf
+
+## Banner/Toast Notification System (Feb 13, 2026)
+- [x] Create site_banners table in schema (title, message, type, active, start/end dates)
+- [x] Add admin CRUD for banners (create, edit, toggle active, delete)
+- [x] Add tRPC procedures for banner management (admin) and fetching active banners (public)
+- [x] Create frontend AnnouncementBanner component (dismissible, colour-coded by type)
+- [x] Display active banners at top of site in Layout
+- [x] Allow users to dismiss banners (localStorage persistence)
+- [x] Write vitest tests for banner system (51 tests passing)

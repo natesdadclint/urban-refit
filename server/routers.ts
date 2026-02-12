@@ -2064,7 +2064,75 @@ Keep insights concise and actionable.`;
         // The expiry is tracked per-referral, not per-code
         return { valid: true, expired: false };
       }),
+   }),
+
+  // ============ SITE BANNERS ============
+  banners: router({
+    // Public: get active banners for display
+    getActive: publicProcedure.query(async () => {
+      return await db.getActiveBanners();
+    }),
+
+    // Admin: get all banners
+    getAll: adminProcedure.query(async () => {
+      return await db.getAllBanners();
+    }),
+
+    // Admin: create a new banner
+    create: adminProcedure
+      .input(z.object({
+        title: z.string().min(1).max(255),
+        message: z.string().min(1),
+        type: z.enum(["info", "promo", "warning", "urgent"]).default("info"),
+        linkUrl: z.string().max(500).optional(),
+        linkText: z.string().max(100).optional(),
+        isActive: z.boolean().default(true),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const banner = await db.createBanner(input);
+        if (!banner) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create banner" });
+        return banner;
+      }),
+
+    // Admin: update a banner
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().min(1).max(255).optional(),
+        message: z.string().min(1).optional(),
+        type: z.enum(["info", "promo", "warning", "urgent"]).optional(),
+        linkUrl: z.string().max(500).nullable().optional(),
+        linkText: z.string().max(100).nullable().optional(),
+        isActive: z.boolean().optional(),
+        startDate: z.date().nullable().optional(),
+        endDate: z.date().nullable().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        const banner = await db.updateBanner(id, data);
+        if (!banner) throw new TRPCError({ code: "NOT_FOUND", message: "Banner not found" });
+        return banner;
+      }),
+
+    // Admin: toggle banner active status
+    toggleActive: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const banner = await db.toggleBannerActive(input.id);
+        if (!banner) throw new TRPCError({ code: "NOT_FOUND", message: "Banner not found" });
+        return banner;
+      }),
+
+    // Admin: delete a banner
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const success = await db.deleteBanner(input.id);
+        if (!success) throw new TRPCError({ code: "NOT_FOUND", message: "Banner not found" });
+        return { success: true };
+      }),
   }),
 });
-
 export type AppRouter = typeof appRouter;

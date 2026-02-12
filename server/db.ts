@@ -26,7 +26,8 @@ import {
   imageValidationLogs, InsertImageValidationLog, ImageValidationLog,
   adminNotifications, InsertAdminNotification, AdminNotification,
   referralCodes, InsertReferralCode, ReferralCode,
-  referrals, InsertReferral, Referral
+  referrals, InsertReferral, Referral,
+  siteBanners, InsertSiteBanner, SiteBanner
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -3542,5 +3543,92 @@ export async function getReferralStats(userId: number): Promise<{
       totalTokensEarned: "0.00",
       code: null
     };
+  }
+}
+
+
+// ============ SITE BANNER OPERATIONS ============
+
+export async function getActiveBanners(): Promise<SiteBanner[]> {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    const now = new Date();
+    const allBanners = await db.select().from(siteBanners)
+      .where(eq(siteBanners.isActive, true))
+      .orderBy(desc(siteBanners.createdAt));
+    // Filter by date range in JS (start/end are optional)
+    return allBanners.filter(b => {
+      if (b.startDate && b.startDate > now) return false;
+      if (b.endDate && b.endDate < now) return false;
+      return true;
+    });
+  } catch (error) {
+    console.error("[Database] Failed to get active banners:", error);
+    return [];
+  }
+}
+
+export async function getAllBanners(): Promise<SiteBanner[]> {
+  const db = await getDb();
+  if (!db) return [];
+  try {
+    return await db.select().from(siteBanners).orderBy(desc(siteBanners.createdAt));
+  } catch (error) {
+    console.error("[Database] Failed to get all banners:", error);
+    return [];
+  }
+}
+
+export async function createBanner(data: Omit<InsertSiteBanner, "id" | "createdAt" | "updatedAt">): Promise<SiteBanner | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [result] = await db.insert(siteBanners).values(data);
+    const [banner] = await db.select().from(siteBanners).where(eq(siteBanners.id, result.insertId));
+    return banner || null;
+  } catch (error) {
+    console.error("[Database] Failed to create banner:", error);
+    return null;
+  }
+}
+
+export async function updateBanner(id: number, data: Partial<InsertSiteBanner>): Promise<SiteBanner | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    await db.update(siteBanners).set(data).where(eq(siteBanners.id, id));
+    const [banner] = await db.select().from(siteBanners).where(eq(siteBanners.id, id));
+    return banner || null;
+  } catch (error) {
+    console.error("[Database] Failed to update banner:", error);
+    return null;
+  }
+}
+
+export async function deleteBanner(id: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  try {
+    await db.delete(siteBanners).where(eq(siteBanners.id, id));
+    return true;
+  } catch (error) {
+    console.error("[Database] Failed to delete banner:", error);
+    return false;
+  }
+}
+
+export async function toggleBannerActive(id: number): Promise<SiteBanner | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const [banner] = await db.select().from(siteBanners).where(eq(siteBanners.id, id));
+    if (!banner) return null;
+    await db.update(siteBanners).set({ isActive: !banner.isActive }).where(eq(siteBanners.id, id));
+    const [updated] = await db.select().from(siteBanners).where(eq(siteBanners.id, id));
+    return updated || null;
+  } catch (error) {
+    console.error("[Database] Failed to toggle banner:", error);
+    return null;
   }
 }

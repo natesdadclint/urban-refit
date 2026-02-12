@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ShoppingBag, User, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
+import AnnouncementBanner from "@/components/AnnouncementBanner";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import {
@@ -108,6 +109,8 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+      {/* Announcement Banner */}
+      <AnnouncementBanner />
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         {/* Row 1: Logo + Desktop Nav + Actions */}

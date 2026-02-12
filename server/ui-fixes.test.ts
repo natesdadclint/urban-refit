@@ -74,9 +74,20 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(pLine).toBeDefined();
   });
 
-  it("should use flex spacers for vertical centering of hero content", () => {
-    // The hero uses flex-1 spacers above and below the main content
+  it("should use flex spacer to separate heading from lower content", () => {
     expect(homeContent).toContain("flex-1");
     expect(homeContent).toContain("flex flex-col items-center text-center");
+  });
+
+  it("should position the heading near the top with padding-top", () => {
+    // The heading is in its own div with top padding, above the clothes rack
+    const lines = homeContent.split("\n");
+    const headingWrapperIdx = lines.findIndex(l => l.includes("pt-6") && l.includes("sm:pt-10"));
+    const headingIdx = lines.findIndex(l => l.includes("Premium Preloved"));
+    expect(headingWrapperIdx).toBeGreaterThan(-1);
+    expect(headingIdx).toBeGreaterThan(headingWrapperIdx);
+    // The flex-1 spacer should come after the heading
+    const spacerIdx = lines.findIndex((l, i) => i > headingIdx && l.includes("flex-1"));
+    expect(spacerIdx).toBeGreaterThan(headingIdx);
   });
 });

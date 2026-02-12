@@ -66,16 +66,19 @@ export default function Home() {
         {/* Enhanced bottom gradient for text area */}
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
-        {/* Content — vertically centered */}
+        {/* Content — heading at top, rest at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col items-center text-center">
-          {/* Top spacer */}
-          <div className="flex-1" />
-          {/* Main hero content block */}
-          <div className="max-w-2xl">
-            <h1 className="hero-header text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight mb-4 md:mb-6 text-white max-w-2xl drop-shadow-lg mx-auto" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
+          {/* Heading positioned between the cap shelf and clothes rack */}
+          <div className="pt-16 sm:pt-20 md:pt-24">
+            <h1 className="hero-header text-3xl sm:text-4xl md:text-5xl font-serif font-bold leading-tight text-white max-w-2xl drop-shadow-lg mx-auto" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
             </h1>
-            <p className="hero-byline text-base sm:text-lg text-white mb-8 sm:mb-10 md:mb-12 max-w-xl leading-relaxed font-medium mx-auto" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
+          </div>
+          {/* Spacer pushes remaining content to the lower portion */}
+          <div className="flex-1" />
+          {/* Subtitle, buttons, and tagline in the lower area */}
+          <div className="max-w-2xl pb-6 sm:pb-8">
+            <p className="hero-byline text-base sm:text-lg text-white mb-6 sm:mb-8 md:mb-10 max-w-xl leading-relaxed font-medium mx-auto" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
               Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
             </p>
             <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
@@ -89,10 +92,7 @@ export default function Home() {
                 <Link href="/shop">See What's New</Link>
               </Button>
             </div>
-          </div>
-          {/* Bottom spacer */}
-          <div className="flex-1 flex items-center">
-            <p className="text-xs sm:text-sm text-muted-foreground/80 tracking-wide mx-auto">
+            <p className="text-xs sm:text-sm text-muted-foreground/80 mt-5 sm:mt-6 tracking-wide mx-auto">
               Every piece is one-of-a-kind. Free shipping over NZ$50. Earn tokens when you sell back.
             </p>
           </div>

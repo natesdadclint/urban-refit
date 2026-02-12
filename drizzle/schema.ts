@@ -1002,3 +1002,24 @@ export const referrals = mysqlTable("referrals", {
 
 export type Referral = typeof referrals.$inferSelect;
 export type InsertReferral = typeof referrals.$inferInsert;
+
+
+/**
+ * Site banners - admin-managed announcement banners displayed at the top of the site
+ */
+export const siteBanners = mysqlTable("site_banners", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  message: text("message").notNull(),
+  type: mysqlEnum("type", ["info", "promo", "warning", "urgent"]).default("info").notNull(),
+  linkUrl: varchar("linkUrl", { length: 500 }),
+  linkText: varchar("linkText", { length: 100 }),
+  isActive: boolean("isActive").default(true).notNull(),
+  startDate: timestamp("startDate"),
+  endDate: timestamp("endDate"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SiteBanner = typeof siteBanners.$inferSelect;
+export type InsertSiteBanner = typeof siteBanners.$inferInsert;

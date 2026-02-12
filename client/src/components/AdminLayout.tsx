@@ -21,6 +21,7 @@ import {
   Upload,
   User,
   Bell,
+  Megaphone,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -32,6 +33,7 @@ interface AdminLayoutProps {
 const navItems = [
   { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/admin/notifications", icon: Bell, label: "Notifications" },
+  { href: "/admin/banners", icon: Megaphone, label: "Site Banners" },
   { href: "/admin/products", icon: Package, label: "Products" },
   { href: "/admin/thrift-stores", icon: Store, label: "Thrift Stores" },
   { href: "/admin/orders", icon: ShoppingCart, label: "Orders" },
