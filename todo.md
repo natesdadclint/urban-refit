@@ -1022,3 +1022,7 @@
 
 ## Hero Heading Mobile Fix (Feb 13, 2026)
 - [x] Fix heading position on mobile to match desktop — between shelf and rack, using percentage-based positioning (top-[12%] sm:top-[13%] md:top-[14%])
+
+## Logo Size Fix (Feb 13, 2026)
+- [x] Increase Urban Refit logo size in header
+- [x] Justify/align logo with the hero page layout

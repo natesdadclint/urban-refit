@@ -17,8 +17,9 @@ const cssContent = fs.readFileSync(cssPath, "utf-8");
 
 describe("Mobile Header: Two-Row Layout", () => {
   describe("Row 1: Logo + Actions", () => {
-    it("should have a compact header height on mobile (h-14) and taller on xl (xl:h-20)", () => {
-      expect(layoutContent).toContain("h-14 xl:h-20");
+    it("should have a responsive header height on mobile (h-16) and taller on xl (xl:h-20)", () => {
+      expect(layoutContent).toContain("h-16");
+      expect(layoutContent).toContain("xl:h-20");
     });
 
     it("should have the Urban Refit logo", () => {
@@ -26,7 +27,7 @@ describe("Mobile Header: Two-Row Layout", () => {
     });
 
     it("should have a responsive logo text size", () => {
-      expect(layoutContent).toMatch(/text-lg\s+sm:text-xl\s+md:text-4xl/);
+      expect(layoutContent).toMatch(/text-2xl\s+sm:text-3xl\s+md:text-4xl/);
     });
   });
 

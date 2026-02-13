@@ -115,14 +115,14 @@ export default function Layout({ children }: LayoutProps) {
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         {/* Row 1: Logo + Desktop Nav + Actions */}
         <div className="container px-4">
-          <div className="flex items-center justify-between h-14 xl:h-20">
+          <div className="flex items-center justify-between h-16 sm:h-18 xl:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-1.5 md:gap-3 shrink-0">
-              <span className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
-              <span className="text-lg sm:text-xl md:text-4xl font-serif font-bold tracking-tight whitespace-nowrap">
+            <Link href="/" className="flex items-center gap-2 sm:gap-2.5 md:gap-3 shrink-0">
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-black"></span>
+              <span className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold tracking-tight whitespace-nowrap">
                 Urban Refit
               </span>
-              <span className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-black"></span>
+              <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-black"></span>
             </Link>
 
             {/* Desktop Navigation — hidden below xl */}
