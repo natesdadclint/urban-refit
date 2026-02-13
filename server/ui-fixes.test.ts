@@ -51,9 +51,9 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(homeContent).toContain("justify-center items-center");
   });
 
-  it("should center the heading with mx-auto", () => {
-    const h1Line = homeContent.split("\n").find(l => l.includes("hero-header"));
-    expect(h1Line).toContain("mx-auto");
+  it("should center the heading with flex justify-center", () => {
+    const wrapperLine = homeContent.split("\n").find(l => l.includes("absolute") && l.includes("top-["));
+    expect(wrapperLine).toContain("justify-center");
   });
 
   it("should center the subtitle with mx-auto", () => {
@@ -79,14 +79,14 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(homeContent).toContain("flex flex-col items-center text-center");
   });
 
-  it("should position the heading near the top with padding-top", () => {
-    // The heading is in its own div with top padding, above the clothes rack
+  it("should position the heading with percentage-based absolute positioning", () => {
+    // The heading uses absolute positioning with top-[12%] to sit between shelf and rack
     const lines = homeContent.split("\n");
-    const headingWrapperIdx = lines.findIndex(l => l.includes("pt-6") && l.includes("sm:pt-10"));
+    const headingWrapperIdx = lines.findIndex(l => l.includes("absolute") && l.includes("top-["));
     const headingIdx = lines.findIndex(l => l.includes("Premium Preloved"));
     expect(headingWrapperIdx).toBeGreaterThan(-1);
     expect(headingIdx).toBeGreaterThan(headingWrapperIdx);
-    // The flex-1 spacer should come after the heading
+    // The flex-1 spacer should still exist for bottom content
     const spacerIdx = lines.findIndex((l, i) => i > headingIdx && l.includes("flex-1"));
     expect(spacerIdx).toBeGreaterThan(headingIdx);
   });

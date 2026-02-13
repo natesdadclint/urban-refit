@@ -1019,3 +1019,6 @@
 - [x] Display active banners at top of site in Layout
 - [x] Allow users to dismiss banners (localStorage persistence)
 - [x] Write vitest tests for banner system (51 tests passing)
+
+## Hero Heading Mobile Fix (Feb 13, 2026)
+- [x] Fix heading position on mobile to match desktop — between shelf and rack, using percentage-based positioning (top-[12%] sm:top-[13%] md:top-[14%])
