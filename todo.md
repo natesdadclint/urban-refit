@@ -1026,3 +1026,6 @@
 ## Logo Size Fix (Feb 13, 2026)
 - [x] Increase Urban Refit logo size in header
 - [x] Justify/align logo with the hero page layout
+
+## Hero Heading Font Size Fix (Feb 13, 2026)
+- [x] Reduce hero heading font size so it fits on a single line on mobile (text-xl sm:text-2xl md:text-3xl lg:text-5xl + whitespace-nowrap)
