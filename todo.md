@@ -1029,3 +1029,9 @@
 
 ## Hero Heading Font Size Fix (Feb 13, 2026)
 - [x] Reduce hero heading font size so it fits on a single line on mobile (text-xl sm:text-2xl md:text-3xl lg:text-5xl + whitespace-nowrap)
+
+## Hero Byline Position Fix (Feb 13, 2026)
+- [ ] Move byline/subtitle down to centre between the cap shelf and top of clothing rack
+
+## Hero Heading Centering Fix (Feb 13, 2026)
+- [x] Move heading down — centred between shelf and rack (top-[16%] sm:top-[17%] md:top-[18%])

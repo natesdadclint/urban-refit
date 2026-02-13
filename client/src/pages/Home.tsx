@@ -69,7 +69,7 @@ export default function Home() {
         {/* Content — heading at top, rest at bottom */}
         <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col items-center text-center">
           {/* Heading positioned between the cap shelf and clothes rack using % so it scales with viewport */}
-          <div className="absolute inset-x-0 top-[12%] sm:top-[13%] md:top-[14%] flex justify-center px-4">
+          <div className="absolute inset-x-0 top-[16%] sm:top-[17%] md:top-[18%] flex justify-center px-4">
             <h1 className="hero-header text-xl sm:text-2xl md:text-3xl lg:text-5xl font-serif font-bold leading-tight text-white max-w-2xl drop-shadow-lg whitespace-nowrap" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
             </h1>
