@@ -1023,3 +1023,20 @@ export const siteBanners = mysqlTable("site_banners", {
 
 export type SiteBanner = typeof siteBanners.$inferSelect;
 export type InsertSiteBanner = typeof siteBanners.$inferInsert;
+
+
+/**
+ * Sell submission replies - conversation thread between admin and customer for price negotiation
+ */
+export const sellSubmissionReplies = mysqlTable("sell_submission_replies", {
+  id: int("id").autoincrement().primaryKey(),
+  submissionId: int("submissionId").notNull(),
+  senderRole: mysqlEnum("senderRole", ["admin", "customer"]).notNull(),
+  senderName: varchar("senderName", { length: 255 }),
+  message: text("message").notNull(),
+  tokenOffer: int("tokenOffer"), // Optional: attach a token offer/counter to this message
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SellSubmissionReply = typeof sellSubmissionReplies.$inferSelect;
+export type InsertSellSubmissionReply = typeof sellSubmissionReplies.$inferInsert;

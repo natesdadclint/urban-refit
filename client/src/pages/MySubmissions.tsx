@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Loader2, Package, Clock, Check, X, Coins, ArrowRight, MessageSquare, ShoppingBag, Heart } from "lucide-react";
+import { Loader2, Package, Clock, Check, X, Coins, ArrowRight, MessageSquare, ShoppingBag, Heart, Send } from "lucide-react";
 import { Link } from "wouter";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
@@ -20,12 +21,29 @@ export default function MySubmissions() {
   const [customerNotes, setCustomerNotes] = useState("");
   const [respondingId, setRespondingId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [replyMessage, setReplyMessage] = useState("");
+  const [replyCounterTokens, setReplyCounterTokens] = useState("");
+  const [sendingReply, setSendingReply] = useState(false);
+  const repliesEndRef = useRef<HTMLDivElement>(null);
 
   const { data: submissions, isLoading, refetch } = trpc.sell.mySubmissions.useQuery(undefined, {
     enabled: isAuthenticated,
   });
 
+  const { data: replies, refetch: refetchReplies } = trpc.sell.getReplies.useQuery(
+    { submissionId: selectedSubmission?.id ?? 0 },
+    { enabled: !!selectedSubmission && dialogOpen }
+  );
+
   const respondMutation = trpc.sell.respondToOffer.useMutation();
+  const customerReplyMutation = trpc.sell.customerReply.useMutation();
+
+  // Scroll to bottom of replies when new ones arrive
+  useEffect(() => {
+    if (replies && repliesEndRef.current) {
+      repliesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [replies]);
 
   if (loading) {
     return (
@@ -75,6 +93,7 @@ export default function MySubmissions() {
       }
       
       refetch();
+      refetchReplies();
       setDialogOpen(false);
       setCounterTokens("");
       setCustomerNotes("");
@@ -82,6 +101,27 @@ export default function MySubmissions() {
       toast.error(error.message || "Failed to respond to offer");
     } finally {
       setRespondingId(null);
+    }
+  };
+
+  const handleSendReply = async () => {
+    if (!selectedSubmission || !replyMessage.trim()) return;
+    setSendingReply(true);
+    try {
+      await customerReplyMutation.mutateAsync({
+        submissionId: selectedSubmission.id,
+        message: replyMessage.trim(),
+        counterTokenOffer: replyCounterTokens ? parseInt(replyCounterTokens) : undefined,
+      });
+      toast.success("Message sent to Urban Refit!");
+      setReplyMessage("");
+      setReplyCounterTokens("");
+      refetchReplies();
+      refetch();
+    } catch (error) {
+      toast.error("Failed to send message");
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -108,6 +148,15 @@ export default function MySubmissions() {
       default:
         return { label: status, color: "bg-gray-100 text-gray-800", icon: Package };
     }
+  };
+
+  const openConversation = (submission: any) => {
+    setSelectedSubmission(submission);
+    setReplyMessage("");
+    setReplyCounterTokens("");
+    setCounterTokens("");
+    setCustomerNotes("");
+    setDialogOpen(true);
   };
 
   return (
@@ -230,80 +279,51 @@ export default function MySubmissions() {
                         {/* Token Offer Section */}
                         {submission.status === 'offer_made' && submission.tokenOffer && (
                           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
-                            <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center justify-between">
                               <div>
                                 <p className="text-sm text-purple-700 font-medium">Our Token Offer</p>
                                 <p className="text-2xl font-bold text-purple-900 flex items-center gap-2">
                                   <Coins className="w-6 h-6 text-amber-500" />
                                   {submission.tokenOffer} tokens
                                 </p>
-                                <p className="text-xs text-purple-600">= $${(submission.tokenOffer * 0.5).toFixed(2)} NZD store credit</p>
+                                <p className="text-xs text-purple-600">= ${(submission.tokenOffer * 0.5).toFixed(2)} NZD store credit</p>
                               </div>
-                              <Dialog open={dialogOpen && selectedSubmission?.id === submission.id} onOpenChange={(open) => {
-                                if (!open) {
-                                  setSelectedSubmission(null);
-                                }
-                                setDialogOpen(open);
-                              }}>
-                                <DialogTrigger asChild>
-                                  <Button onClick={() => setSelectedSubmission(submission)}>Respond to Offer</Button>
-                                </DialogTrigger>
-                                <DialogContent className="sm:max-w-md">
-                                  <DialogHeader>
-                                    <DialogTitle>Respond to Token Offer</DialogTitle>
-                                  </DialogHeader>
-                                  <div className="py-4 space-y-4">
-                                    <p>You can accept, reject, or make a counter offer.</p>
-                                    <div>
-                                      <label className="text-sm font-medium">Counter Offer (Tokens)</label>
-                                      <Input 
-                                        type="number"
-                                        value={counterTokens}
-                                        onChange={(e) => setCounterTokens(e.target.value)}
-                                        placeholder={`Our offer: ${submission.tokenOffer}`}
-                                      />
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Notes (Optional)</label>
-                                      <Input 
-                                        value={customerNotes}
-                                        onChange={(e) => setCustomerNotes(e.target.value)}
-                                        placeholder="e.g., condition notes, price justification"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div className="flex justify-end gap-2 pt-4 border-t">
-                                    <Button 
-                                      variant="outline" 
-                                      onClick={() => handleRespond(submission.id, 'rejected')}
-                                      disabled={respondingId === submission.id}
-                                    >
-                                      {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Decline"}
-                                    </Button>
-                                    <Button 
-                                      variant="default" 
-                                      onClick={() => handleRespond(submission.id, 'accepted')}
-                                      disabled={respondingId === submission.id}
-                                      className="bg-emerald-600 hover:bg-emerald-700"
-                                    >
-                                      {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Accept Offer"}
-                                    </Button>
-                                    <Button 
-                                      variant="secondary" 
-                                      onClick={() => handleRespond(submission.id, 'counter')}
-                                      disabled={!counterTokens || respondingId === submission.id}
-                                    >
-                                      {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send Counter"}
-                                    </Button>
-                                  </div>
-                                </DialogContent>
-                              </Dialog>
                             </div>
-                            {submission.adminNotes && (
-                              <p className="text-sm text-purple-600 border-t border-purple-200 pt-3 mt-3"><b>Admin Notes:</b> {submission.adminNotes}</p>
-                            )}
                           </div>
                         )}
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-2 flex-wrap">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openConversation(submission)}
+                          >
+                            <MessageSquare className="h-4 w-4 mr-1.5" />
+                            View Conversation
+                          </Button>
+                          {submission.status === 'offer_made' && (
+                            <>
+                              <Button
+                                size="sm"
+                                className="bg-emerald-600 hover:bg-emerald-700"
+                                onClick={() => handleRespond(submission.id, 'accepted')}
+                                disabled={respondingId === submission.id}
+                              >
+                                {respondingId === submission.id ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Check className="h-4 w-4 mr-1" />}
+                                Accept Offer
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleRespond(submission.id, 'rejected')}
+                                disabled={respondingId === submission.id}
+                              >
+                                Decline
+                              </Button>
+                            </>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </Card>
@@ -313,6 +333,143 @@ export default function MySubmissions() {
           )}
         </div>
       </main>
+
+      {/* Conversation Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (!open) {
+          setSelectedSubmission(null);
+          setReplyMessage("");
+          setReplyCounterTokens("");
+        }
+      }}>
+        <DialogContent className="max-w-lg max-h-[85vh] flex flex-col">
+          {selectedSubmission && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 text-base">
+                  <MessageSquare className="w-5 h-5" />
+                  {selectedSubmission.brand} - {selectedSubmission.itemName}
+                </DialogTitle>
+              </DialogHeader>
+
+              {/* Messages area */}
+              <div className="flex-1 overflow-y-auto space-y-3 py-2 min-h-[200px] max-h-[400px]">
+                {/* System message: submission created */}
+                <div className="flex justify-center">
+                  <span className="text-xs text-muted-foreground bg-muted px-3 py-1 rounded-full">
+                    Submitted {new Date(selectedSubmission.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+
+                {/* Token offer system message */}
+                {selectedSubmission.tokenOffer && !replies?.some((r: any) => r.senderRole === "admin" && r.tokenOffer) && (
+                  <div className="flex justify-center">
+                    <span className="text-xs text-purple-700 bg-purple-50 px-3 py-1 rounded-full flex items-center gap-1">
+                      <Coins className="w-3 h-3" /> Token offer: {selectedSubmission.tokenOffer} (NZ${(selectedSubmission.tokenOffer * 0.5).toFixed(2)})
+                    </span>
+                  </div>
+                )}
+
+                {/* Reply messages */}
+                {replies && replies.length > 0 ? (
+                  replies.map((reply: any) => (
+                    <div
+                      key={reply.id}
+                      className={`flex ${reply.senderRole === "customer" ? "justify-end" : "justify-start"}`}
+                    >
+                      <div
+                        className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
+                          reply.senderRole === "customer"
+                            ? "bg-stone-900 text-white rounded-br-md"
+                            : "bg-muted text-foreground rounded-bl-md"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-semibold opacity-80">
+                            {reply.senderRole === "admin" ? "Urban Refit" : "You"}
+                          </span>
+                          <span className="text-xs opacity-50">
+                            {new Date(reply.createdAt).toLocaleString(undefined, { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                          </span>
+                        </div>
+                        <p className="text-sm whitespace-pre-wrap">{reply.message}</p>
+                        {reply.tokenOffer && (
+                          <div className={`mt-2 flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-lg ${
+                            reply.senderRole === "customer"
+                              ? "bg-amber-500/20 text-amber-200"
+                              : "bg-amber-100 text-amber-800"
+                          }`}>
+                            <Coins className="w-3.5 h-3.5" />
+                            {reply.senderRole === "admin" ? "Offer" : "Counter"}: {reply.tokenOffer} tokens (NZ${(reply.tokenOffer * 0.5).toFixed(2)})
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex justify-center py-6">
+                    <p className="text-sm text-muted-foreground">No messages yet. Send a message below.</p>
+                  </div>
+                )}
+                <div ref={repliesEndRef} />
+              </div>
+
+              {/* Reply input */}
+              <div className="border-t pt-3 space-y-2">
+                <Textarea
+                  placeholder="Type your message..."
+                  value={replyMessage}
+                  onChange={(e) => setReplyMessage(e.target.value)}
+                  className="resize-none text-sm min-h-[50px]"
+                  rows={2}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                      e.preventDefault();
+                      handleSendReply();
+                    }
+                  }}
+                />
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 flex-1">
+                    <Coins className="w-4 h-4 text-amber-500" />
+                    <Input
+                      type="number"
+                      placeholder="Counter offer (optional)"
+                      value={replyCounterTokens}
+                      onChange={(e) => setReplyCounterTokens(e.target.value)}
+                      className="w-44 h-8 text-sm"
+                    />
+                    {replyCounterTokens && (
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        = NZ${(parseFloat(replyCounterTokens) * 0.5).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                  <Button
+                    size="sm"
+                    onClick={handleSendReply}
+                    disabled={sendingReply || !replyMessage.trim()}
+                    className="bg-stone-900 hover:bg-stone-800"
+                  >
+                    {sendingReply ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        <Send className="h-4 w-4 mr-1.5" />
+                        Send
+                      </>
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Press Cmd/Ctrl + Enter to send
+                </p>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }

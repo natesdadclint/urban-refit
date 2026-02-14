@@ -1517,6 +1517,103 @@ Keep insights concise and actionable.`;
         return { success: true };
       }),
     
+    // Admin: Send a reply message to customer on a submission
+    adminReply: adminProcedure
+      .input(z.object({
+        submissionId: z.number(),
+        message: z.string().min(1).max(2000),
+        tokenOffer: z.number().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const submission = await db.getSellSubmissionById(input.submissionId);
+        if (!submission) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
+        }
+
+        const reply = await db.createSellSubmissionReply({
+          submissionId: input.submissionId,
+          senderRole: "admin",
+          senderName: ctx.user.name || "Urban Refit Team",
+          message: input.message,
+          tokenOffer: input.tokenOffer,
+        });
+
+        if (!reply) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to send reply" });
+        }
+
+        // If a token offer is included, also update the submission status
+        if (input.tokenOffer) {
+          await db.updateSellSubmissionStatus(input.submissionId, "offer_made", undefined, input.tokenOffer);
+        }
+
+        // Create notification for the customer if they have a userId
+        if (submission.userId) {
+          try {
+            await db.createSellSubmissionNotification(
+              submission.userId,
+              input.submissionId,
+              input.tokenOffer ? "offer_made" : "reviewing",
+              input.tokenOffer
+            );
+          } catch (error) {
+            console.error("[Sell] Failed to create notification:", error);
+          }
+        }
+
+        return reply;
+      }),
+
+    // Customer: Send a reply message on their submission
+    customerReply: protectedProcedure
+      .input(z.object({
+        submissionId: z.number(),
+        message: z.string().min(1).max(2000),
+        counterTokenOffer: z.number().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const submission = await db.getSellSubmissionById(input.submissionId);
+        if (!submission) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
+        }
+        if (submission.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+        }
+
+        const reply = await db.createSellSubmissionReply({
+          submissionId: input.submissionId,
+          senderRole: "customer",
+          senderName: ctx.user.name || submission.name,
+          message: input.message,
+          tokenOffer: input.counterTokenOffer,
+        });
+
+        if (!reply) {
+          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to send reply" });
+        }
+
+        // If counter offer included, update submission
+        if (input.counterTokenOffer) {
+          await db.respondToSellOffer(input.submissionId, "counter", input.counterTokenOffer, input.message);
+        }
+
+        return reply;
+      }),
+
+    // Get replies for a submission (admin or owner)
+    getReplies: protectedProcedure
+      .input(z.object({ submissionId: z.number() }))
+      .query(async ({ ctx, input }) => {
+        const submission = await db.getSellSubmissionById(input.submissionId);
+        if (!submission) {
+          throw new TRPCError({ code: "NOT_FOUND", message: "Submission not found" });
+        }
+        if (ctx.user.role !== "admin" && submission.userId !== ctx.user.id) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Access denied" });
+        }
+        return db.getSellSubmissionReplies(input.submissionId);
+      }),
+
     // Customer: Respond to offer
     respondToOffer: protectedProcedure
       .input(z.object({

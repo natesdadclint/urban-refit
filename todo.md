@@ -1074,3 +1074,9 @@
 - [x] Remove "Premium Preloved Men's Fashion" heading from hero section
 - [x] Fix "shifts" to "shelves" and check for other spelling mistakes across the website (confirmed no spelling errors found)
 - [x] Fix hero image to show full image including cap shelf and baseball caps at the top (top is cut off)
+- [x] Add reply/respond system to admin sell submissions for price negotiation
+- [x] Create sell_submission_replies database table (submission_id, sender_role, message, offer_amount, created_at)
+- [x] Add backend tRPC procedures for creating and listing replies
+- [x] Add reply UI in admin sell submissions modal with message thread and offer capability
+- [x] Add customer-facing view of replies on their submission status
+- [x] Write vitest tests for sell submission replies (61 tests passing)

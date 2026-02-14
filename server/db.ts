@@ -27,7 +27,8 @@ import {
   adminNotifications, InsertAdminNotification, AdminNotification,
   referralCodes, InsertReferralCode, ReferralCode,
   referrals, InsertReferral, Referral,
-  siteBanners, InsertSiteBanner, SiteBanner
+  siteBanners, InsertSiteBanner, SiteBanner,
+  sellSubmissionReplies, InsertSellSubmissionReply, SellSubmissionReply
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1413,6 +1414,39 @@ export async function getSellSubmissionStats(): Promise<{
   }
 }
 
+
+// ============ SELL SUBMISSION REPLIES OPERATIONS ============
+
+export async function createSellSubmissionReply(reply: InsertSellSubmissionReply): Promise<SellSubmissionReply | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  try {
+    await db.insert(sellSubmissionReplies).values(reply);
+    const [created] = await db.select().from(sellSubmissionReplies)
+      .where(eq(sellSubmissionReplies.submissionId, reply.submissionId))
+      .orderBy(desc(sellSubmissionReplies.createdAt))
+      .limit(1);
+    return created || null;
+  } catch (error) {
+    console.error("[Database] Failed to create sell submission reply:", error);
+    return null;
+  }
+}
+
+export async function getSellSubmissionReplies(submissionId: number): Promise<SellSubmissionReply[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  try {
+    return await db.select().from(sellSubmissionReplies)
+      .where(eq(sellSubmissionReplies.submissionId, submissionId))
+      .orderBy(sellSubmissionReplies.createdAt);
+  } catch (error) {
+    console.error("[Database] Failed to get sell submission replies:", error);
+    return [];
+  }
+}
 
 // ============ PRODUCT METADATA OPERATIONS ============
 
