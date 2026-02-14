@@ -46,6 +46,39 @@ export async function getDb() {
   return _db;
 }
 
+/**
+ * Reset the database connection (e.g. after ECONNRESET).
+ * The next getDb() call will create a fresh connection.
+ */
+export function resetDbConnection() {
+  _db = null;
+}
+
+/**
+ * Execute a database operation with automatic retry on transient connection errors.
+ * Retries up to `maxRetries` times with exponential backoff.
+ */
+export async function withRetry<T>(operation: () => Promise<T>, maxRetries = 2): Promise<T> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await operation();
+    } catch (error: any) {
+      const isTransient = error?.cause?.code === 'ECONNRESET' ||
+        error?.message?.includes('ECONNRESET') ||
+        error?.message?.includes('Connection lost') ||
+        error?.message?.includes('ETIMEDOUT');
+      if (isTransient && attempt < maxRetries) {
+        console.warn(`[Database] Transient error (attempt ${attempt + 1}/${maxRetries + 1}), reconnecting...`, error?.message);
+        resetDbConnection();
+        await new Promise(r => setTimeout(r, 200 * (attempt + 1)));
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw new Error('withRetry: unreachable');
+}
+
 // ============ USER OPERATIONS ============
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
@@ -207,79 +240,81 @@ export interface ProductFilters {
 }
 
 export async function getAvailableProducts(filters?: ProductFilters) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  const conditions: any[] = [eq(products.status, "available")];
-  
-  if (filters?.category && filters.category !== "all") {
-    conditions.push(eq(products.category, filters.category as any));
-  }
-  
-  if (filters?.size) {
-    const sizes = filters.size.split(',').map(s => s.trim()).filter(Boolean);
-    if (sizes.length === 1) {
-      conditions.push(eq(products.size, sizes[0]));
-    } else if (sizes.length > 1) {
-      conditions.push(inArray(products.size, sizes));
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const conditions: any[] = [eq(products.status, "available")];
+    
+    if (filters?.category && filters.category !== "all") {
+      conditions.push(eq(products.category, filters.category as any));
     }
-  }
-  
-  if (filters?.brand) {
-    const brands = filters.brand.split(',').map(b => b.trim()).filter(Boolean);
-    if (brands.length === 1) {
-      conditions.push(eq(products.brand, brands[0]));
-    } else if (brands.length > 1) {
-      conditions.push(inArray(products.brand, brands));
+    
+    if (filters?.size) {
+      const sizes = filters.size.split(',').map(s => s.trim()).filter(Boolean);
+      if (sizes.length === 1) {
+        conditions.push(eq(products.size, sizes[0]));
+      } else if (sizes.length > 1) {
+        conditions.push(inArray(products.size, sizes));
+      }
     }
-  }
-  
-  if (filters?.condition) {
-    const conditions_ = filters.condition.split(',').map(c => c.trim()).filter(Boolean);
-    if (conditions_.length === 1) {
-      conditions.push(eq(products.condition, conditions_[0] as any));
-    } else if (conditions_.length > 1) {
-      conditions.push(inArray(products.condition, conditions_ as any));
+    
+    if (filters?.brand) {
+      const brands = filters.brand.split(',').map(b => b.trim()).filter(Boolean);
+      if (brands.length === 1) {
+        conditions.push(eq(products.brand, brands[0]));
+      } else if (brands.length > 1) {
+        conditions.push(inArray(products.brand, brands));
+      }
     }
-  }
-  
-  if (filters?.color) {
-    const colors = filters.color.split(',').map(c => c.trim()).filter(Boolean);
-    if (colors.length === 1) {
-      conditions.push(eq(products.color, colors[0]));
-    } else if (colors.length > 1) {
-      conditions.push(inArray(products.color, colors));
+    
+    if (filters?.condition) {
+      const conditions_ = filters.condition.split(',').map(c => c.trim()).filter(Boolean);
+      if (conditions_.length === 1) {
+        conditions.push(eq(products.condition, conditions_[0] as any));
+      } else if (conditions_.length > 1) {
+        conditions.push(inArray(products.condition, conditions_ as any));
+      }
     }
-  }
-  
-  if (filters?.minPrice !== undefined) {
-    conditions.push(gte(products.salePrice, filters.minPrice.toString()));
-  }
-  
-  if (filters?.maxPrice !== undefined) {
-    conditions.push(lte(products.salePrice, filters.maxPrice.toString()));
-  }
-  
-  // Determine sort order
-  let orderByClause;
-  switch (filters?.sortBy) {
-    case 'price_asc':
-      orderByClause = asc(products.salePrice);
-      break;
-    case 'price_desc':
-      orderByClause = desc(products.salePrice);
-      break;
-    case 'name':
-      orderByClause = asc(products.name);
-      break;
-    case 'newest':
-    default:
-      orderByClause = desc(products.createdAt);
-  }
-  
-  return db.select().from(products)
-    .where(and(...conditions))
-    .orderBy(orderByClause);
+    
+    if (filters?.color) {
+      const colors = filters.color.split(',').map(c => c.trim()).filter(Boolean);
+      if (colors.length === 1) {
+        conditions.push(eq(products.color, colors[0]));
+      } else if (colors.length > 1) {
+        conditions.push(inArray(products.color, colors));
+      }
+    }
+    
+    if (filters?.minPrice !== undefined) {
+      conditions.push(gte(products.salePrice, filters.minPrice.toString()));
+    }
+    
+    if (filters?.maxPrice !== undefined) {
+      conditions.push(lte(products.salePrice, filters.maxPrice.toString()));
+    }
+    
+    // Determine sort order
+    let orderByClause;
+    switch (filters?.sortBy) {
+      case 'price_asc':
+        orderByClause = asc(products.salePrice);
+        break;
+      case 'price_desc':
+        orderByClause = desc(products.salePrice);
+        break;
+      case 'name':
+        orderByClause = asc(products.name);
+        break;
+      case 'newest':
+      default:
+        orderByClause = desc(products.createdAt);
+    }
+    
+    return db.select().from(products)
+      .where(and(...conditions))
+      .orderBy(orderByClause);
+  });
 }
 
 export async function getDistinctBrands() {
@@ -3636,9 +3671,9 @@ export async function getReferralStats(userId: number): Promise<{
 // ============ SITE BANNER OPERATIONS ============
 
 export async function getActiveBanners(): Promise<SiteBanner[]> {
-  const db = await getDb();
-  if (!db) return [];
-  try {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
     const now = new Date();
     const allBanners = await db.select().from(siteBanners)
       .where(eq(siteBanners.isActive, true))
@@ -3649,10 +3684,7 @@ export async function getActiveBanners(): Promise<SiteBanner[]> {
       if (b.endDate && b.endDate < now) return false;
       return true;
     });
-  } catch (error) {
-    console.error("[Database] Failed to get active banners:", error);
-    return [];
-  }
+  });
 }
 
 export async function getAllBanners(): Promise<SiteBanner[]> {

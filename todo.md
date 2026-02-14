@@ -1080,3 +1080,4 @@
 - [x] Add reply UI in admin sell submissions modal with message thread and offer capability
 - [x] Add customer-facing view of replies on their submission status
 - [x] Write vitest tests for sell submission replies (61 tests passing)
+- [x] Fix tRPC error: server returning HTML instead of JSON on homepage (added withRetry for ECONNRESET)
