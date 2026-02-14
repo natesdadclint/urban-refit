@@ -157,6 +157,12 @@ export async function getUserById(id: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+export async function updateUserById(id: number, data: Partial<Pick<InsertUser, 'name' | 'email' | 'phone' | 'shippingAddress'>>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(users).set(data).where(eq(users.id, id));
+}
+
 // ============ THRIFT STORE OPERATIONS ============
 export async function createThriftStore(store: InsertThriftStore) {
   const db = await getDb();

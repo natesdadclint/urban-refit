@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
@@ -18,7 +19,7 @@ import { Link } from "wouter";
 import { 
   User, Coins, Gift, TrendingUp, Package, Heart, 
   ArrowRight, Loader2, Calendar, Mail, Phone, MapPin,
-  Sparkles, RefreshCw, ShoppingBag, Bell
+  Sparkles, RefreshCw, ShoppingBag, Bell, Pencil
 } from "lucide-react";
 import { NotificationPreferences } from "@/components/NotificationPreferences";
 import { ReferralCard } from "@/components/ReferralCard";
@@ -27,7 +28,7 @@ const CATEGORIES = ["tops", "bottoms", "dresses", "outerwear", "accessories", "s
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 export default function Profile() {
-  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { user, loading: authLoading, isAuthenticated, refresh: refreshAuth } = useAuth();
   
   const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = trpc.customerProfile.get.useQuery(
     undefined,
@@ -64,6 +65,17 @@ export default function Profile() {
     },
   });
   
+  const updateDetailsMutation = trpc.customerProfile.updateDetails.useMutation({
+    onSuccess: () => {
+      toast.success("Account details updated successfully");
+      refetchProfile();
+      refreshAuth();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to update account details");
+    },
+  });
+  
   const convertTokensMutation = trpc.customerProfile.convertTokensToSpendLimit.useMutation({
     onSuccess: () => {
       toast.success("Tokens converted to spend limit");
@@ -74,7 +86,7 @@ export default function Profile() {
     },
   });
   
-  // Form state
+  // Form state - preferences
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [emailMarketing, setEmailMarketing] = useState(true);
@@ -83,13 +95,20 @@ export default function Profile() {
   const [preferredSizes, setPreferredSizes] = useState<string[]>([]);
   const [convertAmount, setConvertAmount] = useState("");
   
+  // Form state - account details
+  const [accountName, setAccountName] = useState("");
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountPhone, setAccountPhone] = useState("");
+  const [accountAddress, setAccountAddress] = useState("");
+  const [isEditingDetails, setIsEditingDetails] = useState(false);
+  
   // Initialize form from profile
   useEffect(() => {
     if (profile) {
       setGender(profile.gender || "");
       setDateOfBirth(profile.dateOfBirth ? new Date(profile.dateOfBirth).toISOString().split('T')[0] : "");
-      setEmailMarketing(profile.emailMarketing);
-      setSmsMarketing(profile.smsMarketing);
+      setEmailMarketing(profile.emailMarketing ?? true);
+      setSmsMarketing(profile.smsMarketing ?? false);
       try {
         setPreferredCategories(profile.preferredCategories ? JSON.parse(profile.preferredCategories) : []);
         setPreferredSizes(profile.preferredSizes ? JSON.parse(profile.preferredSizes) : []);
@@ -97,6 +116,11 @@ export default function Profile() {
         setPreferredCategories([]);
         setPreferredSizes([]);
       }
+      // Initialize account details from profile
+      setAccountName(profile.userName || "");
+      setAccountEmail(profile.userEmail || "");
+      setAccountPhone(profile.userPhone || "");
+      setAccountAddress(profile.userShippingAddress || "");
     }
   }, [profile]);
   
@@ -143,6 +167,25 @@ export default function Profile() {
       preferredCategories,
       preferredSizes,
     });
+  };
+  
+  const handleSaveDetails = () => {
+    updateDetailsMutation.mutate({
+      name: accountName || undefined,
+      email: accountEmail || undefined,
+      phone: accountPhone || undefined,
+      shippingAddress: accountAddress || undefined,
+    });
+    setIsEditingDetails(false);
+  };
+  
+  const handleCancelEdit = () => {
+    // Reset to profile values
+    setAccountName(profile?.userName || "");
+    setAccountEmail(profile?.userEmail || "");
+    setAccountPhone(profile?.userPhone || "");
+    setAccountAddress(profile?.userShippingAddress || "");
+    setIsEditingDetails(false);
   };
   
   const handleConvertTokens = () => {
@@ -260,8 +303,14 @@ export default function Profile() {
                   {profile?.membershipTier || 'Bronze'} Member
                 </Badge>
                 <div>
-                  <p className="font-medium">{user?.name || 'Member'}</p>
-                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  <p className="font-medium">{profile?.userName || user?.name || 'Member'}</p>
+                  <p className="text-sm text-muted-foreground">{profile?.userEmail || user?.email}</p>
+                  {profile?.userPhone && (
+                    <p className="text-sm text-muted-foreground flex items-center gap-1">
+                      <Phone className="h-3 w-3" />
+                      {profile.userPhone}
+                    </p>
+                  )}
                 </div>
               </div>
               <div className="flex gap-2 flex-wrap">
@@ -295,14 +344,169 @@ export default function Profile() {
         </Card>
         
         {/* Main Content Tabs */}
-        <Tabs defaultValue="rewards" className="space-y-6">
+        <Tabs defaultValue="account" className="space-y-6">
           <TabsList className="flex w-full overflow-x-auto">
+            <TabsTrigger value="account" className="flex-shrink-0 px-4">Account</TabsTrigger>
             <TabsTrigger value="rewards" className="flex-shrink-0 px-4">Rewards</TabsTrigger>
             <TabsTrigger value="preferences" className="flex-shrink-0 px-4">Preferences</TabsTrigger>
             <TabsTrigger value="notifications" className="flex-shrink-0 px-4">Notifications</TabsTrigger>
             <TabsTrigger value="orders" className="flex-shrink-0 px-4">Orders</TabsTrigger>
             <TabsTrigger value="returns" className="flex-shrink-0 px-4">Returns</TabsTrigger>
           </TabsList>
+          
+          {/* Account Details Tab */}
+          <TabsContent value="account" className="space-y-6">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Account Details
+                  </CardTitle>
+                  <CardDescription>
+                    Your personal information and contact details
+                  </CardDescription>
+                </div>
+                {!isEditingDetails && (
+                  <Button variant="outline" size="sm" onClick={() => setIsEditingDetails(true)}>
+                    <Pencil className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                )}
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {isEditingDetails ? (
+                  <>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="accountName">Full Name</Label>
+                        <Input
+                          id="accountName"
+                          value={accountName}
+                          onChange={(e) => setAccountName(e.target.value)}
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="accountEmail">Email Address</Label>
+                        <Input
+                          id="accountEmail"
+                          type="email"
+                          value={accountEmail}
+                          onChange={(e) => setAccountEmail(e.target.value)}
+                          placeholder="Enter your email"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="accountPhone">Phone Number</Label>
+                        <Input
+                          id="accountPhone"
+                          type="tel"
+                          value={accountPhone}
+                          onChange={(e) => setAccountPhone(e.target.value)}
+                          placeholder="+64 21 123 4567"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="accountAddress">Shipping Address</Label>
+                      <Textarea
+                        id="accountAddress"
+                        value={accountAddress}
+                        onChange={(e) => setAccountAddress(e.target.value)}
+                        placeholder="Enter your shipping address"
+                        rows={3}
+                      />
+                    </div>
+                    
+                    <div className="flex gap-3">
+                      <Button 
+                        onClick={handleSaveDetails}
+                        disabled={updateDetailsMutation.isPending}
+                      >
+                        {updateDetailsMutation.isPending ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          "Save Details"
+                        )}
+                      </Button>
+                      <Button variant="outline" onClick={handleCancelEdit}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg mt-0.5">
+                          <User className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Full Name</p>
+                          <p className="font-medium">{profile?.userName || "Not set"}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg mt-0.5">
+                          <Mail className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Email Address</p>
+                          <p className="font-medium">{profile?.userEmail || "Not set"}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg mt-0.5">
+                          <Phone className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Phone Number</p>
+                          <p className="font-medium">{profile?.userPhone || "Not set"}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start gap-3">
+                        <div className="p-2 bg-primary/10 rounded-lg mt-0.5">
+                          <MapPin className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-muted-foreground">Shipping Address</p>
+                          <p className="font-medium whitespace-pre-line">{profile?.userShippingAddress || "Not set"}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <Separator />
+                    
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg mt-0.5">
+                        <Calendar className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Member Since</p>
+                        <p className="font-medium">
+                          {profile?.memberSince 
+                            ? new Date(profile.memberSince).toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })
+                            : "Unknown"
+                          }
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
           
           {/* Rewards Tab */}
           <TabsContent value="rewards" className="space-y-6">

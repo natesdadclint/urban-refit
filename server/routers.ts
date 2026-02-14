@@ -489,8 +489,38 @@ export const appRouter = router({
   // ============ CUSTOMER PROFILE ROUTES ============
   customerProfile: router({
     get: protectedProcedure.query(async ({ ctx }) => {
-      return db.getOrCreateCustomerProfile(ctx.user.id);
+      const profile = await db.getOrCreateCustomerProfile(ctx.user.id);
+      const user = await db.getUserById(ctx.user.id);
+      return {
+        ...profile,
+        // Include user details from the users table
+        userName: user?.name || null,
+        userEmail: user?.email || null,
+        userPhone: user?.phone || null,
+        userShippingAddress: user?.shippingAddress || null,
+        memberSince: user?.createdAt || null,
+      };
     }),
+    
+    updateDetails: protectedProcedure
+      .input(z.object({
+        name: z.string().min(1).max(255).optional(),
+        email: z.string().email().max(320).optional(),
+        phone: z.string().max(20).optional(),
+        shippingAddress: z.string().max(500).optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const updateData: Partial<{ name: string; email: string; phone: string; shippingAddress: string }> = {};
+        if (input.name !== undefined) updateData.name = input.name;
+        if (input.email !== undefined) updateData.email = input.email;
+        if (input.phone !== undefined) updateData.phone = input.phone;
+        if (input.shippingAddress !== undefined) updateData.shippingAddress = input.shippingAddress;
+        
+        if (Object.keys(updateData).length > 0) {
+          await db.updateUserById(ctx.user.id, updateData);
+        }
+        return { success: true };
+      }),
     
     update: protectedProcedure
       .input(z.object({
