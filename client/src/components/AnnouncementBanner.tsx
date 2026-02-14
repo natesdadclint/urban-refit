@@ -89,32 +89,32 @@ export default function AnnouncementBanner() {
               {/* Subtle animated shimmer */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[promo-shimmer_3s_ease-in-out_infinite]" />
               
-              <div className="container relative flex items-center justify-between gap-3 py-2.5 sm:py-3 px-4">
-                <div className="flex items-center gap-3 flex-1 min-w-0 justify-center">
-                  <Sparkles className="h-4 w-4 text-amber-400 shrink-0 animate-pulse" />
-                  <p className="text-sm sm:text-base font-medium text-white text-center">
+              <div className="container relative flex items-center justify-between gap-2 py-1 sm:py-1.5 px-4">
+                <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-center">
+                  <Sparkles className="h-3 w-3 text-amber-400 shrink-0 animate-pulse" />
+                  <p className="text-xs font-medium text-white text-center">
                     <span className="font-bold tracking-wide uppercase text-amber-300">{banner.title}</span>
                     {banner.message && (
-                      <span className="ml-2 text-white/90 font-normal">{banner.message}</span>
+                      <span className="ml-1.5 text-white/90 font-normal">{banner.message}</span>
                     )}
                   </p>
                   {banner.linkUrl && (
                     <a
                       href={banner.linkUrl}
-                      className="text-amber-300 hover:text-amber-200 underline underline-offset-2 text-sm font-semibold shrink-0 flex items-center gap-1 transition-colors"
+                      className="text-amber-300 hover:text-amber-200 underline underline-offset-2 text-xs font-semibold shrink-0 flex items-center gap-0.5 transition-colors"
                     >
                       {banner.linkText || "Shop Now"}
-                      <ArrowRight className="h-3.5 w-3.5" />
+                      <ArrowRight className="h-2.5 w-2.5" />
                     </a>
                   )}
-                  <Sparkles className="h-4 w-4 text-amber-400 shrink-0 animate-pulse hidden sm:block" />
+                  <Sparkles className="h-3 w-3 text-amber-400 shrink-0 animate-pulse hidden sm:block" />
                 </div>
                 <button
                   onClick={() => handleDismiss(banner.id)}
                   className="text-white/60 hover:text-white transition-colors shrink-0 p-0.5"
                   aria-label="Dismiss banner"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             </div>

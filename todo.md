@@ -1070,3 +1070,4 @@
 - [x] Position banner above the hero image on the homepage
 - [x] Add admin controls for banner text/link management
 - [x] Write vitest tests for the promotion banner
+- [x] Make promotional banner 50% smaller (reduce padding, font size, icon size)
