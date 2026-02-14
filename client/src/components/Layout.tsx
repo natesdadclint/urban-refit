@@ -119,7 +119,7 @@ export default function Layout({ children }: LayoutProps) {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 sm:gap-2.5 md:gap-3 shrink-0">
               <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-black"></span>
-              <span className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold tracking-tight whitespace-nowrap">
+              <span className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold tracking-tight whitespace-nowrap">
                 Urban Refit
               </span>
               <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-black"></span>

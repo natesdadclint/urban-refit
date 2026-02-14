@@ -1044,3 +1044,6 @@
 - [x] Make hero heading significantly larger for visual impact (text-3xl to xl:text-7xl)
 - [x] Keep heading centred between shelf and rack
 - [x] Remove whitespace-nowrap to allow natural wrapping at larger sizes
+
+## Logo Size Increase v2 (Feb 14, 2026)
+- [x] Make Urban Refit logo text larger in header (text-3xl sm:text-4xl md:text-5xl)

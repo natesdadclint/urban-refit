@@ -27,7 +27,7 @@ describe("Mobile Header: Two-Row Layout", () => {
     });
 
     it("should have a responsive logo text size", () => {
-      expect(layoutContent).toMatch(/text-2xl\s+sm:text-3xl\s+md:text-4xl/);
+      expect(layoutContent).toMatch(/text-3xl\s+sm:text-4xl\s+md:text-5xl/);
     });
   });
 
