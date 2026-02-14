@@ -55,7 +55,7 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-[500px] sm:min-h-[600px] md:min-h-[750px] w-full">
+      <section className="relative overflow-hidden min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] w-full">
         {/* Background Image */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -67,34 +67,34 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
         {/* Content — heading at top, rest at bottom */}
-        <div className="container relative h-full min-h-[500px] sm:min-h-[600px] md:min-h-[750px] flex flex-col items-center text-center">
+        <div className="container relative h-full min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] flex flex-col items-center text-center">
           {/* Heading positioned between the cap shelf and clothes rack using % so it scales with viewport */}
           <div className="absolute inset-x-0 top-[16%] sm:top-[17%] md:top-[18%] flex justify-center px-4">
-            <h1 className="hero-header text-xl sm:text-2xl md:text-3xl lg:text-5xl font-serif font-bold leading-tight text-white max-w-2xl drop-shadow-lg whitespace-nowrap" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
+            <h1 className="hero-header text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight text-white max-w-3xl drop-shadow-lg whitespace-nowrap" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
               Premium Preloved Men's Fashion
             </h1>
           </div>
-          {/* Spacer pushes remaining content to the lower portion */}
-          <div className="flex-1" />
-          {/* Subtitle, buttons, and tagline in the lower area */}
-          <div className="max-w-2xl pb-6 sm:pb-8">
-            <p className="hero-byline text-base sm:text-lg text-white mb-6 sm:mb-8 md:mb-10 max-w-xl leading-relaxed font-medium mx-auto" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
-              Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
-            </p>
-            <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
-              <Button asChild size="lg" className="gap-2">
-                <Link href="/shop" style={{fontSize: '13px'}}>
-                  Shop Now
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="bg-white/90 hover:bg-white border-foreground/20">
-                <Link href="/shop">See What's New</Link>
-              </Button>
+          {/* Subtitle, buttons, and tagline anchored to bottom of hero */}
+          <div className="absolute inset-x-0 bottom-[4%] sm:bottom-[5%] md:bottom-[6%] flex justify-center px-4">
+            <div className="max-w-2xl text-center">
+              <p className="hero-byline text-base sm:text-lg text-white mb-4 sm:mb-5 max-w-xl leading-relaxed font-medium mx-auto" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
+                Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
+              </p>
+              <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
+                <Button asChild size="lg" className="gap-2">
+                  <Link href="/shop" style={{fontSize: '13px'}}>
+                    Shop Now
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="bg-white/90 hover:bg-white border-foreground/20">
+                  <Link href="/shop">See What's New</Link>
+                </Button>
+              </div>
+              <p className="text-xs sm:text-sm text-muted-foreground/80 mt-3 sm:mt-4 tracking-wide mx-auto">
+                Every piece is one-of-a-kind. Free shipping over NZ$50. Earn tokens when you sell back.
+              </p>
             </div>
-            <p className="text-xs sm:text-sm text-muted-foreground/80 mt-5 sm:mt-6 tracking-wide mx-auto">
-              Every piece is one-of-a-kind. Free shipping over NZ$50. Earn tokens when you sell back.
-            </p>
           </div>
         </div>
       </section>

@@ -1031,7 +1031,11 @@
 - [x] Reduce hero heading font size so it fits on a single line on mobile (text-xl sm:text-2xl md:text-3xl lg:text-5xl + whitespace-nowrap)
 
 ## Hero Byline Position Fix (Feb 13, 2026)
-- [ ] Move byline/subtitle down to centre between the cap shelf and top of clothing rack
+- [x] Move byline/subtitle down to centre between the cap shelf and top of clothing rack
 
 ## Hero Heading Centering Fix (Feb 13, 2026)
 - [x] Move heading down — centred between shelf and rack (top-[16%] sm:top-[17%] md:top-[18%])
+
+## Published Site Hero Layout Fix (Feb 13, 2026)
+- [x] Fix hero heading too large on published site (urbanrefit.store) — switched to absolute bottom positioning
+- [x] Ensure hero layout matches preview on all screen sizes (heading at top-[16-18%], content at bottom-[4-6%])

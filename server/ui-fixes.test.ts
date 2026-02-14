@@ -74,20 +74,20 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(pLine).toBeDefined();
   });
 
-  it("should use flex spacer to separate heading from lower content", () => {
-    expect(homeContent).toContain("flex-1");
+  it("should use absolute positioning for both heading and bottom content", () => {
     expect(homeContent).toContain("flex flex-col items-center text-center");
+    // Bottom content uses absolute bottom positioning
+    expect(homeContent).toContain("bottom-[");
   });
 
   it("should position the heading with percentage-based absolute positioning", () => {
-    // The heading uses absolute positioning with top-[12%] to sit between shelf and rack
     const lines = homeContent.split("\n");
     const headingWrapperIdx = lines.findIndex(l => l.includes("absolute") && l.includes("top-["));
     const headingIdx = lines.findIndex(l => l.includes("Premium Preloved"));
     expect(headingWrapperIdx).toBeGreaterThan(-1);
     expect(headingIdx).toBeGreaterThan(headingWrapperIdx);
-    // The flex-1 spacer should still exist for bottom content
-    const spacerIdx = lines.findIndex((l, i) => i > headingIdx && l.includes("flex-1"));
-    expect(spacerIdx).toBeGreaterThan(headingIdx);
+    // Bottom content also uses absolute positioning
+    const bottomIdx = lines.findIndex((l, i) => i > headingIdx && l.includes("absolute") && l.includes("bottom-["));
+    expect(bottomIdx).toBeGreaterThan(headingIdx);
   });
 });
