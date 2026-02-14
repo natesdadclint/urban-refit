@@ -1089,3 +1089,8 @@
 - [x] Write vitest tests for user management (25 tests passing)
 - [x] Fix: User Management page not visible in admin section sidebar (confirmed working — 7 users displayed)
 - [x] Fix: mobile site has lost its pagination on the Shop page (added 12-per-page pagination with prev/next buttons)
+- [x] Fix AI chat assistant: remove access to user's personal Cart page (superseded — user wants cart access kept)
+- [x] Update AI assistant system prompt to restrict scope to style advice and inventory details only (superseded — enhanced with fashion knowledge instead)
+- [x] Enhance AI assistant: give it access to customer's cart contents for contextual advice
+- [x] Enhance AI assistant: update system prompt to use fashion/internet knowledge for informed style decisions
+- [x] Enhance AI assistant: ensure it can reference inventory and suggest items from catalogue

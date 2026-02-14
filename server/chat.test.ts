@@ -102,3 +102,113 @@ describe("chat product link parsing", () => {
     expect(result.referencedProducts[0]?.image1Url).toBeNull();
   });
 });
+
+describe("chat cart context building", () => {
+  // Replicate the cart context building logic from routers.ts
+  function buildCartContext(
+    userId: number | undefined,
+    cartItems: Array<{ cartItem: { quantity: number }; product: { id: number; name: string; brand: string | null; size: string | null; category: string; color: string | null; salePrice: string } }>
+  ): string {
+    if (!userId) {
+      return '\n\nCUSTOMER\'S CURRENT CART: Customer is not logged in. Encourage them to sign in for a personalised experience.';
+    }
+    if (cartItems.length === 0) {
+      return '\n\nCUSTOMER\'S CURRENT CART: Empty (no items added yet).';
+    }
+    return `\n\nCUSTOMER'S CURRENT CART (${cartItems.length} items):\n${cartItems.map(ci => `- [ID:${ci.product.id}] ${ci.product.name} (${ci.product.brand || 'Unbranded'}) | Size: ${ci.product.size || 'One Size'} | Category: ${ci.product.category} | Color: ${ci.product.color || 'N/A'} | Price: $${ci.product.salePrice} | Qty: ${ci.cartItem.quantity}`).join('\n')}\nTotal items in cart: ${cartItems.reduce((sum, ci) => sum + ci.cartItem.quantity, 0)}`;
+  }
+
+  it("returns not-logged-in message when userId is undefined", () => {
+    const result = buildCartContext(undefined, []);
+    expect(result).toContain("not logged in");
+    expect(result).toContain("sign in");
+  });
+
+  it("returns empty cart message when user has no items", () => {
+    const result = buildCartContext(1, []);
+    expect(result).toContain("Empty");
+    expect(result).toContain("no items added yet");
+  });
+
+  it("includes cart item details when user has items", () => {
+    const cartItems = [
+      { cartItem: { quantity: 1 }, product: { id: 1, name: "Ralph Lauren Polo", brand: "Ralph Lauren", size: "M", category: "tops", color: "Navy", salePrice: "45.00" } },
+      { cartItem: { quantity: 2 }, product: { id: 2, name: "Levi's 501 Jeans", brand: "Levi's", size: "32", category: "bottoms", color: "Blue", salePrice: "55.00" } },
+    ];
+    const result = buildCartContext(1, cartItems);
+    expect(result).toContain("CUSTOMER'S CURRENT CART (2 items)");
+    expect(result).toContain("Ralph Lauren Polo");
+    expect(result).toContain("Levi's 501 Jeans");
+    expect(result).toContain("Total items in cart: 3");
+  });
+
+  it("handles items with null brand and color", () => {
+    const cartItems = [
+      { cartItem: { quantity: 1 }, product: { id: 5, name: "Vintage Cap", brand: null, size: null, category: "accessories", color: null, salePrice: "15.00" } },
+    ];
+    const result = buildCartContext(1, cartItems);
+    expect(result).toContain("Unbranded");
+    expect(result).toContain("One Size");
+    expect(result).toContain("N/A");
+  });
+
+  it("calculates total quantity across multiple items", () => {
+    const cartItems = [
+      { cartItem: { quantity: 3 }, product: { id: 1, name: "Polo", brand: "RL", size: "M", category: "tops", color: "Navy", salePrice: "45.00" } },
+      { cartItem: { quantity: 2 }, product: { id: 2, name: "Jeans", brand: "Levi's", size: "32", category: "bottoms", color: "Blue", salePrice: "55.00" } },
+    ];
+    const result = buildCartContext(1, cartItems);
+    expect(result).toContain("Total items in cart: 5");
+  });
+});
+
+describe("chat system prompt enhancements", () => {
+  // Read the system prompt from routers.ts to verify key sections exist
+  const fs = require('fs');
+  const routersContent = fs.readFileSync('server/routers.ts', 'utf-8');
+  const chatSection = routersContent.substring(
+    routersContent.indexOf('// ============ CHAT/HELPDESK ROUTES'),
+    routersContent.indexOf('// ============ ANALYTICS ROUTES')
+  );
+
+  it("includes cart-aware advice section in system prompt", () => {
+    expect(chatSection).toContain('CART-AWARE ADVICE');
+    expect(chatSection).toContain('Reference their cart items naturally');
+    expect(chatSection).toContain('complementary items from inventory');
+  });
+
+  it("includes fashion knowledge directives in system prompt", () => {
+    expect(chatSection).toContain('OUTFIT STYLING & FASHION KNOWLEDGE');
+    expect(chatSection).toContain('current menswear trends');
+    expect(chatSection).toContain('brand heritage');
+    expect(chatSection).toContain('colour theory');
+    expect(chatSection).toContain('seasonal styling');
+  });
+
+  it("includes internet knowledge directive in rules", () => {
+    expect(chatSection).toContain('broad fashion and internet knowledge');
+    expect(chatSection).toContain('informed style recommendations');
+  });
+
+  it("includes cart access directive in rules", () => {
+    expect(chatSection).toContain('access to the customer\'s shopping cart');
+    expect(chatSection).toContain('personalised advice');
+  });
+
+  it("fetches cart items for logged-in users", () => {
+    expect(chatSection).toContain('getCartItems');
+    expect(chatSection).toContain('ctx.user?.id');
+  });
+
+  it("appends cartContext to the system prompt", () => {
+    expect(chatSection).toContain('${inventoryContext}${cartContext}');
+  });
+
+  it("includes occasion-based styling advice", () => {
+    expect(chatSection).toContain('casual, smart-casual, streetwear, outdoor');
+  });
+
+  it("includes celebrity/style icon references", () => {
+    expect(chatSection).toContain('celebrities or style icons');
+  });
+});

@@ -1041,6 +1041,19 @@ export const appRouter = router({
           ? `\n\nCURRENT INVENTORY (${inventory.length} items available):\n${inventory.map(p => `- [ID:${p.id}] ${p.name} (${p.brand || 'Unbranded'}) | Size: ${p.size || 'One Size'} | Category: ${p.category} | Color: ${p.color || 'N/A'} | Price: $${p.salePrice} | Condition: ${p.condition || 'Good'}`).join('\n')}`
           : '\n\nNote: Unable to fetch current inventory. Suggest customer visits the shop page directly.';
         
+        // Get the customer's cart contents if logged in
+        let cartContext = '';
+        if (ctx.user?.id) {
+          const cartItems = await db.getCartItems(ctx.user.id);
+          if (cartItems.length > 0) {
+            cartContext = `\n\nCUSTOMER'S CURRENT CART (${cartItems.length} items):\n${cartItems.map(ci => `- [ID:${ci.product.id}] ${ci.product.name} (${ci.product.brand || 'Unbranded'}) | Size: ${ci.product.size || 'One Size'} | Category: ${ci.product.category} | Color: ${ci.product.color || 'N/A'} | Price: $${ci.product.salePrice} | Qty: ${ci.cartItem.quantity}`).join('\n')}\nTotal items in cart: ${cartItems.reduce((sum, ci) => sum + ci.cartItem.quantity, 0)}`;
+          } else {
+            cartContext = '\n\nCUSTOMER\'S CURRENT CART: Empty (no items added yet).';
+          }
+        } else {
+          cartContext = '\n\nCUSTOMER\'S CURRENT CART: Customer is not logged in. Encourage them to sign in for a personalised experience.';
+        }
+        
         // Build a product lookup map for the response parser
         const productMap = new Map<number, { id: number; name: string; brand: string | null; salePrice: string; image1Url: string | null; category: string }>(); 
         if (inventory) {
@@ -1057,6 +1070,8 @@ IMPORTANT RULES:
 - Be professional, helpful, and concise
 - You handle multiple customers simultaneously, so if they want a specific item, advise them to visit the Urban Refit online store immediately and purchase it before someone else does
 - Every item is one-of-a-kind since it is secondhand - once sold, it is gone forever
+- You have access to the customer's shopping cart - use it to give personalised advice
+- Use your broad fashion and internet knowledge to make informed style recommendations (current trends, brand heritage, colour theory, seasonal styling, outfit coordination)
 
 PRODUCT LINK FORMAT:
 When mentioning any product from the inventory, you MUST use this exact format to create clickable links:
@@ -1064,13 +1079,29 @@ When mentioning any product from the inventory, you MUST use this exact format t
 Example: "We have a great Ralph Lauren Polo Shirt [[PRODUCT:5]] available in size M."
 Always include the product link when referencing a specific item.
 
-OUTFIT STYLING:
+OUTFIT STYLING & FASHION KNOWLEDGE:
 When a customer asks about a specific item or expresses interest, proactively suggest a complete outfit ensemble from available inventory. An ideal ensemble includes:
 - Top (category: tops or outerwear)
 - Bottom (category: bottoms - trousers, jeans)
 - Shoes (category: shoes)
 - Headwear/Accessories (category: accessories)
 Match items by compatible style, color coordination, and brand aesthetic where possible. Present the outfit as a styled suggestion, not a hard sell.
+
+Use your fashion expertise to:
+- Reference current menswear trends (e.g. quiet luxury, gorpcore, Americana, streetwear, workwear revival)
+- Explain brand heritage and reputation (e.g. Carhartt's workwear roots, Ralph Lauren's preppy aesthetic, Patagonia's outdoor heritage)
+- Apply colour theory for outfit coordination (complementary colours, tonal dressing, neutral anchoring)
+- Suggest seasonal styling tips (layering for winter, breathable fabrics for summer)
+- Recommend styling based on occasion (casual, smart-casual, streetwear, outdoor)
+- Reference how celebrities or style icons wear similar brands/pieces when relevant
+
+CART-AWARE ADVICE:
+When the customer has items in their cart:
+- Reference their cart items naturally in conversation (e.g. "I see you have the Ralph Lauren Oxford in your cart - great choice")
+- Suggest complementary items from inventory that would pair well with their cart contents
+- If they ask for outfit advice, build around what they already have in their cart
+- Point out if they have similar items or potential duplicates
+- Suggest completing an outfit based on what categories are missing from their cart
 
 KEY INFORMATION:
 - Urban Refit sells pre-loved, quality branded clothing from partner thrift stores
@@ -1101,7 +1132,7 @@ WHEN CUSTOMER ASKS ABOUT A PRODUCT:
 4. Always suggest a complete outfit ensemble using items from the inventory
 5. Always remind them that items sell quickly and they should purchase soon if interested
 
-If you cannot find what they are looking for, suggest they check back regularly as new items are added weekly, or contact support@urbanrefit.com for special requests.${inventoryContext}`;
+If you cannot find what they are looking for, suggest they check back regularly as new items are added weekly, or contact support@urbanrefit.com for special requests.${inventoryContext}${cartContext}`;
 
         const messages = [
           { role: "system" as const, content: systemPrompt },
