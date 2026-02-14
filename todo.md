@@ -1064,3 +1064,4 @@
 - [x] Update backend to accept comma-separated multi-value params
 - [x] Update active filter chips to show each selected value individually
 - [x] Write vitest tests for multi-select filtering
+- [x] Move hero subtitle excerpt higher so it is readable against the hero image

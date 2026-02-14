@@ -63,6 +63,8 @@ export default function Home() {
         />
         {/* Smooth full-page gradient overlay - no hard edges */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40" />
+        {/* Mid-section dark overlay for subtitle readability */}
+        <div className="absolute inset-x-0 bottom-[10%] h-[50%] bg-gradient-to-b from-transparent via-black/40 to-black/35" />
         {/* Enhanced bottom gradient for text area */}
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
@@ -75,9 +77,9 @@ export default function Home() {
             </h1>
           </div>
           {/* Subtitle, buttons, and tagline anchored to bottom of hero */}
-          <div className="absolute inset-x-0 bottom-[4%] sm:bottom-[5%] md:bottom-[6%] flex justify-center px-4">
+          <div className="absolute inset-x-0 bottom-[12%] sm:bottom-[14%] md:bottom-[15%] flex justify-center px-4">
             <div className="max-w-2xl text-center">
-              <p className="hero-byline text-base sm:text-lg text-white mb-4 sm:mb-5 max-w-xl leading-relaxed font-medium mx-auto" style={{ textShadow: '-1px -1px 0 rgba(0,0,0,0.8), 1px -1px 0 rgba(0,0,0,0.8), -1px 1px 0 rgba(0,0,0,0.8), 1px 1px 0 rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)', fontSize: '12px' }}>
+              <p className="hero-byline text-sm sm:text-base md:text-lg text-white mb-4 sm:mb-5 max-w-xl leading-relaxed font-semibold mx-auto" style={{ textShadow: '0 2px 6px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4)' }}>
                 Discover curated designer brands at affordable prices. Sustainable fashion for men who value quality, style, and supporting local communities through circular economy shopping.
               </p>
               <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
