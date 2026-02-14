@@ -118,8 +118,10 @@ export const appRouter = router({
     list: publicProcedure
       .input(z.object({ 
         category: z.string().optional(),
-        size: z.string().optional(),
-        brand: z.string().optional(),
+        size: z.string().optional(),       // comma-separated for multi-select
+        brand: z.string().optional(),      // comma-separated for multi-select
+        condition: z.string().optional(),  // comma-separated for multi-select
+        color: z.string().optional(),      // comma-separated for multi-select
         minPrice: z.number().optional(),
         maxPrice: z.number().optional(),
         sortBy: z.enum(['price_asc', 'price_desc', 'newest', 'name']).optional(),
@@ -130,12 +132,14 @@ export const appRouter = router({
     
     // Get available filter options
     filterOptions: publicProcedure.query(async () => {
-      const [brands, sizes, priceRange] = await Promise.all([
+      const [brands, sizes, conditions, colors, priceRange] = await Promise.all([
         db.getDistinctBrands(),
         db.getDistinctSizes(),
+        db.getDistinctConditions(),
+        db.getDistinctColors(),
         db.getPriceRange(),
       ]);
-      return { brands, sizes, priceRange };
+      return { brands, sizes, conditions, colors, priceRange };
     }),
     
     listAll: adminProcedure.query(async () => {

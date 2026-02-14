@@ -1047,3 +1047,20 @@
 
 ## Logo Size Increase v2 (Feb 14, 2026)
 - [x] Make Urban Refit logo text larger in header (text-3xl sm:text-4xl md:text-5xl)
+
+## Product Filtering & Sorting (Feb 14, 2026)
+- [x] Backend filtering support already exists (category, size, brand, price range)
+- [x] Backend sorting support already exists (newest, price asc/desc, name)
+- [x] Filter sidebar/panel UI exists for desktop
+- [x] Filter sheet/drawer UI exists for mobile
+- [x] Sort dropdown exists on Shop page
+- [x] Active filter chips with clear-all exist
+- [x] URL query param sync exists
+- [x] Result count display exists
+- [x] Convert size filter from single-select to multi-select (checkboxes)
+- [x] Convert brand filter from single-select to multi-select (checkboxes)
+- [x] Add condition multi-select filter (Like New, Excellent, Good, Fair)
+- [x] Add colour multi-select filter
+- [x] Update backend to accept comma-separated multi-value params
+- [x] Update active filter chips to show each selected value individually
+- [x] Write vitest tests for multi-select filtering

@@ -196,8 +196,10 @@ export async function getProductsByIds(ids: number[]) {
 
 export interface ProductFilters {
   category?: string;
-  size?: string;
-  brand?: string;
+  size?: string;      // comma-separated for multi-select
+  brand?: string;     // comma-separated for multi-select
+  condition?: string; // comma-separated for multi-select
+  color?: string;     // comma-separated for multi-select
   minPrice?: number;
   maxPrice?: number;
   sortBy?: 'price_asc' | 'price_desc' | 'newest' | 'name';
@@ -214,11 +216,39 @@ export async function getAvailableProducts(filters?: ProductFilters) {
   }
   
   if (filters?.size) {
-    conditions.push(eq(products.size, filters.size));
+    const sizes = filters.size.split(',').map(s => s.trim()).filter(Boolean);
+    if (sizes.length === 1) {
+      conditions.push(eq(products.size, sizes[0]));
+    } else if (sizes.length > 1) {
+      conditions.push(inArray(products.size, sizes));
+    }
   }
   
   if (filters?.brand) {
-    conditions.push(eq(products.brand, filters.brand));
+    const brands = filters.brand.split(',').map(b => b.trim()).filter(Boolean);
+    if (brands.length === 1) {
+      conditions.push(eq(products.brand, brands[0]));
+    } else if (brands.length > 1) {
+      conditions.push(inArray(products.brand, brands));
+    }
+  }
+  
+  if (filters?.condition) {
+    const conditions_ = filters.condition.split(',').map(c => c.trim()).filter(Boolean);
+    if (conditions_.length === 1) {
+      conditions.push(eq(products.condition, conditions_[0] as any));
+    } else if (conditions_.length > 1) {
+      conditions.push(inArray(products.condition, conditions_ as any));
+    }
+  }
+  
+  if (filters?.color) {
+    const colors = filters.color.split(',').map(c => c.trim()).filter(Boolean);
+    if (colors.length === 1) {
+      conditions.push(eq(products.color, colors[0]));
+    } else if (colors.length > 1) {
+      conditions.push(inArray(products.color, colors));
+    }
   }
   
   if (filters?.minPrice !== undefined) {
@@ -271,6 +301,28 @@ export async function getDistinctSizes() {
     .where(and(eq(products.status, "available"), isNotNull(products.size)));
   
   return result.map(r => r.size).filter(Boolean) as string[];
+}
+
+export async function getDistinctConditions() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.selectDistinct({ condition: products.condition })
+    .from(products)
+    .where(eq(products.status, "available"));
+  
+  return result.map(r => r.condition).filter(Boolean) as string[];
+}
+
+export async function getDistinctColors() {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const result = await db.selectDistinct({ color: products.color })
+    .from(products)
+    .where(and(eq(products.status, "available"), isNotNull(products.color)));
+  
+  return result.map(r => r.color).filter(Boolean) as string[];
 }
 
 export async function getPriceRange() {
