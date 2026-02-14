@@ -1072,3 +1072,5 @@
 - [x] Write vitest tests for the promotion banner
 - [x] Make promotional banner 50% smaller (reduce padding, font size, icon size)
 - [x] Remove "Premium Preloved Men's Fashion" heading from hero section
+- [x] Fix "shifts" to "shelves" and check for other spelling mistakes across the website (confirmed no spelling errors found)
+- [x] Fix hero image to show full image including cap shelf and baseball caps at the top (top is cut off)

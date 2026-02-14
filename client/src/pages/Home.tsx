@@ -55,12 +55,14 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] w-full">
+      <section className="relative overflow-hidden min-h-[560px] sm:min-h-[620px] md:min-h-[700px] lg:min-h-[780px] w-full">
         {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: 'url(https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/DcCMQJLdSCGIDxdq.jpg)' }}
+        <img 
+          src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/DcCMQJLdSCGIDxdq.jpg"
+          alt="Urban Refit hero – curated men's fashion on a clothing rack with baseball caps on shelf above"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
+
         {/* Smooth full-page gradient overlay - no hard edges */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/40" />
         {/* Mid-section dark overlay for subtitle readability */}
@@ -69,7 +71,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
         {/* Content — heading at top, rest at bottom */}
-        <div className="container relative h-full min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] flex flex-col items-center text-center">
+        <div className="container relative h-full min-h-[560px] sm:min-h-[620px] md:min-h-[700px] lg:min-h-[780px] flex flex-col items-center text-center">
 
           {/* Subtitle, buttons, and tagline anchored to bottom of hero */}
           <div className="absolute inset-x-0 bottom-[12%] sm:bottom-[14%] md:bottom-[15%] flex justify-center px-4">
