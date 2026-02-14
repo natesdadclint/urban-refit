@@ -70,7 +70,7 @@ export default function Home() {
         <div className="container relative h-full min-h-[500px] sm:min-h-[550px] md:min-h-[600px] lg:min-h-[650px] flex flex-col items-center text-center">
           {/* Heading positioned between the cap shelf and clothes rack using % so it scales with viewport */}
           <div className="absolute inset-x-0 top-[16%] sm:top-[17%] md:top-[18%] flex justify-center px-4">
-            <h1 className="hero-header text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-serif font-bold leading-tight text-white max-w-3xl drop-shadow-lg whitespace-nowrap" style={{ textShadow: '0 0 30px rgba(0,0,0,0.5), 0 0 60px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.4)' }}>
+            <h1 className="hero-header text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-serif font-bold leading-tight text-white max-w-4xl drop-shadow-2xl" style={{ textShadow: '0 2px 4px rgba(0,0,0,0.6), 0 0 40px rgba(0,0,0,0.4), 0 0 80px rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.5)' }}>
               Premium Preloved Men's Fashion
             </h1>
           </div>

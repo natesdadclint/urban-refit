@@ -1039,3 +1039,8 @@
 ## Published Site Hero Layout Fix (Feb 13, 2026)
 - [x] Fix hero heading too large on published site (urbanrefit.store) — switched to absolute bottom positioning
 - [x] Ensure hero layout matches preview on all screen sizes (heading at top-[16-18%], content at bottom-[4-6%])
+
+## Hero Heading Size Increase (Feb 14, 2026)
+- [x] Make hero heading significantly larger for visual impact (text-3xl to xl:text-7xl)
+- [x] Keep heading centred between shelf and rack
+- [x] Remove whitespace-nowrap to allow natural wrapping at larger sizes
