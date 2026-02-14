@@ -163,6 +163,51 @@ export async function updateUserById(id: number, data: Partial<Pick<InsertUser, 
   await db.update(users).set(data).where(eq(users.id, id));
 }
 
+// ============ ADMIN USER MANAGEMENT ============
+
+export async function getAllUsers() {
+  const db = await getDb();
+  if (!db) return [];
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    const allUsers = await db.select().from(users).orderBy(desc(users.createdAt));
+    // Fetch profiles for token balances
+    const profiles = await db.select().from(customerProfiles);
+    const profileMap = new Map(profiles.map(p => [p.userId, p]));
+    return allUsers.map(u => ({
+      ...u,
+      tokenBalance: profileMap.get(u.id)?.tokenBalance || "0.00",
+      membershipTier: profileMap.get(u.id)?.membershipTier || "bronze",
+      totalTokensEarned: profileMap.get(u.id)?.totalTokensEarned || "0.00",
+      totalTokensSpent: profileMap.get(u.id)?.totalTokensSpent || "0.00",
+      totalTokensDonated: profileMap.get(u.id)?.totalTokensDonated || "0.00",
+      spendLimit: profileMap.get(u.id)?.spendLimit || "0.00",
+    }));
+  });
+}
+
+export async function getAdminUserDetails(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    const userResult = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    if (userResult.length === 0) return null;
+    const user = userResult[0];
+    const profile = await db.select().from(customerProfiles).where(eq(customerProfiles.userId, userId)).limit(1);
+    const userOrders = await db.select().from(orders).where(eq(orders.userId, userId)).orderBy(desc(orders.createdAt));
+    const userSubmissions = await db.select().from(sellSubmissions).where(eq(sellSubmissions.userId, userId)).orderBy(desc(sellSubmissions.createdAt));
+    const tokenTxns = await db.select().from(tokenTransactions).where(eq(tokenTransactions.userId, userId)).orderBy(desc(tokenTransactions.createdAt)).limit(20);
+    return {
+      user,
+      profile: profile[0] || null,
+      orders: userOrders,
+      sellSubmissions: userSubmissions,
+      recentTokenTransactions: tokenTxns,
+    };
+  });
+}
+
 // ============ THRIFT STORE OPERATIONS ============
 export async function createThriftStore(store: InsertThriftStore) {
   const db = await getDb();

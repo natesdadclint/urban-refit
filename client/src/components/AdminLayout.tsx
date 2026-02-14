@@ -22,6 +22,7 @@ import {
   User,
   Bell,
   Megaphone,
+  Users,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -45,6 +46,7 @@ const navItems = [
   { href: "/admin/insights", icon: BarChart3, label: "AI Insights" },
   { href: "/admin/contact-messages", icon: Mail, label: "Contact Messages", showBadge: true },
   { href: "/admin/sell-submissions", icon: DollarSign, label: "Sell Submissions" },
+  { href: "/admin/users", icon: Users, label: "Users" },
   { href: "/admin/bulk-upload", icon: Upload, label: "Bulk Upload" },
 ];
 

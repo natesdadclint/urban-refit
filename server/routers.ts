@@ -6,6 +6,8 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
+import { users } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 import { storagePut, uploadProductImage, isAwsConfigured } from "./storage";
 import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe";
@@ -1308,6 +1310,36 @@ Keep insights concise and actionable.`;
       }))
       .mutation(async ({ input }) => {
         await db.updateReviewStatus(input.reviewId, input.status);
+        return { success: true };
+      }),
+  }),
+
+  // ============ USER MANAGEMENT ROUTES ============
+  users: router({
+    // Admin: list all users
+    list: adminProcedure.query(async () => {
+      return await db.getAllUsers();
+    }),
+
+    // Admin: get detailed user info
+    getById: adminProcedure
+      .input(z.object({ userId: z.number() }))
+      .query(async ({ input }) => {
+        const details = await db.getAdminUserDetails(input.userId);
+        if (!details) throw new TRPCError({ code: "NOT_FOUND", message: "User not found" });
+        return details;
+      }),
+
+    // Admin: update user role
+    updateRole: adminProcedure
+      .input(z.object({ userId: z.number(), role: z.enum(["user", "admin"]) }))
+      .mutation(async ({ input, ctx }) => {
+        if (input.userId === ctx.user.id) {
+          throw new TRPCError({ code: "BAD_REQUEST", message: "Cannot change your own role" });
+        }
+        const dbi = await db.getDb();
+        if (!dbi) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Database not available" });
+        await dbi.update(users).set({ role: input.role }).where(eq(users.id, input.userId));
         return { success: true };
       }),
   }),

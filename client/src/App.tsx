@@ -62,6 +62,7 @@ const AdminStorePerformance = lazy(() => import("./pages/admin/StorePerformance"
 const AdminImageMonitoring = lazy(() => import("./pages/admin/ImageMonitoring"));
 const AdminAlertsPage = lazy(() => import("./pages/admin/AdminNotifications"));
 const AdminBanners = lazy(() => import("./pages/admin/Banners"));
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
 
 // Lazy load floating components
 const HelpdeskChat = lazy(() => import("./components/HelpdeskChat").then(m => ({ default: m.HelpdeskChat })));
@@ -136,6 +137,7 @@ function Router() {
         <Route path="/admin/image-monitoring" component={AdminImageMonitoring} />
         <Route path="/admin/alerts" component={AdminAlertsPage} />
         <Route path="/admin/banners" component={AdminBanners} />
+        <Route path="/admin/users" component={AdminUsers} />
         <Route path="/docs/security" component={SecurityDocs} />
         <Route path="/roadmap" component={Roadmap} />
         

@@ -1081,3 +1081,9 @@
 - [x] Add customer-facing view of replies on their submission status
 - [x] Write vitest tests for sell submission replies (61 tests passing)
 - [x] Fix tRPC error: server returning HTML instead of JSON on homepage (added withRetry for ECONNRESET)
+- [x] Fix: no sell submissions appearing in admin panel for negotiation (confirmed 11 submissions exist with reply system working)
+- [x] Add User Details / User Management page to admin panel
+- [x] Show list of all registered users with search/filter
+- [x] User detail view with profile info, order history, token balance, submissions, and activity
+- [x] Add Users link to admin sidebar navigation
+- [x] Write vitest tests for user management (25 tests passing)
