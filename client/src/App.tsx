@@ -107,6 +107,7 @@ function Router() {
         <Route path="/blog/:slug" component={BlogPost} />
         <Route path="/reviews" component={Reviews} />
         <Route path="/sell" component={SellToUs} />
+        <Route path="/sell-to-us" component={SellToUs} />
         <Route path="/my-submissions" component={MySubmissions} />
         <Route path="/my-submissions/:id" component={MySubmissions} />
         <Route path="/how-tokens-work" component={HowTokensWork} />

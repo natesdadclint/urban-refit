@@ -264,7 +264,19 @@ export default function Profile() {
                   <p className="text-sm text-muted-foreground">{user?.email}</p>
                 </div>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
+                <Button asChild>
+                  <Link href="/sell">
+                    <ShoppingBag className="h-4 w-4 mr-2" />
+                    Sell Your Items
+                  </Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/my-submissions">
+                    <Package className="h-4 w-4 mr-2" />
+                    My Submissions
+                  </Link>
+                </Button>
                 <Button variant="outline" asChild>
                   <Link href="/courier-return">
                     <RefreshCw className="h-4 w-4 mr-2" />
@@ -358,6 +370,20 @@ export default function Profile() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between p-3 border rounded-lg bg-primary/5 border-primary/20">
+                    <div className="flex items-center gap-3">
+                      <Coins className="h-5 w-5 text-amber-500" />
+                      <div>
+                        <p className="font-medium">Sell Your Items</p>
+                        <p className="text-sm text-muted-foreground">Trade pre-loved fashion for tokens</p>
+                      </div>
+                    </div>
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href="/sell">
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
                   <div className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
                       <RefreshCw className="h-5 w-5 text-primary" />

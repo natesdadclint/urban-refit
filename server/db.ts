@@ -3213,7 +3213,7 @@ export async function notifyAdminNewSubmission(submissionId: number, customerNam
     message: `${customerName} submitted ${itemCount} item(s) for review`,
     type: "new_submission",
     priority: "medium",
-    link: `/admin/submissions/${submissionId}`,
+    link: `/admin/sell-submissions`,
     relatedEntityType: "submission",
     relatedEntityId: submissionId,
   });
@@ -3225,7 +3225,7 @@ export async function notifyAdminNewContact(contactId: number, senderName: strin
     message: `${senderName}: ${subject.substring(0, 100)}${subject.length > 100 ? '...' : ''}`,
     type: "new_contact",
     priority: "medium",
-    link: `/admin/contact/${contactId}`,
+    link: `/admin/contact-messages`,
     relatedEntityType: "contact",
     relatedEntityId: contactId,
   });

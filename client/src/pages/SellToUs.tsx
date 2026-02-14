@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
@@ -35,6 +35,17 @@ export default function SellToUs() {
     originalPrice: "",
     requestedTokens: "",
   });
+
+  // Auto-fill form when user data loads (fixes race condition for logged-in users)
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: prev.name || user.name || "",
+        email: prev.email || user.email || "",
+      }));
+    }
+  }, [user]);
 
   const submitMutation = trpc.sell.submit.useMutation({
     onSuccess: (data) => {
@@ -147,11 +158,16 @@ export default function SellToUs() {
                 </li>
               </ol>
             </div>
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center flex-wrap">
               <Button variant="outline" onClick={() => { setSubmitted(false); setImages([]); setFormData({ ...formData, brand: "", itemType: "", itemName: "", size: "", condition: "", description: "", originalPrice: "", requestedTokens: "" }); }}>
                 Submit Another Item
               </Button>
-              <Button asChild>
+              {user && (
+                <Button asChild>
+                  <Link href="/my-submissions">View My Submissions</Link>
+                </Button>
+              )}
+              <Button variant="outline" asChild>
                 <a href="/shop">Continue Shopping</a>
               </Button>
             </div>
