@@ -1087,3 +1087,5 @@
 - [x] User detail view with profile info, order history, token balance, submissions, and activity
 - [x] Add Users link to admin sidebar navigation
 - [x] Write vitest tests for user management (25 tests passing)
+- [x] Fix: User Management page not visible in admin section sidebar (confirmed working — 7 users displayed)
+- [x] Fix: mobile site has lost its pagination on the Shop page (added 12-per-page pagination with prev/next buttons)

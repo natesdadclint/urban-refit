@@ -24,7 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation, useSearch } from "wouter";
-import { Search, SlidersHorizontal, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { toast } from "sonner";
@@ -144,6 +144,8 @@ export default function Shop() {
   const { isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
   
   // Get filter values from URL params
   const category = searchParams.get("category") || "all";
@@ -210,6 +212,35 @@ export default function Shop() {
         p.description?.toLowerCase().includes(query)
     );
   }, [products, searchQuery]);
+
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / ITEMS_PER_PAGE));
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPage]);
+
+  // Reset to page 1 when filters/search change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category, selectedSizes.join(","), selectedBrands.join(","), selectedConditions.join(","), selectedColors.join(","), minPriceParam, maxPriceParam, sortBy, searchQuery]);
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push("...");
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        pages.push(i);
+      }
+      if (currentPage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+    return pages;
+  };
 
   // Update URL with filters
   const updateFilters = useCallback((updates: Record<string, string | undefined>) => {
@@ -611,9 +642,10 @@ export default function Shop() {
                   </div>
                 ))}
               </div>
-            ) : filteredProducts.length > 0 ? (
+            ) : paginatedProducts.length > 0 ? (
+              <>
               <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-                {filteredProducts.map((product) => (
+                {paginatedProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     id={product.id}
@@ -634,6 +666,51 @@ export default function Shop() {
                   />
                 ))}
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-8 flex flex-col items-center gap-3">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-9"
+                      disabled={currentPage === 1}
+                      onClick={() => { setCurrentPage(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </Button>
+                    {getPageNumbers().map((page, idx) =>
+                      page === "..." ? (
+                        <span key={`ellipsis-${idx}`} className="px-1 sm:px-2 text-muted-foreground text-sm">...</span>
+                      ) : (
+                        <Button
+                          key={page}
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="icon"
+                          className="h-8 w-8 sm:h-9 sm:w-9 text-xs sm:text-sm"
+                          onClick={() => { setCurrentPage(page as number); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                        >
+                          {page}
+                        </Button>
+                      )
+                    )}
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-9"
+                      disabled={currentPage === totalPages}
+                      onClick={() => { setCurrentPage(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} of {filteredProducts.length} items
+                  </p>
+                </div>
+              )}
+              </>
             ) : (
               <div className="text-center py-10 sm:py-16 bg-secondary/30 rounded-lg px-4">
                 <SlidersHorizontal className="h-8 w-8 sm:h-12 sm:w-12 mx-auto text-muted-foreground mb-3 sm:mb-4" />
