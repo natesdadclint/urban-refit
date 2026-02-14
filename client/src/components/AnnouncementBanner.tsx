@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
-import { X, Info, Tag, AlertTriangle, AlertCircle, ArrowRight } from "lucide-react";
+import { X, Info, Tag, AlertTriangle, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
 
 const DISMISSED_KEY = "ur-dismissed-banners";
 
@@ -27,30 +27,34 @@ const typeConfig = {
     bg: "bg-sky-600",
     text: "text-white",
     border: "border-sky-700",
+    isPromo: false,
   },
   promo: {
-    icon: Tag,
-    bg: "bg-emerald-600",
+    icon: Sparkles,
+    bg: "bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900",
     text: "text-white",
-    border: "border-emerald-700",
+    border: "border-stone-700",
+    isPromo: true,
   },
   warning: {
     icon: AlertTriangle,
     bg: "bg-amber-500",
     text: "text-amber-950",
     border: "border-amber-600",
+    isPromo: false,
   },
   urgent: {
     icon: AlertCircle,
     bg: "bg-red-600",
     text: "text-white",
     border: "border-red-700",
+    isPromo: false,
   },
 };
 
 export default function AnnouncementBanner() {
   const { data: banners } = trpc.banners.getActive.useQuery(undefined, {
-    staleTime: 60_000, // refresh every minute
+    staleTime: 60_000,
   });
 
   const [dismissedIds, setDismissedIds] = useState<number[]>([]);
@@ -75,6 +79,49 @@ export default function AnnouncementBanner() {
         const config = typeConfig[banner.type as keyof typeof typeConfig] || typeConfig.info;
         const Icon = config.icon;
 
+        if (config.isPromo) {
+          // Enhanced seasonal promo banner
+          return (
+            <div
+              key={banner.id}
+              className={`${config.bg} ${config.border} border-b relative overflow-hidden`}
+            >
+              {/* Subtle animated shimmer */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[promo-shimmer_3s_ease-in-out_infinite]" />
+              
+              <div className="container relative flex items-center justify-between gap-3 py-2.5 sm:py-3 px-4">
+                <div className="flex items-center gap-3 flex-1 min-w-0 justify-center">
+                  <Sparkles className="h-4 w-4 text-amber-400 shrink-0 animate-pulse" />
+                  <p className="text-sm sm:text-base font-medium text-white text-center">
+                    <span className="font-bold tracking-wide uppercase text-amber-300">{banner.title}</span>
+                    {banner.message && (
+                      <span className="ml-2 text-white/90 font-normal">{banner.message}</span>
+                    )}
+                  </p>
+                  {banner.linkUrl && (
+                    <a
+                      href={banner.linkUrl}
+                      className="text-amber-300 hover:text-amber-200 underline underline-offset-2 text-sm font-semibold shrink-0 flex items-center gap-1 transition-colors"
+                    >
+                      {banner.linkText || "Shop Now"}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                  <Sparkles className="h-4 w-4 text-amber-400 shrink-0 animate-pulse hidden sm:block" />
+                </div>
+                <button
+                  onClick={() => handleDismiss(banner.id)}
+                  className="text-white/60 hover:text-white transition-colors shrink-0 p-0.5"
+                  aria-label="Dismiss banner"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          );
+        }
+
+        // Standard banner (info, warning, urgent)
         return (
           <div
             key={banner.id}

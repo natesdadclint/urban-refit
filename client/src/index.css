@@ -234,6 +234,16 @@
   box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1);
 }
 
+/* Promo banner shimmer */
+@keyframes promo-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 /* Loading skeleton animation */
 @keyframes shimmer {
   0% {

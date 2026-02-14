@@ -1066,3 +1066,7 @@
 - [x] Write vitest tests for multi-select filtering
 - [x] Move hero subtitle excerpt higher so it is readable against the hero image
 - [x] Reduce hero heading font size to 40px and add left padding (visual editor edit)
+- [x] Create seasonal promotion banner component with dismissible close button
+- [x] Position banner above the hero image on the homepage
+- [x] Add admin controls for banner text/link management
+- [x] Write vitest tests for the promotion banner

@@ -138,8 +138,23 @@ describe("Banner Notification System", () => {
       expect(component).toContain("bg-sky-600");
     });
 
-    it("should have type-specific styling for promo", () => {
-      expect(component).toContain("bg-emerald-600");
+    it("should have enhanced promo styling with dark gradient", () => {
+      expect(component).toContain("stone-900");
+      expect(component).toContain("stone-800");
+      expect(component).toContain("amber-300");
+      expect(component).toContain("amber-400");
+    });
+
+    it("should have sparkle icons for promo banners", () => {
+      expect(component).toContain("Sparkles");
+    });
+
+    it("should have shimmer animation for promo banners", () => {
+      expect(component).toContain("promo-shimmer");
+    });
+
+    it("should differentiate promo from standard banner rendering", () => {
+      expect(component).toContain("isPromo");
     });
 
     it("should have type-specific styling for warning", () => {
@@ -177,12 +192,15 @@ describe("Banner Notification System", () => {
       expect(layout).toContain("import AnnouncementBanner");
     });
 
-    it("should render AnnouncementBanner above the header", () => {
+    it("should render AnnouncementBanner between header and main content", () => {
       const bannerIndex = layout.indexOf("<AnnouncementBanner");
-      const headerIndex = layout.indexOf("<header");
+      const headerCloseIndex = layout.indexOf("</header>");
+      const mainIndex = layout.indexOf("<main");
       expect(bannerIndex).toBeGreaterThan(-1);
-      expect(headerIndex).toBeGreaterThan(-1);
-      expect(bannerIndex).toBeLessThan(headerIndex);
+      expect(headerCloseIndex).toBeGreaterThan(-1);
+      expect(mainIndex).toBeGreaterThan(-1);
+      expect(bannerIndex).toBeGreaterThan(headerCloseIndex);
+      expect(bannerIndex).toBeLessThan(mainIndex);
     });
   });
 

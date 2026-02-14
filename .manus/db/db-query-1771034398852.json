@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO site_banners (title, message, type, linkUrl, linkText, isActive, startDate, endDate, createdAt)\nVALUES (\n  'SUMMER SALE',\n  'Up to 40% off selected styles. Limited stock, one-of-a-kind pieces.',\n  'promo',\n  '/shop',\n  'Shop the Sale',\n  true,\n  NOW(),\n  DATE_ADD(NOW(), INTERVAL 30 DAY),\n  NOW()\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute INSERT INTO site_banners (title, message, type, linkUrl, linkText, isActive, startDate, endDate, createdAt)\nVALUES (\n  'SUMMER SALE',\n  'Up to 40% off selected styles. Limited stock, one-of-a-kind pieces.',\n  'promo',\n  '/shop',\n  'Shop the Sale',\n  true,\n  NOW(),\n  DATE_ADD(NOW(), INTERVAL 30 DAY),\n  NOW()\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1674
+}
