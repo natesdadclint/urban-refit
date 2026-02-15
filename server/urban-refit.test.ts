@@ -133,13 +133,21 @@ describe("Urban Refit E-Commerce Backend", () => {
       expect(expectedPayout).toBe(3);
     });
 
-    it("calculates profit correctly after payout", () => {
+    it("calculates charity payout as 10% of sale price", () => {
+      const salePrice = 30;
+      const charityPayout = salePrice * 0.10; // 3.0
+      
+      expect(charityPayout).toBe(3);
+    });
+
+    it("calculates profit correctly after both payouts", () => {
       const originalCost = 20;
       const salePrice = 30;
       const thriftStorePayout = salePrice * 0.10; // 3.0
-      const profit = salePrice - originalCost - thriftStorePayout; // 7.0
+      const charityPayout = salePrice * 0.10; // 3.0
+      const profit = salePrice - originalCost - thriftStorePayout - charityPayout; // 4.0
       
-      expect(profit).toBe(7);
+      expect(profit).toBe(4);
     });
 
     it("handles various markup percentages", () => {
@@ -284,6 +292,40 @@ describe("Urban Refit E-Commerce Backend", () => {
     });
   });
 
+  describe("Charity Payout Calculation", () => {
+    it("calculates 10% charity payout for single item", () => {
+      const salePrice = 50;
+      const charityPayout = salePrice * 0.10;
+      
+      expect(charityPayout).toBe(5);
+    });
+
+    it("calculates total charity payout for multiple items", () => {
+      const items = [
+        { salePrice: 30 },
+        { salePrice: 50 },
+        { salePrice: 75 },
+      ];
+      
+      const totalCharityPayout = items.reduce(
+        (sum, item) => sum + item.salePrice * 0.10,
+        0
+      );
+      
+      expect(totalCharityPayout).toBe(15.5);
+    });
+
+    it("calculates combined community payout (thrift + charity) at 20%", () => {
+      const salePrice = 100;
+      const thriftPayout = salePrice * 0.10;
+      const charityPayout = salePrice * 0.10;
+      const totalCommunity = thriftPayout + charityPayout;
+      
+      expect(totalCommunity).toBe(20);
+      expect(totalCommunity / salePrice).toBe(0.20);
+    });
+  });
+
   describe("Cart Operations", () => {
     it("calculates cart subtotal correctly", () => {
       const cartItems = [
@@ -353,31 +395,33 @@ describe("Urban Refit E-Commerce Backend", () => {
 
 describe("Business Logic", () => {
   describe("Profit Margin Analysis", () => {
-    it("calculates profit margin percentage", () => {
+    it("calculates profit margin percentage with dual payouts", () => {
       const originalCost = 20;
       const salePrice = 30;
       const thriftPayout = salePrice * 0.10;
-      const netProfit = salePrice - originalCost - thriftPayout;
+      const charityPayout = salePrice * 0.10;
+      const netProfit = salePrice - originalCost - thriftPayout - charityPayout;
       const profitMargin = (netProfit / salePrice) * 100;
       
-      // Net profit: 30 - 20 - 3 = 7
-      // Profit margin: 7/30 * 100 = 23.33%
-      expect(netProfit).toBe(7);
-      expect(profitMargin).toBeCloseTo(23.33, 1);
+      // Net profit: 30 - 20 - 3 - 3 = 4
+      // Profit margin: 4/30 * 100 = 13.33%
+      expect(netProfit).toBe(4);
+      expect(profitMargin).toBeCloseTo(13.33, 1);
     });
 
-    it("identifies low margin products", () => {
+    it("identifies low margin products with dual payouts", () => {
       const lowMarginThreshold = 15; // 15%
       
       const products = [
         { cost: 25, salePrice: 30 }, // Low margin
-        { cost: 20, salePrice: 40 }, // Good margin
+        { cost: 20, salePrice: 40 }, // Moderate margin
         { cost: 50, salePrice: 55 }, // Very low margin
       ];
       
       const lowMarginProducts = products.filter((p) => {
-        const payout = p.salePrice * 0.10;
-        const profit = p.salePrice - p.cost - payout;
+        const thriftPayout = p.salePrice * 0.10;
+        const charityPayout = p.salePrice * 0.10;
+        const profit = p.salePrice - p.cost - thriftPayout - charityPayout;
         const margin = (profit / p.salePrice) * 100;
         return margin < lowMarginThreshold;
       });

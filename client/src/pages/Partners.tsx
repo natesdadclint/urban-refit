@@ -26,7 +26,7 @@ export default function Partners() {
             <section>
               <SectionHeader title="Our Partnership Model" />
               <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                Every thrift store partner receives 10% of the sale price for each garment sourced from their store. This creates a sustainable partnership that supports their mission while ensuring quality inventory for Urban Refit.
+                Every thrift store partner receives 10% of the sale price for each garment sourced from their store. In addition, another 10% of every sale goes to our charity partners. This dual-payout model creates a sustainable partnership that supports both thrift stores and charities while ensuring quality inventory for Urban Refit.
               </p>
               <p className="text-base text-muted-foreground leading-relaxed">
                 We carefully select partners whose values align with ours—organizations committed to sustainability, community impact, and quality merchandise.

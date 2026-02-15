@@ -29,9 +29,11 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
 function calculatePricing(originalCost: number, markupPercentage: number) {
   const salePrice = originalCost * (1 + markupPercentage / 100);
   const thriftStorePayoutAmount = salePrice * 0.10; // 10% to thrift store
+  const charityPayoutAmount = salePrice * 0.10; // 10% to charity
   return {
     salePrice: salePrice.toFixed(2),
     thriftStorePayoutAmount: thriftStorePayoutAmount.toFixed(2),
+    charityPayoutAmount: charityPayoutAmount.toFixed(2),
   };
 }
 
@@ -1046,7 +1048,7 @@ export const appRouter = router({
         if (ctx.user?.id) {
           const cartItems = await db.getCartItems(ctx.user.id);
           if (cartItems.length > 0) {
-            cartContext = `\n\nCUSTOMER'S CURRENT CART (${cartItems.length} items):\n${cartItems.map(ci => `- [ID:${ci.product.id}] ${ci.product.name} (${ci.product.brand || 'Unbranded'}) | Size: ${ci.product.size || 'One Size'} | Category: ${ci.product.category} | Color: ${ci.product.color || 'N/A'} | Price: $${ci.product.salePrice} | Qty: ${ci.cartItem.quantity}`).join('\n')}\nTotal items in cart: ${cartItems.reduce((sum, ci) => sum + ci.cartItem.quantity, 0)}`;
+            cartContext = `\n\nCUSTOMER'S CURRENT CART (${cartItems.length} items):\n${cartItems.map(ci => `- [ID:${ci.product.id}] ${ci.product.name} (${ci.product.brand || 'Unbranded'}) | Size: ${ci.product.size || 'One Size'} | Category: ${ci.product.category} | Color: ${ci.product.color || 'N/A'} | Price: $${ci.product.salePrice}`).join('\n')}\nTotal items in cart: ${cartItems.length}`;
           } else {
             cartContext = '\n\nCUSTOMER\'S CURRENT CART: Empty (no items added yet).';
           }
@@ -1105,7 +1107,7 @@ When the customer has items in their cart:
 
 KEY INFORMATION:
 - Urban Refit sells pre-loved, quality branded clothing from partner thrift stores
-- 10% of every sale goes back to our thrift store partners
+- 10% of every sale goes to our thrift store partners, and another 10% goes to our charity partners (20% total community impact)
 - Each item is unique (one-of-one) since it is secondhand
 - Customers can return items for resale and earn tokens (25% of resale value)
 - Each token is worth $0.50 NZD

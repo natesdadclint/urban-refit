@@ -187,7 +187,7 @@ export default function CheckoutSuccess() {
             <Package className="h-8 w-8 mx-auto text-primary mb-3" />
             <p className="text-sm text-center text-muted-foreground">
               By shopping with Urban Refit, you've helped give pre-loved clothing a second life
-              and supported our local thrift store partners. Thank you for being part of the
+              and supported our local thrift store and charity partners. Thank you for being part of the
               circular fashion movement!
             </p>
           </div>

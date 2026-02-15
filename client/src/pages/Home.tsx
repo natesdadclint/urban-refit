@@ -120,7 +120,7 @@ export default function Home() {
               <div className="min-w-0">
                 <h3 className="font-semibold text-sm sm:text-base mb-0.5 sm:mb-1">Community Partners</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  10% of every sale goes back to our thrift store partners.
+                  10% of every sale goes to our thrift store partners. Another 10% supports our charity partners.
                 </p>
               </div>
             </div>
@@ -266,7 +266,7 @@ export default function Home() {
               Ready to Shop Sustainably?
             </h2>
             <p className="text-sm sm:text-base text-primary-foreground/80 max-w-2xl mx-auto mb-5 sm:mb-8">
-              Every purchase keeps quality clothing out of landfill and puts money back into local thrift stores. Good style, good karma.
+              Every purchase keeps quality clothing out of landfill and puts money back into local thrift stores and charities. Good style, good karma.
             </p>
             <Button asChild size="lg" variant="secondary" className="gap-2 text-sm sm:text-base">
               <Link href="/shop">

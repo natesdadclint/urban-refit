@@ -206,7 +206,7 @@ export default function Cart() {
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
                     Secure payment via Stripe. Free shipping on orders over NZ$50.
-                    10% of your purchase supports our thrift store partners.
+                    10% of your purchase supports our thrift store partners, and another 10% goes to our charity partners.
                   </p>
                 </div>
               </div>

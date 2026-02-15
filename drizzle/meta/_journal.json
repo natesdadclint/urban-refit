@@ -211,6 +211,13 @@
       "when": 1771045715686,
       "tag": "0029_eager_silk_fever",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "5",
+      "when": 1771129056812,
+      "tag": "0030_red_bishop",
+      "breakpoints": true
     }
   ]
 }

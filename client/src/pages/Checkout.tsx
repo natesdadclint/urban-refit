@@ -523,7 +523,7 @@ export default function Checkout() {
                   </div>
 
                   <p className="text-xs text-muted-foreground text-center mt-3">
-                    10% of your purchase supports our thrift store partners.
+                    10% of your purchase supports our thrift store partners, and another 10% goes to our charity partners.
                     Changed your mind? Return within 14 days for Urban Refit Tokens.
                   </p>
                 </div>

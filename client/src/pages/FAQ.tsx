@@ -102,7 +102,7 @@ export default function FAQ() {
       questions: [
         {
           q: "How does the thrift store partnership work?",
-          a: "We partner with local thrift stores to source our inventory. When we sell a garment that came from a partner store, that store receives 10% of the sale price. This creates a sustainable cycle that benefits both the thrift stores and our customers."
+          a: "We partner with local thrift stores to source our inventory. When we sell a garment that came from a partner store, that store receives 10% of the sale price. In addition, another 10% of every sale goes to our charity partners. This creates a sustainable cycle that benefits thrift stores, charities, and our customers."
         },
         {
           q: "Which thrift stores do you partner with?",
@@ -114,7 +114,7 @@ export default function FAQ() {
         },
         {
           q: "How are thrift store payouts calculated?",
-          a: "Each partner thrift store receives exactly 10% of the sale price for every garment we sell that originated from their store. Payouts are tracked automatically and processed regularly. This ensures our partners benefit directly from every successful sale."
+          a: "Each partner thrift store receives exactly 10% of the sale price for every garment we sell that originated from their store. Additionally, 10% of every sale is allocated to our charity partners. Both payouts are tracked automatically and processed regularly, ensuring our partners benefit directly from every successful sale."
         }
       ]
     },

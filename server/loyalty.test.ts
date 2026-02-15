@@ -76,6 +76,37 @@ describe("Thrift Store Payout Calculation", () => {
   });
 });
 
+describe("Charity Payout Calculation", () => {
+  // 10% of sale price goes to charity partners
+  const calculateCharityPayout = (salePrice: number): number => {
+    return Math.round(salePrice * 0.10 * 100) / 100;
+  };
+
+  it("should calculate 10% payout for charity partners", () => {
+    expect(calculateCharityPayout(100)).toBe(10);
+    expect(calculateCharityPayout(50)).toBe(5);
+    expect(calculateCharityPayout(79.99)).toBe(8);
+  });
+
+  it("should handle zero price", () => {
+    expect(calculateCharityPayout(0)).toBe(0);
+  });
+
+  it("should match thrift store payout percentage", () => {
+    const salePrice = 100;
+    const thriftPayout = salePrice * 0.10;
+    const charityPayout = salePrice * 0.10;
+    expect(thriftPayout).toBe(charityPayout);
+  });
+
+  it("should total 20% community impact (thrift + charity)", () => {
+    const salePrice = 100;
+    const totalCommunityPayout = salePrice * 0.10 + salePrice * 0.10;
+    expect(totalCommunityPayout).toBe(20);
+    expect(totalCommunityPayout / salePrice).toBe(0.20);
+  });
+});
+
 describe("Sale Price Calculation", () => {
   // Sale price = original cost + (original cost * markup percentage / 100)
   const calculateSalePrice = (originalCost: number, markupPercentage: number): number => {

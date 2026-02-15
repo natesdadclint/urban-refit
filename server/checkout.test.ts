@@ -32,6 +32,23 @@ describe("Checkout Flow", () => {
       
       expect(payoutAmount).toBeCloseTo(9.00, 2);
     });
+
+    it("should calculate charity payout at 10%", () => {
+      const salePrice = 89.99;
+      const charityPayout = salePrice * 0.10;
+      
+      expect(charityPayout).toBeCloseTo(9.00, 2);
+    });
+
+    it("should calculate total community payout at 20% (thrift + charity)", () => {
+      const salePrice = 89.99;
+      const thriftPayout = salePrice * 0.10;
+      const charityPayout = salePrice * 0.10;
+      const totalCommunityPayout = thriftPayout + charityPayout;
+      
+      expect(totalCommunityPayout).toBeCloseTo(18.00, 2);
+      expect(totalCommunityPayout / salePrice).toBeCloseTo(0.20, 2);
+    });
   });
 
   describe("Stripe Session Metadata", () => {

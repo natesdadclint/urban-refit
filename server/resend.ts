@@ -378,7 +378,7 @@ WHAT HAPPENS NEXT:
 3. Your items will arrive within 5-7 business days
 
 By shopping with Urban Refit, you've helped give pre-loved clothing a second life 
-and supported our local thrift store partners. Thank you for being part of the circular fashion movement!
+and supported our local thrift store and charity partners. Thank you for being part of the circular fashion movement!
 
 Questions? Contact us at help@urbanrefit.store
 

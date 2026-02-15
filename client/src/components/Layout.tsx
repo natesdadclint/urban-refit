@@ -518,7 +518,7 @@ export default function Layout({ children }: LayoutProps) {
               © {new Date().getFullYear()} Urban Refit. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground">
-              10% of every sale goes back to our thrift store partners.
+              10% of every sale goes to our thrift store partners. Another 10% supports our charity partners.
             </p>
           </div>
         </div>

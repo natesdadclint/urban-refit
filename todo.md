@@ -1102,3 +1102,12 @@
 - [x] Add donation history section to user profile page
 - [x] Show total donated and total tax credits earned on profile
 - [x] Write vitest tests for donation tax credit and history features (31 tests passing)
+- [x] Fix: update all references to show 10% of every sale goes to charity (in addition to 10% to thrift store partners)
+- [x] Update Charities, About, Home, FAQ, Partners pages with charity percentage
+- [x] Update backend checkout/order logic to calculate 10% charity donation per sale
+- [x] Add charityPayoutAmount column to products and order_items tables
+- [x] Update calculatePricing function to include charity payout
+- [x] Update Stripe checkout to track charity payout per order item
+- [x] Update AI chat assistant system prompt with dual payout info
+- [x] Update order confirmation emails to mention charity partners
+- [x] Add charity payout tests (checkout, loyalty, urban-refit, breadcrumb-microcopy)

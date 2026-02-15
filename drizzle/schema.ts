@@ -63,7 +63,8 @@ export const products = mysqlTable("products", {
   originalCost: decimal("originalCost", { precision: 10, scale: 2 }).notNull(),
   markupPercentage: decimal("markupPercentage", { precision: 5, scale: 2 }).notNull(),
   salePrice: decimal("salePrice", { precision: 10, scale: 2 }).notNull(),
-  thriftStorePayoutAmount: decimal("thriftStorePayoutAmount", { precision: 10, scale: 2 }).notNull(), // 5% of sale price
+  thriftStorePayoutAmount: decimal("thriftStorePayoutAmount", { precision: 10, scale: 2 }).notNull(), // 10% of sale price
+  charityPayoutAmount: decimal("charityPayoutAmount", { precision: 10, scale: 2 }).default("0.00").notNull(), // 10% of sale price to charity
   
   // Dual images for different viewpoints
   image1Url: text("image1Url"),
@@ -146,9 +147,11 @@ export const orderItems = mysqlTable("order_items", {
   // Snapshot of price at time of purchase
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   
-  // Thrift store payout tracking (5% of sale price) - nullable for products without store association
+  // Thrift store payout tracking (10% of sale price) - nullable for products without store association
   thriftStoreId: int("thriftStoreId"),
   thriftStorePayoutAmount: decimal("thriftStorePayoutAmount", { precision: 10, scale: 2 }),
+  // Charity payout tracking (10% of sale price)
+  charityPayoutAmount: decimal("charityPayoutAmount", { precision: 10, scale: 2 }),
   
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });

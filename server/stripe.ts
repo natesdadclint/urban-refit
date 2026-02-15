@@ -20,6 +20,7 @@ interface CartItemWithProduct {
     image1Url: string | null;
     thriftStoreId: number;
     thriftStorePayoutAmount: string;
+    charityPayoutAmount: string;
   };
 }
 
@@ -81,6 +82,7 @@ export async function createCheckoutSession(
       price: item.product.salePrice,
       thriftStoreId: item.product.thriftStoreId || null,
       thriftStorePayoutAmount: item.product.thriftStorePayoutAmount || null,
+      charityPayoutAmount: item.product.charityPayoutAmount || (parseFloat(item.product.salePrice) * 0.10).toFixed(2),
     });
   }
 
@@ -196,14 +198,15 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // Get order items and mark products as sold
   const orderItems = await db.getOrderItems(order.id);
   
-  // Track payouts by thrift store
+  // Track payouts by thrift store and total charity payout
   const thriftStorePayouts: Record<number, number> = {};
+  let totalCharityPayout = 0;
   
   for (const item of orderItems) {
     // Mark product as sold
     await db.markProductAsSold(item.product.id);
     
-    // Accumulate payout amounts (only if thrift store is associated)
+    // Accumulate thrift store payout amounts (only if thrift store is associated)
     const storeId = item.orderItem.thriftStoreId;
     const payoutAmountStr = item.orderItem.thriftStorePayoutAmount;
     
@@ -214,6 +217,20 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
       // Update thrift store total payout
       await db.incrementThriftStorePayout(storeId, payoutAmountStr);
     }
+    
+    // Accumulate charity payout (10% of sale price for every item)
+    const charityAmountStr = item.orderItem.charityPayoutAmount;
+    if (charityAmountStr) {
+      totalCharityPayout += parseFloat(charityAmountStr);
+    } else {
+      // Fallback: calculate 10% of item price
+      totalCharityPayout += parseFloat(item.orderItem.price) * 0.10;
+    }
+  }
+  
+  // Log charity payout for this order
+  if (totalCharityPayout > 0) {
+    console.log(`[Webhook] Order ${orderId}: NZ$${totalCharityPayout.toFixed(2)} allocated to charity partners`);
   }
 
   // Create payout records for each thrift store
