@@ -12,7 +12,7 @@ import { getLoginUrl } from "@/const";
 import { toast } from "sonner";
 import { useState } from "react";
 import { 
-  Heart, Coins, Loader2, ExternalLink, Globe, ArrowLeft
+  Heart, Coins, Loader2, ExternalLink, Globe, ArrowLeft, Sparkles
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -177,7 +177,7 @@ export default function Charities() {
                             <DialogTitle>Donate to {charity.name}</DialogTitle>
                             <DialogDescription>
                               Enter the number of tokens you'd like to donate. 
-                              Each token equals NZ$0.50 in donation value.
+                              Each token equals NZ$0.50 in donation value. You may be eligible for a 33% tax credit rebate.
                             </DialogDescription>
                           </DialogHeader>
                           <div className="space-y-4 pt-4">
@@ -218,6 +218,29 @@ export default function Charities() {
                                 </Button>
                               </div>
                             </div>
+                            {/* Tax Credit Preview */}
+                            {donationAmount && parseFloat(donationAmount) > 0 && (
+                              <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <Sparkles className="h-4 w-4 text-green-600" />
+                                  <p className="text-sm font-semibold text-green-700 dark:text-green-400">Tax Credit Rebate (33%)</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 text-sm">
+                                  <div>
+                                    <p className="text-muted-foreground">Donation Value</p>
+                                    <p className="font-bold">NZ${(parseFloat(donationAmount) * 0.50).toFixed(2)}</p>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground">Your Tax Credit</p>
+                                    <p className="font-bold text-green-600">NZ${(parseFloat(donationAmount) * 0.50 * 0.33).toFixed(2)}</p>
+                                  </div>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  Under NZ tax law, donations to approved charities qualify for a 33.33% tax credit. 
+                                  Urban Refit will provide a donation receipt for your tax return.
+                                </p>
+                              </div>
+                            )}
                             <Button 
                               onClick={handleDonate} 
                               className="w-full"
@@ -283,7 +306,10 @@ export default function Charities() {
                         {parseFloat(item.donation.tokenAmount).toFixed(2)} tokens
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        ${parseFloat(item.donation.dollarValue).toFixed(2)}
+                        NZ${parseFloat(item.donation.dollarValue).toFixed(2)}
+                      </p>
+                      <p className="text-xs text-green-600 font-medium">
+                        Tax credit: NZ${(parseFloat(item.donation.dollarValue) * 0.33).toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -296,12 +322,24 @@ export default function Charities() {
         {/* Info Section */}
         <div className="mt-12 p-6 bg-muted rounded-lg">
           <SectionHeader title="About Token Donations" level="h3" />
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground mb-3">
             When you donate tokens, they are converted to their dollar equivalent and 
             contributed to your chosen charity. Urban Refit processes all donations 
             and provides receipts for tax purposes. Your generosity helps support 
             important causes while participating in sustainable fashion.
           </p>
+          <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="h-4 w-4 text-green-600" />
+              <p className="text-sm font-semibold text-green-700 dark:text-green-400">33% Tax Credit Rebate</p>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Under New Zealand tax law, donations of NZ$5 or more to approved charitable organisations 
+              qualify for a 33.33% tax credit. This means for every NZ$100 you donate, you can claim 
+              NZ$33.33 back on your tax return. Urban Refit provides donation receipts to help you 
+              claim your tax credit with IRD.
+            </p>
+          </div>
         </div>
       </div>
     </Layout>

@@ -1096,3 +1096,9 @@
 - [x] Enhance AI assistant: ensure it can reference inventory and suggest items from catalogue
 - [x] Fix: free shipping threshold to $50 (orders over $50 get free shipping)
 - [x] Fix: raise charity donation percentage back to 10%
+- [x] Add 33% tax credit rebate calculation when donating tokens to charity
+- [x] Show tax credit amount (33% of NZD value) during donation flow
+- [x] Track donation history in database (charity, amount, date, tax credit)
+- [x] Add donation history section to user profile page
+- [x] Show total donated and total tax credits earned on profile
+- [x] Write vitest tests for donation tax credit and history features (31 tests passing)

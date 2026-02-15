@@ -352,6 +352,7 @@ export default function Profile() {
             <TabsTrigger value="notifications" className="flex-shrink-0 px-4">Notifications</TabsTrigger>
             <TabsTrigger value="orders" className="flex-shrink-0 px-4">Orders</TabsTrigger>
             <TabsTrigger value="returns" className="flex-shrink-0 px-4">Returns</TabsTrigger>
+            <TabsTrigger value="donations" className="flex-shrink-0 px-4">Donations</TabsTrigger>
           </TabsList>
           
           {/* Account Details Tab */}
@@ -883,6 +884,130 @@ export default function Profile() {
                     </p>
                     <Button asChild>
                       <Link href="/courier-return">Start a Return</Link>
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Donations Tab */}
+          <TabsContent value="donations">
+            {/* Donation Summary Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-pink-100 dark:bg-pink-950 rounded-lg">
+                      <Heart className="h-5 w-5 text-pink-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Total Donated</p>
+                      <p className="text-2xl font-bold">
+                        NZ${charityDonations ? charityDonations.reduce((sum: number, d: any) => sum + parseFloat(d.donation.dollarValue), 0).toFixed(2) : '0.00'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-100 dark:bg-green-950 rounded-lg">
+                      <Sparkles className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Tax Credits Earned</p>
+                      <p className="text-2xl font-bold text-green-600">
+                        NZ${charityDonations ? (charityDonations.reduce((sum: number, d: any) => sum + parseFloat(d.donation.dollarValue), 0) * 0.33).toFixed(2) : '0.00'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 rounded-lg">
+                      <Coins className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Tokens Donated</p>
+                      <p className="text-2xl font-bold">
+                        {charityDonations ? charityDonations.reduce((sum: number, d: any) => sum + parseFloat(d.donation.tokenAmount), 0).toFixed(2) : '0.00'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* Tax Credit Info Banner */}
+            <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg mb-6">
+              <div className="flex items-center gap-2 mb-1">
+                <Sparkles className="h-4 w-4 text-green-600" />
+                <p className="text-sm font-semibold text-green-700 dark:text-green-400">33% Tax Credit Rebate</p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Under NZ tax law, donations of NZ$5+ to approved charities qualify for a 33.33% tax credit. 
+                Urban Refit provides donation receipts for your IRD tax return.
+              </p>
+            </div>
+            
+            {/* Donation History */}
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Donation History</CardTitle>
+                  <CardDescription>Your charitable contributions and tax credits</CardDescription>
+                </div>
+                <Button asChild>
+                  <Link href="/charities">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Donate Now
+                  </Link>
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {charityDonations && charityDonations.length > 0 ? (
+                  <div className="space-y-4">
+                    {charityDonations.map((item: any) => {
+                      const dollarValue = parseFloat(item.donation.dollarValue);
+                      const taxCredit = dollarValue * 0.33;
+                      return (
+                        <div key={item.donation.id} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div>
+                            <p className="font-medium">{item.charity.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(item.donation.createdAt).toLocaleDateString()}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {parseFloat(item.donation.tokenAmount).toFixed(2)} tokens
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-bold text-primary">
+                              NZ${dollarValue.toFixed(2)}
+                            </p>
+                            <p className="text-sm text-green-600 font-medium">
+                              Tax credit: NZ${taxCredit.toFixed(2)}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Heart className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                    <p className="text-muted-foreground mb-2">No donations yet</p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Donate your tokens to charity and earn a 33% tax credit rebate!
+                    </p>
+                    <Button asChild>
+                      <Link href="/charities">Browse Charities</Link>
                     </Button>
                   </div>
                 )}
