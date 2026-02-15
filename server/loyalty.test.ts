@@ -60,15 +60,15 @@ describe("Token Calculation", () => {
 });
 
 describe("Thrift Store Payout Calculation", () => {
-  // 5% of sale price goes to thrift store
+  // 10% of sale price goes to thrift store
   const calculateThriftStorePayout = (salePrice: number): number => {
-    return Math.round(salePrice * 0.05 * 100) / 100;
+    return Math.round(salePrice * 0.10 * 100) / 100;
   };
 
-  it("should calculate 5% payout for thrift stores", () => {
-    expect(calculateThriftStorePayout(100)).toBe(5);
-    expect(calculateThriftStorePayout(50)).toBe(2.5);
-    expect(calculateThriftStorePayout(79.99)).toBe(4);
+  it("should calculate 10% payout for thrift stores", () => {
+    expect(calculateThriftStorePayout(100)).toBe(10);
+    expect(calculateThriftStorePayout(50)).toBe(5);
+    expect(calculateThriftStorePayout(79.99)).toBe(8);
   });
 
   it("should handle zero price", () => {

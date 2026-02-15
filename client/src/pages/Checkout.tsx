@@ -177,7 +177,7 @@ export default function Checkout() {
 
   const itemCount = cart.items.length;
   const subtotal = parseFloat(cart.total);
-  const shipping = 9.99;
+  const shipping = subtotal >= 50 ? 0 : 9.99;
   
   // Calculate GST (15% included in prices - NZ standard)
   // GST = Price × (15/115) for GST-inclusive pricing
@@ -523,7 +523,7 @@ export default function Checkout() {
                   </div>
 
                   <p className="text-xs text-muted-foreground text-center mt-3">
-                    5% of your purchase supports our thrift store partners.
+                    10% of your purchase supports our thrift store partners.
                     Changed your mind? Return within 14 days for Urban Refit Tokens.
                   </p>
                 </div>

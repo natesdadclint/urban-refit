@@ -26,7 +26,7 @@ export default function Partners() {
             <section>
               <SectionHeader title="Our Partnership Model" />
               <p className="text-base text-muted-foreground leading-relaxed mb-4">
-                Every thrift store partner receives 5% of the sale price for each garment sourced from their store. This creates a sustainable partnership that supports their mission while ensuring quality inventory for Urban Refit.
+                Every thrift store partner receives 10% of the sale price for each garment sourced from their store. This creates a sustainable partnership that supports their mission while ensuring quality inventory for Urban Refit.
               </p>
               <p className="text-base text-muted-foreground leading-relaxed">
                 We carefully select partners whose values align with ours—organizations committed to sustainability, community impact, and quality merchandise.
@@ -40,7 +40,7 @@ export default function Partners() {
                 <div className="space-y-3">
                   <h3 className="text-base font-semibold text-foreground">Revenue Share</h3>
                   <p className="text-base text-muted-foreground">
-                    Receive 5% of every sale price for garments sourced from your store.
+                    Receive 10% of every sale price for garments sourced from your store.
                   </p>
                 </div>
                 <div className="space-y-3">

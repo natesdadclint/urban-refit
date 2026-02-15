@@ -1094,3 +1094,5 @@
 - [x] Enhance AI assistant: give it access to customer's cart contents for contextual advice
 - [x] Enhance AI assistant: update system prompt to use fashion/internet knowledge for informed style decisions
 - [x] Enhance AI assistant: ensure it can reference inventory and suggest items from catalogue
+- [x] Fix: free shipping threshold to $50 (orders over $50 get free shipping)
+- [x] Fix: raise charity donation percentage back to 10%

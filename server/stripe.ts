@@ -51,7 +51,8 @@ export async function createCheckoutSession(
   // GST is included in prices (NZ standard) - calculate GST component (15%)
   // GST = Price × (15/115) for GST-inclusive pricing
   const gstAmount = subtotal * (15 / 115);
-  const shippingCost = 9.99; // Flat rate shipping
+  const FREE_SHIPPING_THRESHOLD = 50;
+  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 9.99; // Free shipping on orders over NZ$50
   const total = subtotal + shippingCost;
 
   // Create order in database first
@@ -98,17 +99,19 @@ export async function createCheckoutSession(
     })
   );
 
-  // Add shipping as a line item
-  lineItems.push({
-    price_data: {
-      currency: "nzd",
-      product_data: {
-        name: "Shipping",
+  // Add shipping as a line item (only if not free)
+  if (shippingCost > 0) {
+    lineItems.push({
+      price_data: {
+        currency: "nzd",
+        product_data: {
+          name: "Shipping",
+        },
+        unit_amount: Math.round(shippingCost * 100),
       },
-      unit_amount: Math.round(shippingCost * 100),
-    },
-    quantity: 1,
-  });
+      quantity: 1,
+    });
+  }
 
   // Create Stripe checkout session with multiple payment methods
   const session = await stripe.checkout.sessions.create({

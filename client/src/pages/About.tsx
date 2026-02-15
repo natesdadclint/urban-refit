@@ -86,7 +86,7 @@ export default function About() {
                   </div>
                   <h3 className="text-xl font-semibold text-foreground">Community First</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    5% of every sale goes directly to our thrift store partners. Their mission fuels ours.
+                    10% of every sale goes directly to our thrift store partners. Their mission fuels ours.
                   </p>
                 </div>
                 <div className="space-y-4">

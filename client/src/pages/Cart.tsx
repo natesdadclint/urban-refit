@@ -186,7 +186,7 @@ export default function Cart() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
-                      <span>NZ$9.99</span>
+                      <span>{parseFloat(cart.total) >= 50 ? <span className="text-green-600 font-medium">FREE</span> : "NZ$9.99"}</span>
                     </div>
                   </div>
 
@@ -194,7 +194,7 @@ export default function Cart() {
 
                   <div className="flex justify-between font-semibold text-lg mb-6">
                     <span>Total</span>
-                    <span>NZ${(parseFloat(cart.total) + 9.99).toFixed(2)}</span>
+                    <span>NZ${(parseFloat(cart.total) + (parseFloat(cart.total) >= 50 ? 0 : 9.99)).toFixed(2)}</span>
                   </div>
 
                   <Button asChild className="w-full gap-2">
@@ -206,7 +206,7 @@ export default function Cart() {
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
                     Secure payment via Stripe. Free shipping on orders over NZ$50.
-                    5% of your purchase supports our thrift store partners.
+                    10% of your purchase supports our thrift store partners.
                   </p>
                 </div>
               </div>

@@ -120,7 +120,7 @@ export default function Home() {
               <div className="min-w-0">
                 <h3 className="font-semibold text-sm sm:text-base mb-0.5 sm:mb-1">Community Partners</h3>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  5% of every sale goes back to our thrift store partners.
+                  10% of every sale goes back to our thrift store partners.
                 </p>
               </div>
             </div>

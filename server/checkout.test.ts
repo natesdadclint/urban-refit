@@ -26,11 +26,11 @@ describe("Checkout Flow", () => {
       expect(total).toBe(159.99);
     });
 
-    it("should calculate thrift store payout at 5%", () => {
+    it("should calculate thrift store payout at 10%", () => {
       const salePrice = 89.99;
-      const payoutAmount = salePrice * 0.05;
+      const payoutAmount = salePrice * 0.10;
       
-      expect(payoutAmount).toBeCloseTo(4.50, 2);
+      expect(payoutAmount).toBeCloseTo(9.00, 2);
     });
   });
 

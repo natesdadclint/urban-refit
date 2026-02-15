@@ -28,7 +28,7 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
 // Calculate sale price from original cost and markup
 function calculatePricing(originalCost: number, markupPercentage: number) {
   const salePrice = originalCost * (1 + markupPercentage / 100);
-  const thriftStorePayoutAmount = salePrice * 0.05; // 5% to thrift store
+  const thriftStorePayoutAmount = salePrice * 0.10; // 10% to thrift store
   return {
     salePrice: salePrice.toFixed(2),
     thriftStorePayoutAmount: thriftStorePayoutAmount.toFixed(2),
@@ -1105,7 +1105,7 @@ When the customer has items in their cart:
 
 KEY INFORMATION:
 - Urban Refit sells pre-loved, quality branded clothing from partner thrift stores
-- 5% of every sale goes back to our thrift store partners
+- 10% of every sale goes back to our thrift store partners
 - Each item is unique (one-of-one) since it is secondhand
 - Customers can return items for resale and earn tokens (25% of resale value)
 - Each token is worth $0.50 NZD

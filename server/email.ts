@@ -109,7 +109,7 @@ A sale has been completed and you're entitled to a payout!
 
 Order #${orderId}
 Payout Amount: NZ$${amount.toFixed(2)}
-(5% of sale price as per our partnership agreement)
+(10% of sale price as per our partnership agreement)
 
 This payout will be processed according to our standard payment schedule.
 

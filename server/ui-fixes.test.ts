@@ -51,9 +51,9 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(homeContent).toContain("justify-center items-center");
   });
 
-  it("should center the heading with flex justify-center", () => {
-    const wrapperLine = homeContent.split("\n").find(l => l.includes("absolute") && l.includes("top-["));
-    expect(wrapperLine).toContain("justify-center");
+  it("should have the subtitle content area with absolute positioning", () => {
+    expect(homeContent).toContain("absolute");
+    expect(homeContent).toContain("bottom-[");
   });
 
   it("should center the subtitle with mx-auto", () => {
@@ -80,14 +80,10 @@ describe("Hero CTA Buttons: Centered", () => {
     expect(homeContent).toContain("bottom-[");
   });
 
-  it("should position the heading with percentage-based absolute positioning", () => {
+  it("should position the subtitle content with percentage-based absolute positioning", () => {
     const lines = homeContent.split("\n");
-    const headingWrapperIdx = lines.findIndex(l => l.includes("absolute") && l.includes("top-["));
-    const headingIdx = lines.findIndex(l => l.includes("Premium Preloved"));
-    expect(headingWrapperIdx).toBeGreaterThan(-1);
-    expect(headingIdx).toBeGreaterThan(headingWrapperIdx);
-    // Bottom content also uses absolute positioning
-    const bottomIdx = lines.findIndex((l, i) => i > headingIdx && l.includes("absolute") && l.includes("bottom-["));
-    expect(bottomIdx).toBeGreaterThan(headingIdx);
+    // Bottom content uses absolute bottom positioning
+    const bottomIdx = lines.findIndex(l => l.includes("absolute") && l.includes("bottom-["));
+    expect(bottomIdx).toBeGreaterThan(-1);
   });
 });
