@@ -214,7 +214,7 @@ export default function AdminSellSubmissions() {
           <div>
             <p className="font-medium text-amber-900">Circular Economy Model</p>
             <p className="text-sm text-amber-700">
-              Customers earn tokens (1 token = NZ$0.50) to shop or donate. No cash payouts.
+              Customers earn tokens (1 token = NZ$1.00) to shop or donate. No cash payouts.
             </p>
           </div>
         </div>

@@ -234,7 +234,7 @@ export default function SellToUs() {
                 <div>
                   <SectionHeader title="What Are Urban Refit Tokens?" level="h3" />
                   <p className="text-muted-foreground mb-4">
-                    Tokens are our circular currency. <strong>1 token = $0.50 NZD</strong> in store credit. 
+                    Tokens are our circular currency. <strong>1 token = $1.00 NZD</strong> in store credit. 
                     Unlike cash, tokens keep value circulating within our sustainable ecosystem.
                   </p>
                   <div className="grid md:grid-cols-2 gap-4 mt-4">
@@ -344,7 +344,7 @@ export default function SellToUs() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="requestedTokens">Requested Tokens (Optional)</Label>
-                      <Input id="requestedTokens" type="number" placeholder="e.g. 75 (1 token = $0.50)" value={formData.requestedTokens} onChange={(e) => setFormData({ ...formData, requestedTokens: e.target.value })} />
+                      <Input id="requestedTokens" type="number" placeholder="e.g. 75 (1 token = $1.00)" value={formData.requestedTokens} onChange={(e) => setFormData({ ...formData, requestedTokens: e.target.value })} />
                     </div>
                   </div>
                 </CardContent>
@@ -428,7 +428,7 @@ export default function SellToUs() {
                   <p className="text-sm text-muted-foreground">
                     Our team assesses each item based on brand, condition, item type, style, and current market demand. 
                     We then make a token offer based on what we believe is a fair resale value within our closed-loop system. 
-                    Remember, 1 token is equivalent to $0.50 NZD in store credit.
+                    Remember, 1 token is equivalent to $1.00 NZD in store credit.
                   </p>
                 </CardContent>
               </Card>

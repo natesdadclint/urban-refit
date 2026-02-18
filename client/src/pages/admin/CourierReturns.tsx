@@ -432,7 +432,7 @@ export default function AdminCourierReturns() {
               {estimatedValue && (
                 <div className="text-sm text-muted-foreground space-y-1">
                   <p>Tokens to award: {(parseFloat(estimatedValue) * 0.25).toFixed(2)}</p>
-                  <p>NZD value of tokens: NZ${(parseFloat(estimatedValue) * 0.25 * 0.5).toFixed(2)} <span className="text-xs">(at NZ$0.50/token)</span></p>
+                  <p>NZD value of tokens: NZ${(parseFloat(estimatedValue) * 0.25 * 1.0).toFixed(2)} <span className="text-xs">(at NZ$1.00/token)</span></p>
                 </div>
               )}
             </div>
@@ -529,7 +529,7 @@ export default function AdminCourierReturns() {
                   Tokens to award on approval: {parseFloat(selectedReturn.tokensAwarded).toFixed(2)}
                 </p>
                 <p className="text-xs text-muted-foreground ml-5">
-                  NZD value: NZ${(parseFloat(selectedReturn.tokensAwarded) * 0.5).toFixed(2)} (at NZ$0.50/token)
+                  NZD value: NZ${(parseFloat(selectedReturn.tokensAwarded) * 1.0).toFixed(2)} (at NZ$1.00/token)
                 </p>
               </div>
             )}

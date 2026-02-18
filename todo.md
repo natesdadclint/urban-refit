@@ -1115,3 +1115,4 @@
 - [x] Update frontend pages (FAQ, Sell, Tokens, Profile, etc.) with $1.00 token value
 - [x] Update backend logic (token calculations, AI chat prompt) with $1.00 token value
 - [x] Update all vitest tests with $1.00 token value
+- [x] Fix: update all placeholder texts and helper labels from $0.50 to $1.00 in Sell, Profile, Terms, CourierReturns, SellSubmissions pages

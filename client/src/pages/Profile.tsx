@@ -554,11 +554,11 @@ export default function Profile() {
                   </div>
                   {convertAmount && parseFloat(convertAmount) > 0 && (
                     <p className="text-sm text-primary font-medium">
-                      {parseFloat(convertAmount).toFixed(2)} tokens = NZ${(parseFloat(convertAmount) * 0.50).toFixed(2)} spend limit
+                      {parseFloat(convertAmount).toFixed(2)} tokens = NZ${(parseFloat(convertAmount) * 1.00).toFixed(2)} spend limit
                     </p>
                   )}
                   <p className="text-xs text-muted-foreground">
-                    1 token = NZ$0.50 spend limit. Spend limit can be used on orders of 3+ items.
+                    1 token = NZ$1.00 spend limit. Spend limit can be used on orders of 3+ items.
                   </p>
                 </CardContent>
               </Card>
