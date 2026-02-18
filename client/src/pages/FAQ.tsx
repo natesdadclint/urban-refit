@@ -152,7 +152,7 @@ export default function FAQ() {
         },
         {
           q: "What can I do with my tokens?",
-          a: "Tokens can be converted to spend limit credit (1 token = NZ$0.50) to use on future orders of 3+ items, or you can donate your tokens to one of our charity partners. The choice is yours—save money or give back to the community."
+          a: "Tokens can be converted to spend limit credit (1 token = NZ$1.00) to use on future orders of 3+ items, or you can donate your tokens to one of our charity partners. The choice is yours—save money or give back to the community."
         },
         {
           q: "Do tokens expire?",

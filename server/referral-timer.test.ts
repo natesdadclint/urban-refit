@@ -5,7 +5,7 @@ import { describe, it, expect } from 'vitest';
 const TIMER_DURATION_SECONDS = 10 * 60; // 10 minutes
 const TIMER_BONUS_TOKENS = 10;
 const REFERRAL_EXPIRY_DAYS = 7;
-const TOKEN_VALUE_NZD = 0.50;
+const TOKEN_VALUE_NZD = 1.00;
 
 describe('Referral Timer Bonus System', () => {
   describe('Timer Duration', () => {
@@ -39,9 +39,9 @@ describe('Referral Timer Bonus System', () => {
       expect(TIMER_BONUS_TOKENS).toBe(10);
     });
 
-    it('should calculate NZD value of timer bonus at $0.50 per token', () => {
+    it('should calculate NZD value of timer bonus at $1.00 per token', () => {
       const nzdValue = TIMER_BONUS_TOKENS * TOKEN_VALUE_NZD;
-      expect(nzdValue).toBe(5.00);
+      expect(nzdValue).toBe(10.00);
     });
 
     it('timer bonus tokens should be donation-only', () => {

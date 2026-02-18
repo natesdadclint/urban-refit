@@ -98,19 +98,17 @@ describe("Microcopy Content", () => {
     productDetail: "One-of-a-kind piece — once it's gone, it's gone. Free shipping on orders over NZ$50.",
     cart: "Secure payment via Stripe. Free shipping on orders over NZ$50. 10% of your purchase supports our thrift store partners, and another 10% goes to our charity partners.",
     checkout: "10% of your purchase supports our thrift store partners, and another 10% goes to our charity partners. Changed your mind? Return within 14 days for Urban Refit Tokens.",
-    sellToUs: "By submitting, you agree to our terms of service and confirm that the item is authentic and accurately described. You'll receive a token offer within 48 hours. 1 token = NZ$0.50 spend credit on Urban Refit.",
-    courierReturn: "Free prepaid shipping label included. Tokens credited within 48 hours of inspection. 1 token = NZ$0.50.",
+    sellToUs: "By submitting, you agree to our terms of service and confirm that the item is authentic and accurately described. You'll receive a token offer within 48 hours. 1 token = NZ$1.00 spend credit on Urban Refit.",
+    courierReturn: "Free prepaid shipping label included. Tokens credited within 48 hours of inspection. 1 token = NZ$1.00.",
     hero: "Every piece is one-of-a-kind. Free shipping over NZ$50. Earn tokens when you sell back.",
   };
 
-  it("should reference correct token value (NZ$0.50) in sell microcopy", () => {
-    expect(microcopy.sellToUs).toContain("NZ$0.50");
-    expect(microcopy.sellToUs).not.toContain("NZ$1");
+  it("should reference correct token value (NZ$1.00) in sell microcopy", () => {
+    expect(microcopy.sellToUs).toContain("NZ$1.00");
   });
 
-  it("should reference correct token value (NZ$0.50) in courier return microcopy", () => {
-    expect(microcopy.courierReturn).toContain("NZ$0.50");
-    expect(microcopy.courierReturn).not.toContain("NZ$1");
+  it("should reference correct token value (NZ$1.00) in courier return microcopy", () => {
+    expect(microcopy.courierReturn).toContain("NZ$1.00");
   });
 
   it("should mention free shipping threshold in product detail microcopy", () => {

@@ -570,8 +570,8 @@ export const appRouter = router({
           throw new TRPCError({ code: "BAD_REQUEST", message: "Insufficient token balance" });
         }
         
-        // Deduct tokens and add to spend limit (1 token = $0.50 NZD)
-        const spendLimitValue = input.amount * 0.50;
+        // Deduct tokens and add to spend limit (1 token = $1.00 NZD)
+        const spendLimitValue = input.amount * 1.00;
         await db.updateTokenBalance(ctx.user.id, input.amount.toFixed(2), 'subtract');
         await db.updateSpendLimit(ctx.user.id, spendLimitValue.toFixed(2), 'add');
         
@@ -671,8 +671,8 @@ export const appRouter = router({
           throw new TRPCError({ code: "NOT_FOUND", message: "Charity not found or inactive" });
         }
         
-        // Convert tokens to dollar value (1 token = $0.50 NZD)
-        const dollarValue = input.tokenAmount * 0.50;
+        // Convert tokens to dollar value (1 token = $1.00 NZD)
+        const dollarValue = input.tokenAmount * 1.00;
         
         // Create donation record
         await db.createCharityDonation({
@@ -1110,7 +1110,7 @@ KEY INFORMATION:
 - 10% of every sale goes to our thrift store partners, and another 10% goes to our charity partners (20% total community impact)
 - Each item is unique (one-of-one) since it is secondhand
 - Customers can return items for resale and earn tokens (25% of resale value)
-- Each token is worth $0.50 NZD
+- Each token is worth $1.00 NZD
 - Tokens can be used for discounts or donated to charity partners
 - Shipping is calculated at checkout
 - We accept all major credit cards, PayPal, and Afterpay via Stripe
@@ -1125,7 +1125,7 @@ COMMON QUESTIONS:
 - Shipping: Standard shipping 5-7 business days, express 2-3 days
 - Sizing: Check product descriptions for measurements
 - Condition: Items are rated as Like New, Excellent, Good, or Fair
-- Tokens: Earn tokens by returning items or making purchases (1 token = $0.50 NZD)
+- Tokens: Earn tokens by returning items or making purchases (1 token = $1.00 NZD)
 
 WHEN CUSTOMER ASKS ABOUT A PRODUCT:
 1. Check the inventory list below to see if we have it or something similar

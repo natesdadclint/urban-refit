@@ -568,7 +568,7 @@ export async function sendSellOfferEmail(options: {
           <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
             <p style="color: #92400e; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Our Token Offer</p>
             <p style="color: #92400e; font-size: 36px; font-weight: 700; margin: 0;">🪙 ${tokenOffer} Tokens</p>
-            <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $0.50 NZD value)</p>
+            <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $1.00 NZD value)</p>
           </div>
           
           <p style="color: #1c1917; font-size: 16px; line-height: 1.6; margin: 0 0 16px 0;">
@@ -616,7 +616,7 @@ YOUR ITEM
 ${brand} - ${itemName}
 Submission #${submissionId}
 
-OUR TOKEN OFFER: ${tokenOffer} Tokens (1 token = $0.50 NZD value)
+OUR TOKEN OFFER: ${tokenOffer} Tokens (1 token = $1.00 NZD value)
 
 HOW TOKENS WORK:
 Use your tokens to shop for more pre-loved fashion on Urban Refit, or donate them directly to our partner charities. It's our circular economy in action!
@@ -711,7 +711,7 @@ export async function sendSellOfferAcceptedEmail(options: {
           <div style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; padding: 24px; margin: 0 0 24px 0; text-align: center;">
             <p style="color: #92400e; font-size: 14px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Agreed Token Amount</p>
             <p style="color: #92400e; font-size: 36px; font-weight: 700; margin: 0;">🪙 ${finalTokens} Tokens</p>
-            <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $0.50 NZD value)</p>
+            <p style="color: #a16207; font-size: 12px; margin: 8px 0 0 0;">(1 token = $1.00 NZD value)</p>
           </div>
           
           ${shippingLabelSection}
@@ -771,7 +771,7 @@ YOUR ITEM
 ${brand} - ${itemName}
 Submission #${submissionId}
 
-AGREED TOKEN AMOUNT: ${finalTokens} Tokens (1 token = $0.50 NZD value)
+AGREED TOKEN AMOUNT: ${finalTokens} Tokens (1 token = $1.00 NZD value)
 ${shippingLabelText}
 WHAT HAPPENS NEXT?
 1. ${shippingLabelUrl ? 'Download and print the shipping label above.' : "We'll send you a prepaid shipping label via email within 24 hours."}

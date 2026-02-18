@@ -1111,3 +1111,7 @@
 - [x] Update AI chat assistant system prompt with dual payout info
 - [x] Update order confirmation emails to mention charity partners
 - [x] Add charity payout tests (checkout, loyalty, urban-refit, breadcrumb-microcopy)
+- [x] Fix: update all token value references from $0.50 to $1.00 across entire codebase
+- [x] Update frontend pages (FAQ, Sell, Tokens, Profile, etc.) with $1.00 token value
+- [x] Update backend logic (token calculations, AI chat prompt) with $1.00 token value
+- [x] Update all vitest tests with $1.00 token value

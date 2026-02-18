@@ -106,7 +106,7 @@ export default function Charities() {
                     <p className="text-2xl font-bold">{tokenBalance.toFixed(2)} tokens</p>
                   </div>
                 </div>
-                <Badge variant="secondary">1 token = NZ$0.50</Badge>
+                <Badge variant="secondary">1 token = NZ$1.00</Badge>
               </div>
             </CardContent>
           </Card>
@@ -177,7 +177,7 @@ export default function Charities() {
                             <DialogTitle>Donate to {charity.name}</DialogTitle>
                             <DialogDescription>
                               Enter the number of tokens you'd like to donate. 
-                              Each token equals NZ$0.50 in donation value. You may be eligible for a 33% tax credit rebate.
+                              Each token equals NZ$1.00 in donation value. You may be eligible for a 33% tax credit rebate.
                             </DialogDescription>
                           </DialogHeader>
                           <div className="space-y-4 pt-4">
@@ -228,11 +228,11 @@ export default function Charities() {
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                   <div>
                                     <p className="text-muted-foreground">Donation Value</p>
-                                    <p className="font-bold">NZ${(parseFloat(donationAmount) * 0.50).toFixed(2)}</p>
+                                    <p className="font-bold">NZ${(parseFloat(donationAmount) * 1.00).toFixed(2)}</p>
                                   </div>
                                   <div>
                                     <p className="text-muted-foreground">Your Tax Credit</p>
-                                    <p className="font-bold text-green-600">NZ${(parseFloat(donationAmount) * 0.50 * 0.33).toFixed(2)}</p>
+                                    <p className="font-bold text-green-600">NZ${(parseFloat(donationAmount) * 1.00 * 0.33).toFixed(2)}</p>
                                   </div>
                                 </div>
                                 <p className="text-xs text-muted-foreground mt-2">

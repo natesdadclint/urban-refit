@@ -18,12 +18,12 @@ describe("Donation Tax Credit Feature", () => {
       expect(charitiesPage).toContain("Tax Credit Rebate (33%)");
     });
 
-    it("calculates donation value at $0.50 per token", () => {
-      expect(charitiesPage).toContain("parseFloat(donationAmount) * 0.50");
+    it("calculates donation value at $1.00 per token", () => {
+      expect(charitiesPage).toContain("parseFloat(donationAmount) * 1.00");
     });
 
     it("calculates 33% tax credit on the dollar value", () => {
-      expect(charitiesPage).toContain("parseFloat(donationAmount) * 0.50 * 0.33");
+      expect(charitiesPage).toContain("parseFloat(donationAmount) * 1.00 * 0.33");
     });
 
     it("mentions NZ tax law in the dialog", () => {

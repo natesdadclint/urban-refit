@@ -20,7 +20,7 @@ import {
   Sparkles
 } from "lucide-react";
 
-const TOKEN_RATE = 0.50;
+const TOKEN_RATE = 1.00;
 
 export default function HowTokensWork() {
   const [tokenInput, setTokenInput] = useState("");
@@ -67,7 +67,7 @@ export default function HowTokensWork() {
         <div className="container max-w-4xl py-8 sm:py-12">
           <div className="bg-primary/5 border border-primary/20 rounded-xl p-6 sm:p-8 text-center">
             <p className="text-sm text-muted-foreground mb-2">Token Value</p>
-            <p className="text-3xl sm:text-4xl font-bold text-primary mb-2">1 Token = NZ$0.50</p>
+            <p className="text-3xl sm:text-4xl font-bold text-primary mb-2">1 Token = NZ$1.00</p>
             <p className="text-sm text-muted-foreground">Use tokens as real money towards your next purchase or charity donation</p>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function HowTokensWork() {
                         ? `NZ$${nzdInput || "0.00"}`
                         : `${tokenInput || "0"} tokens`}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">at the rate of 1 token = NZ$0.50</p>
+                    <p className="text-xs text-muted-foreground mt-1">at the rate of 1 token = NZ$1.00</p>
                   </div>
                 )}
 
@@ -322,7 +322,7 @@ export default function HowTokensWork() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Save on Purchases</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Apply your tokens at checkout to reduce your order total. Each token is worth NZ$0.50 off your purchase.
+                  Apply your tokens at checkout to reduce your order total. Each token is worth NZ$1.00 off your purchase.
                 </p>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2 text-sm">

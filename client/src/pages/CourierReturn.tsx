@@ -193,7 +193,7 @@ export default function CourierReturn() {
                 </div>
                 <div className="mt-6 p-4 bg-muted rounded-lg">
                   <p className="text-sm">
-                    <strong>Token Value:</strong> Tokens can be converted to spend limit (1 token = NZ$0.50) 
+                    <strong>Token Value:</strong> Tokens can be converted to spend limit (1 token = NZ$1.00) 
                     or donated to charity. Spend limit applies to orders of 3+ items.
                   </p>
                 </div>
@@ -443,7 +443,7 @@ export default function CourierReturn() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground text-center mt-3">
-                  Free prepaid shipping label included. Tokens credited within 48 hours of inspection. 1 token = NZ$0.50.
+                  Free prepaid shipping label included. Tokens credited within 48 hours of inspection. 1 token = NZ$1.00.
                 </p>
               </CardContent>
             </Card>

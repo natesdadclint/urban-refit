@@ -37,18 +37,18 @@ describe("Sell Submission Token System", () => {
   });
 
   describe("Token Value", () => {
-    it("should have 1 token equal to $0.50 NZD", () => {
-      const tokenValue = 0.50; // 1 token = $0.50 NZD
+    it("should have 1 token equal to $1.00 NZD", () => {
+      const tokenValue = 1.00; // 1 token = $1.00 NZD
       const tokens = 50;
       const nzdValue = tokens * tokenValue;
-      expect(nzdValue).toBe(25);
+      expect(nzdValue).toBe(50);
     });
 
     it("should calculate correct token value for items", () => {
-      // Example: Item worth $75 NZD should be offered 150 tokens (at $0.50 each)
+      // Example: Item worth $75 NZD should be offered 75 tokens (at $1.00 each)
       const itemValueNZD = 75;
-      const tokenOffer = itemValueNZD / 0.50; // 1 token = $0.50
-      expect(tokenOffer).toBe(150);
+      const tokenOffer = itemValueNZD / 1.00; // 1 token = $1.00
+      expect(tokenOffer).toBe(75);
     });
   });
 

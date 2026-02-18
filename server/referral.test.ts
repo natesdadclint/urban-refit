@@ -57,18 +57,18 @@ describe('Referral System', () => {
       expect(totalTokensIssued).toBe(30);
     });
 
-    it('converts referee bonus to NZD at $0.50 per token', () => {
+    it('converts referee bonus to NZD at $1.00 per token', () => {
       const REFEREE_SIGNUP_BONUS = 10;
-      const TOKEN_VALUE_NZD = 0.50;
+      const TOKEN_VALUE_NZD = 1.00;
       const nzdValue = REFEREE_SIGNUP_BONUS * TOKEN_VALUE_NZD;
-      expect(nzdValue).toBe(5.00);
+      expect(nzdValue).toBe(10.00);
     });
 
-    it('converts referrer reward to NZD at $0.50 per token', () => {
+    it('converts referrer reward to NZD at $1.00 per token', () => {
       const REFERRER_REWARD = 20;
-      const TOKEN_VALUE_NZD = 0.50;
+      const TOKEN_VALUE_NZD = 1.00;
       const nzdValue = REFERRER_REWARD * TOKEN_VALUE_NZD;
-      expect(nzdValue).toBe(10.00);
+      expect(nzdValue).toBe(20.00);
     });
   });
 
