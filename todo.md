@@ -1119,3 +1119,4 @@
 - [x] CTA Standardisation: audit all CTA buttons across every page
 - [x] CTA Standardisation: define consistent styling, wording, sizing rules
 - [x] CTA Standardisation: implement standardised CTAs across all pages
+- [x] Fix: Weekly login reward should grant 1 token instead of 5 tokens per week

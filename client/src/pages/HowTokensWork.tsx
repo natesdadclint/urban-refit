@@ -247,7 +247,7 @@ export default function HowTokensWork() {
                       </p>
                       <div className="flex items-center gap-2 text-primary font-semibold">
                         <Coins className="w-4 h-4" />
-                        <span>+5 tokens per week</span>
+                        <span>+1 token per week</span>
                       </div>
                     </div>
                   </div>
@@ -415,7 +415,7 @@ export default function HowTokensWork() {
               <CardContent className="p-5 sm:p-6">
                 <h3 className="font-semibold mb-2">Can I earn tokens without selling clothes?</h3>
                 <p className="text-sm text-muted-foreground">
-                  Yes! You earn 5 tokens just for logging in each week. You also earn tokens back on purchases.
+                  Yes! You earn 1 token just for logging in each week. You also earn tokens back on purchases.
                 </p>
               </CardContent>
             </Card>

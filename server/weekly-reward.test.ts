@@ -17,7 +17,7 @@ describe("Weekly Login Reward System", () => {
   });
 
   describe("checkAndAwardWeeklyLoginReward", () => {
-    it("should award 5 tokens for first-time login", async () => {
+    it("should award 1 token for first-time login", async () => {
       const mockProfile = {
         userId: 1,
         tokenBalance: "10.00",
@@ -29,16 +29,16 @@ describe("Weekly Login Reward System", () => {
       vi.mocked(db.createTokenTransaction).mockResolvedValue(1);
       vi.mocked(db.checkAndAwardWeeklyLoginReward).mockResolvedValue({
         awarded: true,
-        tokensAwarded: 5,
-        newBalance: "15.00",
-        message: "Congratulations! You earned 5 tokens for your weekly login!"
+        tokensAwarded: 1,
+        newBalance: "11.00",
+        message: "Congratulations! You earned 1 token for your weekly login!"
       });
 
       const result = await db.checkAndAwardWeeklyLoginReward(1);
 
       expect(result.awarded).toBe(true);
-      expect(result.tokensAwarded).toBe(5);
-      expect(result.newBalance).toBe("15.00");
+      expect(result.tokensAwarded).toBe(1);
+      expect(result.newBalance).toBe("11.00");
     });
 
     it("should not award tokens if already claimed this week", async () => {
@@ -66,15 +66,15 @@ describe("Weekly Login Reward System", () => {
 
       vi.mocked(db.checkAndAwardWeeklyLoginReward).mockResolvedValue({
         awarded: true,
-        tokensAwarded: 5,
-        newBalance: "20.00",
-        message: "Congratulations! You earned 5 tokens for your weekly login!"
+        tokensAwarded: 1,
+        newBalance: "11.00",
+        message: "Congratulations! You earned 1 token for your weekly login!"
       });
 
       const result = await db.checkAndAwardWeeklyLoginReward(1);
 
       expect(result.awarded).toBe(true);
-      expect(result.tokensAwarded).toBe(5);
+      expect(result.tokensAwarded).toBe(1);
     });
   });
 

@@ -149,8 +149,7 @@ describe('Notification Helper Functions', () => {
     const notification = {
       userId: 1,
       title: 'Tokens Earned!',
-      message: '+50 tokens: Weekly login reward',
-      type: 'tokens' as const,
+      message: '+1 token: Weekly login reward',     type: 'tokens' as const,
       link: '/profile'
     };
     

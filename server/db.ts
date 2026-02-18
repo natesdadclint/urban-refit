@@ -2041,7 +2041,7 @@ export async function getStoreDetailedAnalytics(thriftStoreId: number): Promise<
 
 // ============ WEEKLY LOGIN REWARD OPERATIONS ============
 
-const WEEKLY_REWARD_TOKENS = 5;
+const WEEKLY_REWARD_TOKENS = 1;
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 const MIN_ACCOUNT_AGE_DAYS = 7; // Account must be at least 7 days old
 const MIN_PURCHASES_FOR_REWARD = 1; // Must have at least 1 completed purchase
