@@ -167,8 +167,8 @@ export default function Charities() {
                         if (open) setSelectedCharity(charity);
                       }}>
                         <DialogTrigger asChild>
-                          <Button size="sm">
-                            <Heart className="h-4 w-4 mr-2" />
+                          <Button size="sm" className="gap-2">
+                            <Heart className="h-4 w-4" />
                             Donate
                           </Button>
                         </DialogTrigger>
@@ -243,17 +243,18 @@ export default function Charities() {
                             )}
                             <Button 
                               onClick={handleDonate} 
-                              className="w-full"
+                              size="lg"
+                              className="w-full gap-2"
                               disabled={donateMutation.isPending || !donationAmount || parseFloat(donationAmount) <= 0}
                             >
                               {donateMutation.isPending ? (
                                 <>
-                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                  <Loader2 className="h-4 w-4 animate-spin" />
                                   Processing...
                                 </> 
                               ) : (
                                 <>
-                                  <Heart className="h-4 w-4 mr-2" />
+                                  <Heart className="h-4 w-4" />
                                   Donate {donationAmount ? `$${parseFloat(donationAmount).toFixed(2)}` : ''}
                                 </> 
                               )}

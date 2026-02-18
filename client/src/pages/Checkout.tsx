@@ -38,7 +38,7 @@ const NZ_REGIONS = [
 ] as const;
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Link, useLocation } from "wouter";
-import { ArrowLeft, CreditCard, Lock, Coins, Gift, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, CreditCard, Lock, Coins, Gift, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
@@ -151,7 +151,7 @@ export default function Checkout() {
           <p className="text-muted-foreground mb-6">
             Sign in to complete your purchase.
           </p>
-          <Button asChild>
+          <Button asChild size="lg">
             <a href={getLoginUrl()}>Sign In</a>
           </Button>
         </div>
@@ -167,8 +167,11 @@ export default function Checkout() {
           <p className="text-muted-foreground mb-6">
             Add some items to your cart before checking out.
           </p>
-          <Button asChild>
-            <Link href="/shop">Continue Shopping</Link>
+          <Button asChild size="lg" className="gap-2">
+            <Link href="/shop">
+              Continue Shopping
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
       </Layout>

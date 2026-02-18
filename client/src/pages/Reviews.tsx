@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Star, ThumbsUp, CheckCircle, User, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Star, ThumbsUp, CheckCircle, User, ShieldCheck, ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "wouter";
 import { toast } from "sonner";
@@ -370,11 +370,12 @@ export default function Reviews() {
               <p className="text-muted-foreground mb-6">
                 Your experience could help another guy find his next go-to piece.
               </p>
-              <Link href="/shop">
-                <Button className="rounded-full bg-black text-white hover:bg-black/90">
-                  Start Shopping
-                </Button>
-              </Link>
+              <Button asChild size="lg" className="gap-2">
+                <Link href="/shop">
+                  Shop Now
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
             </div>
           )}
         </div>
@@ -391,11 +392,12 @@ export default function Reviews() {
               Join thousands of men who shop smarter, not harder. 
               Premium brands, curated selection, delivered to you.
             </p>
-            <Link href="/shop">
-              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-8">
+            <Button asChild size="lg" className="gap-2">
+              <Link href="/shop">
                 Shop Now
-              </Button>
-            </Link>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Link } from "wouter";
-import { Package, ShoppingBag } from "lucide-react";
+import { Package, ShoppingBag, ArrowRight } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import PageHeader from "@/components/PageHeader";
 
@@ -51,7 +51,7 @@ export default function Orders() {
           <p className="text-muted-foreground mb-6 mt-4">
             Sign in to view your order history.
           </p>
-          <Button asChild>
+          <Button asChild size="lg">
             <a href={getLoginUrl()}>Sign In</a>
           </Button>
         </div>
@@ -75,8 +75,11 @@ export default function Orders() {
             <div className="text-center py-16 bg-secondary/30 rounded-lg">
               <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground mb-6">You haven't placed any orders yet.</p>
-              <Button asChild>
-                <Link href="/shop">Start Shopping</Link>
+              <Button asChild size="lg" className="gap-2">
+                <Link href="/shop">
+                  Start Shopping
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
             </div>
           ) : (

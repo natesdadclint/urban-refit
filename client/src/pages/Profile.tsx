@@ -314,27 +314,27 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex gap-2 flex-wrap">
-                <Button asChild>
+                <Button asChild className="gap-2">
                   <Link href="/sell">
-                    <ShoppingBag className="h-4 w-4 mr-2" />
+                    <ShoppingBag className="h-4 w-4" />
                     Sell Your Items
                   </Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="gap-2">
                   <Link href="/my-submissions">
-                    <Package className="h-4 w-4 mr-2" />
+                    <Package className="h-4 w-4" />
                     My Submissions
                   </Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="gap-2">
                   <Link href="/courier-return">
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                    <RefreshCw className="h-4 w-4" />
                     Return Garments
                   </Link>
                 </Button>
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild className="gap-2">
                   <Link href="/charities">
-                    <Heart className="h-4 w-4 mr-2" />
+                    <Heart className="h-4 w-4" />
                     Donate Tokens
                   </Link>
                 </Button>
@@ -369,8 +369,8 @@ export default function Profile() {
                   </CardDescription>
                 </div>
                 {!isEditingDetails && (
-                  <Button variant="outline" size="sm" onClick={() => setIsEditingDetails(true)}>
-                    <Pencil className="h-4 w-4 mr-2" />
+                  <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsEditingDetails(true)}>
+                    <Pencil className="h-4 w-4" />
                     Edit
                   </Button>
                 )}
@@ -431,11 +431,11 @@ export default function Profile() {
                       >
                         {updateDetailsMutation.isPending ? (
                           <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            <Loader2 className="h-4 w-4 animate-spin" />
                             Saving...
                           </>
                         ) : (
-                          "Save Details"
+                          "Save Changes"
                         )}
                       </Button>
                       <Button variant="outline" onClick={handleCancelEdit}>
@@ -756,11 +756,12 @@ export default function Profile() {
                 <Button 
                   onClick={handleSavePreferences}
                   disabled={updateProfileMutation.isPending}
-                  className="w-full md:w-auto"
+                  size="lg"
+                  className="w-full md:w-auto gap-2"
                 >
                   {updateProfileMutation.isPending ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Saving...
                     </>
                   ) : (
@@ -827,8 +828,11 @@ export default function Profile() {
                   <div className="text-center py-12">
                     <Package className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                     <p className="text-muted-foreground mb-4">No orders yet – your sustainable wardrobe awaits</p>
-                    <Button asChild>
-                      <Link href="/shop">Start Shopping</Link>
+                    <Button asChild className="gap-2">
+                      <Link href="/shop">
+                        Start Shopping
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </Button>
                   </div>
                 )}
@@ -844,9 +848,9 @@ export default function Profile() {
                   <CardTitle>Courier Returns</CardTitle>
                   <CardDescription>Track your garment returns and token earnings</CardDescription>
                 </div>
-                <Button asChild>
+                <Button asChild className="gap-2">
                   <Link href="/courier-return">
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                    <RefreshCw className="h-4 w-4" />
                     New Return
                   </Link>
                 </Button>
@@ -882,8 +886,11 @@ export default function Profile() {
                     <p className="text-sm text-muted-foreground mb-4">
                       Return garments you no longer wear and earn 25% of the resale value in tokens!
                     </p>
-                    <Button asChild>
-                      <Link href="/courier-return">Start a Return</Link>
+                    <Button asChild className="gap-2">
+                      <Link href="/courier-return">
+                        Start a Return
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </Button>
                   </div>
                 )}
@@ -963,9 +970,9 @@ export default function Profile() {
                   <CardTitle>Donation History</CardTitle>
                   <CardDescription>Your charitable contributions and tax credits</CardDescription>
                 </div>
-                <Button asChild>
+                <Button asChild className="gap-2">
                   <Link href="/charities">
-                    <Heart className="h-4 w-4 mr-2" />
+                    <Heart className="h-4 w-4" />
                     Donate Now
                   </Link>
                 </Button>
@@ -1006,8 +1013,11 @@ export default function Profile() {
                     <p className="text-sm text-muted-foreground mb-4">
                       Donate your tokens to charity and earn a 33% tax credit rebate!
                     </p>
-                    <Button asChild>
-                      <Link href="/charities">Browse Charities</Link>
+                    <Button asChild className="gap-2">
+                      <Link href="/charities">
+                        Browse Charities
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
                     </Button>
                   </div>
                 )}

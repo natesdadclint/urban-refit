@@ -194,12 +194,12 @@ export default function CheckoutSuccess() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild>
+            <Button asChild size="lg" className="gap-2">
               <Link href="/orders">
                 View My Orders
               </Link>
             </Button>
-            <Button asChild variant="outline" className="gap-2">
+            <Button asChild variant="outline" size="lg" className="gap-2">
               <Link href="/shop">
                 Continue Shopping
                 <ArrowRight className="h-4 w-4" />

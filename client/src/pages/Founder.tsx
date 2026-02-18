@@ -181,16 +181,16 @@ export default function Founder() {
                   I read every message that comes through. Whether it is feedback on the platform, a question about a product, or just a yarn about sustainable fashion — I am here.
                 </p>
                 <div className="flex flex-wrap gap-3">
-                  <Link href="/contact">
-                    <Button variant="outline" className="rounded-full">
+                  <Button asChild variant="outline" size="lg">
+                    <Link href="/contact">
                       Contact Us
-                    </Button>
-                  </Link>
-                  <a href="mailto:help@urbanrefit.store">
-                    <Button variant="outline" className="rounded-full">
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg">
+                    <a href="mailto:help@urbanrefit.store">
                       help@urbanrefit.store
-                    </Button>
-                  </a>
+                    </a>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -227,12 +227,12 @@ export default function Founder() {
 
           {/* CTA */}
           <section className="mt-16 text-center">
-            <Link href="/shop">
-              <Button className="rounded-full bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base">
-                Shop With Purpose
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
+            <Button asChild size="lg" className="gap-2">
+              <Link href="/shop">
+                Shop Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </section>
         </div>
       </div>

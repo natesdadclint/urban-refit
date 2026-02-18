@@ -6,7 +6,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, Clock, Eye, Heart, Share2, Twitter, Facebook, Link2, Grid3X3 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, Eye, Heart, Share2, Twitter, Facebook, Link2, Grid3X3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
@@ -111,12 +111,12 @@ export default function BlogPost() {
           <p className="text-muted-foreground mb-6">
             This post might have been moved or deleted.
           </p>
-          <Link href="/blog">
-            <Button className="rounded-full bg-black text-white hover:bg-black/90">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+          <Button asChild variant="outline" size="lg" className="gap-2">
+            <Link href="/blog">
+              <ArrowLeft className="h-4 w-4" />
               Back to Blog
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     );
@@ -260,11 +260,12 @@ export default function BlogPost() {
               title="Ready to shop sustainably?"
               subtitle="Discover unique pre-loved pieces that look good and do good."
             />
-            <Link href="/shop">
-              <Button className="rounded-full bg-black text-white hover:bg-black/90 px-8 mt-6">
+            <Button asChild size="lg" className="gap-2 mt-6">
+              <Link href="/shop">
                 Shop Now
-              </Button>
-            </Link>
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </div>
         </div>
       </section>

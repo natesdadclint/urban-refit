@@ -441,10 +441,10 @@ export default function Shop() {
           <Separator />
           <Button 
             variant="ghost" 
-            className="w-full text-destructive hover:text-destructive"
+            className="w-full text-destructive hover:text-destructive gap-2"
             onClick={clearAllFilters}
           >
-            <X className="h-4 w-4 mr-2" />
+            <X className="h-4 w-4" />
             Clear All Filters
           </Button>
         </>

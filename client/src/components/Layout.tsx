@@ -271,10 +271,10 @@ export default function Layout({ children }: LayoutProps) {
                 </DropdownMenu>
               ) : (
                 <div className="flex items-center gap-1 sm:gap-2">
-                  <Button asChild variant="outline" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+                  <Button asChild variant="outline" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm gap-2">
                     <Link href="/join">Join</Link>
                   </Button>
-                  <Button asChild variant="default" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm">
+                  <Button asChild variant="default" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm gap-2">
                     <a href={getLoginUrl()}>Sign In</a>
                   </Button>
                 </div>

@@ -131,10 +131,10 @@ export default function Join() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button asChild className="w-full">
+              <Button asChild size="lg" className="w-full gap-2">
                 <a href="/profile">View Your Profile & Rewards</a>
               </Button>
-              <Button asChild variant="outline" className="w-full">
+              <Button asChild variant="outline" size="lg" className="w-full gap-2">
                 <a href="/shop">Continue Shopping</a>
               </Button>
             </CardContent>

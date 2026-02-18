@@ -159,15 +159,15 @@ export default function SellToUs() {
               </ol>
             </div>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button variant="outline" onClick={() => { setSubmitted(false); setImages([]); setFormData({ ...formData, brand: "", itemType: "", itemName: "", size: "", condition: "", description: "", originalPrice: "", requestedTokens: "" }); }}>
+              <Button variant="outline" size="lg" className="gap-2" onClick={() => { setSubmitted(false); setImages([]); setFormData({ ...formData, brand: "", itemType: "", itemName: "", size: "", condition: "", description: "", originalPrice: "", requestedTokens: "" }); }}>
                 Submit Another Item
               </Button>
               {user && (
-                <Button asChild>
+                <Button asChild size="lg" className="gap-2">
                   <Link href="/my-submissions">View My Submissions</Link>
                 </Button>
               )}
-              <Button variant="outline" asChild>
+              <Button variant="outline" size="lg" className="gap-2" asChild>
                 <a href="/shop">Continue Shopping</a>
               </Button>
             </div>
@@ -393,7 +393,7 @@ export default function SellToUs() {
               </Card>
 
               <div className="text-center">
-                <Button type="submit" size="lg" disabled={isSubmitting || uploadMutation.isPending}>
+                <Button type="submit" size="lg" className="gap-2" disabled={isSubmitting || uploadMutation.isPending}>
                   {isSubmitting ? "Submitting..." : "Submit Item for Review"}
                 </Button>
               </div>

@@ -369,7 +369,7 @@ export default function FAQ() {
                 </label>
               </div>
               
-              <Button type="submit" className="w-full gap-2" disabled={contactMutation.isPending}>
+              <Button type="submit" size="lg" className="w-full gap-2" disabled={contactMutation.isPending}>
                 {contactMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (

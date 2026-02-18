@@ -228,12 +228,12 @@ export default function OurProcess() {
 
           {/* CTA */}
           <section className="mt-16 text-center">
-            <Link href="/shop">
-              <Button className="rounded-full bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base">
-                Shop With Confidence
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
+            <Button asChild size="lg" className="gap-2">
+              <Link href="/shop">
+                Shop Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </section>
         </div>
       </div>

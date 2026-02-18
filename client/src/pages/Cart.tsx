@@ -66,7 +66,7 @@ export default function Cart() {
           <p className="text-muted-foreground mb-6">
             Sign in to view your cart and start shopping.
           </p>
-          <Button asChild>
+          <Button asChild size="lg">
             <a href={getLoginUrl()}>Sign In</a>
           </Button>
         </div>
@@ -107,8 +107,11 @@ export default function Cart() {
             <div className="text-center py-16 bg-secondary/30 rounded-lg">
               <ShoppingBag className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground mb-6">Your cart is waiting for some pre-loved gems</p>
-              <Button asChild>
-                <Link href="/shop">Start Shopping</Link>
+              <Button asChild size="lg" className="gap-2">
+                <Link href="/shop">
+                  Start Shopping
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
             </div>
           ) : (
@@ -197,7 +200,7 @@ export default function Cart() {
                     <span>NZ${(parseFloat(cart.total) + (parseFloat(cart.total) >= 50 ? 0 : 9.99)).toFixed(2)}</span>
                   </div>
 
-                  <Button asChild className="w-full gap-2">
+                  <Button asChild size="lg" className="w-full gap-2">
                     <Link href="/checkout">
                       Proceed to Checkout
                       <ArrowRight className="h-4 w-4" />

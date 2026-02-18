@@ -122,7 +122,7 @@ export default function Contact() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                <Button type="submit" size="lg" className="w-full gap-2" disabled={isSubmitting}>
                   {isSubmitting ? "Opening Email..." : "Send Message"}
                 </Button>
               </form>

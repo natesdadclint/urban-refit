@@ -81,13 +81,16 @@ export default function Home() {
               </p>
               <div className="hero-buttons flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
                 <Button asChild size="lg" className="gap-2">
-                  <Link href="/shop" style={{fontSize: '13px'}}>
+                  <Link href="/shop">
                     Shop Now
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="bg-white/90 hover:bg-white border-foreground/20">
-                  <Link href="/shop">See What's New</Link>
+                <Button asChild variant="outline" size="lg" className="bg-white/90 hover:bg-white border-foreground/20 gap-2">
+                  <Link href="/shop">
+                    See What's New
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </Button>
               </div>
               <p className="text-xs sm:text-sm text-muted-foreground/80 mt-3 sm:mt-4 tracking-wide mx-auto">
@@ -268,9 +271,9 @@ export default function Home() {
             <p className="text-sm sm:text-base text-primary-foreground/80 max-w-2xl mx-auto mb-5 sm:mb-8">
               Every purchase keeps quality clothing out of landfill and puts money back into local thrift stores and charities. Good style, good karma.
             </p>
-            <Button asChild size="lg" variant="secondary" className="gap-2 text-sm sm:text-base">
+            <Button asChild size="lg" className="gap-2">
               <Link href="/shop">
-                Find Your Next Favourite
+                Shop Now
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

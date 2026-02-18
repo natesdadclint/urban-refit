@@ -71,8 +71,11 @@ export default function ProductDetail() {
           <p className="text-muted-foreground mb-6">
             This product may have been sold or removed.
           </p>
-          <Button asChild>
-            <Link href="/shop">Back to Shop</Link>
+          <Button asChild size="lg" className="gap-2">
+            <Link href="/shop">
+              <ArrowLeft className="h-4 w-4" />
+              Back to Shop
+            </Link>
           </Button>
         </div>
       </Layout>

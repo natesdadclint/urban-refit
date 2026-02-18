@@ -312,11 +312,12 @@ export default function CourierReturn() {
                 
                 <Button 
                   onClick={() => setStep(2)} 
-                  className="w-full"
+                  size="lg"
+                  className="w-full gap-2"
                   disabled={!itemName || !itemCategory || !itemCondition}
                 >
                   Continue to Photos
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </CardContent>
             </Card>
@@ -424,17 +425,18 @@ export default function CourierReturn() {
                 )}
                 
                 <div className="flex gap-4">
-                  <Button variant="outline" onClick={() => setStep(1)} className="flex-1">
+                  <Button variant="outline" size="lg" onClick={() => setStep(1)} className="flex-1 gap-2">
                     Back
                   </Button>
                   <Button 
                     onClick={handleSubmit} 
-                    className="flex-1"
+                    size="lg"
+                    className="flex-1 gap-2"
                     disabled={createReturnMutation.isPending}
                   >
                     {createReturnMutation.isPending ? (
                       <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        <Loader2 className="h-4 w-4 animate-spin" />
                         Submitting...
                       </>
                     ) : (
@@ -468,10 +470,10 @@ export default function CourierReturn() {
                   </p>
                 </div>
                 <div className="flex gap-4 justify-center">
-                  <Button variant="outline" onClick={() => setLocation('/profile')}>
+                  <Button variant="outline" size="lg" className="gap-2" onClick={() => setLocation('/profile')}>
                     View My Returns
                   </Button>
-                  <Button onClick={() => {
+                  <Button size="lg" className="gap-2" onClick={() => {
                     setStep(1);
                     setItemName("");
                     setItemBrand("");

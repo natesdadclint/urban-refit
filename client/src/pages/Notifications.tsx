@@ -128,10 +128,11 @@ export default function Notifications() {
           {unreadCount && unreadCount > 0 && (
             <Button 
               variant="outline" 
+              className="gap-2"
               onClick={() => markAllAsReadMutation.mutate()}
               disabled={markAllAsReadMutation.isPending}
             >
-              <CheckCheck className="h-4 w-4 mr-2" />
+              <CheckCheck className="h-4 w-4" />
               Mark all as read
             </Button>
           )}

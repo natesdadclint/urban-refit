@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { XCircle, ArrowLeft, ShoppingBag, HelpCircle } from "lucide-react";
+import { XCircle, ArrowLeft, ArrowRight, ShoppingBag, HelpCircle } from "lucide-react";
 
 export default function CheckoutCanceled() {
   return (
@@ -29,15 +29,16 @@ export default function CheckoutCanceled() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild>
+            <Button asChild size="lg" className="gap-2">
               <Link href="/cart">
-                <ArrowLeft className="h-4 w-4 mr-2" />
+                <ArrowLeft className="h-4 w-4" />
                 Return to Cart
               </Link>
             </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" size="lg" className="gap-2">
               <Link href="/shop">
                 Continue Shopping
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </div>
@@ -48,7 +49,7 @@ export default function CheckoutCanceled() {
             </p>
             <Button asChild variant="ghost" size="sm">
               <Link href="/faq">
-                <HelpCircle className="h-4 w-4 mr-2" />
+                <HelpCircle className="h-4 w-4" />
                 View FAQ
               </Link>
             </Button>

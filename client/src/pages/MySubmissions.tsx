@@ -207,10 +207,10 @@ export default function MySubmissions() {
                 centered
                 className="mb-6"
               />
-              <Button asChild>
+              <Button asChild size="lg" className="gap-2">
                 <Link href="/sell">
                   Trade Your Items for Tokens
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
             </Card>

@@ -304,12 +304,12 @@ export default function QualityStandards() {
 
           {/* CTA */}
           <section className="mt-16 text-center">
-            <Link href="/shop">
-              <Button className="rounded-full bg-foreground text-background hover:bg-foreground/90 px-8 py-6 text-base">
-                Browse Our Collection
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </Link>
+            <Button asChild size="lg" className="gap-2">
+              <Link href="/shop">
+                Shop Now
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
           </section>
         </div>
       </div>

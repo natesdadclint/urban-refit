@@ -260,11 +260,11 @@ export default function Blog() {
               />
               <Button 
                 type="submit"
-                className="rounded-full bg-black text-white hover:bg-black/90 px-6"
+                className="rounded-full bg-black text-white hover:bg-black/90 px-6 gap-2"
                 disabled={newsletterMutation.isPending}
               >
                 {newsletterMutation.isPending ? (
-                  <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Subscribing...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Subscribing...</>
                 ) : (
                   "Subscribe"
                 )}

@@ -440,18 +440,18 @@ export default function HowTokensWork() {
               centered 
             />
             <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
-              <Link href="/shop">
-                <Button size="lg" className="w-full sm:w-auto">
-                  <ShoppingBag className="w-4 h-4 mr-2" />
+              <Button asChild size="lg" className="w-full sm:w-auto gap-2">
+                <Link href="/shop">
                   Shop Now
-                </Button>
-              </Link>
-              <Link href="/sell">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  <Package className="w-4 h-4 mr-2" />
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="w-full sm:w-auto gap-2">
+                <Link href="/sell">
+                  <Package className="w-4 h-4" />
                   Sell Your Clothes
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </div>
         </div>
