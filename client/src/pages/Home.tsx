@@ -55,12 +55,12 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden min-h-[560px] sm:min-h-[620px] md:min-h-[700px] lg:min-h-[780px] w-full">
+      <section className="relative overflow-hidden h-[600px] sm:h-[700px] md:h-[850px] lg:h-[950px] w-full">
         {/* Background Image */}
         <img 
           src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/kfUuIBBcHurGsNia.png"
           alt="Urban Refit hero – curated designer brands displayed on clothing racks with folded items below"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-110"
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
 
         {/* Smooth full-page gradient overlay - no hard edges */}
@@ -71,7 +71,7 @@ export default function Home() {
         <div className="absolute inset-x-0 bottom-0 h-96 sm:h-[500px] md:h-[600px] bg-gradient-to-t from-white/95 via-white/70 via-white/40 to-transparent" />
         
         {/* Content — heading at top, rest at bottom */}
-        <div className="container relative h-full min-h-[560px] sm:min-h-[620px] md:min-h-[700px] lg:min-h-[780px] flex flex-col items-center text-center">
+        <div className="container relative h-full flex flex-col items-center text-center">
 
           {/* Subtitle, buttons, and tagline anchored to bottom of hero */}
           <div className="absolute inset-x-0 bottom-[12%] sm:bottom-[14%] md:bottom-[15%] flex justify-center px-4">
