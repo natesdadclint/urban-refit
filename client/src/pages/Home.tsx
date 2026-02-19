@@ -60,7 +60,7 @@ export default function Home() {
         <img 
           src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/kfUuIBBcHurGsNia.png"
           alt="Urban Refit hero – curated designer brands displayed on clothing racks with folded items below"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover object-center scale-110"
         />
 
         {/* Smooth full-page gradient overlay - no hard edges */}
