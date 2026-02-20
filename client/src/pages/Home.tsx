@@ -55,12 +55,12 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative overflow-hidden h-[600px] sm:h-[700px] md:h-[850px] lg:h-[950px] w-full">
+      <section className="relative overflow-hidden h-[700px] sm:h-[850px] md:h-[1000px] lg:h-[1100px] w-full">
         {/* Background Image */}
         <img 
           src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/kfUuIBBcHurGsNia.png"
           alt="Urban Refit hero – curated designer brands displayed on clothing racks with folded items below"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 w-full h-full object-cover object-top"
         />
 
         {/* Smooth full-page gradient overlay - no hard edges */}
