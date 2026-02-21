@@ -1,0 +1,38 @@
+{
+  "query": "SELECT id, name FROM products WHERE status = 'available' ORDER BY createdAt DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, name FROM products WHERE status = 'available' ORDER BY createdAt DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "120002",
+      "name": "Nike Sports Shoes"
+    },
+    {
+      "id": "8",
+      "name": "Patagonia Fleece Jacket"
+    },
+    {
+      "id": "7",
+      "name": "Dickies 874 Work Pants"
+    },
+    {
+      "id": "6",
+      "name": "Tommy Hilfiger Polo"
+    },
+    {
+      "id": "2",
+      "name": "Levi's 501 Original Jeans"
+    },
+    {
+      "id": "5",
+      "name": "New Era Yankees Cap"
+    },
+    {
+      "id": "1",
+      "name": "Ralph Lauren Oxford Shirt"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\n120002\tNike Sports Shoes\n8\tPatagonia Fleece Jacket\n7\tDickies 874 Work Pants\n6\tTommy Hilfiger Polo\n2\tLevi's 501 Original Jeans\n5\tNew Era Yankees Cap\n1\tRalph Lauren Oxford Shirt\n",
+  "stderr": "",
+  "execution_time_ms": 1500
+}

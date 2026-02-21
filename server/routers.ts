@@ -1048,7 +1048,7 @@ export const appRouter = router({
         if (ctx.user?.id) {
           const cartItems = await db.getCartItems(ctx.user.id);
           if (cartItems.length > 0) {
-            cartContext = `\n\nCUSTOMER'S CURRENT CART (${cartItems.length} items):\n${cartItems.map(ci => `- [ID:${ci.product.id}] ${ci.product.name} (${ci.product.brand || 'Unbranded'}) | Size: ${ci.product.size || 'One Size'} | Category: ${ci.product.category} | Color: ${ci.product.color || 'N/A'} | Price: $${ci.product.salePrice}`).join('\n')}\nTotal items in cart: ${cartItems.length}`;
+            cartContext = `\n\nCUSTOMER'S CURRENT CART (${cartItems.length} items):\n${cartItems.map(ci => `- [ID:${ci.product.id}] ${ci.product.name} (${ci.product.brand || 'Unbranded'}) | Size: ${ci.product.size || 'One Size'} | Category: ${ci.product.category} | Color: ${ci.product.color || 'N/A'} | Price: $${ci.product.salePrice}`).join('\n')}\nTotal items in cart: ${cartItems.length}`
           } else {
             cartContext = '\n\nCUSTOMER\'S CURRENT CART: Empty (no items added yet).';
           }

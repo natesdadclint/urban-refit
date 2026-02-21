@@ -18,7 +18,7 @@ export default function Home() {
     document.title = "Urban Refit | Sustainable Secondhand Men's Fashion NZ";
     
     // Preload hero image for fast LCP
-    const heroUrl = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/QgZSIbGnxuCyFCXC.png';
+    const heroUrl = 'https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/TJudtYDkvyaVEfSg.webp';
     let preloadLink = document.querySelector('link[rel="preload"][as="image"]') as HTMLLinkElement;
     if (!preloadLink) {
       preloadLink = document.createElement('link');
@@ -58,7 +58,7 @@ export default function Home() {
       <section className="relative overflow-hidden h-[700px] sm:h-[850px] md:h-[1000px] lg:h-[1100px] w-full">
         {/* Background Image */}
         <img 
-          src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/QgZSIbGnxuCyFCXC.png"
+          src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663045015687/TJudtYDkvyaVEfSg.webp"
           alt="Urban Refit hero – curated designer brands displayed on clothing racks with folded items below"
           className="absolute inset-0 w-full h-full object-cover object-[center_top] scale-125 -mt-48 sm:-mt-64 md:-mt-80 lg:-mt-96"
         />
