@@ -109,6 +109,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-background overflow-x-hidden">
+      {/* Promo Banner — above header */}
+      <AnnouncementBanner />
+      
       {/* Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
         {/* Row 1: Logo + Desktop Nav + Actions */}
@@ -341,9 +344,6 @@ export default function Layout({ children }: LayoutProps) {
           )}
         </nav>
       </header>
-
-      {/* Seasonal / Announcement Banner — sits between header and hero */}
-      <AnnouncementBanner />
 
       {/* Main content */}
       <main className="flex-1">{children}</main>

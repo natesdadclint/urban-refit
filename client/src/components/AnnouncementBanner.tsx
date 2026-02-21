@@ -80,34 +80,28 @@ export default function AnnouncementBanner() {
         const Icon = config.icon;
 
         if (config.isPromo) {
-          // Enhanced seasonal promo banner
+          // Minimal 1-line promo banner
           return (
             <div
               key={banner.id}
-              className={`${config.bg} ${config.border} border-b relative overflow-hidden`}
+              className={`${config.bg} ${config.border} border-b`}
             >
-              {/* Subtle animated shimmer */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[promo-shimmer_3s_ease-in-out_infinite]" />
-              
-              <div className="container relative flex items-center justify-between gap-2 py-1 sm:py-1.5 px-4">
-                <div className="flex items-center gap-1.5 flex-1 min-w-0 justify-center">
+              <div className="flex items-center justify-between gap-2 px-4 py-1 text-xs">
+                <div className="flex items-center gap-1.5 flex-1 min-w-0">
                   <Sparkles className="h-3 w-3 text-amber-400 shrink-0 animate-pulse" />
-                  <p className="text-xs font-medium text-white text-center">
-                    <span className="font-bold tracking-wide uppercase text-amber-300">{banner.title}</span>
-                    {banner.message && (
-                      <span className="ml-1.5 text-white/90 font-normal">{banner.message}</span>
-                    )}
-                  </p>
+                  <span className="font-bold tracking-wide uppercase text-amber-300 truncate">{banner.title}</span>
+                  {banner.message && (
+                    <span className="text-white/90 truncate hidden sm:inline">{banner.message}</span>
+                  )}
                   {banner.linkUrl && (
                     <a
                       href={banner.linkUrl}
-                      className="text-amber-300 hover:text-amber-200 underline underline-offset-2 text-xs font-semibold shrink-0 flex items-center gap-0.5 transition-colors"
+                      className="text-amber-300 hover:text-amber-200 underline underline-offset-1 font-semibold shrink-0 flex items-center gap-0.5 transition-colors whitespace-nowrap ml-auto"
                     >
                       {banner.linkText || "Shop Now"}
                       <ArrowRight className="h-2.5 w-2.5" />
                     </a>
                   )}
-                  <Sparkles className="h-3 w-3 text-amber-400 shrink-0 animate-pulse hidden sm:block" />
                 </div>
                 <button
                   onClick={() => handleDismiss(banner.id)}
