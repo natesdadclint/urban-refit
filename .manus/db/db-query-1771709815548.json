@@ -1,0 +1,52 @@
+{
+  "query": "SELECT id, title, message, type, isActive FROM site_banners ORDER BY createdAt DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute SELECT id, title, message, type, isActive FROM site_banners ORDER BY createdAt DESC;",
+  "rows": [
+    {
+      "id": "60002",
+      "title": "WINTER WARMTH",
+      "message": "Cosy layers and winter essentials. Sustainable warmth for the season ahead.",
+      "type": "promo",
+      "isActive": "0"
+    },
+    {
+      "id": "60003",
+      "title": "NEW ARRIVALS",
+      "message": "Fresh finds just added to our collection. Discover your next favourite piece today.",
+      "type": "info",
+      "isActive": "0"
+    },
+    {
+      "id": "60004",
+      "title": "SUPPORT CHARITIES",
+      "message": "Every purchase gives back. 10% of proceeds support local charities and thrift partners.",
+      "type": "warning",
+      "isActive": "1"
+    },
+    {
+      "id": "60001",
+      "title": "SUMMER SALE",
+      "message": "Up to 40% off selected styles. Limited stock, one-of-a-kind pieces.",
+      "type": "promo",
+      "isActive": "1"
+    },
+    {
+      "id": "30001",
+      "title": "Buy for your Boyfriend ",
+      "message": "Use Code BOYFRIEND at Checkout for 20% discount on orders on our above $50 ",
+      "type": "promo",
+      "isActive": "1"
+    },
+    {
+      "id": "1",
+      "title": "SUMMER SALE",
+      "message": "Up to 40% off selected styles. Limited stock, one-of-a-kind pieces.",
+      "type": "promo",
+      "isActive": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\tmessage\ttype\tisActive\n60002\tWINTER WARMTH\tCosy layers and winter essentials. Sustainable warmth for the season ahead.\tpromo\t0\n60003\tNEW ARRIVALS\tFresh finds just added to our collection. Discover your next favourite piece today.\tinfo\t0\n60004\tSUPPORT CHARITIES\tEvery purchase gives back. 10% of proceeds support local charities and thrift partners.\twarning\t1\n60001\tSUMMER SALE\tUp to 40% off selected styles. Limited stock, one-of-a-kind pieces.\tpromo\t1\n30001\tBuy for your Boyfriend \tUse Code BOYFRIEND at Checkout for 20% discount on orders on our above $50 \tpromo\t1\n1\tSUMMER SALE\tUp to 40% off selected styles. Limited stock, one-of-a-kind pieces.\tpromo\t0\n",
+  "stderr": "",
+  "execution_time_ms": 1520
+}

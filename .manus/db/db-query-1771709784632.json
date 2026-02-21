@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO site_banners (title, message, type, linkUrl, linkText, isActive) VALUES \n('WINTER WARMTH', 'Cosy layers and winter essentials. Sustainable warmth for the season ahead.', 'promo', '/shop?category=outerwear', 'Shop Winter', false),\n('NEW ARRIVALS', 'Fresh finds just added to our collection. Discover your next favourite piece today.', 'info', '/shop', 'Browse New', false),\n('SUPPORT CHARITIES', 'Every purchase gives back. 10% of proceeds support local charities and thrift partners.', 'warning', '/charities', 'Learn More', true);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute INSERT INTO site_banners (title, message, type, linkUrl, linkText, isActive) VALUES \n('WINTER WARMTH', 'Cosy layers and winter essentials. Sustainable warmth for the season ahead.', 'promo', '/shop?category=outerwear', 'Shop Winter', false),\n('NEW ARRIVALS', 'Fresh finds just added to our collection. Discover your next favourite piece today.', 'info', '/shop', 'Browse New', false),\n('SUPPORT CHARITIES', 'Every purchase gives back. 10% of proceeds support local charities and thrift partners.', 'warning', '/charities', 'Learn More', true);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1560
+}
