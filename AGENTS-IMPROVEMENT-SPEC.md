@@ -1,8 +1,8 @@
 # AGENTS.md Improvement Spec — Urban Refit
 
-## Current State
+## State Before This PR
 
-No `AGENTS.md` exists. No agent configuration files (`.cursorrules`, `CLAUDE.md`, `.ona/skills/`) are present. The only agent-adjacent artifacts are an empty `.ona/review/comments.json` and a `.manus/db/` directory with cached query results.
+Prior to these changes, no `AGENTS.md` existed. No agent configuration files (`.cursorrules`, `CLAUDE.md`, `.ona/skills/`) were present. The only agent-adjacent artifacts were an empty `.ona/review/comments.json` and a `.manus/db/` directory with cached query results.
 
 ---
 
@@ -76,7 +76,7 @@ shared/const.ts         → Shared constants
 ```
 
 #### 1.3 Code Conventions
-- **Formatting**: Prettier — double quotes, 2-space indent, trailing commas (es5), no semicolons optional. Run `pnpm format`.
+- **Formatting**: Prettier — double quotes, 2-space indent, trailing commas (es5), semicolons enabled (`"semi": true`). Run `pnpm format`.
 - **Imports**: Use `@/` for client code, `@shared/` for shared code. Server files use relative imports.
 - **Components**: Functional components only. Use shadcn/ui patterns from `client/src/components/ui/`.
 - **State management**: TanStack Query via tRPC hooks. No Redux or Zustand.
@@ -104,11 +104,11 @@ shared/const.ts         → Shared constants
 - Tests are server-side only. No client-side test infrastructure currently.
 
 #### 1.7 Environment Variables
-Document required vars (derive from `server/_core/env.ts`):
+Document required vars based on actual usage (core vars from `server/_core/env.ts`, plus integration-specific vars read directly from `process.env`):
 - `DATABASE_URL` — MySQL connection string
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` — Stripe integration
 - `RESEND_API_KEY` — Email via Resend
-- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `AWS_S3_BUCKET` — S3 storage
+- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `S3_BUCKET` — S3 storage
 - Plus any Forge/Manus API keys from `ENV`
 
 #### 1.8 Commands

@@ -68,7 +68,7 @@ Prettier with these settings (see `.prettierrc`):
 ### Imports
 - `@/` → `client/src/` (client code)
 - `@shared/` → `shared/` (shared code)
-- Server files use relative imports (no alias)
+- Server-internal modules use relative imports; server code imports shared modules via `@shared/*`
 
 ### Components
 - Functional components only
