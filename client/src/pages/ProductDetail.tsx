@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import ImageZoom from "@/components/ImageZoom";
 import SocialShare from "@/components/SocialShare";
+import QualityComparisonChart from "@/components/QualityComparisonChart";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -247,6 +248,15 @@ export default function ProductDetail() {
                 <p className="text-xs text-muted-foreground mt-2">
                   5% of this sale goes back to this thrift store partner.
                 </p>
+              </div>
+            )}
+
+            <Separator className="my-6" />
+
+            {/* Quality Comparison Chart */}
+            {product.brand && (
+              <div className="mb-8">
+                <QualityComparisonChart brand={product.brand} />
               </div>
             )}
 
