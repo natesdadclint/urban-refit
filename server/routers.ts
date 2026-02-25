@@ -2,7 +2,7 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { adminRouter } from "./admin-routes";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, adminProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
@@ -16,14 +16,6 @@ import { addSubscriberToMailchimp, removeSubscriberFromMailchimp } from "./mailc
 import { calculateSustainabilityMetrics, formatMetrics } from "./sustainability";
 import { badgesRouter } from "./routers/badges";
 import { feedbackRouter } from "./routers/feedback";
-
-// Admin-only procedure
-const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
-  if (ctx.user.role !== "admin") {
-    throw new TRPCError({ code: "FORBIDDEN", message: "Admin access required" });
-  }
-  return next({ ctx });
-});
 
 // Calculate sale price from original cost and markup
 function calculatePricing(originalCost: number, markupPercentage: number) {
