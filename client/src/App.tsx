@@ -42,6 +42,7 @@ const Roadmap = lazy(() => import("./pages/Roadmap"));
 const OurProcess = lazy(() => import("./pages/OurProcess"));
 const QualityStandards = lazy(() => import("./pages/QualityStandards"));
 const Founder = lazy(() => import("./pages/Founder"));
+const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 
 // Admin pages - lazy loaded
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -139,6 +140,7 @@ function Router() {
         <Route path="/admin/banners" component={AdminBanners} />
         <Route path="/admin/users" component={AdminUsers} />
         <Route path="/docs/security" component={SecurityDocs} />
+        <Route path="/api-docs" component={ApiDocs} />
         <Route path="/roadmap" component={Roadmap} />
         
         <Route path="/404" component={NotFound} />
