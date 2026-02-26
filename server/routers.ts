@@ -156,12 +156,6 @@ export const appRouter = router({
         return db.getProductWithThriftStore(input.id);
       }),
     
-    priceComparison: publicProcedure
-      .input(z.object({ brand: z.string() }))
-      .query(async ({ input }) => {
-        return db.getPriceComparisonByCondition(input.brand);
-      }),
-    
     create: adminProcedure
       .input(z.object({
         name: z.string().min(1),
