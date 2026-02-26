@@ -12,6 +12,9 @@ export default function ImageZoom({ src, alt, className = "" }: ImageZoomProps) 
   const [isOpen, setIsOpen] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [imageError, setImageError] = useState(false);
+  const placeholderImage = "https://placehold.co/600x600/f5f5f4/a8a29e?text=No+Image";
+  const displaySrc = imageError || !src ? placeholderImage : src;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (zoomLevel === 1) return;
@@ -34,9 +37,10 @@ export default function ImageZoom({ src, alt, className = "" }: ImageZoomProps) 
         onClick={() => setIsOpen(true)}
       >
         <img
-          src={src}
+          src={displaySrc}
           alt={alt}
           className="w-full h-full object-cover"
+          onError={() => setImageError(true)}
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
           <ZoomIn className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg" />
@@ -60,9 +64,10 @@ export default function ImageZoom({ src, alt, className = "" }: ImageZoomProps) 
               style={{ cursor: zoomLevel > 1 ? "zoom-out" : "zoom-in" }}
             >
               <img
-                src={src}
+                src={displaySrc}
                 alt={alt}
                 className="max-w-[90vw] max-h-[90vh] object-contain transition-transform duration-200"
+                onError={() => setImageError(true)}
                 style={{
                   transform: `scale(${zoomLevel})`,
                   transformOrigin: `${position.x}% ${position.y}%`,

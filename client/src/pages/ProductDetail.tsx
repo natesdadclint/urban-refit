@@ -89,7 +89,8 @@ export default function ProductDetail() {
   
   // Collect all available images
   const productImages = [product.image1Url, product.image2Url].filter((url): url is string => Boolean(url));
-  const currentImage = productImages[selectedImageIndex] || placeholderImage;
+  const safeImageIndex = Math.min(selectedImageIndex, productImages.length - 1);
+  const currentImage = productImages.length > 0 ? productImages[safeImageIndex] : placeholderImage;
 
   return (
     <Layout>
