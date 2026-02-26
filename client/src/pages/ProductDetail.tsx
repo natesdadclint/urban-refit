@@ -133,6 +133,7 @@ export default function ProductDetail() {
                     <img
                       src={imageUrl}
                       alt={`${product.name} view ${index + 1}`}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </button>
