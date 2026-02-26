@@ -89,8 +89,7 @@ export default function ProductDetail() {
   
   // Collect all available images
   const productImages = [product.image1Url, product.image2Url].filter((url): url is string => Boolean(url));
-  const safeImageIndex = Math.min(selectedImageIndex, productImages.length - 1);
-  const currentImage = productImages.length > 0 ? productImages[safeImageIndex] : placeholderImage;
+  const currentImage = productImages[selectedImageIndex] || placeholderImage;
 
   return (
     <Layout>
@@ -133,7 +132,6 @@ export default function ProductDetail() {
                     <img
                       src={imageUrl}
                       alt={`${product.name} view ${index + 1}`}
-                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </button>
