@@ -24,6 +24,13 @@ const conditionLabels: Record<string, string> = {
   fair: "Fair",
 };
 
+const conditionColors: Record<string, string> = {
+  like_new: "bg-emerald-100 text-emerald-800 border border-emerald-300",
+  excellent: "bg-blue-100 text-blue-800 border border-blue-300",
+  good: "bg-amber-100 text-amber-800 border border-amber-300",
+  fair: "bg-orange-100 text-orange-800 border border-orange-300",
+};
+
 // Check if product was added within the last 7 days
 function isNewArrival(createdAt?: Date | string): boolean {
   if (!createdAt) return false;
@@ -66,7 +73,12 @@ export default function ProductCard({
             className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
             onLoad={() => setImageLoaded(true)}
           />
-          {/* New Arrivals Badge */}
+          {/* Quality Badge - Top Right */}
+          <div className={`absolute top-1.5 right-1.5 sm:top-2 sm:right-2 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-md text-[9px] sm:text-xs font-semibold shadow-md ${conditionColors[condition] || conditionColors.good}`}>
+            {conditionLabels[condition] || condition}
+          </div>
+          
+          {/* New Arrivals Badge - Top Left */}
           {isNew && (
             <div className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-primary text-primary-foreground px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-md text-[10px] sm:text-xs font-medium flex items-center gap-0.5 sm:gap-1 shadow-sm">
               <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
@@ -104,9 +116,6 @@ export default function ProductCard({
               </h3>
             </Link>
           </div>
-          <span className={`condition-badge ${condition} shrink-0 text-[9px] sm:text-xs px-1 sm:px-1.5 py-0.5`}>
-            {conditionLabels[condition] || condition}
-          </span>
         </div>
 
         {size && (

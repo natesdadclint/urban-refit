@@ -151,6 +151,33 @@ async function startServer() {
     }
   });
 
+  // REST API endpoint for products
+  app.get("/api/products", async (req, res) => {
+    try {
+      const { getAvailableProducts } = await import("../db");
+      const products = await getAvailableProducts({ limit: 100 });
+      res.json(products);
+    } catch (error) {
+      console.error("[Products API] Error:", error);
+      res.status(500).json({ error: "Failed to fetch products" });
+    }
+  });
+
+  // REST API endpoint for single product
+  app.get("/api/products/:id", async (req, res) => {
+    try {
+      const { getProductById } = await import("../db");
+      const product = await getProductById(parseInt(req.params.id));
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+      res.json(product);
+    } catch (error) {
+      console.error("[Product API] Error:", error);
+      res.status(500).json({ error: "Failed to fetch product" });
+    }
+  });
+  
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
   
