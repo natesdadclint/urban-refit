@@ -285,6 +285,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
 }
 
 export async function getPaymentHistory(userId: number) {
-  const orders = await db.getUserOrders(userId);
+  const orders = await db.getOrdersByUserId(userId);
   return orders.filter((order) => order.status !== "pending");
 }

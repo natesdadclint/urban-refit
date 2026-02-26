@@ -169,16 +169,18 @@ export async function getProductWithThriftStore(id: number) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return null;
-    
-    const [product] = await db.select().from(products).where(eq(products.id, id));
-    if (!product) return null;
-    
-    let store = null;
-    if (product.thriftStoreId) {
-      store = await getThriftStoreById(product.thriftStoreId);
-    }
-    
-    return { ...product, thriftStore: store };
+
+    const [row] = await db
+      .select({
+        ...getTableColumns(products),
+        thriftStore: getTableColumns(thriftStores),
+      })
+      .from(products)
+      .leftJoin(thriftStores, eq(products.thriftStoreId, thriftStores.id))
+      .where(eq(products.id, id));
+
+    if (!row) return null;
+    return row;
   });
 }
 
@@ -386,17 +388,15 @@ export async function getCartItems(userId: number) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return [];
-    
-    const cartItemsData = await db.select().from(cartItems).where(eq(cartItems.userId, userId));
-    
-    const itemsWithProducts = await Promise.all(
-      cartItemsData.map(async (ci) => {
-        const product = await getProductById(ci.productId);
-        return { cartItem: ci, product };
+
+    return db
+      .select({
+        cartItem: getTableColumns(cartItems),
+        product: getTableColumns(products),
       })
-    );
-    
-    return itemsWithProducts.filter(item => item.product);
+      .from(cartItems)
+      .innerJoin(products, eq(cartItems.productId, products.id))
+      .where(eq(cartItems.userId, userId));
   });
 }
 
@@ -504,6 +504,83 @@ export async function getOrderItems(orderId: number) {
     const db = await getDb();
     if (!db) return [];
     return db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+  });
+}
+
+export async function getAllOrders() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(orders);
+  });
+}
+
+/**
+ * Count order items for a user across delivered/shipped/paid orders in a single
+ * aggregation query, avoiding the N+1 pattern of fetching each order's items
+ * individually.
+ */
+export async function countUserOrderItems(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return 0;
+
+    const [row] = await db
+      .select({ count: sql<number>`COUNT(${orderItems.id})` })
+      .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(
+        and(
+          eq(orders.userId, userId),
+          inArray(orders.status, ["delivered", "shipped", "paid"])
+        )
+      );
+
+    return Number(row?.count || 0);
+  });
+}
+
+/**
+ * Count all order items across delivered/shipped/paid orders site-wide in a
+ * single aggregation query, avoiding the N+1 pattern.
+ */
+export async function countAllOrderItems() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return 0;
+
+    const [row] = await db
+      .select({ count: sql<number>`COUNT(${orderItems.id})` })
+      .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(inArray(orders.status, ["delivered", "shipped", "paid"]));
+
+    return Number(row?.count || 0);
+  });
+}
+
+/**
+ * Return the set of product IDs that a user has purchased in delivered or
+ * shipped orders.  Uses a single JOIN query instead of the N+1 pattern of
+ * fetching orders then fetching each order's items one by one.
+ */
+export async function getPurchasedProductIds(userId: number): Promise<Set<number>> {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return new Set<number>();
+
+    const rows = await db
+      .select({ productId: orderItems.productId })
+      .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(
+        and(
+          eq(orders.userId, userId),
+          inArray(orders.status, ["shipped", "delivered"])
+        )
+      );
+
+    return new Set(rows.map((r) => r.productId));
   });
 }
 
@@ -966,4 +1043,4 @@ export async function getSellSubmissionReplies(submissionId: number) {
 }
 
 // Import drizzle operators
-import { eq, and, or, inArray, isNotNull, gte, lte, asc, desc, sql } from "drizzle-orm";
+import { eq, and, or, inArray, isNotNull, gte, lte, asc, desc, sql, getTableColumns } from "drizzle-orm";

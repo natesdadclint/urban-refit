@@ -417,7 +417,7 @@ export const appRouter = router({
   // ============ ORDER ROUTES ============
   order: router({
     list: protectedProcedure.query(async ({ ctx }) => {
-      return db.getUserOrders(ctx.user.id);
+      return db.getOrdersByUserId(ctx.user.id);
     }),
     
     listAll: adminProcedure.query(async () => {
@@ -1307,15 +1307,9 @@ Keep insights concise and actionable.`;
         imageUrl: z.string().optional(),
       }))
       .mutation(async ({ ctx, input }) => {
-        // Check if user has purchased this product (verified purchase)
-        const userOrders = await db.getUserOrders(ctx.user.id);
-        const purchasedProductIds = new Set<number>();
-        for (const order of userOrders) {
-          if (order.status === "delivered" || order.status === "shipped") {
-            const items = await db.getOrderItems(order.id);
-            items.forEach(item => purchasedProductIds.add(item.orderItem.productId));
-          }
-        }
+        // Check if user has purchased this product (verified purchase).
+        // Uses a single JOIN query instead of fetching each order's items one by one.
+        const purchasedProductIds = await db.getPurchasedProductIds(ctx.user.id);
         const isVerifiedPurchase = purchasedProductIds.has(input.productId);
         
         const reviewId = await db.createProductReview({
@@ -2100,26 +2094,16 @@ Keep insights concise and actionable.`;
   // ============ SUSTAINABILITY ROUTES ============
   sustainability: router({
     myMetrics: protectedProcedure.query(async ({ ctx }) => {
-      const orders = await db.getUserOrders(ctx.user.id);
-      let totalGarmentsPurchased = 0;
-      for (const order of orders) {
-        if (order.status === "delivered" || order.status === "shipped" || order.status === "paid") {
-          const items = await db.getOrderItems(order.id);
-          totalGarmentsPurchased += items.length;
-        }
-      }
+      // Single COUNT aggregate query instead of fetching all orders then all
+      // items per order (N+1).
+      const totalGarmentsPurchased = await db.countUserOrderItems(ctx.user.id);
       const metrics = calculateSustainabilityMetrics(totalGarmentsPurchased);
       return formatMetrics(metrics);
     }),
     global: publicProcedure.query(async () => {
-      const allOrders = await db.getAllOrders();
-      let totalGarments = 0;
-      for (const order of allOrders) {
-        if (order.status === "delivered" || order.status === "shipped" || order.status === "paid") {
-          const items = await db.getOrderItems(order.id);
-          totalGarments += items.length;
-        }
-      }
+      // Single COUNT aggregate query instead of fetching all orders then all
+      // items per order (N+1).
+      const totalGarments = await db.countAllOrderItems();
       const metrics = calculateSustainabilityMetrics(totalGarments);
       return formatMetrics(metrics);
     }),
