@@ -484,7 +484,7 @@ export async function createOrder(data: InsertOrder) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(orders).values(data);
-    return result[0];
+    return Number(result[0].insertId);
   });
 }
 
@@ -1045,6 +1045,15 @@ export async function updateBanner(id: number, data: Partial<InsertSiteBanner>) 
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     await db.update(siteBanners).set(data).where(eq(siteBanners.id, id));
+    return true;
+  });
+}
+
+export async function deleteBanner(id: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.delete(siteBanners).where(eq(siteBanners.id, id));
     return true;
   });
 }

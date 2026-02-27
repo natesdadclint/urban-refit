@@ -1169,3 +1169,10 @@
 - [x] Fix website not rendering when published (investigate production build errors)
 - [x] Fix TypeScript errors blocking production build (242 errors in server/stripe.ts)
 - [x] Test published site after fixes
+
+## Publishing Issues (Feb 27, 2026)
+- [x] Fix remaining 239 TypeScript errors blocking production build
+- [x] Fix deleteBanner missing function error
+- [x] Fix Stripe API version mismatch (2025-12-15.clover vs 2026-02-25.clover)
+- [x] Fix ResultSetHeader type errors in stripe.ts
+- [x] Test production build succeeds

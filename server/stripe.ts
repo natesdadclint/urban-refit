@@ -6,7 +6,7 @@ import { sendOrderConfirmationEmailViaResend } from "./resend";
 
 // Initialize Stripe
 const stripe = new Stripe(ENV.stripeSecretKey || "", {
-  apiVersion: "2025-12-15.clover",
+  apiVersion: "2026-02-25.clover",
 });
 
 export { stripe };
