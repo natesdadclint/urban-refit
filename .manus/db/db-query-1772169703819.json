@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE products \nSET image1Url = CONCAT('https://placehold.co/600x600/e5e7eb/6b7280?text=', REPLACE(name, ' ', '+'))\nWHERE image1Url LIKE 'https://images.unsplash.com%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3hVNBNxhmVUwbF8.d13697214b4f --database E6pe8Nu22gDSQMdPz9Svd5 --execute UPDATE products \nSET image1Url = CONCAT('https://placehold.co/600x600/e5e7eb/6b7280?text=', REPLACE(name, ' ', '+'))\nWHERE image1Url LIKE 'https://images.unsplash.com%';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 1627
+}

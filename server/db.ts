@@ -27,7 +27,8 @@ import {
   referralCodes, InsertReferralCode, ReferralCode,
   referrals, InsertReferral, Referral,
   siteBanners, InsertSiteBanner, SiteBanner,
-  sellSubmissionReplies, InsertSellSubmissionReply, SellSubmissionReply
+  sellSubmissionReplies, InsertSellSubmissionReply, SellSubmissionReply,
+  productReviews, InsertProductReview, ProductReview
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -173,12 +174,12 @@ export async function getProductWithThriftStore(id: number) {
     const [product] = await db.select().from(products).where(eq(products.id, id));
     if (!product) return null;
     
-    let store = null;
+    let thriftStore = null;
     if (product.thriftStoreId) {
-      store = await getThriftStoreById(product.thriftStoreId);
+      thriftStore = await getThriftStoreById(product.thriftStoreId);
     }
     
-    return { ...product, thriftStore: store };
+    return { product, thriftStore };
   });
 }
 
@@ -967,3 +968,25 @@ export async function getSellSubmissionReplies(submissionId: number) {
 
 // Import drizzle operators
 import { eq, and, or, inArray, isNotNull, gte, lte, asc, desc, sql } from "drizzle-orm";
+
+/**
+ * Get all approved product reviews
+ */
+export async function getAllApprovedReviews(limit?: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    let query = db
+      .select()
+      .from(productReviews)
+      .where(eq(productReviews.status, "approved"))
+      .orderBy(desc(productReviews.createdAt));
+    
+    if (limit) {
+      query = query.limit(limit) as any;
+    }
+    
+    return query;
+  });
+}

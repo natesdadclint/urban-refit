@@ -1135,3 +1135,18 @@
 - [x] Integrate gallery into product detail page
 - [x] Add zoom functionality for gallery images
 - [x] Test gallery with products that have multiple images
+
+## Bug Fixes
+- [x] Fix missing db.getAllApprovedReviews function causing /shop page error
+
+## Shop Page Issues
+- [ ] Fix missing product images on shop page (showing blank placeholders)
+- [ ] Fix "Product Not Found" error when clicking product cards
+- [ ] Ensure all product links route correctly to detail pages
+
+## Shop Page Fixes (Feb 27, 2026)
+- [x] Fix missing product images on shop page (replaced broken Unsplash URLs with placeholders)
+- [x] Fix "Product Not Found" errors when clicking product cards (corrected getProductWithThriftStore return structure)
+- [x] Fix product detail page rendering (changed from `{ ...product, thriftStore }` to `{ product, thriftStore }`)
+- [x] Update getAllApprovedReviews function in db.ts (was missing, causing /shop page errors)
+- [x] Verify product image gallery component integration
