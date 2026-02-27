@@ -66,9 +66,11 @@ export const products = mysqlTable("products", {
   thriftStorePayoutAmount: decimal("thriftStorePayoutAmount", { precision: 10, scale: 2 }).notNull(), // 10% of sale price
   charityPayoutAmount: decimal("charityPayoutAmount", { precision: 10, scale: 2 }).default("0.00").notNull(), // 10% of sale price to charity
   
-  // Dual images for different viewpoints
+  // Multiple images for different viewpoints (up to 4)
   image1Url: text("image1Url"),
   image2Url: text("image2Url"),
+  image3Url: text("image3Url"),
+  image4Url: text("image4Url"),
   
   // Relationships
   thriftStoreId: int("thriftStoreId"),

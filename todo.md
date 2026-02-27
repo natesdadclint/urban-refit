@@ -1150,3 +1150,17 @@
 - [x] Fix product detail page rendering (changed from `{ ...product, thriftStore }` to `{ product, thriftStore }`)
 - [x] Update getAllApprovedReviews function in db.ts (was missing, causing /shop page errors)
 - [x] Verify product image gallery component integration
+
+## TypeScript Error Fixes (Feb 27, 2026)
+- [ ] Implement db.getOrderItemsWithDetails() function to return properly structured order item data
+- [ ] Implement db.getUserOrders() function for payment history
+- [ ] Update server/stripe.ts to use getOrderItemsWithDetails() instead of getOrderItems()
+- [ ] Verify TypeScript compilation passes (fix 258 errors)
+
+## Product Image Expansion (Feb 27, 2026)
+- [x] Add image3Url and image4Url columns to products table schema
+- [x] Run database migration to apply schema changes
+- [x] Update product creation/update forms to support 4 images
+- [x] Update ProductImageGallery component to display up to 4 images
+- [x] Update ProductCard to handle additional images
+- [x] Test image gallery with 3-4 images per product

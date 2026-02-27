@@ -473,6 +473,11 @@ export async function getOrdersByUserId(userId: number) {
   });
 }
 
+// Alias for compatibility
+export async function getUserOrders(userId: number) {
+  return getOrdersByUserId(userId);
+}
+
 export async function getOrderById(id: number) {
   return withRetry(async () => {
     const db = await getDb();
@@ -505,6 +510,55 @@ export async function getOrderItems(orderId: number) {
     const db = await getDb();
     if (!db) return [];
     return db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+  });
+}
+
+export async function getOrderItemsWithDetails(orderId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const items = await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+    
+    const itemsWithDetails = await Promise.all(
+      items.map(async (item) => {
+        const product = await getProductById(item.productId);
+        let thriftStore = null;
+        
+        if (item.thriftStoreId) {
+          thriftStore = await getThriftStoreById(item.thriftStoreId);
+        }
+        
+        return {
+          orderItem: {
+            id: item.id,
+            orderId: item.orderId,
+            productId: item.productId,
+            price: item.price,
+            thriftStoreId: item.thriftStoreId,
+            thriftStorePayoutAmount: item.thriftStorePayoutAmount,
+          },
+          product: product ? {
+            id: product.id,
+            name: product.name,
+            brand: product.brand,
+            size: product.size,
+            image1Url: product.image1Url,
+          } : {
+            id: item.productId,
+            name: 'Unknown Product',
+            brand: null,
+            size: null,
+            image1Url: null,
+          },
+          thriftStore: thriftStore ? {
+            name: thriftStore.name,
+          } : null,
+        };
+      })
+    );
+    
+    return itemsWithDetails;
   });
 }
 

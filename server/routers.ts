@@ -177,6 +177,8 @@ export const appRouter = router({
         thriftStoreId: z.number().optional(),
         image1Url: z.string().optional(),
         image2Url: z.string().optional(),
+        image3Url: z.string().optional(),
+        image4Url: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const pricing = calculatePricing(input.originalCost, input.markupPercentage);
@@ -206,6 +208,8 @@ export const appRouter = router({
         thriftStoreId: z.number().optional(),
         image1Url: z.string().optional(),
         image2Url: z.string().optional(),
+        image3Url: z.string().optional(),
+        image4Url: z.string().optional(),
         status: z.enum(["available", "reserved", "sold", "archived"]).optional(),
       }))
       .mutation(async ({ input }) => {
@@ -288,7 +292,13 @@ export const appRouter = router({
           key = result.key;
         }
         
-        const field = input.slot === 1 ? 'image1Url' : 'image2Url';
+        const fieldMap: Record<number, string> = {
+          1: 'image1Url',
+          2: 'image2Url',
+          3: 'image3Url',
+          4: 'image4Url',
+        };
+        const field = fieldMap[input.slot] || 'image1Url';
         
         await db.updateProduct(input.productId, { [field]: url });
         

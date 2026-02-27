@@ -218,6 +218,13 @@
       "when": 1771129056812,
       "tag": "0030_red_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "5",
+      "when": 1772170224701,
+      "tag": "0031_warm_firebrand",
+      "breakpoints": true
     }
   ]
 }

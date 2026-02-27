@@ -195,8 +195,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     stripePaymentIntentId: session.payment_intent as string,
   });
 
-  // Get order items and mark products as sold
-  const orderItems = await db.getOrderItems(order.id);
+  // Get order items with full details and mark products as sold
+  const orderItems = await db.getOrderItemsWithDetails(order.id);
   
   // Track payouts by thrift store and total charity payout
   const thriftStorePayouts: Record<number, number> = {};

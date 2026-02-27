@@ -87,8 +87,8 @@ export default function ProductDetail() {
   const condition = conditionLabels[product.condition] || { label: product.condition, description: "" };
   const placeholderImage = "https://placehold.co/600x600/f5f5f4/a8a29e?text=No+Image";
   
-  // Collect all available images
-  const productImages = [product.image1Url, product.image2Url].filter((url): url is string => Boolean(url));
+  // Collect all available images (up to 4)
+  const productImages = [product.image1Url, product.image2Url, product.image3Url, product.image4Url].filter((url): url is string => Boolean(url));
 
   return (
     <Layout>
