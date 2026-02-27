@@ -1126,3 +1126,6 @@
 - [x] Update vulnerable packages to secure versions
 - [x] Run pnpm audit to verify fixes
 - [x] Test application after dependency updates
+
+## Image Fixes
+- [x] Fix 5 products with broken image2Url relative paths by setting to null
