@@ -1,5 +1,5 @@
 import Layout from "@/components/Layout";
-import ImageZoom from "@/components/ImageZoom";
+import ProductImageGallery from "@/components/ProductImageGallery";
 import SocialShare from "@/components/SocialShare";
 import QualityComparisonChart from "@/components/QualityComparisonChart";
 import { PageBreadcrumb } from "@/components/PageBreadcrumb";
@@ -25,7 +25,7 @@ export default function ProductDetail() {
   const params = useParams<{ id: string }>();
   const [, setLocation] = useLocation();
   const { isAuthenticated } = useAuth();
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   
   const { data, isLoading, error } = trpc.product.getById.useQuery(
     { id: parseInt(params.id || "0") },
@@ -89,7 +89,6 @@ export default function ProductDetail() {
   
   // Collect all available images
   const productImages = [product.image1Url, product.image2Url].filter((url): url is string => Boolean(url));
-  const currentImage = productImages[selectedImageIndex] || placeholderImage;
 
   return (
     <Layout>
@@ -106,39 +105,10 @@ export default function ProductDetail() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image Gallery */}
-          <div className="space-y-4">
-            {/* Main Image with zoom */}
-            <div className="aspect-square rounded-lg overflow-hidden bg-muted">
-              <ImageZoom
-                src={currentImage}
-                alt={product.name}
-                className="w-full h-full"
-              />
-            </div>
-            
-            {/* Thumbnail Gallery */}
-            {productImages.length > 1 && (
-              <div className="flex gap-3">
-                {productImages.map((imageUrl, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImageIndex(index)}
-                    className={`relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      selectedImageIndex === index
-                        ? "border-primary ring-2 ring-primary/20"
-                        : "border-transparent hover:border-muted-foreground/30"
-                    }`}
-                  >
-                    <img
-                      src={imageUrl}
-                      alt={`${product.name} view ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+          <ProductImageGallery
+            images={productImages}
+            productName={product.name}
+          />
 
           {/* Product Info */}
           <div>
