@@ -147,6 +147,25 @@ export async function updateThriftStore(id: number, data: Partial<InsertThriftSt
   });
 }
 
+export async function incrementThriftStorePayout(id: number, amount: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    const store = await getThriftStoreById(id);
+    if (!store) throw new Error("Thrift store not found");
+    
+    const currentPayout = parseFloat(store.totalPayout || "0");
+    const newPayout = currentPayout + parseFloat(amount);
+    
+    await db.update(thriftStores)
+      .set({ totalPayout: newPayout.toFixed(2) })
+      .where(eq(thriftStores.id, id));
+    
+    return true;
+  });
+}
+
 // ============ PRODUCT QUERIES ============
 
 export async function getAllProducts() {
@@ -199,6 +218,10 @@ export async function updateProduct(id: number, data: Partial<InsertProduct>) {
     await db.update(products).set(data).where(eq(products.id, id));
     return true;
   });
+}
+
+export async function markProductAsSold(id: number) {
+  return updateProduct(id, { status: "sold" });
 }
 
 interface ProductFilters {
@@ -537,6 +560,7 @@ export async function getOrderItemsWithDetails(orderId: number) {
             price: item.price,
             thriftStoreId: item.thriftStoreId,
             thriftStorePayoutAmount: item.thriftStorePayoutAmount,
+            charityPayoutAmount: item.charityPayoutAmount,
           },
           product: product ? {
             id: product.id,
@@ -845,6 +869,30 @@ export async function createNotification(data: InsertNotification) {
     if (!db) throw new Error("Database not available");
     const result = await db.insert(notifications).values(data);
     return result[0];
+  });
+}
+
+export async function notifyAdminNewOrder(orderId: number, customerName: string, total: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    // Get admin users
+    const admins = await db.select().from(users).where(eq(users.role, "admin"));
+    
+    // Create notification for each admin
+    for (const admin of admins) {
+      await createNotification({
+        userId: admin.id,
+        type: "order",
+        title: "New Order Received",
+        message: `${customerName} placed an order (#${orderId}) for NZ$${total.toFixed(2)}`,
+        relatedId: orderId.toString(),
+        isRead: false,
+      });
+    }
+    
+    return true;
   });
 }
 

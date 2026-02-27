@@ -1152,10 +1152,10 @@
 - [x] Verify product image gallery component integration
 
 ## TypeScript Error Fixes (Feb 27, 2026)
-- [ ] Implement db.getOrderItemsWithDetails() function to return properly structured order item data
-- [ ] Implement db.getUserOrders() function for payment history
-- [ ] Update server/stripe.ts to use getOrderItemsWithDetails() instead of getOrderItems()
-- [ ] Verify TypeScript compilation passes (fix 258 errors)
+- [x] Implement db.getOrderItemsWithDetails() function to return properly structured order item data
+- [x] Implement db.getUserOrders() function for payment history
+- [x] Update server/stripe.ts to use getOrderItemsWithDetails() instead of getOrderItems()
+- [x] Verify TypeScript compilation passes (fix 258 errors)
 
 ## Product Image Expansion (Feb 27, 2026)
 - [x] Add image3Url and image4Url columns to products table schema
@@ -1164,3 +1164,8 @@
 - [x] Update ProductImageGallery component to display up to 4 images
 - [x] Update ProductCard to handle additional images
 - [x] Test image gallery with 3-4 images per product
+
+## Published Site Issues (Feb 27, 2026)
+- [x] Fix website not rendering when published (investigate production build errors)
+- [x] Fix TypeScript errors blocking production build (242 errors in server/stripe.ts)
+- [x] Test published site after fixes
