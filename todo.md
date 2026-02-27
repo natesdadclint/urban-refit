@@ -1120,3 +1120,9 @@
 - [x] CTA Standardisation: define consistent styling, wording, sizing rules
 - [x] CTA Standardisation: implement standardised CTAs across all pages
 - [x] Fix: Weekly login reward should grant 1 token instead of 5 tokens per week
+
+## Security Updates
+- [x] Fix 27 security vulnerabilities in dependencies (1 critical, 12 high, 12 moderate, 2 low)
+- [x] Update vulnerable packages to secure versions
+- [x] Run pnpm audit to verify fixes
+- [x] Test application after dependency updates
