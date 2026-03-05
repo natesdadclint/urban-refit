@@ -49,6 +49,10 @@ async function startServer() {
       }
 
       try {
+        if (!stripe) {
+          console.error("[Stripe Webhook] Stripe not initialized");
+          return res.status(500).send("Stripe not initialized");
+        }
         const event = stripe.webhooks.constructEvent(
           req.body,
           sig,

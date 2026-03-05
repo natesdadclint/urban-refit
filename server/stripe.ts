@@ -5,9 +5,18 @@ import { sendOrderConfirmationEmail, sendPayoutNotificationEmail } from "./email
 import { sendOrderConfirmationEmailViaResend } from "./resend";
 
 // Initialize Stripe
-const stripe = new Stripe(ENV.stripeSecretKey || "", {
-  apiVersion: "2026-02-25.clover",
-});
+let stripe: Stripe | null = null;
+try {
+  if (ENV.stripeSecretKey) {
+    stripe = new Stripe(ENV.stripeSecretKey, {
+      apiVersion: "2026-02-25.clover" as any,
+    });
+  } else {
+    console.warn("[Stripe] STRIPE_SECRET_KEY is not configured. Stripe features will be disabled.");
+  }
+} catch (error) {
+  console.error("[Stripe] Failed to initialize Stripe:", error);
+}
 
 export { stripe };
 

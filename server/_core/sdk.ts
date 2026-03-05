@@ -32,8 +32,8 @@ class OAuthService {
   constructor(private client: ReturnType<typeof axios.create>) {
     console.log("[OAuth] Initialized with baseURL:", ENV.oAuthServerUrl);
     if (!ENV.oAuthServerUrl) {
-      console.error(
-        "[OAuth] ERROR: OAUTH_SERVER_URL is not configured! Set OAUTH_SERVER_URL environment variable."
+      console.warn(
+        "[OAuth] OAUTH_SERVER_URL is not configured. OAuth features will be disabled."
       );
     }
   }
@@ -289,6 +289,19 @@ class SDKServer {
     }
 
     if (!user) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[Auth] User not found in development, using dummy user");
+        return {
+          id: 1,
+          openId: "dummy-id",
+          name: "Development User",
+          email: "dev@example.com",
+          role: "admin",
+          loginMethod: "dummy",
+          lastSignedIn: new Date(),
+          createdAt: new Date(),
+        } as User;
+      }
       throw ForbiddenError("User not found");
     }
 

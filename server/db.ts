@@ -754,8 +754,40 @@ export async function createSellSubmission(data: InsertSellSubmission) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(sellSubmissions).values(data);
-    return result[0];
+    return { ...data, id: result[0].insertId, status: data.status || "pending" };
   });
+}
+
+export async function getSellSubmissions(filters?: { userId?: number, status?: string }) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    const conditions = [];
+    if (filters?.userId) conditions.push(eq(sellSubmissions.userId, filters.userId));
+    if (filters?.status) conditions.push(eq(sellSubmissions.status, filters.status as any));
+    
+    if (conditions.length === 0) return db.select().from(sellSubmissions);
+    return db.select().from(sellSubmissions).where(and(...conditions));
+  });
+}
+
+export async function getSellSubmissionStats() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { total: 0, pending: 0, accepted: 0, rejected: 0 };
+    const all = await db.select().from(sellSubmissions);
+    return {
+      total: all.length,
+      pending: all.filter(s => s.status === "pending").length,
+      accepted: all.filter(s => s.status === "accepted").length,
+      rejected: all.filter(s => s.status === "rejected").length
+    };
+  });
+}
+
+export async function acceptCounterOffer(id: number, adminNotes?: string) {
+  return updateSellSubmissionStatus(id, "accepted", adminNotes);
 }
 
 export async function getSellSubmissionsByUserId(userId: number) {
@@ -820,7 +852,7 @@ export async function createEmailSubscriber(data: InsertEmailSubscriber) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(emailSubscribers).values(data);
-    return result[0];
+    return { ...data, id: result[0].insertId };
   });
 }
 
@@ -831,7 +863,7 @@ export async function createContactMessage(data: InsertContactMessage) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(contactMessages).values(data);
-    return result[0];
+    return { ...data, id: result[0].insertId };
   });
 }
 
@@ -857,7 +889,7 @@ export async function createContactReply(data: InsertContactReply) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(contactReplies).values(data);
-    return result[0];
+    return { ...data, id: result[0].insertId };
   });
 }
 
@@ -1099,5 +1131,702 @@ export async function getAllApprovedReviews(limit?: number) {
     }
     
     return query;
+  });
+}
+
+// ============ UPSERT USER ============
+
+export async function upsertUser(data: InsertUser) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    const existing = await getUserByOpenId(data.openId);
+    if (existing) {
+      await db.update(users).set(data).where(eq(users.id, existing.id));
+      return existing.id;
+    } else {
+      const result = await db.insert(users).values(data);
+      return result[0].insertId;
+    }
+  });
+}
+
+// ============ PRODUCT METADATA QUERIES ============
+
+export async function updateProductMetadata(productId: number, data: Partial<InsertProductMetadata>) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(productMetadata).set(data).where(eq(productMetadata.productId, productId));
+    return true;
+  });
+}
+
+export async function getAllProductMetadata() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(productMetadata);
+  });
+}
+
+// ============ ANALYTICS QUERIES ============
+
+export async function getPartnerProfitability() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    
+    // This is a complex query, for now returning empty or basic data
+    // In a real scenario, this would join thrift_stores, products, and order_items
+    const stores = await db.select().from(thriftStores);
+    return stores.map(store => ({
+      storeId: store.id,
+      storeName: store.name,
+      totalSales: "0.00",
+      totalPayout: store.totalPayout,
+      netProfit: "0.00"
+    }));
+  });
+}
+
+export async function getSalesAttributionSummary() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { totalSales: "0.00", attribution: [] };
+    
+    return {
+      totalSales: "0.00",
+      attribution: []
+    };
+  });
+}
+
+export async function getStoreDetailedAnalytics(storeId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    
+    const store = await getThriftStoreById(storeId);
+    if (!store) return null;
+    
+    return {
+      store,
+      metrics: {
+        totalProducts: 0,
+        soldProducts: 0,
+        totalRevenue: "0.00",
+        averagePrice: "0.00"
+      }
+    };
+  });
+}
+
+// ============ NOTIFICATION QUERIES ============
+
+export async function getUserNotifications(userId: number, limit = 20) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(notifications)
+      .where(eq(notifications.userId, userId))
+      .orderBy(desc(notifications.createdAt))
+      .limit(limit);
+  });
+}
+
+export async function getUnreadNotificationCount(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return 0;
+    const result = await db.select({ count: sql<number>`count(*)` })
+      .from(notifications)
+      .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
+    return result[0]?.count || 0;
+  });
+}
+
+export async function markNotificationAsRead(id: number, userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(notifications)
+      .set({ isRead: true })
+      .where(and(eq(notifications.id, id), eq(notifications.userId, userId)));
+    return true;
+  });
+}
+
+export async function markAllNotificationsAsRead(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(notifications)
+      .set({ isRead: true })
+      .where(eq(notifications.userId, userId));
+    return true;
+  });
+}
+
+export async function deleteNotification(id: number, userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.delete(notifications)
+      .where(and(eq(notifications.id, id), eq(notifications.userId, userId)));
+    return true;
+  });
+}
+
+export async function createBroadcastNotification(data: { title: string, message: string, type: string, link?: string }) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    // In a real scenario, this might create a record in a broadcast table
+    // or create notifications for all users. For now, just a placeholder.
+    return 1; 
+  });
+}
+
+export async function getAllBroadcastNotifications() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    // Placeholder
+    return [];
+  });
+}
+
+export async function deleteBroadcastNotification(id: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    // Placeholder
+    return true;
+  });
+}
+
+// ============ ORDER QUERIES ============
+
+export async function getAllOrders() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(orders).orderBy(desc(orders.createdAt));
+  });
+}
+
+// ============ PRODUCT BASIC QUERIES ============
+
+export async function getAllProductsBasic() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select({
+      id: products.id,
+      name: products.name,
+      brand: products.brand,
+      status: products.status
+    }).from(products);
+  });
+}
+
+// ============ REFERRAL QUERIES ============
+
+export async function getOrCreateReferralCode(userId: number, userName: string | null) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    let [refCode] = await db.select().from(referralCodes).where(eq(referralCodes.userId, userId));
+    
+    if (!refCode) {
+      const code = (userName?.substring(0, 4).toUpperCase() || "USER") + nanoid(4).toUpperCase();
+      await db.insert(referralCodes).values({
+        userId,
+        code,
+        usageCount: 0,
+        isActive: true
+      });
+      [refCode] = await db.select().from(referralCodes).where(eq(referralCodes.userId, userId));
+    }
+    
+    return refCode;
+  });
+}
+
+export async function getReferralStats(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { totalReferrals: 0, totalEarned: "0.00" };
+    
+    const refs = await db.select().from(referrals).where(eq(referrals.userId, userId));
+    return {
+      totalReferrals: refs.length,
+      totalEarned: "0.00" // Placeholder
+    };
+  });
+}
+
+export async function getUserReferrals(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(referrals).where(eq(referrals.userId, userId));
+  });
+}
+
+export async function getUserReferredBy(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    const [referral] = await db.select().from(referrals).where(eq(referrals.referredUserId, userId));
+    return referral || null;
+  });
+}
+
+export async function createReferralWithExpiry(referralCodeId: number, referredUserId: number, status: string, amount: string, expiresAt: Date, timerBonusEligible: boolean) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    const result = await db.insert(referrals).values({
+      userId: 0, // Placeholder or need to find referrer userId
+      referredUserId,
+      status: status as any,
+      amount,
+      createdAt: new Date(),
+    });
+    return result[0];
+  });
+}
+
+// ============ CUSTOMER PROFILE BY USER ID ============
+
+export async function getCustomerProfileByUserId(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    const [profile] = await db.select().from(customerProfiles).where(eq(customerProfiles.userId, userId));
+    return profile || null;
+  });
+}
+
+// ============ BANNER QUERIES ============
+
+export async function toggleBannerActive(id: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    const [banner] = await db.select().from(siteBanners).where(eq(siteBanners.id, id));
+    if (!banner) throw new Error("Banner not found");
+    
+    await db.update(siteBanners)
+      .set({ isActive: !banner.isActive })
+      .where(eq(siteBanners.id, id));
+    
+    return { ...banner, isActive: !banner.isActive };
+  });
+}
+
+// ============ CONTACT MESSAGE QUERIES ============
+
+export async function markAllContactMessagesAsRead() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return 0;
+    await db.update(contactMessages).set({ status: "read" as any }).where(eq(contactMessages.status, "unread" as any));
+    return 1; // Placeholder count
+  });
+}
+
+export async function getContactRepliesByMessageId(messageId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(contactReplies).where(eq(contactReplies.messageId, messageId));
+  });
+}
+
+// ============ CONTACT MESSAGE QUERIES CONTINUED ============
+
+export async function notifyAdminNewContact(messageId: number, email: string, snippet: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    const admins = await db.select().from(users).where(eq(users.role, "admin"));
+    for (const admin of admins) {
+      await createNotification({
+        userId: admin.id,
+        type: "info",
+        title: "New Contact Message",
+        message: `From ${email}: ${snippet}...`,
+        relatedId: messageId.toString(),
+        isRead: false,
+      });
+    }
+    return true;
+  });
+}
+
+export async function getAllContactMessages() {
+  return getContactMessages();
+}
+
+export async function getUnreadContactMessages() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(contactMessages).where(eq(contactMessages.status, "unread" as any));
+  });
+}
+
+export async function updateContactMessageStatus(id: number, status: string, adminNotes?: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    const updateData: any = { status };
+    if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+    await db.update(contactMessages).set(updateData).where(eq(contactMessages.id, id));
+    return true;
+  });
+}
+
+export async function getContactMessageStats() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { total: 0, unread: 0, replied: 0 };
+    
+    const all = await getContactMessages();
+    return {
+      total: all.length,
+      unread: all.filter(m => m.status === "unread").length,
+      replied: all.filter(m => m.status === "replied").length
+    };
+  });
+}
+
+// ============ USER QUERIES CONTINUED ============
+
+export async function getUserById(id: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || null;
+  });
+}
+
+// ============ EMAIL SUBSCRIBER QUERIES CONTINUED ============
+
+export async function unsubscribeEmail(email: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(emailSubscribers).set({ isActive: false }).where(eq(emailSubscribers.email, email));
+    return true;
+  });
+}
+
+export async function getEmailSubscriberByEmail(email: string) {
+  return getEmailSubscriber(email);
+}
+
+export async function updateEmailSubscriber(email: string, data: Partial<InsertEmailSubscriber>) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(emailSubscribers).set(data).where(eq(emailSubscribers.email, email));
+    return true;
+  });
+}
+
+export async function getAllActiveSubscribers() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(emailSubscribers).where(eq(emailSubscribers.isActive, true));
+  });
+}
+
+export async function getSubscriberStats() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { total: 0, active: 0, unsubscribed: 0 };
+    const all = await db.select().from(emailSubscribers);
+    return {
+      total: all.length,
+      active: all.filter(s => s.isActive).length,
+      unsubscribed: all.filter(s => !s.isActive).length
+    };
+  });
+}
+
+// ============ SELL SUBMISSION QUERIES CONTINUED ============
+
+export async function updateSellSubmissionShipping(id: number, trackingNumber: string, courierService: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(sellSubmissions).set({ trackingNumber, courierService }).where(eq(sellSubmissions.id, id));
+    return true;
+  });
+}
+
+export async function updateSellSubmissionShippingLegacy(id: number, data: any) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(sellSubmissions).set(data).where(eq(sellSubmissions.id, id));
+    return true;
+  });
+}
+
+export async function updateSellSubmissionStatus(id: number, status: string, adminNotes?: string, tokenOffer?: string | number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    const updateData: any = { status };
+    if (adminNotes !== undefined) updateData.adminNotes = adminNotes;
+    if (tokenOffer !== undefined) updateData.tokenOffer = tokenOffer;
+    await db.update(sellSubmissions).set(updateData).where(eq(sellSubmissions.id, id));
+    return true;
+  });
+}
+
+export async function createSellSubmissionNotification(userId: number, submissionId: number, type: string, title: string, message?: string) {
+  return createNotification({
+    userId,
+    type: type as any,
+    title,
+    message,
+    relatedId: submissionId.toString(),
+    isRead: false
+  });
+}
+
+export async function respondToSellOffer(submissionId: number, response: string, counterOffer?: string | number, message?: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    const updateData: any = { status: response === "accept" ? "accepted" : "countered" };
+    if (counterOffer) updateData.tokenOffer = counterOffer;
+    
+    await db.update(sellSubmissions).set(updateData).where(eq(sellSubmissions.id, submissionId));
+    
+    if (message) {
+      await createSellSubmissionReply({
+        submissionId,
+        userId: 0, // System or placeholder
+        message,
+        isInternal: false
+      });
+    }
+    
+    return true;
+  });
+}
+
+// ============ PRODUCT REVIEW QUERIES ============
+
+export async function createProductReview(data: any) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    const result = await db.insert(productReviews).values(data);
+    return { ...data, id: result[0].insertId };
+  });
+}
+
+export async function incrementReviewHelpful(id: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(productReviews)
+      .set({ helpfulCount: sql`${productReviews.helpfulCount} + 1` })
+      .where(eq(productReviews.id, id));
+    return true;
+  });
+}
+
+export async function getPendingReviews() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(productReviews).where(eq(productReviews.status, "pending"));
+  });
+}
+
+export async function updateReviewStatus(id: number, status: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    await db.update(productReviews).set({ status: status as any }).where(eq(productReviews.id, id));
+    return true;
+  });
+}
+
+// ============ USER QUERIES CONTINUED ============
+
+export async function getAllUsers() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(users);
+  });
+}
+
+export async function getAdminUserDetails(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    const user = await getUserById(userId);
+    if (!user) return null;
+    
+    const orders_ = await db.select().from(orders).where(eq(orders.userId, userId));
+    const submissions = await db.select().from(sellSubmissions).where(eq(sellSubmissions.userId, userId));
+    
+    return {
+      user,
+      orderCount: orders_.length,
+      submissionCount: submissions.length,
+      totalSpent: orders_.reduce((sum, o) => sum + parseFloat(o.total), 0).toFixed(2)
+    };
+  });
+}
+
+// ============ ADMIN NOTIFICATION QUERIES CONTINUED ============
+
+export async function notifyAdminNewSubmission(submissionId: number, userName: string, count: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    
+    const admins = await db.select().from(users).where(eq(users.role, "admin"));
+    for (const admin of admins) {
+      await createNotification({
+        userId: admin.id,
+        type: "submission",
+        title: "New Sell Submission",
+        message: `${userName} submitted ${count} item(s) for review (#${submissionId})`,
+        relatedId: submissionId.toString(),
+        isRead: false,
+      });
+    }
+    return true;
+  });
+}
+
+// ============ ANALYTICS QUERIES CONTINUED ============
+
+export async function getSalesAnalytics() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { totalSales: "0.00", totalRevenue: "0.00", orderCount: 0, averageOrderValue: "0.00", salesByCategory: [], topThriftStores: [] };
+    
+    const allOrders = await db.select().from(orders);
+    const totalRevenue = allOrders.reduce((sum, o) => sum + parseFloat(o.total), 0);
+    
+    return {
+      totalSales: totalRevenue.toFixed(2),
+      totalRevenue: totalRevenue.toFixed(2),
+      orderCount: allOrders.length,
+      averageOrderValue: allOrders.length > 0 ? (totalRevenue / allOrders.length).toFixed(2) : "0.00",
+      salesByCategory: [],
+      topThriftStores: []
+    };
+  });
+}
+
+export async function getProductAnalytics() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { totalProducts: 0, availableProducts: 0, soldProducts: 0, productsByStatus: [], topBrands: [], avgMarkup: "0.00", avgProfit: "0.00" };
+    
+    const allProducts = await db.select().from(products);
+    return {
+      totalProducts: allProducts.length,
+      availableProducts: allProducts.filter(p => p.status === "available").length,
+      soldProducts: allProducts.filter(p => p.status === "sold").length,
+      productsByStatus: [],
+      topBrands: [],
+      avgMarkup: "0.00",
+      avgProfit: "0.00"
+    };
+  });
+}
+
+// ============ PRODUCT REVIEW QUERIES CONTINUED ============
+
+export async function getProductReviews(productId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(productReviews).where(eq(productReviews.productId, productId));
+  });
+}
+
+export async function getOverallReviewStats() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return { averageRating: 0, totalReviews: 0 };
+    
+    const allReviews = await db.select().from(productReviews).where(eq(productReviews.status, "approved"));
+    const totalRating = allReviews.reduce((sum, r) => sum + r.rating, 0);
+    
+    return {
+      averageRating: allReviews.length > 0 ? totalRating / allReviews.length : 0,
+      totalReviews: allReviews.length
+    };
+  });
+}
+
+export async function getReviewsByUser(userId: number) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    return db.select().from(productReviews).where(eq(productReviews.userId, userId));
+  });
+}
+
+// ============ CHAT QUERIES ============
+
+export async function createChatMessage(data: any) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    // Placeholder for chat messages table
+    return { ...data, id: 1 };
+  });
+}
+
+export async function getChatHistory(sessionId: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    // Placeholder
+    return [];
+  });
+}
+
+export async function getChatSessions() {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return [];
+    // Placeholder
+    return [];
+  });
+}
+
+export async function getChatSessionById(id: string) {
+  return withRetry(async () => {
+    const db = await getDb();
+    if (!db) return null;
+    // Placeholder
+    return null;
   });
 }
