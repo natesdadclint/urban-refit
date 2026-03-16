@@ -35,9 +35,9 @@ export const adminRouter = router({
             if (filename) {
               const file = input.images.find((f: any) => f.name === filename);
               if (file) {
-                const buffer = await file.arrayBuffer();
+                const buffer = Buffer.from(file.base64, 'base64');
                 const key = `products/${productId}/image-${i}-${nanoid()}.jpg`;
-                const { url } = await storagePut(key, Buffer.from(buffer), 'image/jpeg');
+                const { url } = await storagePut(key, buffer, file.type || 'image/jpeg');
                 imageUrls[`image${i}Url`] = url;
               }
             }

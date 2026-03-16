@@ -58,8 +58,22 @@ export default function AdminBulkUpload() {
     formData.append("csv", csvFile);
 
     try {
+      // Convert files to base64 for tRPC
+      const imagePromises = files.map(async (file) => {
+        return new Promise<{ name: string; base64: string; type: string }>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = (reader.result as string).split(",")[1];
+            resolve({ name: file.name, base64, type: file.type });
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+
+      const imagesWithBase64 = await Promise.all(imagePromises);
+
       await bulkUploadMutation.mutateAsync({
-        images: files,
+        images: imagesWithBase64,
         csvData: await csvFile.text(),
       });
     } finally {

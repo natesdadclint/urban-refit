@@ -188,6 +188,7 @@ export const appRouter = router({
           markupPercentage: input.markupPercentage.toFixed(2),
           salePrice: pricing.salePrice,
           thriftStorePayoutAmount: pricing.thriftStorePayoutAmount,
+          charityPayoutAmount: pricing.charityPayoutAmount,
         });
         return { id, success: true, ...pricing };
       }),
@@ -232,6 +233,7 @@ export const appRouter = router({
             markupPercentage: markup.toFixed(2),
             salePrice: pricing.salePrice,
             thriftStorePayoutAmount: pricing.thriftStorePayoutAmount,
+            charityPayoutAmount: pricing.charityPayoutAmount,
           };
         }
         

@@ -93,7 +93,7 @@ export async function createUser(data: InsertUser) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(users).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -134,7 +134,7 @@ export async function createThriftStore(data: InsertThriftStore) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(thriftStores).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -207,7 +207,7 @@ export async function createProduct(data: InsertProduct) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(products).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -438,7 +438,7 @@ export async function addToCart(userId: number, productId: number) {
     }
     
     const result = await db.insert(cartItems).values({ userId, productId });
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -524,7 +524,7 @@ export async function createOrderItem(data: InsertOrderItem) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(orderItems).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -593,7 +593,7 @@ export async function createPayout(data: InsertPayout) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(payouts).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -612,7 +612,7 @@ export async function createEmailLog(data: InsertEmailLog) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(emailLogs).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -667,7 +667,7 @@ export async function createCharity(data: InsertCharity) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(charities).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -677,8 +677,8 @@ export async function createCourierReturn(data: InsertCourierReturn) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
-    const result = await db.insert(courierReturns).values(data);
-    return result[0];
+    const result = await db.insert(discountTiers).values(data);
+    return result[0].insertId;
   });
 }
 
@@ -697,7 +697,7 @@ export async function createTokenTransaction(data: InsertTokenTransaction) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(tokenTransactions).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -716,7 +716,7 @@ export async function createCharityDonation(data: InsertCharityDonation) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(charityDonations).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -832,7 +832,7 @@ export async function createProductMetadata(data: InsertProductMetadata) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(productMetadata).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -900,7 +900,7 @@ export async function createNotification(data: InsertNotification) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(notifications).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -943,7 +943,7 @@ export async function createBroadcastReadStatus(data: InsertBroadcastReadStatus)
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(broadcastReadStatus).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -963,7 +963,7 @@ export async function createNotificationPreferences(data: InsertNotificationPref
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(notificationPreferences).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -983,7 +983,7 @@ export async function createImageValidationLog(data: InsertImageValidationLog) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(imageValidationLogs).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -994,7 +994,7 @@ export async function createAdminNotification(data: InsertAdminNotification) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(adminNotifications).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -1013,7 +1013,7 @@ export async function createReferralCode(data: InsertReferralCode) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(referralCodes).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -1033,7 +1033,7 @@ export async function createReferral(data: InsertReferral) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(referrals).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -1068,7 +1068,7 @@ export async function createBanner(data: InsertSiteBanner) {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(siteBanners).values(data);
-    return result[0];
+    return result[0].insertId;
   });
 }
 
@@ -1096,8 +1096,8 @@ export async function createSellSubmissionReply(data: InsertSellSubmissionReply)
   return withRetry(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
-    const result = await db.insert(sellSubmissionReplies).values(data);
-    return result[0];
+       const result = await db.insert(sellSubmissionReplies).values(data);
+    return result[0].insertId;
   });
 }
 
@@ -1392,13 +1392,14 @@ export async function createReferralWithExpiry(referralCodeId: number, referredU
     const db = await getDb();
     if (!db) throw new Error("Database not available");
     const result = await db.insert(referrals).values({
+      referralCodeId,
       userId: 0, // Placeholder or need to find referrer userId
       referredUserId,
       status: status as any,
       amount,
       createdAt: new Date(),
     });
-    return result[0];
+    return result[0].insertId;
   });
 }
 
