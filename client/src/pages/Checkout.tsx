@@ -42,6 +42,7 @@ import { ArrowLeft, ArrowRight, CreditCard, Lock, Coins, Gift, Sparkles } from "
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
+import { ManusDialog } from "@/components/ManusDialog";
 
 // Tiered discount structure
 const getTieredDiscount = (itemCount: number): { percentage: number; bonusTokens: number } => {
@@ -55,6 +56,7 @@ const getTieredDiscount = (itemCount: number): { percentage: number; bonusTokens
 export default function Checkout() {
   const { isAuthenticated, user, loading } = useAuth();
   const [, setLocation] = useLocation();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const [useSpendLimit, setUseSpendLimit] = useState(false);
   const [spendLimitAmount, setSpendLimitAmount] = useState("");
   
@@ -151,9 +153,14 @@ export default function Checkout() {
           <p className="text-muted-foreground mb-6">
             Sign in to complete your purchase.
           </p>
-          <Button asChild size="lg">
-            <a href={getLoginUrl()}>Sign In</a>
+          <Button size="lg" onClick={() => setShowLoginDialog(true)}>
+            Sign In
           </Button>
+          <ManusDialog
+            open={showLoginDialog}
+            onOpenChange={setShowLoginDialog}
+            onLogin={() => { window.location.href = getLoginUrl(); }}
+          />
         </div>
       </Layout>
     );

@@ -13,6 +13,7 @@ import { Link } from "wouter";
 import Layout from "@/components/Layout";
 import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
+import { ManusDialog } from "@/components/ManusDialog";
 
 export default function MySubmissions() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -24,6 +25,7 @@ export default function MySubmissions() {
   const [replyMessage, setReplyMessage] = useState("");
   const [replyCounterTokens, setReplyCounterTokens] = useState("");
   const [sendingReply, setSendingReply] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const repliesEndRef = useRef<HTMLDivElement>(null);
 
   const { data: submissions, isLoading, refetch } = trpc.sell.mySubmissions.useQuery(undefined, {
@@ -66,9 +68,14 @@ export default function MySubmissions() {
             variant="compact"
             className="text-center"
           />
-          <Button asChild size="lg" className="mt-8">
-            <a href={getLoginUrl()}>Sign In</a>
+          <Button size="lg" className="mt-8" onClick={() => setShowLoginDialog(true)}>
+            Sign In
           </Button>
+          <ManusDialog
+            open={showLoginDialog}
+            onOpenChange={setShowLoginDialog}
+            onLogin={() => { window.location.href = getLoginUrl(); }}
+          />
         </div>
       </Layout>
     );

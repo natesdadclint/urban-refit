@@ -14,9 +14,12 @@ import {
   AlertTriangle, CheckCircle
 } from "lucide-react";
 import { NotificationPreferences } from "@/components/NotificationPreferences";
+import { ManusDialog } from "@/components/ManusDialog";
+import { useState } from "react";
 
 export default function Notifications() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   const { data: notifications, isLoading, refetch } = trpc.notification.list.useQuery(
     { limit: 50 },
@@ -68,9 +71,14 @@ export default function Notifications() {
             <p className="text-muted-foreground mb-8">
               Please sign in to view your notifications.
             </p>
-            <Button asChild size="lg">
-              <a href={getLoginUrl()}>Sign In</a>
+            <Button size="lg" onClick={() => setShowLoginDialog(true)}>
+              Sign In
             </Button>
+            <ManusDialog
+              open={showLoginDialog}
+              onOpenChange={setShowLoginDialog}
+              onLogin={() => { window.location.href = getLoginUrl(); }}
+            />
           </div>
         </div>
       </Layout>

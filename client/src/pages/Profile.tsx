@@ -23,13 +23,14 @@ import {
 } from "lucide-react";
 import { NotificationPreferences } from "@/components/NotificationPreferences";
 import { ReferralCard } from "@/components/ReferralCard";
+import { ManusDialog } from "@/components/ManusDialog";
 
 const CATEGORIES = ["tops", "bottoms", "dresses", "outerwear", "accessories", "shoes", "bags"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 export default function Profile() {
   const { user, loading: authLoading, isAuthenticated, refresh: refreshAuth } = useAuth();
-  
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const { data: profile, isLoading: profileLoading, refetch: refetchProfile } = trpc.customerProfile.get.useQuery(
     undefined,
     { enabled: isAuthenticated }
@@ -144,9 +145,14 @@ export default function Profile() {
             <p className="text-muted-foreground mb-8">
               Please sign in to access your profile, rewards, and exclusive member benefits.
             </p>
-            <Button asChild size="lg">
-              <a href={getLoginUrl()}>Sign In</a>
+            <Button size="lg" onClick={() => setShowLoginDialog(true)}>
+              Sign In
             </Button>
+            <ManusDialog
+              open={showLoginDialog}
+              onOpenChange={setShowLoginDialog}
+              onLogin={() => { window.location.href = getLoginUrl(); }}
+            />
           </div>
         </div>
       </Layout>
