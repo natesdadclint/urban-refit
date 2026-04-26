@@ -265,16 +265,9 @@ export default function Charities() {
                         </DialogContent>
                       </Dialog>
                     ) : (
-                      <>
-                        <Button size="sm" onClick={() => setShowLoginDialog(true)}>
-                          Sign in to Donate
-                        </Button>
-                        <ManusDialog
-                          open={showLoginDialog}
-                          onOpenChange={setShowLoginDialog}
-                          onLogin={() => { window.location.href = getLoginUrl(); }}
-                        />
-                      </>
+                      <Button size="sm" onClick={() => setShowLoginDialog(true)}>
+                        Sign in to Donate
+                      </Button>
                     )}
                   </div>
                 </CardContent>
@@ -352,6 +345,11 @@ export default function Charities() {
           </div>
         </div>
       </div>
+      <ManusDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        onLogin={() => { window.location.href = getLoginUrl(); }}
+      />
     </Layout>
   );
 }
