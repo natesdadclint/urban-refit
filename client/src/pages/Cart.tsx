@@ -10,10 +10,13 @@ import { Link, useLocation } from "wouter";
 import { Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
+import { ManusDialog } from "@/components/ManusDialog";
+import { useState } from "react";
 
 export default function Cart() {
   const { isAuthenticated, loading } = useAuth();
   const [, setLocation] = useLocation();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   const { data: cart, isLoading } = trpc.cart.get.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -66,9 +69,14 @@ export default function Cart() {
           <p className="text-muted-foreground mb-6">
             Sign in to view your cart and start shopping.
           </p>
-          <Button asChild size="lg">
-            <a href={getLoginUrl()}>Sign In</a>
+          <Button size="lg" onClick={() => setShowLoginDialog(true)}>
+            Sign In
           </Button>
+          <ManusDialog
+            open={showLoginDialog}
+            onOpenChange={setShowLoginDialog}
+            onLogin={() => { window.location.href = getLoginUrl(); }}
+          />
         </div>
       </Layout>
     );

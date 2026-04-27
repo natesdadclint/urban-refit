@@ -13,6 +13,7 @@ import { ShoppingBag, ArrowLeft, Truck, Shield, Recycle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getLoginUrl } from "@/const";
+import { ManusDialog } from "@/components/ManusDialog";
 
 const conditionLabels: Record<string, { label: string; description: string }> = {
   like_new: { label: "Like New", description: "Practically unworn – no visible signs of use. Ready for its first real adventure." },
@@ -25,8 +26,7 @@ export default function ProductDetail() {
   const params = useParams<{ id: string }>();
   const [, setLocation] = useLocation();
   const { isAuthenticated } = useAuth();
-
-  
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   const { data, isLoading, error } = trpc.product.getById.useQuery(
     { id: parseInt(params.id || "0") },
     { enabled: !!params.id }
@@ -162,12 +162,18 @@ export default function ProductDetail() {
                     {addToCart.isPending ? "Adding..." : "Add to Cart"}
                   </Button>
                 ) : (
-                  <Button size="lg" className="w-full sm:w-auto gap-2" asChild>
-                    <a href={getLoginUrl()}>
+                  <>
+                    <Button size="lg" className="w-full sm:w-auto gap-2" onClick={() => setShowLoginDialog(true)}>
                       <ShoppingBag className="h-5 w-5" />
                       Sign in to Buy
-                    </a>
-                  </Button>
+                    </Button>
+                    <ManusDialog
+                      open={showLoginDialog}
+                      onOpenChange={setShowLoginDialog}
+                      onLogin={() => { window.location.href = getLoginUrl(); }}
+                      title="Sign in to Buy"
+                    />
+                  </>
                 )}
                 <p className="text-xs text-muted-foreground mt-2">
                   One-of-a-kind piece — once it's gone, it's gone. Free shipping on orders over NZ$50.

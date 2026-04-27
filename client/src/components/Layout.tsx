@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { ShoppingBag, User, LogOut, Settings, Heart, RefreshCw, Mail, Loader2, ArrowRight, Check, Package, ChevronLeft, ChevronRight } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
+import { ManusDialog } from "@/components/ManusDialog";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import {
@@ -37,6 +38,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [subscriptionSuccess, setSubscriptionSuccess] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   // Mobile nav scroll arrow state
   const navScrollRef = useRef<HTMLDivElement>(null);
@@ -277,9 +279,14 @@ export default function Layout({ children }: LayoutProps) {
                   <Button asChild variant="outline" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm gap-2">
                     <Link href="/join">Join</Link>
                   </Button>
-                  <Button asChild variant="default" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm gap-2">
-                    <a href={getLoginUrl()}>Sign In</a>
+                  <Button variant="default" size="sm" className="h-8 px-2 text-xs sm:h-9 sm:px-3 sm:text-sm gap-2" onClick={() => setShowLoginDialog(true)}>
+                    Sign In
                   </Button>
+                  <ManusDialog
+                    open={showLoginDialog}
+                    onOpenChange={setShowLoginDialog}
+                    onLogin={() => { window.location.href = getLoginUrl(); }}
+                  />
                 </div>
               )}
             </div>

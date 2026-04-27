@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import SectionHeader from "@/components/SectionHeader";
+import { ManusDialog } from "@/components/ManusDialog";
 
 const CATEGORIES = [
   { value: "tops", label: "Tops" },
@@ -41,6 +42,7 @@ export default function CourierReturn() {
   const [, setLocation] = useLocation();
   const [step, setStep] = useState(1);
   const [isUploading, setIsUploading] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   // Form state
   const [itemName, setItemName] = useState("");
@@ -131,9 +133,14 @@ export default function CourierReturn() {
               variant="compact"
               className="mb-8"
             />
-            <Button asChild size="lg">
-              <a href={getLoginUrl()}>Sign In</a>
+            <Button size="lg" onClick={() => setShowLoginDialog(true)}>
+              Sign In
             </Button>
+            <ManusDialog
+              open={showLoginDialog}
+              onOpenChange={setShowLoginDialog}
+              onLogin={() => { window.location.href = getLoginUrl(); }}
+            />
           </div>
         </div>
       </Layout>

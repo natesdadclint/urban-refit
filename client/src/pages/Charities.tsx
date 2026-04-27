@@ -15,12 +15,14 @@ import {
   Heart, Coins, Loader2, ExternalLink, Globe, ArrowLeft, Sparkles
 } from "lucide-react";
 import { Link } from "wouter";
+import { ManusDialog } from "@/components/ManusDialog";
 
 export default function Charities() {
   const { user, loading: authLoading, isAuthenticated } = useAuth();
   const [selectedCharity, setSelectedCharity] = useState<any>(null);
   const [donationAmount, setDonationAmount] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   const { data: charities, isLoading: charitiesLoading } = trpc.charity.list.useQuery();
   
@@ -263,8 +265,8 @@ export default function Charities() {
                         </DialogContent>
                       </Dialog>
                     ) : (
-                      <Button size="sm" asChild>
-                        <a href={getLoginUrl()}>Sign in to Donate</a>
+                      <Button size="sm" onClick={() => setShowLoginDialog(true)}>
+                        Sign in to Donate
                       </Button>
                     )}
                   </div>
@@ -343,6 +345,11 @@ export default function Charities() {
           </div>
         </div>
       </div>
+      <ManusDialog
+        open={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        onLogin={() => { window.location.href = getLoginUrl(); }}
+      />
     </Layout>
   );
 }

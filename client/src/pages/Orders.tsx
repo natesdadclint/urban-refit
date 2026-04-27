@@ -6,6 +6,8 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Link } from "wouter";
 import { Package, ShoppingBag, ArrowRight } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { ManusDialog } from "@/components/ManusDialog";
+import { useState } from "react";
 import PageHeader from "@/components/PageHeader";
 
 const statusColors: Record<string, string> = {
@@ -20,6 +22,7 @@ const statusColors: Record<string, string> = {
 
 export default function Orders() {
   const { isAuthenticated, loading } = useAuth();
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
   
   const { data: orders, isLoading } = trpc.order.list.useQuery(undefined, {
     enabled: isAuthenticated,
@@ -51,9 +54,14 @@ export default function Orders() {
           <p className="text-muted-foreground mb-6 mt-4">
             Sign in to view your order history.
           </p>
-          <Button asChild size="lg">
-            <a href={getLoginUrl()}>Sign In</a>
+          <Button size="lg" onClick={() => setShowLoginDialog(true)}>
+            Sign In
           </Button>
+          <ManusDialog
+            open={showLoginDialog}
+            onOpenChange={setShowLoginDialog}
+            onLogin={() => { window.location.href = getLoginUrl(); }}
+          />
         </div>
       </Layout>
     );

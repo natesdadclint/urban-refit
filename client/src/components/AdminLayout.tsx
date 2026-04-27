@@ -25,6 +25,7 @@ import {
   Users,
 } from "lucide-react";
 import { useState } from "react";
+import { ManusDialog } from "@/components/ManusDialog";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -54,6 +55,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
   const { user, isAuthenticated, loading, logout } = useAuth();
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   // Fetch unread message count for badge
   const { data: unreadMessages } = trpc.contact.unread.useQuery(undefined, {
@@ -80,9 +82,14 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         <div className="text-center">
           <h1 className="text-2xl font-serif font-semibold mb-4">Admin Access Required</h1>
           <p className="text-muted-foreground mb-6">Please sign in to access the admin panel.</p>
-          <Button asChild>
-            <a href={getLoginUrl()}>Sign In</a>
+          <Button onClick={() => setShowLoginDialog(true)}>
+            Sign In
           </Button>
+          <ManusDialog
+            open={showLoginDialog}
+            onOpenChange={setShowLoginDialog}
+            onLogin={() => { window.location.href = getLoginUrl(); }}
+          />
         </div>
       </div>
     );
