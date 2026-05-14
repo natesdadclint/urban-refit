@@ -189,16 +189,22 @@ export async function getProductWithThriftStore(id: number) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return null;
-    
-    const [product] = await db.select().from(products).where(eq(products.id, id));
-    if (!product) return null;
-    
-    let thriftStore = null;
-    if (product.thriftStoreId) {
-      thriftStore = await getThriftStoreById(product.thriftStoreId);
-    }
-    
-    return { product, thriftStore };
+
+    const [row] = await db
+      .select({
+        product: getTableColumns(products),
+        thriftStore: getTableColumns(thriftStores),
+      })
+      .from(products)
+      .leftJoin(thriftStores, eq(products.thriftStoreId, thriftStores.id))
+      .where(eq(products.id, id));
+
+    if (!row) return null;
+
+    return {
+      product: row.product,
+      thriftStore: row.thriftStore.id ? row.thriftStore : null,
+    };
   });
 }
 
@@ -410,17 +416,15 @@ export async function getCartItems(userId: number) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return [];
-    
-    const cartItemsData = await db.select().from(cartItems).where(eq(cartItems.userId, userId));
-    
-    const itemsWithProducts = await Promise.all(
-      cartItemsData.map(async (ci) => {
-        const product = await getProductById(ci.productId);
-        return { cartItem: ci, product };
+
+    return db
+      .select({
+        cartItem: getTableColumns(cartItems),
+        product: getTableColumns(products),
       })
-    );
-    
-    return itemsWithProducts.filter(item => item.product);
+      .from(cartItems)
+      .innerJoin(products, eq(cartItems.productId, products.id))
+      .where(eq(cartItems.userId, userId));
   });
 }
 
@@ -540,49 +544,37 @@ export async function getOrderItemsWithDetails(orderId: number) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return [];
-    
-    const items = await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
-    
-    const itemsWithDetails = await Promise.all(
-      items.map(async (item) => {
-        const product = await getProductById(item.productId);
-        let thriftStore = null;
-        
-        if (item.thriftStoreId) {
-          thriftStore = await getThriftStoreById(item.thriftStoreId);
-        }
-        
-        return {
-          orderItem: {
-            id: item.id,
-            orderId: item.orderId,
-            productId: item.productId,
-            price: item.price,
-            thriftStoreId: item.thriftStoreId,
-            thriftStorePayoutAmount: item.thriftStorePayoutAmount,
-            charityPayoutAmount: item.charityPayoutAmount,
-          },
-          product: product ? {
-            id: product.id,
-            name: product.name,
-            brand: product.brand,
-            size: product.size,
-            image1Url: product.image1Url,
-          } : {
-            id: item.productId,
-            name: 'Unknown Product',
-            brand: null,
-            size: null,
-            image1Url: null,
-          },
-          thriftStore: thriftStore ? {
-            name: thriftStore.name,
-          } : null,
-        };
+
+    const rows = await db
+      .select({
+        orderItem: {
+          id: orderItems.id,
+          orderId: orderItems.orderId,
+          productId: orderItems.productId,
+          price: orderItems.price,
+          thriftStoreId: orderItems.thriftStoreId,
+          thriftStorePayoutAmount: orderItems.thriftStorePayoutAmount,
+          charityPayoutAmount: orderItems.charityPayoutAmount,
+        },
+        product: {
+          id: products.id,
+          name: products.name,
+          brand: products.brand,
+          size: products.size,
+          image1Url: products.image1Url,
+        },
+        thriftStoreName: thriftStores.name,
       })
-    );
-    
-    return itemsWithDetails;
+      .from(orderItems)
+      .innerJoin(products, eq(orderItems.productId, products.id))
+      .leftJoin(thriftStores, eq(orderItems.thriftStoreId, thriftStores.id))
+      .where(eq(orderItems.orderId, orderId));
+
+    return rows.map((row) => ({
+      orderItem: row.orderItem,
+      product: row.product,
+      thriftStore: row.thriftStoreName ? { name: row.thriftStoreName } : null,
+    }));
   });
 }
 
@@ -908,22 +900,23 @@ export async function notifyAdminNewOrder(orderId: number, customerName: string,
   return withRetry(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
-    
-    // Get admin users
-    const admins = await db.select().from(users).where(eq(users.role, "admin"));
-    
-    // Create notification for each admin
-    for (const admin of admins) {
-      await createNotification({
+
+    const admins = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.role, "admin"));
+    if (admins.length === 0) return true;
+
+    await db.insert(notifications).values(
+      admins.map((admin) => ({
         userId: admin.id,
-        type: "order",
+        type: "order" as const,
         title: "New Order Received",
         message: `${customerName} placed an order (#${orderId}) for NZ$${total.toFixed(2)}`,
-        relatedId: orderId.toString(),
         isRead: false,
-      });
-    }
-    
+      }))
+    );
+
     return true;
   });
 }
@@ -1110,7 +1103,7 @@ export async function getSellSubmissionReplies(submissionId: number) {
 }
 
 // Import drizzle operators
-import { eq, and, or, inArray, isNotNull, gte, lte, asc, desc, sql } from "drizzle-orm";
+import { eq, and, or, inArray, isNotNull, gte, lte, asc, desc, sql, getTableColumns } from "drizzle-orm";
 
 /**
  * Get all approved product reviews
@@ -1457,18 +1450,22 @@ export async function notifyAdminNewContact(messageId: number, email: string, sn
   return withRetry(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
-    
-    const admins = await db.select().from(users).where(eq(users.role, "admin"));
-    for (const admin of admins) {
-      await createNotification({
+
+    const admins = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.role, "admin"));
+    if (admins.length === 0) return true;
+
+    await db.insert(notifications).values(
+      admins.map((admin) => ({
         userId: admin.id,
-        type: "info",
+        type: "info" as const,
         title: "New Contact Message",
         message: `From ${email}: ${snippet}...`,
-        relatedId: messageId.toString(),
         isRead: false,
-      });
-    }
+      }))
+    );
     return true;
   });
 }
@@ -1677,7 +1674,18 @@ export async function getAllUsers() {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return [];
-    return db.select().from(users);
+
+    return db
+      .select({
+        ...getTableColumns(users),
+        tokenBalance: customerProfiles.tokenBalance,
+        totalTokensEarned: customerProfiles.totalTokensEarned,
+        totalTokensSpent: customerProfiles.totalTokensSpent,
+        totalTokensDonated: customerProfiles.totalTokensDonated,
+        membershipTier: customerProfiles.membershipTier,
+      })
+      .from(users)
+      .leftJoin(customerProfiles, eq(users.id, customerProfiles.userId));
   });
 }
 
@@ -1685,17 +1693,38 @@ export async function getAdminUserDetails(userId: number) {
   return withRetry(async () => {
     const db = await getDb();
     if (!db) return null;
-    const user = await getUserById(userId);
+
+    const [[user], orders_, submissions, recentTokenTransactions, [profile]] =
+      await Promise.all([
+        db.select().from(users).where(eq(users.id, userId)).limit(1),
+        db.select().from(orders).where(eq(orders.userId, userId)),
+        db.select().from(sellSubmissions).where(eq(sellSubmissions.userId, userId)),
+        db
+          .select()
+          .from(tokenTransactions)
+          .where(eq(tokenTransactions.userId, userId))
+          .orderBy(desc(tokenTransactions.createdAt))
+          .limit(20),
+        db
+          .select()
+          .from(customerProfiles)
+          .where(eq(customerProfiles.userId, userId))
+          .limit(1),
+      ]);
+
     if (!user) return null;
-    
-    const orders_ = await db.select().from(orders).where(eq(orders.userId, userId));
-    const submissions = await db.select().from(sellSubmissions).where(eq(sellSubmissions.userId, userId));
-    
+
     return {
       user,
+      profile: profile || null,
+      orders: orders_,
       orderCount: orders_.length,
+      sellSubmissions: submissions,
       submissionCount: submissions.length,
-      totalSpent: orders_.reduce((sum, o) => sum + parseFloat(o.total), 0).toFixed(2)
+      totalSpent: orders_
+        .reduce((sum, o) => sum + parseFloat(o.total), 0)
+        .toFixed(2),
+      recentTokenTransactions,
     };
   });
 }
@@ -1706,18 +1735,22 @@ export async function notifyAdminNewSubmission(submissionId: number, userName: s
   return withRetry(async () => {
     const db = await getDb();
     if (!db) throw new Error("Database not available");
-    
-    const admins = await db.select().from(users).where(eq(users.role, "admin"));
-    for (const admin of admins) {
-      await createNotification({
+
+    const admins = await db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.role, "admin"));
+    if (admins.length === 0) return true;
+
+    await db.insert(notifications).values(
+      admins.map((admin) => ({
         userId: admin.id,
-        type: "submission",
+        type: "submission" as const,
         title: "New Sell Submission",
         message: `${userName} submitted ${count} item(s) for review (#${submissionId})`,
-        relatedId: submissionId.toString(),
         isRead: false,
-      });
-    }
+      }))
+    );
     return true;
   });
 }
